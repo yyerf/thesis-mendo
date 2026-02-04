@@ -1,0 +1,15 @@
+{"id":"ex001","text":"Grabe I’m coughing since yesterday tapos masakit ulo ko","labels":["cough","headache"]}
+{"id":"ex002","text":"May lagnat ako at sipon","labels":["fever","runny_nose"]}
+{"id":"ex003","text":"Sore throat and barado ilong","labels":["sore_throat","stuffy_nose"]}
+{"id":"ex004","text":"Nahihilo ako and I feel nauseous","labels":["dizziness","nausea"]}
+{"id":"ex005","text":"Sumusuka ako since morning","labels":["vomiting"]}
+{"id":"ex006","text":"Loose stool / diarrhea for 2 days","labels":["diarrhea"]}
+{"id":"ex007","text":"Pagod na pagod ako, hina ng katawan","labels":["fatigue"]}
+{"id":"ex008","text":"Masakit katawan at ngalay","labels":["body_aches"]}
+{"id":"ex009","text":"Hirap huminga pag umaakyat ng stairs","labels":["shortness_of_breath"]}
+{"id":"ex010","text":"Masakit dibdib ko","labels":["chest_pain"]}
+{"id":"ex011","text":"Masakit tiyan ko","labels":["stomach_ache"]}
+{"id":"ex012","text":"Ubo at lagnat","labels":["cough","fever"]}
+{"id":"ex013","text":"Headache lang, no fever","labels":["headache"]}
+{"id":"ex014","text":"May sipon pero ok naman","labels":["runny_nose"]}
+{"id":"ex015","text":"I feel short of breath and chest pain","labels":["shortness_of_breath","chest_pain"]}

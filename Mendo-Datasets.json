@@ -1,0 +1,214 @@
+{
+  "Sheet1": [
+    {
+      "Brand": "Bioflu",
+      "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine",
+      "Drug Category": "Cold & Flu",
+      "Primary Symptom": "fever",
+      "Typical Symptoms Treated": "fever, high fever, body aches, muscle pain, chills, flu-like symptoms, cough with colds, nasal congestion",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 7,
+      "Notes": "Best used when at least 3 of these occur together: fever, body aches, cough, nasal congestion"
+    },
+    {
+      "Brand": "Neozep / Neozep Z+",
+      "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine (± Zinc)",
+      "Drug Category": "Cold",
+      "Primary Symptom": "nasal congestion",
+      "Typical Symptoms Treated": "nasal congestion, stuffy nose, blocked nose, runny nose, sneezing, sinus pressure",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when nasal symptoms (runny nose, sneezing, congestion) are present"
+    },
+    {
+      "Brand": "Neozep ",
+      "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine (± Zinc)",
+      "Drug Category": "Cold",
+      "Primary Symptom": "nasal congestion",
+      "Typical Symptoms Treated": "stuffy nose, runny nose, blocked nose",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when nasal symptoms are present in children"
+    },
+    {
+      "Brand": "Decolgen",
+      "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine",
+      "Drug Category": "Cold",
+      "Primary Symptom": "runny nose",
+      "Typical Symptoms Treated": "runny nose, sneezing, stuffy nose, mild headache",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when at least 2 nasal cold symptoms occur together"
+    },
+    {
+      "Brand": "Decolgen Forte",
+      "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine",
+      "Drug Category": "Cold",
+      "Primary Symptom": "nasal congestion",
+      "Typical Symptoms Treated": "stuffy nose, runny nose, sneezing, headache, mild fever",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when nasal symptoms occur with mild fever"
+    },
+    {
+      "Brand": "Symdex-D",
+      "Generic/Main Use": "Paracetamol + Decongestant + Antihistamine",
+      "Drug Category": "Cold & Cough",
+      "Primary Symptom": "nasal congestion",
+      "Typical Symptoms Treated": "cough, cough with colds, throat irritation, cough with runny nose",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when cough occurs with colds in children"
+    },
+    {
+      "Brand": "Symdex-D",
+      "Generic/Main Use": "Paracetamol + Decongestant + Antihistamine",
+      "Drug Category": "Cold & Cough",
+      "Primary Symptom": "nasal congestion",
+      "Typical Symptoms Treated": "cough, cough with colds, throat irritation, cough with runny nose",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when cough and nasal congestion occur together"
+    },
+    {
+      "Brand": "Tuseran Forte",
+      "Generic/Main Use": "Dextromethorphan + Paracetamol + Phenylephrine + Chlorphenamine",
+      "Drug Category": "Cold & Cough",
+      "Primary Symptom": "dry cough",
+      "Typical Symptoms Treated": "dry cough, tickly cough, throat itchiness, cough without mucus, night cough",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 12,
+      "Notes": "Best used when dry cough occurs with cold symptoms"
+    },
+    {
+      "Brand": "Ascof Forte",
+      "Generic/Main Use": "Lagundi leaf extract",
+      "Drug Category": "Cough",
+      "Primary Symptom": "productive cough",
+      "Typical Symptoms Treated": "cough with phlegm, wet cough, mucus cough, chest congestion",
+      "Dosage Form": "Capsule",
+      "Minimum Age": 2,
+      "Notes": "Best used when cough with phlegm is present"
+    },
+    {
+      "Brand": "Solmux",
+      "Generic/Main Use": "Carbocisteine",
+      "Drug Category": "Expectorant",
+      "Primary Symptom": "productive cough",
+      "Typical Symptoms Treated": "cough with thick phlegm, wet cough, hard-to-expel mucus, chest congestion",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when thick phlegm is present"
+    },
+    {
+      "Brand": "Solmux",
+      "Generic/Main Use": "Carbocisteine",
+      "Drug Category": "Expectorant",
+      "Primary Symptom": "productive cough",
+      "Typical Symptoms Treated": "cough with phlegm, chest congestion",
+      "Dosage Form": "Capsule",
+      "Minimum Age": 12,
+      "Notes": "Best used when productive cough persists"
+    },
+    {
+      "Brand": "Robitussin",
+      "Generic/Main Use": "Guaifenesin",
+      "Drug Category": "Expectorant",
+      "Primary Symptom": "chest congestion",
+      "Typical Symptoms Treated": "chest congestion, mucus in chest, phlegm buildup, wet cough",
+      "Dosage Form": "Capsule",
+      "Minimum Age": 6,
+      "Notes": "Best used when chest congestion and phlegm are present"
+    },
+    {
+      "Brand": "Sinecod Forte",
+      "Generic/Main Use": "Butamirate citrate",
+      "Drug Category": "Cough Suppressant",
+      "Primary Symptom": "dry cough",
+      "Typical Symptoms Treated": "dry cough, persistent cough, non-productive cough",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when cough is dry and non-productive"
+    },
+    {
+      "Brand": "Biogesic",
+      "Generic/Main Use": "Paracetamol",
+      "Drug Category": "Pain & Fever",
+      "Primary Symptom": "fever",
+      "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when fever or body pain is present"
+    },
+    {
+      "Brand": "Biogesic",
+      "Generic/Main Use": "Paracetamol",
+      "Drug Category": "Pain & Fever",
+      "Primary Symptom": "headache",
+      "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 2,
+      "Notes": "Best used when mild to moderate pain or fever is present"
+    },
+    {
+      "Brand": "Advil",
+      "Generic/Main Use": "Ibuprofen",
+      "Drug Category": "Pain & Inflammation",
+      "Primary Symptom": "pain",
+      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when pain or fever is present with inflammation"
+    },
+    {
+      "Brand": "Advil",
+      "Generic/Main Use": "Ibuprofen",
+      "Drug Category": "Pain & Inflammation",
+      "Primary Symptom": "pain",
+      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 12,
+      "Notes": "Best used when pain or inflammation is present"
+    },
+    {
+      "Brand": "Cetirizine",
+      "Generic/Main Use": "Cetirizine HCl",
+      "Drug Category": "Allergy",
+      "Primary Symptom": "allergic rhinitis",
+      "Typical Symptoms Treated": "allergy symptoms, runny nose from allergy, sneezing, itchy nose, itchy eyes",
+      "Dosage Form": "Syrup",
+      "Minimum Age": 2,
+      "Notes": "Best used when allergic symptoms occur together"
+    },
+    {
+      "Brand": "Cetirizine",
+      "Generic/Main Use": "Cetirizine HCl",
+      "Drug Category": "Allergy",
+      "Primary Symptom": "allergic rhinitis",
+      "Typical Symptoms Treated": "allergy symptoms, runny nose from allergy, sneezing, itchy nose, itchy eyes",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when allergy symptoms persist"
+    },
+    {
+      "Brand": "Loperamide (Diatabs)",
+      "Generic/Main Use": "Loperamide HCl",
+      "Drug Category": "Anti-diarrhea",
+      "Primary Symptom": "diarrhea",
+      "Typical Symptoms Treated": "diarrhea, loose stools, frequent bowel movements, watery stool",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when frequent loose stools occur without red flags"
+    },
+    {
+      "Brand": "Erceflora",
+      "Generic/Main Use": "Bacillus clausii",
+      "Drug Category": "GI / Probiotic",
+      "Primary Symptom": "diarrhea",
+      "Typical Symptoms Treated": "diarrhea, stomach imbalance, digestive upset",
+      "Dosage Form": "Oral Suspension",
+      "Minimum Age": "All ages",
+      "Notes": "Best used when diarrhea is present to restore gut flora"
+    }
+  ]
+}
