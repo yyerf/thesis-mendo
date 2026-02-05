@@ -21,20 +21,293 @@ import json
 import re
 from typing import List
 
-from step1 import extract_symptoms as extract_symptoms_dictionary
+from .step1 import extract_symptoms as extract_symptoms_dictionary
 
 
 def _normalize(text: str) -> str:
     text = (text or "").lower().strip()
+
+    # De-jejemize / leetspeak normalization (keep deterministic)
+    text = text.translate(
+        str.maketrans(
+            {
+                "@": "a",
+                "0": "o",
+                "1": "i",
+                "3": "e",
+                "4": "a",
+                "5": "s",
+                "7": "t",
+                "8": "b",
+                "$": "s",
+                "!": "i",
+                "|": "i",
+            }
+        )
+    )
     text = re.sub(r"[^a-z0-9ñ\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
 
+def _explicitly_negates_fever(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    # Handle common mixed-language patterns like:
+    # - "wala akong fever" / "walang fever" / "no fever"
+    # - "wala akong lagnat" / "walang lagnat" / "walay hilanat"
+    return (
+        re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\bfever\b", nt)
+        is not None
+        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\blagnat\b", nt)
+        is not None
+        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(hilanat)\b", nt)
+        is not None
+    )
+
+
+def _explicitly_negates_headache(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    # Examples we want to respect:
+    # - "no headache" / "not headache"
+    # - "not sakit ulo" / "walang sakit ulo" / "dili sakit ulo"
+    # - "wala akong headache" / "wala koy sakit ulo"
+    neg = r"(wala|walang|walay|no|not|without|dili|di)"
+    return (
+        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(headache|head|ulo)\b", nt) is not None
+        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+sakit\s+ulo\b", nt) is not None
+        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+labad\b(?:\s+\w+){{0,2}}\s+\b(head|ulo)\b", nt)
+        is not None
+    )
+
+
+def _has_any(normalized_text: str, keywords: List[str]) -> bool:
+    for kw in keywords:
+        nkw = _normalize(kw)
+        if not nkw:
+            continue
+        if " " in nkw:
+            if nkw in normalized_text:
+                return True
+        else:
+            if re.search(rf"\b{re.escape(nkw)}\b", normalized_text):
+                return True
+    return False
+
+
+def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> List[str]:
+    """Reduce semantic false-positives using cheap keyword gating.
+
+    Rationale: embeddings can over-match short/ambiguous inputs.
+    We only allow certain symptoms if the sentence contains at least one
+    related keyword family.
+    """
+
+    nt = _normalize(user_input)
+    if not semantic_detected:
+        return semantic_detected
+
+    cough_keywords = [
+        "cough",
+        "coughing",
+        "ubo",
+        "inuubo",
+        "gi ubo",
+        "gi-ubo",
+        "g-ubo",
+        "gubo",
+        "hubak",
+        "halak",
+    ]
+    plema_keywords = ["plema", "phlegm", "mucus"]
+
+    diarrhea_keywords = [
+        "diarrhea",
+        "loose stool",
+        "watery stool",
+        "stool",
+        "bowel",
+        "pagtatae",
+        "nagtatae",
+        "lbm",
+        "kalibang",
+        "tae",
+    ]
+
+    nasal_keywords = [
+        "nose",
+        "ilong",
+        "sipon",
+        "runny",
+        "stuffy",
+        "barado",
+        "bara",
+        "tumutulo",
+        "nagatulo",
+    ]
+
+    fever_keywords = [
+        "fever",
+        "temperature",
+        "hot",
+        "feverish",
+        "lagnat",
+        "nilalagnat",
+        "hilanat",
+        "gihilanat",
+        "init akong lawas",
+        "mainit ang katawan",
+        "mainit katawan",
+    ]
+
+    headache_keywords = [
+        "headache",
+        "head ache",
+        "head",
+        "ulo",
+        "sakit ulo",
+        "masakit ulo",
+        "labad",
+        "migraine",
+    ]
+
+    body_aches_keywords = [
+        "body ache",
+        "body aches",
+        "aches",
+        "nanakit ang katawan",
+        "masakit katawan",
+        "sakit katawan",
+        "sakit sa lawas",
+        "lawas",
+        "katawan",
+        "kalamnan",
+        "muscle",
+        "joints",
+        "kasukasuan",
+        "likod",
+        "back pain",
+    ]
+
+    stomach_keywords = [
+        "stomach",
+        "tummy",
+        "abdomen",
+        "abdominal",
+        "tiyan",
+        "tyan",
+        "sikmura",
+        "hilab",
+        "kabag",
+        "sakit tiyan",
+        "sakit sa tiyan",
+        "sakit sa sikmura",
+        "stomach ache",
+    ]
+
+    rhinitis_keywords = [
+        "sipon",
+        "runny nose",
+        "stuffy nose",
+        "nasal",
+        "nose",
+        "ilong",
+        "bahing",
+        "sneeze",
+        "sneezing",
+        "itchy nose",
+        "katol ilong",
+        "makati ilong",
+        "watery eyes",
+        "itchy eyes",
+        "katol mata",
+        "makati mata",
+    ]
+
+    rash_keywords = [
+        "rash",
+        "rashes",
+        "hives",
+        "urticaria",
+        "pantal",
+        "butlig",
+        "balat",
+        "panit",
+        "itch",
+        "itchy",
+        "makati",
+        "katol",
+        "pula",
+        "red",
+        "namumula",
+        "nagpula",
+    ]
+
+    allowed: List[str] = []
+    for s in semantic_detected:
+        if s in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}:
+            if _has_any(nt, cough_keywords):
+                # For productive cough, require plema/phlegm/mucus mention too.
+                if s == "COUGH_PRODUCTIVE" and not _has_any(nt, plema_keywords):
+                    continue
+                allowed.append(s)
+            continue
+
+        if s == "DIARRHEA":
+            if _has_any(nt, diarrhea_keywords):
+                allowed.append(s)
+            continue
+
+        if s in {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}:
+            # If they mention nose/ilong/sipon, these are plausible.
+            if _has_any(nt, nasal_keywords):
+                allowed.append(s)
+            else:
+                # Still allow allergy if explicit "allergy" is mentioned.
+                if s == "ALLERGIC_RHINITIS" and _has_any(nt, ["allergy", "allergic", "bahing", "sneeze", "makati", "katol"]):
+                    allowed.append(s)
+            continue
+
+        if s == "FEVER":
+            if _has_any(nt, fever_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "HEADACHE":
+            if _has_any(nt, headache_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "BODY_ACHES":
+            if _has_any(nt, body_aches_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "STOMACH_ACHE":
+            if _has_any(nt, stomach_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "ALLERGIC_RHINITIS":
+            # Only allow if the sentence is actually about nose/eyes/sneezing.
+            if _has_any(nt, rhinitis_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "RASHES":
+            if _has_any(nt, rash_keywords):
+                allowed.append(s)
+            continue
+
+        # Default: keep other symptoms as-is
+        allowed.append(s)
+
+    return list(dict.fromkeys(allowed))
+
+
 def _dictionary_matches(user_input: str) -> List[dict]:
     """Return which symptom + phrase(s) matched in the dictionary stage."""
     try:
-        from step1 import SYMPTOM_DICTIONARY  # type: ignore
+        from .step1 import SYMPTOM_DICTIONARY  # type: ignore
     except Exception:
         return []
 
@@ -66,7 +339,7 @@ def _get_semantic_extractor():
     if _SEMANTIC_EXTRACTOR is not None:
         return _SEMANTIC_EXTRACTOR
 
-    from step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
+    from .step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
 
     _SEMANTIC_EXTRACTOR = EmbeddingSymptomExtractor(SYMPTOM_ANCHORS)
     return _SEMANTIC_EXTRACTOR
@@ -94,7 +367,7 @@ def extract_symptoms_hybrid(
 
     # Lazy import so step3 can still run without sentence-transformers installed
     try:
-        from step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
+        from .step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
     except Exception:
         # If semantic components are not available, gracefully return dictionary result.
         return detected
@@ -111,6 +384,16 @@ def extract_symptoms_hybrid(
     # take the TOP-N symptoms that pass the threshold.
     # (semantic_top_margin is kept as a tunable argument, but selection is
     # primarily controlled by the threshold + top-N cap.)
+    semantic_detected = _semantic_lexical_guard(user_input, semantic_detected)
+
+    # Global negation override: don't re-add FEVER if explicitly negated.
+    if _explicitly_negates_fever(user_input):
+        semantic_detected = [s for s in semantic_detected if s != "FEVER"]
+
+    # Global negation override: don't re-add HEADACHE if explicitly negated.
+    if _explicitly_negates_headache(user_input):
+        semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
+
     scored = sorted(
         ((m.symptom, float(m.score)) for m in diag if m.symptom in semantic_detected),
         key=lambda x: x[1],
@@ -158,6 +441,7 @@ def extract_symptoms_hybrid_report(
     try:
         extractor = _get_semantic_extractor()
         semantic_detected, diag = extractor.analyze(user_input, threshold=semantic_threshold)
+        semantic_detected = _semantic_lexical_guard(user_input, semantic_detected)
         diag_sorted = sorted(
             [
                 {
@@ -170,6 +454,18 @@ def extract_symptoms_hybrid_report(
             key=lambda x: x["score"],
             reverse=True,
         )
+
+        # Global negation override: don't let semantic fallback re-add fever
+        # when user explicitly denies it.
+        if _explicitly_negates_fever(user_input):
+            semantic_detected = [s for s in semantic_detected if s != "FEVER"]
+            diag_sorted = [row for row in diag_sorted if row.get("symptom") != "FEVER"]
+
+        # Global negation override: don't let semantic fallback re-add headache
+        # when user explicitly denies it.
+        if _explicitly_negates_headache(user_input):
+            semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
+            diag_sorted = [row for row in diag_sorted if row.get("symptom") != "HEADACHE"]
     except Exception as e:
         report["stages"].append(
             {

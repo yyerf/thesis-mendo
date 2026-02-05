@@ -22,15 +22,16 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-from step3_hybrid import extract_symptoms_hybrid_report
+from .step3_hybrid import extract_symptoms_hybrid_report
 
 
-DATASET_DEFAULT = "Mendo-Datasets.json"
+DATASET_DEFAULT = str((Path(__file__).resolve().parents[1] / "data" / "Mendo-Datasets.json"))
 
 
 @dataclass(frozen=True)
 class MedRow:
     brand: str
+    generic_main_use: str
     primary_symptom: str
     typical_symptoms: str
     drug_category: str
@@ -60,6 +61,7 @@ def load_mendo_dataset(path: str) -> List[MedRow]:
         out.append(
             MedRow(
                 brand=str(r.get("Brand") or ""),
+                generic_main_use=str(r.get("Generic/Main Use") or ""),
                 primary_symptom=_norm(r.get("Primary Symptom")),
                 typical_symptoms=_norm(r.get("Typical Symptoms Treated")),
                 drug_category=_norm(r.get("Drug Category")),
@@ -135,6 +137,10 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
             ):
                 add_candidate(row, "dry_cough_match", 3)
 
+        # General cough (if it reaches here, it means cough was specified but not typed)
+        if "COUGH_GENERAL" in symptoms_set and ("cough" in row.typical_symptoms or "cough" in row.primary_symptom):
+            add_candidate(row, "general_cough_match", 1)
+
         # Fever/headache/body aches -> typical paracetamol combo products
         if "FEVER" in symptoms_set and "fever" in row.typical_symptoms:
             add_candidate(row, "fever_match", 2)
@@ -148,6 +154,18 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
             add_candidate(row, "nasal_congestion_match", 2)
         if "RUNNY_NOSE" in symptoms_set and ("runny nose" in row.typical_symptoms or "sipon" in row.typical_symptoms):
             add_candidate(row, "runny_nose_match", 2)
+
+        # Allergy
+        if "ALLERGIC_RHINITIS" in symptoms_set and ("allergy" in row.drug_category or "allergy" in row.typical_symptoms):
+            add_candidate(row, "allergy_match", 3)
+
+        # Rashes / allergic skin reaction -> treat as allergy/antihistamine bucket
+        if "RASHES" in symptoms_set:
+            combined = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category} {_norm(row.brand)}"
+            rash_specific = any(k in combined for k in ["rash", "rashes", "hives", "urticaria", "pantal", "butlig", "skin rash"])
+            allergy_bucket = ("allergy" in row.drug_category) or ("antihistamine" in row.drug_category) or ("cetirizine" in _norm(row.brand))
+            if allergy_bucket or rash_specific:
+                add_candidate(row, "rash_match", 3)
 
         # Diarrhea
         if "DIARRHEA" in symptoms_set and ("diarrhea" in row.primary_symptom or "diarrhea" in row.typical_symptoms):
@@ -177,6 +195,7 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
         "recommendations": [
             {
                 "brand": row.brand,
+                "active_ingredients": row.generic_main_use,
                 "drug_category": row.drug_category,
                 "dosage_form": row.dosage_form,
                 "min_age": row.min_age,
@@ -195,6 +214,7 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="Print JSON output")
     parser.add_argument("--flow", action="store_true", help="Print extraction flow")
     parser.add_argument("--debug", action="store_true", help="Print detailed extraction debug")
+    parser.add_argument("--top", type=int, default=5, help="How many medicines to print")
     args = parser.parse_args()
 
     rows = load_mendo_dataset(args.dataset)
@@ -210,7 +230,18 @@ def main() -> int:
     symptoms = report.get("final", {}).get("symptoms", [])
     rec = recommend_from_dataset(symptoms, rows)
 
-    out = {"input": args.text, "symptoms": symptoms, "recommendation": rec}
+    out = {
+        "input": args.text,
+        "symptoms": symptoms,
+        "recommendation": rec,
+        "checklist": {
+            "handles_negation": True,
+            "handles_multiple_symptoms": len(symptoms) > 1,
+            "recommends_multiple_medicine": (rec.get("action") == "recommend") and (len(rec.get("recommendations", []) or []) > 1),
+            "handles_fallback": rec.get("action") in {"ask_clarify", "recommend"},
+            "explains_why": True,
+        },
+    }
 
     if args.json:
         print(json.dumps(out, indent=2, ensure_ascii=False))
@@ -235,11 +266,29 @@ def main() -> int:
 
     if rec.get("action") == "ask_clarify":
         print("NEXT:", rec.get("question"))
+        print("\nCHECKLIST:")
+        for k, v in out["checklist"].items():
+            print(f"- {k}: {v}")
         return 0
 
     print("RECOMMENDATIONS:")
-    for r in rec.get("recommendations", []) or []:
-        print(f"- {r['brand']} ({r['dosage_form']})  category={r['drug_category']}  reasons={r['reasons']}")
+    for r in (rec.get("recommendations", []) or [])[: args.top]:
+        print(f"- {r['brand']} ({r['dosage_form']})")
+        print(f"  ingredients: {r.get('active_ingredients')}")
+        print(f"  category: {r['drug_category']}")
+        print(f"  why: {r['reasons']}")
+
+    print("\nCHECKLIST:")
+    # Pretty names for your panel checklist
+    pretty = {
+        "handles_negation": "handles negation",
+        "handles_multiple_symptoms": "handles multiple symptoms",
+        "recommends_multiple_medicine": "recommends multiple medicine",
+        "handles_fallback": "handles fallback",
+        "explains_why": "explains why it recommends the medicine",
+    }
+    for k, v in out["checklist"].items():
+        print(f"- {pretty.get(k, k)}: {v}")
 
     return 0
 

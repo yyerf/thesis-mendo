@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% set title = 'Mendo | Disclaimer' %}
+
+{% block content %}
+<section class="card">
+  <h2>Disclaimer</h2>
+  <p class="muted">
+    This is a thesis prototype for research/demo purposes only.
+    It does not replace professional medical advice.
+  </p>
+  <ul class="list">
+    <li>Always follow the medicine label and dosing instructions.</li>
+    <li>For severe symptoms, consult a doctor immediately.</li>
+    <li>This app may make mistakes; it relies on a small dataset and rules.</li>
+  </ul>
+
+  <a class="btn btn--primary" href="{{ url_for('nlp') }}">I Understand — Continue</a>
+{% endblock %}

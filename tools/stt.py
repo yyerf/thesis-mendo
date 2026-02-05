@@ -27,7 +27,7 @@ import re
 from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional
 
-from symptom_models import RuleRegexModel, available_models, get_model, normalize_text
+from mendo_core.symptom_models import RuleRegexModel, available_models, get_model, normalize_text
 
 
 # -----------------------------

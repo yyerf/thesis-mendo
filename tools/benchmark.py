@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
-from symptom_models import SYMPTOM_LABELS, available_models, get_model
+from mendo_core.symptom_models import SYMPTOM_LABELS, available_models, get_model
 
 
 @dataclass(frozen=True)
