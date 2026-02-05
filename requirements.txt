@@ -1,0 +1,11 @@
+# Core Web Framework
+Flask==3.0.0
+
+# Machine Learning & NLP (Core models)
+scikit-learn==1.3.2
+sentence-transformers==2.2.2
+torch==2.1.1
+
+# Data Processing
+joblib==1.3.2
+numpy==1.26.2

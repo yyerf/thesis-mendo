@@ -1,0 +1,128 @@
+{
+  "timestamp": "20260205_153826",
+  "overall_stats": {
+    "total_tests": 100,
+    "exact_matches": 74,
+    "partial_matches": 5,
+    "failed_detections": 21,
+    "false_positives": 0,
+    "negation_handled": 4,
+    "negation_failed": 2,
+    "recommendation_success": 79,
+    "recommendation_failed": 1
+  },
+  "category_stats": {
+    "simple_single": {
+      "total": 10,
+      "exact": 7,
+      "partial": 0,
+      "failed": 3,
+      "avg_f1": 0.7
+    },
+    "multiple_symptoms": {
+      "total": 10,
+      "exact": 6,
+      "partial": 4,
+      "failed": 0,
+      "avg_f1": 0.8633333333333333
+    },
+    "negation": {
+      "total": 6,
+      "exact": 4,
+      "partial": 0,
+      "failed": 2,
+      "avg_f1": 0.6666666666666666
+    },
+    "partial_negation": {
+      "total": 4,
+      "exact": 4,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "noisy_input": {
+      "total": 10,
+      "exact": 9,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.9
+    },
+    "misspelling": {
+      "total": 10,
+      "exact": 4,
+      "partial": 0,
+      "failed": 6,
+      "avg_f1": 0.4
+    },
+    "alternative_phrasing": {
+      "total": 10,
+      "exact": 4,
+      "partial": 0,
+      "failed": 6,
+      "avg_f1": 0.4
+    },
+    "english": {
+      "total": 5,
+      "exact": 4,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.8
+    },
+    "code_switching": {
+      "total": 5,
+      "exact": 4,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.8
+    },
+    "third_person": {
+      "total": 5,
+      "exact": 4,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.8
+    },
+    "temporal": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "age_context": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "severe_intensity": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "mild_intensity": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "question_form": {
+      "total": 5,
+      "exact": 4,
+      "partial": 1,
+      "failed": 0,
+      "avg_f1": 0.9
+    }
+  },
+  "overall_metrics": {
+    "accuracy": 0.74,
+    "partial_success_rate": 0.79,
+    "avg_f1_score": 0.771,
+    "avg_precision": 0.78,
+    "avg_recall": 0.767
+  }
+}

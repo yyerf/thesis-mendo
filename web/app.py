@@ -1,15 +1,9 @@
-import pymysql
-pymysql.install_as_MySQLdb()
-
 from flask import Flask, redirect, render_template, url_for, flash, session
 import joblib
 from flask import request, jsonify
-# from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder
-from flask_mysqldb import MySQL
 import pickle
-# from sklearn.metrics.pairwise import euclidean_distances
 
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -17,25 +11,33 @@ import os
 import re
 import tempfile
 
-# Try to import SpeechRecognition and Pydub
+# Database is OPTIONAL - only needed for shop/cart features, NOT for core NLP
 try:
-    import speech_recognition as sr
-    from pydub import AudioSegment
-    SPEECH_LIBS_AVAILABLE = True
+    import pymysql
+    pymysql.install_as_MySQLdb()
+    from flask_mysqldb import MySQL
+    MYSQL_AVAILABLE = True
 except ImportError:
-    SPEECH_LIBS_AVAILABLE = False
-    print("Warning: SpeechRecognition or pydub not installed. Audio features will be disabled.")
+    MYSQL_AVAILABLE = False
+    print("Note: MySQL not installed. Core NLP features will work fine. Shop/cart disabled.")
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
+app.secret_key = 'mendo-dev-secret-key'
 
-# MysQL Database
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'mendo-user'
-app.config['MYSQL_PASSWORD'] = '120904'
-app.config['MYSQL_DB'] = 'mendo'
-
-shopsql = MySQL(app)
-# MySQL Database
+# MysQL Database (optional - only for shop)
+if MYSQL_AVAILABLE:
+    try:
+        app.config['MYSQL_HOST'] = 'localhost'
+        app.config['MYSQL_USER'] = 'mendo-user'
+        app.config['MYSQL_PASSWORD'] = '120904'
+        app.config['MYSQL_DB'] = 'mendo'
+        shopsql = MySQL(app)
+        print("✓ MySQL connected (shop features enabled)")
+    except:
+        shopsql = None
+        print("Note: MySQL not configured. Core NLP works without it.")
+else:
+    shopsql = None
 
 # Legacy ML artifacts (optional). These are only required for the old `/assess` SVM page.
 vectorizer = None
@@ -451,6 +453,9 @@ def finished():
 
 @app.route("/result", methods = ["GET", "POST"])
 def result():
+    if not shopsql:
+        flash("Database features not available.")
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     cur.execute("SELECT * FROM predictiontable ORDER BY id DESC")
     item = cur.fetchall()
@@ -460,6 +465,8 @@ def result():
 
 @app.route("/assessagain")
 def assessagain():
+    if not shopsql:
+        return redirect(url_for("welcome"))
     cur = shopsql.connection.cursor()
     cur.execute("DELETE FROM predictiontable")
     shopsql.connection.commit()
@@ -469,6 +476,9 @@ def assessagain():
 
 @app.route("/shop")
 def shop():
+    if not shopsql:
+        flash("Shop requires database (not needed for symptom detection).")
+        return redirect(url_for("nlp"))
     curs = shopsql.connection.cursor()
     curs.execute('SELECT * FROM shopdatabase')
     item = curs.fetchall()
@@ -478,6 +488,8 @@ def shop():
 
 @app.route("/itemdescription/<int:item_id>")
 def itemdescription(item_id):
+    if not shopsql:
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     # SELECT * FROM shopdatabase WHERE item = :item_id LIMIT 1 ORDER BY item DESC LIMIT 1 ORDER    
     cur.execute("SELECT * FROM shopdatabase WHERE item_id = %s LIMIT 1", (item_id,))
@@ -486,6 +498,8 @@ def itemdescription(item_id):
 
 @app.route("/addtocart", methods = ["GET", "POST"])
 def addtocart():
+    if not shopsql:
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     
     if request.method == "POST":
@@ -527,6 +541,8 @@ def addtocart():
 
 @app.route("/cart", methods=["GET", "POST"])
 def cart():
+    if not shopsql:
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     cur.execute("""
         SELECT shopdatabase.item_id, shopdatabase.item_name, cartdatabase.qty, shopdatabase.price
@@ -539,6 +555,8 @@ def cart():
 
 @app.route('/deleteitem/<int:item_id>', methods=['GET','POST'])
 def deleteitem(item_id):
+    if not shopsql:
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     cur.execute("DELETE FROM shopdatabase WHERE item_id = %s", (item_id,))
     shopsql.connection.commit()
@@ -548,6 +566,8 @@ def deleteitem(item_id):
 
 @app.route('/cartitemdelete/<int:item_id>', methods=['GET','POST'])
 def deletecartitem(item_id):
+    if not shopsql:
+        return redirect(url_for("nlp"))
     cur = shopsql.connection.cursor()
     cur.execute("DELETE FROM cartdatabase WHERE item_id = %s", (item_id,))
     shopsql.connection.commit()
@@ -558,6 +578,8 @@ def deletecartitem(item_id):
 
 @app.post("/purchased")
 def purchased():
+    if not shopsql:
+        return redirect(url_for("nlp"))
     # get all the items from the cartdatabase
     cur = shopsql.connection.cursor()
     cur.execute("SELECT * FROM cartdatabase");
