@@ -539,12 +539,25 @@
     const detected = data.detected_labels || [];
     const recs = data.recommendations || [];
     const filtered = data.age_filtered_out || [];
+    const warnings = data.warnings || [];
 
     // Detected symptoms chips
     const chipsHtml = detected.length
       ? detected.map(s => `<span class="chip chip--green">${esc(s)}</span>`).join('')
       : '<span class="chip chip--amber">No symptoms detected</span>';
     body.innerHTML += `<div class="chips">${chipsHtml}</div>`;
+
+    // Safety warnings
+    if (warnings.length) {
+      const warnHtml = warnings.map(w => {
+        const isCritical = w.startsWith('CRITICAL');
+        return `<div class="safety-warning${isCritical ? ' safety-warning--critical' : ''}">
+          <span class="safety-warning__icon">${isCritical ? '🚨' : '⚠️'}</span>
+          <span class="safety-warning__text">${esc(w)}</span>
+        </div>`;
+      }).join('');
+      body.innerHTML += `<div class="safety-warnings">${warnHtml}</div>`;
+    }
 
     // Cough clarification
     if (clarify.needed) {

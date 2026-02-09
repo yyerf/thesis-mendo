@@ -233,8 +233,243 @@ TEST_DATA_LEVELS_12_16 = [
       {"user_input": "Buntis ako, pwede ba uminom ng Advil para sa sakit ng ngipin?", "intended_meaning": "Ibuprofen + Pregnancy", "expected_condition": "pain", "expected_brands": ["Biogesic"], "user_age": 28, "safety_warning": "WARNING: Ibuprofen contraindicated in pregnancy."},
       {"user_input": "Highblood ako, pahingi Bioflu", "intended_meaning": "Phenylephrine + Hypertension", "expected_condition": "flu", "expected_brands": ["Biogesic"], "user_age": 55, "safety_warning": "WARNING: Bioflu has Phenylephrine. Risky for HBP."},
       {"user_input": "Driving ako maya, pahingi Benadryl", "intended_meaning": "Antihistamine + Driving", "expected_condition": "allergy", "expected_brands": ["Claritin", "Allerta", "Cetirizine"], "user_age": 30, "safety_warning": "WARNING: Benadryl causes drowsiness."},
+      {"user_input": "Driving ako maya, pahingi allergy meds", "intended_meaning": "Allergy + Driving Risk", "expected_condition": "allergy", "expected_brands": ["Claritin", "Allerta"], "user_age": 30, "safety_warning": "CRITICAL: Benadryl causes sleepiness. Cetirizine causes mild drowsiness. RECOMMENDED: Loratadine (Claritin/Allerta) as it is the least sedating."},
     ]
   },
+]
+
+# ── Test Data: Levels 17-21 ──
+TEST_DATA_LEVELS_17_21 = [
+  {
+    "category": "LEVEL 17: CHRONIC VS. ACUTE (The 'Time' Trap)",
+    "note": "Standard OTC rule: If symptoms persist > 2 weeks (cough) or > 3 days (fever), REFER TO DOCTOR.",
+    "data": [
+      {
+        "user_input": "Ubo ako ng ubo mag-iisang buwan na",
+        "intended_meaning": "Cough > 1 month (TB Risk)",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": [],
+        "safety_warning": "CRITICAL: Cough > 2 weeks requires TB screening. Do NOT dispense Solmux.",
+        "user_age": 45
+      },
+      {
+        "user_input": "3 days na akong may lagnat di pa rin bumababa",
+        "intended_meaning": "Fever > 3 days (Dengue/Typhoid Risk)",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": [],
+        "safety_warning": "CRITICAL: High fever > 3 days needs blood test. Refer to hospital.",
+        "user_age": 22
+      },
+      {
+        "user_input": "Nagtatae ako simula pa noong Monday (5 days ago)",
+        "intended_meaning": "Chronic Diarrhea (Dehydration Risk)",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": ["Hydrite"],
+        "safety_warning": "WARNING: Diarrhea > 2 days causes severe dehydration. Refer immediately.",
+        "user_age": 30
+      },
+      {
+        "user_input": "Sakit ulo ko every morning for 2 weeks na",
+        "intended_meaning": "Chronic Headache (Hypertension/Vision Risk)",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": [],
+        "safety_warning": "Recurrent headaches require checkup. Do not just keep giving Biogesic.",
+        "user_age": 50
+      },
+      {
+        "user_input": "Kahapon lang nagsimula ubo ko",
+        "intended_meaning": "Acute Cough (Safe for OTC)",
+        "expected_condition": "productive cough",
+        "expected_brands": ["Solmux", "Ascof"],
+        "safety_warning": "SAFE: Symptom is recent.",
+        "user_age": 25
+      }
+    ]
+  },
+  {
+    "category": "LEVEL 18: LIFESTYLE & ACTIVITY CONSTRAINTS",
+    "note": "Tests for Drowsiness (Driving/Work) and Liver Toxicity (Alcohol).",
+    "data": [
+      {
+        "user_input": "Pahingi Benadryl, magda-drive ako pauwi sa probinsya",
+        "intended_meaning": "Drowsy Med + Driving",
+        "expected_condition": "allergy",
+        "expected_brands": ["Claritin", "Allerta"],
+        "safety_warning": "DANGER: Benadryl causes drowsiness. Switch to Non-Drowsy (Loratadine) or warn user.",
+        "user_age": 35
+      },
+      {
+        "user_input": "Ininom ko to tapos tagay kami mamaya, okay lang?",
+        "intended_meaning": "Paracetamol + Alcohol",
+        "expected_condition": "pain",
+        "expected_brands": ["Biogesic"],
+        "safety_warning": "DANGER: Paracetamol + Alcohol = Liver Damage. Warn user strictly.",
+        "user_age": 21
+      },
+      {
+        "user_input": "Night shift guard ako, bawal antukin. May sipon ako.",
+        "intended_meaning": "Cold + Needs Alertness",
+        "expected_condition": "cold",
+        "expected_brands": ["Neozep (Non-Drowsy if avail)", "Decolgen"],
+        "safety_warning": "Check if Neozep/Decolgen has Chlorphenamine (drowsy). Use Phenylephrine-only if possible.",
+        "user_age": 28
+      },
+      {
+        "user_input": "Mag-eexam ako bukas, need ko focus pero grabe allergy ko",
+        "intended_meaning": "Allergy + Focus needed",
+        "expected_condition": "allergy",
+        "expected_brands": ["Claritin", "Allerta"],
+        "safety_warning": "Suggest Non-Drowsy options only.",
+        "user_age": 19
+      },
+      {
+        "user_input": "Construction worker ako, sakit katawan, need pumasok bukas",
+        "intended_meaning": "Body Pain + Heavy Machinery Work",
+        "expected_condition": "pain",
+        "expected_brands": ["Alaxan (if avail)", "Advil", "Biogesic"],
+        "safety_warning": "SAFE: Ibuprofen/Paracetamol usually don't cause drowsiness.",
+        "user_age": 40
+      }
+    ]
+  },
+  {
+    "category": "LEVEL 19: OVERDOSE & FREQUENCY CHECKS",
+    "note": "Prevents users from taking too much medicine in a short time.",
+    "data": [
+      {
+        "user_input": "Kakainom ko lang ng Biogesic 1 hour ago, pwede isa pa?",
+        "intended_meaning": "Too frequent dosing",
+        "expected_condition": "pain",
+        "expected_brands": [],
+        "safety_warning": "STOP: Paracetamol interval must be at least 4 hours. Do not dispense.",
+        "user_age": 30
+      },
+      {
+        "user_input": "Uminom ako Bioflu kanina, pwede ba sabayan ng Neozep ngayon?",
+        "intended_meaning": "Double Dosing (Same ingredients)",
+        "expected_condition": "flu",
+        "expected_brands": [],
+        "safety_warning": "STOP: Bioflu and Neozep both have Paracetamol/Phenylephrine. Overdose risk.",
+        "user_age": 25
+      },
+      {
+        "user_input": "Bigyan mo ako 20 tablets ng Diatabs",
+        "intended_meaning": "Hoarding / Abuse Risk",
+        "expected_condition": "diarrhea",
+        "expected_brands": ["Loperamide (Diatabs)"],
+        "safety_warning": "LIMIT: Max daily dose is usually 4-6 tabs. Dispense small pack only.",
+        "user_age": 40
+      },
+      {
+        "user_input": "Naka-inom na ako 8 Biogesic today, sakit pa rin",
+        "intended_meaning": "Max Daily Dose Reached",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": [],
+        "safety_warning": "STOP: Max paracetamol is 4000mg (8 tabs). Risk of liver failure. Refer to ER.",
+        "user_age": 35
+      },
+      {
+        "user_input": "Missed my dose kanina, can I take 2 now?",
+        "intended_meaning": "Double dose catch-up",
+        "expected_condition": "pain",
+        "expected_brands": ["Biogesic"],
+        "safety_warning": "WARNING: Usually not recommended to double dose. Take 1 now.",
+        "user_age": 29
+      }
+    ]
+  },
+  {
+    "category": "LEVEL 20: THE 'ULTIMATE BOSS FIGHT' (Mixed Complexity)",
+    "note": "Combines Slang, Negation, Typo, and Contraindications in one input.",
+    "data": [
+      {
+        "user_input": "Grabe lagnat ko pero preggy ako 5 months, bawal ako sa Advil diba?",
+        "intended_meaning": "Fever + Pregnancy + Correct Knowledge check",
+        "expected_condition": "fever",
+        "expected_brands": ["Biogesic"],
+        "safety_warning": "Confirm: Yes, Advil is bawal. Dispensing Biogesic (Safe).",
+        "user_age": 28
+      },
+      {
+        "user_input": "Walay hilanat pero grabe akong ubo na naay dugo",
+        "intended_meaning": "No Fever + Coughing Blood (Red Flag)",
+        "expected_condition": "REFER_TO_DOCTOR",
+        "expected_brands": [],
+        "safety_warning": "CRITICAL: Coughing blood is a medical emergency. Do not dispense.",
+        "user_age": 50
+      },
+      {
+        "user_input": "Sakit sa heart ang break up pero need ko meds sa ubo na dry",
+        "intended_meaning": "Emotional noise + Dry Cough",
+        "expected_condition": "dry cough",
+        "expected_brands": ["Sinecod", "Tuseran"],
+        "safety_warning": "Filter out 'sakit sa heart'. Dispense for cough.",
+        "user_age": 22
+      },
+      {
+        "user_input": "Im allergic to aspirin and i have headache, im 12 years old",
+        "intended_meaning": "Allergy + Pediatric/Teen + Headache",
+        "expected_condition": "pain",
+        "expected_brands": ["Biogesic for Kids", "Biogesic (325mg if avail)"],
+        "safety_warning": "Avoid Aspirin (Reye's) AND Allergic. Paracetamol is safe.",
+        "user_age": 12
+      },
+      {
+        "user_input": "Hubog ko gabii karon sakit akong ulo unya kasukaon",
+        "intended_meaning": "Hangover (Drunk last night) + Headache + Nausea",
+        "expected_condition": "pain",
+        "expected_brands": ["(Hydration/Rest)"],
+        "safety_warning": "WARNING: Alcohol still in system? Risk with Paracetamol. Recommend Water/Electrolytes first.",
+        "user_age": 26
+      }
+    ]
+  },
+  {
+    "category": "LEVEL 21: THE 'PARADOX' (Conflicting Symptoms)",
+    "note": "Symptoms that contradict each other or imply a complex condition.",
+    "data": [
+      {
+        "user_input": "Nilalamig ako pero pawis na pawis",
+        "intended_meaning": "Cold sweats / Chills (Could be Infection/Shock)",
+        "expected_condition": "fever",
+        "expected_brands": ["Biogesic"],
+        "safety_warning": "Monitor temp. If cold sweats persist without fever, refer to doctor.",
+        "user_age": 30
+      },
+      {
+        "user_input": "Gutom ako pero nasusuka pag kumakain",
+        "intended_meaning": "Loss of appetite / Nausea",
+        "expected_condition": "hyperacidity",
+        "expected_brands": ["Kremil-S"],
+        "safety_warning": "Could be Ulcer/Gastritis.",
+        "user_age": 40
+      },
+      {
+        "user_input": "Masakit tiyan ko pero di naman ako natata-e, parang bloated lang",
+        "intended_meaning": "Gas Pain (Not Diarrhea)",
+        "expected_condition": "hyperacidity",
+        "expected_brands": ["Kremil-S"],
+        "safety_warning": "Ensure not Diatabs.",
+        "user_age": 35
+      },
+      {
+        "user_input": "Inuubo ako pero walang lumalabas, pero parang may plema sa loob",
+        "intended_meaning": "Hard-to-expel Phlegm (Needs Mucolytic)",
+        "expected_condition": "productive cough",
+        "expected_brands": ["Solmux Advance", "Fluimucil (if avail)"],
+        "safety_warning": "Needs strong mucolytic to loosen phlegm.",
+        "user_age": 55
+      },
+      {
+        "user_input": "Antok na antok ako pero di ako makatulog sa sakit ng katawan",
+        "intended_meaning": "Pain-induced Insomnia",
+        "expected_condition": "pain",
+        "expected_brands": ["Biogesic", "Advil"],
+        "safety_warning": "Treating pain often helps sleep.",
+        "user_age": 27
+      }
+    ]
+  }
 ]
 
 
@@ -315,7 +550,7 @@ def check_symptom_relevance(detected: List[str], expected_condition: str, test_c
 
 def run_benchmark() -> Tuple[List[TestResult], Dict[str, Any]]:
     rows = load_mendo_dataset(DATASET_DEFAULT)
-    all_tests = TEST_DATA_LEVELS_1_6 + TEST_DATA_LEVELS_7_11 + TEST_DATA_LEVELS_12_16
+    all_tests = TEST_DATA_LEVELS_1_6 + TEST_DATA_LEVELS_7_11 + TEST_DATA_LEVELS_12_16 + TEST_DATA_LEVELS_17_21
     results: List[TestResult] = []
 
     for level in all_tests:

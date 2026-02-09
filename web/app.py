@@ -334,11 +334,12 @@ def _compute_recommendation(
     except Exception as e:
         return {"ok": False, "error": f"recommender unavailable: {e}"}
 
-    rec = recommend_from_dataset(detected, rows)
+    rec = recommend_from_dataset(detected, rows, user_age=age, user_input=text)
 
     clarify = {"needed": False, "question": ""}
     recommendations: List[Dict[str, Any]] = []
     filtered_out: List[Dict[str, Any]] = []
+    warnings: List[str] = rec.get("warnings", []) or []
 
     if rec.get("action") == "ask_clarify":
         clarify = {"needed": True, "question": rec.get("question") or "Please clarify your cough type."}
@@ -364,6 +365,7 @@ def _compute_recommendation(
         "age": age,
         "detected_labels": detected,
         "recommendations": recommendations,
+        "warnings": warnings,
         "clarify": clarify,
         "flow_text": _flow_text(report, debug=debug) if show_flow else "",
         "age_filtered_out": filtered_out,
@@ -446,6 +448,7 @@ def api_recommend():
         {
             "detected_labels": data.get("detected_labels", []),
             "recommendations": recs,
+            "warnings": data.get("warnings", []),
             "clarify": data.get("clarify", {}),
             "flow_text": data.get("flow_text", ""),
             "age_filtered_out": data.get("age_filtered_out", []),
