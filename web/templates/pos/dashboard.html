@@ -1,0 +1,120 @@
+{% extends "pos/base_admin.html" %}
+{% set active_page = 'dashboard' %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- ─── Stat Cards ─── -->
+<div class="stats-grid">
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__icon"><span class="material-icons-round">payments</span></div>
+    <div class="stat-card__body">
+      <span class="stat-card__label">Today's Revenue</span>
+      <span class="stat-card__value">₱{{ "%.2f"|format(stats.today_revenue) }}</span>
+    </div>
+  </div>
+  <div class="stat-card stat-card--accent">
+    <div class="stat-card__icon"><span class="material-icons-round">receipt</span></div>
+    <div class="stat-card__body">
+      <span class="stat-card__label">Today's Transactions</span>
+      <span class="stat-card__value">{{ stats.today_transactions }}</span>
+    </div>
+  </div>
+  <div class="stat-card stat-card--green">
+    <div class="stat-card__icon"><span class="material-icons-round">inventory</span></div>
+    <div class="stat-card__body">
+      <span class="stat-card__label">Total Stock Units</span>
+      <span class="stat-card__value">{{ stats.total_units }}</span>
+    </div>
+  </div>
+  <div class="stat-card stat-card--warn">
+    <div class="stat-card__icon"><span class="material-icons-round">warning</span></div>
+    <div class="stat-card__body">
+      <span class="stat-card__label">Low / Out of Stock</span>
+      <span class="stat-card__value">{{ stats.low_stock }} / {{ stats.out_of_stock }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Two-column layout ─── -->
+<div class="dash-grid">
+  <!-- All time stats -->
+  <div class="card">
+    <div class="card__header">
+      <span class="material-icons-round">trending_up</span> All-Time Performance
+    </div>
+    <div class="card__body">
+      <div class="kpi-row">
+        <div class="kpi">
+          <span class="kpi__label">Total Revenue</span>
+          <span class="kpi__value">₱{{ "%.2f"|format(stats.all_time_revenue) }}</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi__label">Total Transactions</span>
+          <span class="kpi__value">{{ stats.all_time_transactions }}</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi__label">Products</span>
+          <span class="kpi__value">{{ stats.total_products }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top sellers -->
+  <div class="card">
+    <div class="card__header">
+      <span class="material-icons-round">star</span> Top Sellers
+    </div>
+    <div class="card__body">
+      {% if stats.top_sellers %}
+      <table class="table table--compact">
+        <thead>
+          <tr><th>Medicine</th><th>Sold</th><th>Revenue</th></tr>
+        </thead>
+        <tbody>
+          {% for ts in stats.top_sellers %}
+          <tr>
+            <td>{{ ts.brand }}</td>
+            <td>{{ ts.total_sold }}</td>
+            <td>₱{{ "%.2f"|format(ts.total_revenue) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-muted">No sales yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ─── Recent Transactions ─── -->
+<div class="card">
+  <div class="card__header">
+    <span class="material-icons-round">schedule</span> Recent Transactions
+  </div>
+  <div class="card__body">
+    {% if stats.recent_transactions %}
+    <table class="table">
+      <thead>
+        <tr><th>Ref</th><th>Amount</th><th>Items</th><th>Cashier</th><th>Status</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        {% for t in stats.recent_transactions %}
+        <tr>
+          <td><code>{{ t.transaction_ref }}</code></td>
+          <td>₱{{ "%.2f"|format(t.total_amount) }}</td>
+          <td>{{ t.item_count }}</td>
+          <td>{{ t.cashier_name or '—' }}</td>
+          <td><span class="badge badge--{{ t.status }}">{{ t.status }}</span></td>
+          <td>{{ t.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No transactions yet. Start selling from the <a href="{{ url_for('shop.index') }}">POS</a>!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

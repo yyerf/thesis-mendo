@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% set title = 'Mendo | Disclaimer' %}
+
+{% block content %}
+<section class="card">
+  <h2>Disclaimer</h2>
+
+  <a class="btn btn--primary" href="{{ url_for('nlp') }}">I Understand — Continue</a>
+{% endblock %}

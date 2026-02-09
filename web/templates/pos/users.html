@@ -1,0 +1,146 @@
+{% extends "pos/base_admin.html" %}
+{% set active_page = 'users' %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="toolbar__actions">
+    <button class="btn btn--primary" onclick="document.getElementById('add-user-modal').classList.add('show')">
+      <span class="material-icons-round">person_add</span> Add User
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card__body" style="overflow-x:auto">
+    <table class="table">
+      <thead>
+        <tr><th>ID</th><th>Username</th><th>Full Name</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td class="fw-600">{{ u.username }}</td>
+          <td>{{ u.full_name }}</td>
+          <td><span class="badge badge--{{ 'primary' if u.role == 'admin' else 'default' }}">{{ u.role }}</span></td>
+          <td><span class="badge badge--{{ 'success' if u.is_active else 'danger' }}">{{ 'Active' if u.is_active else 'Inactive' }}</span></td>
+          <td class="text-sm text-muted">{{ u.last_login or 'Never' }}</td>
+          <td>
+            <button class="btn btn--ghost btn--sm" onclick="openChangePw({{ u.id }}, '{{ u.username }}')">
+              <span class="material-icons-round">key</span>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─── Add User Modal ─── -->
+<div class="modal-overlay" id="add-user-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="material-icons-round">person_add</span>
+      <span>Add New User</span>
+      <button class="modal__close" onclick="closeModal('add-user-modal')">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="nu-username" class="inp" placeholder="username" />
+      </div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="nu-fullname" class="inp" placeholder="Juan Dela Cruz" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="nu-password" class="inp" placeholder="min 6 characters" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="nu-role" class="inp">
+          <option value="staff">Staff</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('add-user-modal')">Cancel</button>
+      <button class="btn btn--primary" onclick="addUser()">
+        <span class="material-icons-round">check</span> Create User
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Change Password Modal ─── -->
+<div class="modal-overlay" id="pw-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="material-icons-round">key</span>
+      <span>Change Password: <strong id="pw-username"></strong></span>
+      <button class="modal__close" onclick="closeModal('pw-modal')">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="pw-new" class="inp" placeholder="min 6 characters" />
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('pw-modal')">Cancel</button>
+      <button class="btn btn--primary" onclick="changePw()">
+        <span class="material-icons-round">check</span> Update
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let _pwUserId;
+
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function openChangePw(id, username) {
+  _pwUserId = id;
+  document.getElementById('pw-username').textContent = username;
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-modal').classList.add('show');
+}
+
+async function addUser() {
+  const username = document.getElementById('nu-username').value.trim();
+  const full_name = document.getElementById('nu-fullname').value.trim();
+  const password = document.getElementById('nu-password').value;
+  const role = document.getElementById('nu-role').value;
+  if (!username || !full_name || !password) return alert('All fields are required');
+  if (password.length < 6) return alert('Password must be at least 6 characters');
+
+  const res = await fetch('/admin/api/users', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({username, full_name, password, role})
+  });
+  const data = await res.json();
+  if (data.success) { closeModal('add-user-modal'); location.reload(); }
+  else alert(data.error || 'Failed');
+}
+
+async function changePw() {
+  const pw = document.getElementById('pw-new').value;
+  if (pw.length < 6) return alert('Password must be at least 6 characters');
+  const res = await fetch(`/admin/api/users/${_pwUserId}/password`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({password: pw})
+  });
+  const data = await res.json();
+  if (data.success) { closeModal('pw-modal'); alert('Password updated'); }
+  else alert(data.error || 'Failed');
+}
+</script>
+{% endblock %}

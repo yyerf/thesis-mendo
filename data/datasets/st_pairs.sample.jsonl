@@ -1,0 +1,7 @@
+{"text1":"sinisipon ako","text2":"my nose is running","label":1}
+{"text1":"walay plema","text2":"dry cough no phlegm","label":1}
+{"text1":"masakit ulo ko","text2":"my head hurts","label":1}
+{"text1":"binat yata ako","text2":"i feel feverish again","label":1}
+{"text1":"masakit ulo ko","text2":"sinisipon ako","label":0}
+{"text1":"sakit tiyan","text2":"my stomach hurts","label":1}
+{"text1":"sakit tiyan","text2":"my head hurts","label":0}

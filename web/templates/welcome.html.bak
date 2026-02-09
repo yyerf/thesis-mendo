@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% set title = 'Mendo | Welcome' %}
+
+{% block content %}
+<section class="card">
+  <h2>Welcome</h2>
+  <p class="muted">Start the symptom check.</p>
+  <div class="actions">
+    <a class="btn btn--primary" href="{{ url_for('nlp') }}">Symptom Check (Hybrid NLP)</a>
+  </div>
+</section>
+{% endblock %}

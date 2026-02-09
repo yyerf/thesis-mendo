@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mendo POS — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pos.css') }}" />
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="login-card__header">
+      <span class="material-icons-round login-icon">local_pharmacy</span>
+      <h1>Mendo POS</h1>
+      <p>Point-of-Sale &amp; Inventory System</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for cat, msg in messages %}
+    <div class="flash flash--{{ cat }}" style="margin-bottom:1rem">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="login-form" autocomplete="off">
+      <div class="form-group">
+        <label for="username">
+          <span class="material-icons-round">person</span> Username
+        </label>
+        <input type="text" id="username" name="username" required autofocus placeholder="Enter username" />
+      </div>
+      <div class="form-group">
+        <label for="password">
+          <span class="material-icons-round">lock</span> Password
+        </label>
+        <input type="password" id="password" name="password" required placeholder="Enter password" />
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">
+        <span class="material-icons-round">login</span> Sign In
+      </button>
+    </form>
+
+    <div class="login-card__footer">
+      <a href="/">← Back to Mendo Assessment</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "pos/base_admin.html" %}
+{% set active_page = 'stock_logs' %}
+{% block page_title %}Stock Movement Logs{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card__header">
+    <span class="material-icons-round">history</span> Audit Trail
+    {% if inv_filter %}
+      <span class="text-muted text-sm">(filtered by inventory #{{ inv_filter }})</span>
+      <a href="{{ url_for('admin.stock_logs') }}" class="btn btn--ghost btn--sm">Clear Filter</a>
+    {% endif %}
+  </div>
+  <div class="card__body" style="overflow-x:auto">
+    {% if logs %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Medicine</th>
+          <th>Type</th>
+          <th>Change</th>
+          <th>Before</th>
+          <th>After</th>
+          <th>Reference</th>
+          <th>By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="text-sm">{{ log.created_at }}</td>
+          <td class="fw-600">{{ log.brand }}</td>
+          <td>
+            <span class="badge badge--{{ 'success' if log.change_type in ('restock','void_return','initial') else 'danger' if log.change_type == 'sale' else 'warning' }}">
+              {{ log.change_type }}
+            </span>
+          </td>
+          <td class="{{ 'text-green' if log.quantity_change > 0 else 'text-red' }}">
+            {{ '+' if log.quantity_change > 0 else '' }}{{ log.quantity_change }}
+          </td>
+          <td>{{ log.quantity_before }}</td>
+          <td>{{ log.quantity_after }}</td>
+          <td class="text-sm text-muted">{{ log.reference or '—' }}</td>
+          <td>{{ log.performed_by_name or 'System' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No stock movements recorded yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

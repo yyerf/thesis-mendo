@@ -1,0 +1,210 @@
+{% extends "pos/base_admin.html" %}
+{% set active_page = 'inventory' %}
+{% block page_title %}Inventory Management{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="toolbar__search">
+    <span class="material-icons-round">search</span>
+    <input type="text" id="inv-search" placeholder="Search medicines…" oninput="filterInventory()" />
+  </div>
+  <div class="toolbar__actions">
+    <label class="toolbar__filter">
+      <input type="checkbox" id="inv-low" onchange="filterInventory()" /> Low / Out of Stock only
+    </label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card__body" style="overflow-x:auto">
+    <table class="table" id="inv-table">
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Generic / Use</th>
+          <th>Category</th>
+          <th>Form</th>
+          <th>Price (₱)</th>
+          <th>Stock</th>
+          <th>Min</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in items %}
+        <tr data-id="{{ it.id }}" data-brand="{{ it.brand|lower }}" data-stock="{{ it.stock_quantity }}" data-min="{{ it.min_stock_level }}">
+          <td class="fw-600">{{ it.brand }}</td>
+          <td class="text-muted text-sm">{{ it.generic_name }}</td>
+          <td>{{ it.category }}</td>
+          <td>{{ it.dosage_form }}</td>
+          <td>
+            <input type="number" class="inp inp--sm" value="{{ it.unit_price }}" min="0" step="0.5"
+                   onchange="updateDetail({{ it.id }}, 'unit_price', this.value)" />
+          </td>
+          <td>
+            <span class="stock-qty" id="qty-{{ it.id }}">{{ it.stock_quantity }}</span>
+          </td>
+          <td>
+            <input type="number" class="inp inp--sm" value="{{ it.min_stock_level }}" min="0" style="width:60px"
+                   onchange="updateDetail({{ it.id }}, 'min_stock_level', this.value)" />
+          </td>
+          <td>
+            {% if it.stock_quantity == 0 %}
+              <span class="badge badge--danger">OUT</span>
+            {% elif it.stock_quantity <= it.min_stock_level %}
+              <span class="badge badge--warning">LOW</span>
+            {% else %}
+              <span class="badge badge--success">OK</span>
+            {% endif %}
+          </td>
+          <td class="actions-cell">
+            <button class="btn btn--primary btn--sm" onclick="openRestock({{ it.id }}, '{{ it.brand }}', {{ it.stock_quantity }})">
+              <span class="material-icons-round">add</span> Restock
+            </button>
+            <button class="btn btn--ghost btn--sm" onclick="openAdjust({{ it.id }}, '{{ it.brand }}', {{ it.stock_quantity }})">
+              <span class="material-icons-round">tune</span>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─── Restock Modal ─── -->
+<div class="modal-overlay" id="restock-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="material-icons-round">add_circle</span>
+      <span>Restock: <strong id="rs-brand"></strong></span>
+      <button class="modal__close" onclick="closeModal('restock-modal')">&times;</button>
+    </div>
+    <div class="modal__body">
+      <p>Current stock: <strong id="rs-current"></strong></p>
+      <div class="form-group">
+        <label>Add Quantity</label>
+        <input type="number" id="rs-qty" min="1" value="10" class="inp" />
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('restock-modal')">Cancel</button>
+      <button class="btn btn--primary" id="rs-confirm" onclick="doRestock()">
+        <span class="material-icons-round">check</span> Confirm Restock
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Adjust Modal ─── -->
+<div class="modal-overlay" id="adjust-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="material-icons-round">tune</span>
+      <span>Adjust Stock: <strong id="adj-brand"></strong></span>
+      <button class="modal__close" onclick="closeModal('adjust-modal')">&times;</button>
+    </div>
+    <div class="modal__body">
+      <p>Current stock: <strong id="adj-current"></strong></p>
+      <div class="form-group">
+        <label>Set Stock To</label>
+        <input type="number" id="adj-qty" min="0" class="inp" />
+      </div>
+      <div class="form-group">
+        <label>Reason</label>
+        <input type="text" id="adj-reason" class="inp" placeholder="e.g. Expired batch removed" />
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('adjust-modal')">Cancel</button>
+      <button class="btn btn--warning" onclick="doAdjust()">
+        <span class="material-icons-round">check</span> Adjust
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let _rsId, _adjId;
+
+function openRestock(id, brand, current) {
+  _rsId = id;
+  document.getElementById('rs-brand').textContent = brand;
+  document.getElementById('rs-current').textContent = current;
+  document.getElementById('rs-qty').value = 10;
+  document.getElementById('restock-modal').classList.add('show');
+}
+
+function openAdjust(id, brand, current) {
+  _adjId = id;
+  document.getElementById('adj-brand').textContent = brand;
+  document.getElementById('adj-current').textContent = current;
+  document.getElementById('adj-qty').value = current;
+  document.getElementById('adj-reason').value = '';
+  document.getElementById('adjust-modal').classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+async function doRestock() {
+  const qty = parseInt(document.getElementById('rs-qty').value);
+  if (!qty || qty <= 0) return alert('Enter a valid quantity');
+  const res = await fetch(`/admin/api/inventory/${_rsId}/restock`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({quantity: qty})
+  });
+  const data = await res.json();
+  if (data.success) {
+    closeModal('restock-modal');
+    location.reload();
+  } else {
+    alert(data.error || 'Failed');
+  }
+}
+
+async function doAdjust() {
+  const qty = parseInt(document.getElementById('adj-qty').value);
+  const reason = document.getElementById('adj-reason').value || 'Manual adjustment';
+  if (qty < 0) return alert('Quantity cannot be negative');
+  const res = await fetch(`/admin/api/inventory/${_adjId}/adjust`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({quantity: qty, reason})
+  });
+  const data = await res.json();
+  if (data.success) {
+    closeModal('adjust-modal');
+    location.reload();
+  } else {
+    alert(data.error || 'Failed');
+  }
+}
+
+async function updateDetail(id, field, value) {
+  const body = {};
+  body[field] = field === 'unit_price' ? parseFloat(value) : parseInt(value);
+  await fetch(`/admin/api/inventory/${id}/details`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+}
+
+function filterInventory() {
+  const q = document.getElementById('inv-search').value.toLowerCase();
+  const lowOnly = document.getElementById('inv-low').checked;
+  document.querySelectorAll('#inv-table tbody tr').forEach(row => {
+    const brand = row.dataset.brand;
+    const stock = parseInt(row.dataset.stock);
+    const min = parseInt(row.dataset.min);
+    const matchSearch = !q || brand.includes(q);
+    const matchLow = !lowOnly || stock <= min;
+    row.style.display = (matchSearch && matchLow) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

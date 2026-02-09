@@ -1,59 +1,312 @@
 {% extends 'base.html' %}
-{% set title = 'Mendo | Symptom Check' %}
+{% set title = 'Mendo | Kiosk' %}
 
-{% block content %}
-<section class="pos">
-  <div class="pos__header">
-    <div>
-      <div class="pos__title">Symptom Input</div>
-      <div class="pos__subtitle muted">POS-style flow: input first → age prompt → assessment opens in a new tab</div>
-    </div>
-    <div class="pill">Hybrid NLP</div>
-  </div>
+{% block body %}
+<div class="kiosk">
 
-  <form id="nlpForm" method="post" action="{{ url_for('nlp_results') }}" class="pos__card">
-    <label class="label">User input</label>
-    <textarea id="nlpText" name="text" class="textarea textarea--pos" rows="4" placeholder="e.g., katol akong skin tpos labad akong ulo"></textarea>
-
-    <input id="ageHidden" name="age" type="hidden" value="" />
-    <input id="coughHidden" name="cough_type" type="hidden" value="" />
-
-    <div class="pos__row">
-      <button id="micBtn" class="btn" type="button">🎙 Talk (Offline)</button>
-      <button id="clearBtn" class="btn" type="button">Clear</button>
-      <button id="analyzeBtn" class="btn btn--primary" type="submit">Analyze</button>
-      <div id="micStatus" class="muted" style="margin-left:auto;"></div>
-    </div>
-
-    <div class="hint">
-      Tip: For cough, include <span class="kbd">"walay plema"</span> or <span class="kbd">"naay plema"</span>.
-    </div>
-  </form>
-
-  <div id="ageModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
-    <div class="modal__backdrop"></div>
-    <div class="modal__card">
-      <div id="ageTitle" class="modal__title">Age (who will drink it?)</div>
-      <div class="muted">This is required to filter medicines safely.</div>
-      <input id="ageInput" class="input input--pos" type="number" min="0" max="120" step="1" placeholder="Enter age (0–120)" />
-      <div class="pos__row" style="margin-top:12px;">
-        <button id="ageCancel" class="btn" type="button">Cancel</button>
-        <button id="ageConfirm" class="btn btn--primary" type="button">Continue</button>
+  <!-- ─── header ─── -->
+  <header class="kiosk__header">
+    <div class="brand">
+      <div class="brand__icon">M</div>
+      <div>
+        <div class="brand__name">Mendo</div>
+        <div class="brand__tag">OTC Medicine Dispenser</div>
       </div>
     </div>
-  </div>
+    <div class="header-pill">Hybrid NLP</div>
+  </header>
 
-  <div id="loadingModal" class="modal hidden" role="status" aria-live="polite">
-    <div class="modal__backdrop"></div>
-    <div class="modal__card">
-      <div class="modal__title">Assessing<span class="dots"></span></div>
-      <div class="muted">Please wait.</div>
+  <!-- ─── body (screens swap here) ─── -->
+  <div class="kiosk__body">
+
+    <!-- ===== 0. WARNING ===== -->
+    <div id="screen-warning" class="screen active">
+      <div class="step-card">
+        <div style="font-size:48px;margin-bottom:14px;">⚠️</div>
+        <div class="step-title" style="color:var(--amber);">WARNING</div>
+        <div class="warning-text" style="text-align:left;font-size:14px;line-height:1.6;color:var(--muted);margin:16px 0;">
+          Hoarding of medicines such as; <strong style="color:var(--text);">Phenylephrine hydrochloride</strong>, <strong style="color:var(--text);">Chlorpheniramine Maleate</strong>, <strong style="color:var(--text);">Paracetamol tablets</strong> and <strong style="color:var(--text);">Carbocisteine capsules</strong> are prohibited as stated in the <strong style="color:var(--text);">Joint Memorandum Circular (JMC) No. 22-01</strong>.
+          <br><br>
+          People and establishments found to have violated the JMC will be held liable under the <strong style="color:var(--text);">Price Act</strong>, <strong style="color:var(--text);">Consumer Act of the Philippines</strong> and other laws.
+        </div>
+        <button id="btnWarningNext" class="btn btn--primary btn--lg w-full">I Understand — Continue</button>
+      </div>
+    </div>
+
+    <!-- ===== 1. DISCLAIMER ===== -->
+    <div id="screen-disclaimer" class="screen">
+      <div class="step-card">
+        <div style="font-size:48px;margin-bottom:14px;">📋</div>
+        <div class="step-title">DISCLAIMER!</div>
+        <div class="step-sub" style="font-size:14px;line-height:1.6;">
+          This machine is specifically designed to store and dispense <strong>over-the-counter medicines</strong>.
+          Its primary function is to provide quick and convenient access to a range of non-prescription drugs
+          and healthcare products, making it a valuable resource for those seeking relief from common ailments
+          and health concerns.
+        </div>
+        <div class="btn-row">
+          <button id="btnDisagreeBack" class="btn btn--outline">Back</button>
+          <button id="btnAgree" class="btn btn--primary btn--lg" style="flex:1;">I Understand — Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 2. WELCOME (CHOICES) ===== -->
+    <div id="screen-welcome" class="screen">
+      <div class="step-card">
+        <div style="font-size:48px;margin-bottom:14px;">💊</div>
+        <div class="step-title">Welcome to Mendo</div>
+        <div class="step-sub">
+          Tell us your symptoms in Tagalog, Bisaya, English, or mix — and we'll suggest the right OTC medicine for you.
+        </div>
+        <div class="btn-row" style="flex-direction:column;gap:16px;">
+          <button id="btnAssess" class="btn btn--primary btn--lg w-full">🩺 Assess Symptoms</button>
+          <button id="btnViewMeds" class="btn btn--outline btn--lg w-full">💊 View Medicine Available</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 2b. KIOSK SHOP (browse & buy without AI) ===== -->
+    <div id="screen-shop" class="screen">
+      <div class="step-card" style="text-align:left;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+          <div class="step-title" style="margin-bottom:0;">💊 Medicine Available</div>
+          <div style="display:flex;gap:8px;">
+            <button id="shopCartBtn" class="btn btn--green" style="min-height:40px;padding:8px 16px;font-size:13px;display:none;">🛒 Cart (<span id="shopCartCount">0</span>)</button>
+          </div>
+        </div>
+
+        <input id="shopSearch" type="text" class="textarea" style="min-height:auto;padding:10px 14px;font-size:15px;margin-bottom:12px;" placeholder="🔍 Search medicine…">
+
+        <div id="shopBody" class="results-scroll">
+          <div class="spinner-wrap">
+            <div class="spinner"></div>
+            <div class="text-muted" style="font-size:13px;">Loading inventory…</div>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:24px;">
+          <button id="shopBack" class="btn btn--outline btn--lg">← Back</button>
+          <button id="shopViewCart" class="btn btn--green btn--lg" style="flex:1;display:none;">Proceed to Cart →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. SYMPTOM INPUT ===== -->
+    <div id="screen-input" class="screen">
+      <div class="step-card">
+        <div class="step-title">What do you feel?</div>
+        <div class="step-sub">Describe your symptoms below, or tap the mic to speak.</div>
+
+        <textarea id="symptomText" class="textarea"
+          placeholder="e.g., sumasakit ulo ko tapos nilalagnat…"></textarea>
+
+        <div class="hint">
+          Tip: For cough, say <span class="kbd">walay plema</span> (dry) or <span class="kbd">naay plema</span> (with phlegm).
+        </div>
+
+        <div class="btn-row">
+          <button id="micBtn" class="mic-orb" title="Tap to speak">
+            <svg class="mic-orb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="1" width="6" height="12" rx="3"></rect>
+              <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            <div class="mic-orb__rings">
+              <span class="mic-orb__ring"></span>
+              <span class="mic-orb__ring"></span>
+              <span class="mic-orb__ring"></span>
+            </div>
+          </button>
+          <button id="clearBtn" class="btn btn--outline">Clear</button>
+          <button id="nextToAge" class="btn btn--primary btn--lg" style="flex:1;">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 4. AGE (numpad) ===== -->
+    <div id="screen-age" class="screen">
+      <div class="step-card">
+        <div class="step-title">How old is the patient?</div>
+        <div class="step-sub">We use this to filter medicines by age safety.</div>
+
+        <div id="ageDisplay" class="age-display"></div>
+
+        <div class="numpad">
+          <button class="btn" data-num="1">1</button>
+          <button class="btn" data-num="2">2</button>
+          <button class="btn" data-num="3">3</button>
+          <button class="btn" data-num="4">4</button>
+          <button class="btn" data-num="5">5</button>
+          <button class="btn" data-num="6">6</button>
+          <button class="btn" data-num="7">7</button>
+          <button class="btn" data-num="8">8</button>
+          <button class="btn" data-num="9">9</button>
+          <button class="btn" data-num="clear">C</button>
+          <button class="btn" data-num="0">0</button>
+          <button class="btn" data-num="back">⌫</button>
+        </div>
+
+        <div class="btn-row">
+          <button id="ageBack" class="btn btn--outline">← Back</button>
+          <button id="ageConfirm" class="btn btn--primary btn--lg" style="flex:1;">Confirm Age</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 5. LOADING ===== -->
+    <div id="screen-loading" class="screen">
+      <div class="step-card">
+        <div class="spinner-wrap">
+          <div class="spinner"></div>
+          <div class="pulse-text">Assessing your symptoms…</div>
+          <div class="text-muted" style="font-size:13px;">This may take a moment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 6. RESULTS ===== -->
+    <div id="screen-results" class="screen">
+      <div class="step-card" style="text-align:left;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+          <div class="step-title" style="margin-bottom:0;">Results</div>
+          <div style="display:flex;gap:8px;">
+            <button id="viewCartBtn" class="btn btn--green" style="min-height:40px;padding:8px 16px;font-size:13px;display:none;">🛒 Cart (<span id="cartCount">0</span>)</button>
+            <button id="printBtn" class="btn btn--outline" style="min-height:40px;padding:8px 16px;font-size:13px;">🖨 Print</button>
+          </div>
+        </div>
+
+        <div id="resultsBody" class="results-scroll">
+          <!-- dynamically filled by JS -->
+        </div>
+
+        <div class="btn-row" style="margin-top:24px;">
+          <button id="newAssess" class="btn btn--primary btn--lg w-full">New Assessment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 7. CART ===== -->
+    <div id="screen-cart" class="screen">
+      <div class="step-card" style="text-align:left;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+          <div class="step-title" style="margin-bottom:0;">🛒 Your Cart</div>
+        </div>
+
+        <div id="cartBody" class="results-scroll">
+          <!-- dynamically filled by JS -->
+        </div>
+
+        <div class="cart-total" id="cartTotal" style="display:none;">
+          <div class="cart-total__label">Total</div>
+          <div class="cart-total__amount" id="cartTotalAmount">₱0.00</div>
+        </div>
+
+        <div class="btn-row" style="margin-top:24px;">
+          <button id="cartBack" class="btn btn--outline btn--lg">← Add More</button>
+          <button id="cartProceed" class="btn btn--green btn--lg" style="flex:1;">Proceed to Payment →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 8. PAYMENT ===== -->
+    <div id="screen-payment" class="screen">
+      <div class="step-card">
+        <div style="font-size:48px;margin-bottom:14px;">💳</div>
+        <div class="step-title">Payment</div>
+
+        <div id="paymentSummary" class="payment-summary">
+          <!-- dynamically filled -->
+        </div>
+
+        <div class="payment-total" id="paymentTotal">
+          <span>Total Amount</span>
+          <span class="payment-total__amount" id="paymentTotalAmount">₱0.00</span>
+        </div>
+
+        <div class="btn-row" style="margin-top:24px;">
+          <button id="paymentBack" class="btn btn--outline btn--lg">← Back to Cart</button>
+          <button id="paymentConfirm" class="btn btn--green btn--lg" style="flex:1;">💰 Confirm Payment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 9. DISPENSING ===== -->
+    <div id="screen-dispensing" class="screen">
+      <div class="step-card">
+        <div class="spinner-wrap">
+          <div style="font-size:60px;margin-bottom:8px;">💊</div>
+          <div id="dispenseTitle" class="pulse-text">Dispensing your medicine…</div>
+          <div id="dispenseProgress" class="dispense-progress"></div>
+          <div id="dispenseStatus" class="text-muted" style="font-size:13px;">Please wait</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 10. ORDER COMPLETE ===== -->
+    <div id="screen-complete" class="screen">
+      <div class="step-card">
+        <div style="font-size:60px;margin-bottom:14px;">✅</div>
+        <div class="step-title" style="color:var(--green);">Order Complete!</div>
+        <div id="completeBody" class="complete-body">
+          <!-- dynamically filled -->
+        </div>
+        <div class="btn-row" style="margin-top:24px;">
+          <button id="completeDone" class="btn btn--primary btn--lg w-full">Done — Start Over</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /kiosk__body -->
+
+  <!-- ─── Siri-style mic overlay ─── -->
+  <div id="micOverlay" class="mic-overlay">
+    <div class="mic-overlay__content">
+      <div class="siri-orb" id="siriOrb">
+        <div class="siri-orb__core"></div>
+        <div class="siri-orb__wave siri-orb__wave--1"></div>
+        <div class="siri-orb__wave siri-orb__wave--2"></div>
+        <div class="siri-orb__wave siri-orb__wave--3"></div>
+        <div class="siri-orb__wave siri-orb__wave--4"></div>
+        <!-- Sound wave bars -->
+        <div class="siri-bars" id="siriBars">
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+          <span class="siri-bar"></span>
+        </div>
+      </div>
+      <div id="micOverlayStatus" class="mic-overlay__status">Listening…</div>
+      <div id="micOverlayLang" class="mic-overlay__lang">
+        <button class="lang-chip active" data-lang="">Auto</button>
+        <button class="lang-chip" data-lang="tl">Tagalog</button>
+        <button class="lang-chip" data-lang="ceb">Bisaya</button>
+        <button class="lang-chip" data-lang="en">English</button>
+      </div>
+      <button id="micOverlayStop" class="btn btn--danger btn--lg" style="margin-top:24px;">⏹ Stop Recording</button>
+      <button id="micOverlayCancel" class="btn btn--outline" style="margin-top:12px;">Cancel</button>
     </div>
   </div>
-</section>
+
+  <!-- ─── footer ─── -->
+  <footer class="kiosk__footer">
+    Thesis Prototype · Recommendations are for demo purposes only · <a href="#" style="color:var(--muted);">Disclaimer</a>
+  </footer>
+
+  <!-- idle progress bar -->
+  <div class="idle-bar"><div id="idleBarFill" class="idle-bar__fill"></div></div>
+
+</div><!-- /kiosk -->
 {% endblock %}
 
 {% block scripts %}
 <meta name="mendo-endpoint" content="{{ url_for('api_recommend') }}" />
 <meta name="mendo-stt-endpoint" content="{{ url_for('api_stt') }}" />
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

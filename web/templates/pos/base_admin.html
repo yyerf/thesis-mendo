@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or 'Mendo POS' }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pos.css') }}" />
+</head>
+<body>
+
+  <!-- ─── Sidebar ─── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <span class="material-icons-round">local_pharmacy</span>
+      <span>Mendo POS</span>
+    </div>
+    <ul class="sidebar__nav">
+      <li><a href="{{ url_for('admin.dashboard') }}" class="{% if active_page=='dashboard' %}active{% endif %}">
+        <span class="material-icons-round">dashboard</span><span>Dashboard</span></a></li>
+      <li><a href="{{ url_for('shop.index') }}" class="{% if active_page=='shop' %}active{% endif %}">
+        <span class="material-icons-round">point_of_sale</span><span>Point of Sale</span></a></li>
+      <li><a href="{{ url_for('admin.inventory') }}" class="{% if active_page=='inventory' %}active{% endif %}">
+        <span class="material-icons-round">inventory_2</span><span>Inventory</span></a></li>
+      <li><a href="{{ url_for('admin.transactions') }}" class="{% if active_page=='transactions' %}active{% endif %}">
+        <span class="material-icons-round">receipt_long</span><span>Transactions</span></a></li>
+      <li><a href="{{ url_for('admin.stock_logs') }}" class="{% if active_page=='stock_logs' %}active{% endif %}">
+        <span class="material-icons-round">history</span><span>Stock Logs</span></a></li>
+      {% if user and user.role == 'admin' %}
+      <li><a href="{{ url_for('admin.users') }}" class="{% if active_page=='users' %}active{% endif %}">
+        <span class="material-icons-round">group</span><span>Users</span></a></li>
+      {% endif %}
+    </ul>
+    <div class="sidebar__footer">
+      <div class="sidebar__user">
+        <span class="material-icons-round">account_circle</span>
+        <div>
+          <small>{{ user.full_name if user else 'Guest' }}</small>
+          <small class="role-badge">{{ user.role|upper if user else '' }}</small>
+        </div>
+      </div>
+      <a href="{{ url_for('admin.logout') }}" class="sidebar__logout" title="Logout">
+        <span class="material-icons-round">logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ─── Main ─── -->
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar__toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <span class="material-icons-round">menu</span>
+      </button>
+      <h1 class="topbar__title">{% block page_title %}Dashboard{% endblock %}</h1>
+      <div class="topbar__right">
+        <a href="/" class="btn btn--ghost btn--sm" title="Back to Mendo Assessment">
+          <span class="material-icons-round">medical_services</span>
+          <span>Assessment</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+      {% for cat, msg in messages %}
+      <div class="flash flash--{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="page-content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

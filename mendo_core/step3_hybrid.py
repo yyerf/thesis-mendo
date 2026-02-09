@@ -157,6 +157,11 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "init akong lawas",
         "mainit ang katawan",
         "mainit katawan",
+        "mainit lang ang katawan",
+        "sinat",
+        "trangkaso",
+        "kalintura",
+        "binat",
     ]
 
     headache_keywords = [
@@ -186,6 +191,11 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "kasukasuan",
         "likod",
         "back pain",
+        "panuhot",
+        "mabigat",
+        "heavy",
+        "tibuok lawas",
+        "bug-at",
     ]
 
     stomach_keywords = [
@@ -202,6 +212,15 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "sakit sa tiyan",
         "sakit sa sikmura",
         "stomach ache",
+        "mahapdi",
+        "hapdi",
+        "aslom",
+        "gihiluan",
+        "gasela",
+        "acidic",
+        "hyperacidity",
+        "masusuka",
+        "suka",
     ]
 
     rhinitis_keywords = [

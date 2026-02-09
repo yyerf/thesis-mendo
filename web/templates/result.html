@@ -1,31 +1,5 @@
 {% extends 'base.html' %}
-{% set title = 'Mendo | Result' %}
-
-{% block content %}
-<section class="card">
-  <h2>Results</h2>
-  <p class="muted">This is a minimal placeholder. Your DB-powered result table can be styled here.</p>
-
-  {% if item %}
-    <table class="table">
-      <thead><tr><th>ID</th><th>Input</th><th>Prediction</th></tr></thead>
-      <tbody>
-      {% for row in item %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p class="muted">No items found.</p>
-  {% endif %}
-
-  <div class="actions">
-    <a class="btn btn--primary" href="{{ url_for('nlp') }}">Symptom Check</a>
-    <a class="btn" href="{{ url_for('index') }}">Home</a>
-  </div>
-</section>
+{% set title = 'Mendo | Results' %}
+{% block body %}
+<script>window.location.href = "{{ url_for('nlp') }}";</script>
 {% endblock %}

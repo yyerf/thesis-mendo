@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-02-08T22:10:48.640527",
+  "total_tests": 79,
+  "symptom_accuracy": 97.5,
+  "brand_accuracy": 91.1,
+  "full_accuracy": 91.1,
+  "false_positives": 0,
+  "per_level": {
+    "LEVEL 1: STOMACH ISSUES (Acid vs. Diarrhea)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 2: COUGH WARS (Dry vs. Productive)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 3: FEVER VS FLU (The Combo Rule)": {
+      "total": 4,
+      "correct": 4,
+      "accuracy": 100.0
+    },
+    "LEVEL 4: ALLERGY VS COLD": {
+      "total": 4,
+      "correct": 4,
+      "accuracy": 100.0
+    },
+    "LEVEL 5: CULTURAL & SLANG (The Hardest Test)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 6: TYPOS & SHORTCUTS (Real World)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 7: RED FLAGS (Must Refer to Doctor)": {
+      "total": 6,
+      "correct": 6,
+      "accuracy": 100.0
+    },
+    "LEVEL 8: PREGNANCY & ALLERGIES (Safety First)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 9: MULTIPLE UNRELATED SYMPTOMS (Polypharmacy)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 10: NEGATION OLYMPICS (Logic Twisters)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 11: VAGUE & EMOTIONAL (The 'Marites' Test)": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 12: FLU VS COLD NUANCE": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 13: COUGH COMBO WARS": {
+      "total": 5,
+      "correct": 3,
+      "accuracy": 60.0
+    },
+    "LEVEL 14: PEDIATRIC & FORMULATION": {
+      "total": 5,
+      "correct": 2,
+      "accuracy": 40.0
+    },
+    "LEVEL 15: BRAND LOYALTY VS GENERICS": {
+      "total": 5,
+      "correct": 5,
+      "accuracy": 100.0
+    },
+    "LEVEL 16: DANGEROUS CONTRAINDICATIONS": {
+      "total": 5,
+      "correct": 3,
+      "accuracy": 60.0
+    }
+  }
+}

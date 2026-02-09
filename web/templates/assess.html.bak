@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% set title = 'Mendo | Legacy Assess' %}
+
+{% block content %}
+<section class="card">
+  <h2>Legacy Assess (SVM)</h2>
+  <p class="muted">This page uses your existing SVM model files. If you want the new hybrid NLP UI, use Symptom Check.</p>
+
+  <form method="post" class="form">
+    <label class="label">Describe your symptoms</label>
+    <textarea name="input_data" class="textarea" rows="3" placeholder="e.g., inuubo ko tapos sakit ulo"></textarea>
+    <button class="btn btn--primary" type="submit">Submit</button>
+  </form>
+
+  <div class="divider"></div>
+  <a class="btn" href="{{ url_for('nlp') }}">Go to Symptom Check (Hybrid NLP)</a>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% set title = 'Mendo | Finished' %}
+
+{% block content %}
+<section class="card">
+  <h2>Done</h2>
+  <p class="muted">Your request has been processed.</p>
+  <div class="actions">
+    <a class="btn btn--primary" href="{{ url_for('nlp') }}">Try Symptom Check</a>
+    <a class="btn" href="{{ url_for('index') }}">Home</a>
+  </div>
+</section>
+{% endblock %}

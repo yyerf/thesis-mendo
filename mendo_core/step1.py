@@ -2,7 +2,6 @@
 
 Phrase-Based Symptom Extraction (Deterministic / Dictionary-Based)
 
-Goal (thesis-friendly):
 - Handle mixed-language input (Tagalog, Bisaya, English, Taglish/Conyo)
 - No ML, no language detection
 - Use a fixed dictionary of symptom -> phrases, then scan the sentence
@@ -37,11 +36,19 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "head hurts",
         "my head hurts",
         "splitting headache",
+        "head is pounding",
         # Tagalog / Taglish
         "sakit ulo",
+        "sakit ng ulo",
         "masakit ulo",
         "masakit ang ulo",
+        "masakit ang ulo ko",
+        "masakit ulo ko",
         "sumasakit ulo",
+        "sumasakit ang ulo",
+        "sumakit ulo",
+        "sumakit ang ulo",
+        "sumakit ulo ko",
         "labad ulo",
         "kirot ulo",
         "masakit head",
@@ -49,12 +56,20 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "binibiyak",
         "binibiyak ang ulo",
         "binibiyak ang ulo ko",
+        "may headache",
         # Bisaya
         "labad akong ulo",
         "sakit akong ulo",
         "sakit ako'g ulo",
         "gibukbok",
         "gibukbok akong ulo",
+        "sakit sa ulo",
+        # Toothache (treated as pain)
+        "sakit ng ngipin",
+        "sakit ngipin",
+        "masakit ngipin",
+        "toothache",
+        "tooth pain",
     ],
     # NOTE (thesis/panel-friendly): COUGH is split into 3 intents.
     # - COUGH_PRODUCTIVE: cough with phlegm/mucus (wet cough)
@@ -71,11 +86,16 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "cough with phlegm",
         "cough with mucus",
         "chest congestion",
+        "phlegm in chest",
         # Tagalog / Taglish
         "may plema",
+        "my plema",
         "basang ubo",
         "malapot na plema",
         "ubo na may plema",
+        "hirap ilabas yung plema",
+        "hirap ilabas ang plema",
+        "plema sa dibdib",
         # Bisaya / Conyo
         "naay plema",
         "basa nga ubo",
@@ -83,6 +103,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "with plema",
         "halak",
         "hubak",
+        "plema sa dughan",
+        "pure phlegm",
+        "pure plema",
     ],
     "COUGH_DRY": [
         # English
@@ -98,11 +121,16 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "makati lalamunan",
         "makati ang lalamunan",
         "makati ang lalamunan ko",
+        "kati ng lalamunan",
+        "kati lalamunan",
+        "kati ang lalamunan",
+        "makati ang lalamunan ko tapos ubo",
         # Bisaya
         "uga nga ubo",
         "walay plema",
         "makatol ang tutunlan",
         "makatol akong tutunlan",
+        "katol sa tutunlan",
     ],
     "COUGH_GENERAL": [
         # English
@@ -130,6 +158,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # English
         "fever",
         "high fever",
+        "feverish",
         # Tagalog
         "lagnat",
         "may lagnat",
@@ -137,17 +166,24 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "nilalagnat ako",
         "mainit ang katawan",
         "mainit katawan",
+        "mainit lang ang katawan",
+        "mainit ang katawan ko",
         "nanginginig",
         "panginginig",
         "binat",
         "binat ako",
         "binat yata",
         "binat yata ako",
+        "sinat",
+        "sinat lang",
+        "may sinat",
+        "trangkaso",
         # Bisaya
         "hilanat",
         "gihilanat",
         "ginahilanat",
         "naay hilanat",
+        "kalintura",
         # Bisaya phrasing for "my body feels hot" (common fever description)
         "init akong lawas",
         "init kaayo akong lawas",
@@ -165,6 +201,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "muscle pain",
         "muscle aches",
         "joint pain",
+        "back pain",
         "chills",
         "nilalamig",
         "nilalamig ako",
@@ -173,16 +210,30 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "masakit katawan",
         "sakit katawan",
         "katawan ko masakit",
+        "sakit ng katawan",
+        "masakit ang katawan",
+        "katawan lang ang masakit",
         "ngalay",
         "nanlalambot",
         "binugbog",
         "parang binugbog",
         "binugbog yung katawan",
         "binugbog ang katawan",
+        "sakit tibuok lawas",
+        "mabigat ang katawan",
+        "mabigat katawan",
+        "mabigat ang pakiramdam",
         # Bisaya
         "sakit lawas",
+        "sakit sa lawas",
+        "sakit tibuok lawas",
         "luya",
         "kapoy kaayo",
+        "panuhot",
+        "panuhot sa likod",
+        "sakit sa likod",
+        "bug-at akong lawas",
+        "bug-at ang lawas",
     ],
     "NASAL_CONGESTION": [
         # English
@@ -217,37 +268,48 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
     ],
     "RUNNY_NOSE": [
         "runny nose",
+        "running nose",
         "sipon",
         "may sipon",
         "sisipon",
         "sinisipon",
         "sinasipon",
+        "sinisipon me",
         "tumutulo ilong",
         "nagatulo ilong",
         # Bisaya
-        "gatusok ang sipon", 
+        "gatusok ang sipon",
         "nagatulo akong ilong",
+        "sip-on",
+        "gisip-on",
+        "gisipon",
+        "gi sip-on",
+        "naay sip-on",
     ],
     "ALLERGIC_RHINITIS": [
         # English
         "allergy",
-        "allergic",
         "allergic rhinitis",
         "hay fever",
         "sneezing",
+        "sneezing all day",
         "itchy nose",
         "itchy eyes",
         # Tagalog
-        "allergy",
         "bahing",
         "makati ilong",
         "makati mata",
+        "makati ang mata",
+        "makati ang ilong",
+        "allergy rashes",
+        "allergy sa balat",
+        "allergy sa panit",
         # Bisaya
-        "allergy",
-        "bahing",
         "katol ilong",
         "katol mata",
         # (Keep rhinitis focused on nose/eyes + sneezing)
+        # NOTE: 'allergic' alone omitted — triggers false positive with
+        # 'allergic ako sa Paracetamol' which means drug allergy, not rhinitis.
     ],
     "RASHES": [
         # English
@@ -285,6 +347,50 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "red akong panit",
         "nagpula akong balat",
     ],
+    "STOMACH_ACHE_ACID": [
+        # English
+        "hyperacidity",
+        "acid reflux",
+        "heartburn",
+        "gas pain",
+        "bloated stomach",
+        "bloating",
+        "acidic stomach",
+        "acidic",
+        # Tagalog
+        "mahapdi",
+        "mahapdi ang sikmura",
+        "mahapdi sikmura",
+        "hapdi",
+        "hapdi ng sikmura",
+        "hapdi ng tiyan",
+        "sikmura",
+        "masakit sikmura",
+        "sakit sikmura",
+        "kabag",
+        "ang kabag",
+        "grabe ang kabag",
+        "masama ang pakiramdam ng tiyan",
+        "nag-aacid",
+        "sakit tiyan",
+        "sakit ng tiyan",
+        "sakit tiyan ko",
+        "masakit ang tiyan",
+        "masakit tiyan",
+        "masusuka at sakit tiyan",
+        "masusuka",
+        # Bisaya
+        "aslom",
+        "aslom kaayo",
+        "aslom akong tiyan",
+        "gihiluan",
+        "mura kog gihiluan",
+        "gasela",
+        "sakit sa sikmura",
+        "hapdi sa tiyan",
+        "hilab",
+        "sakit akong tiyan",
+    ],
     "DIARRHEA": [
         # English
         "diarrhea",
@@ -296,10 +402,48 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "nagtatae",
         "lbm",
         "malambot na dumi",
+        "basa akong tae",
+        "basa tae",
         # Bisaya
         "kalibang",
         "nagkalibang",
+        "gikalibang",
+        "gikalibanga",
         "laway ang tae",
+        "kalibanga",
+    ],
+    "NAUSEA": [
+        # English
+        "nausea",
+        "nauseous",
+        "feeling like vomiting",
+        "about to vomit",
+        # Tagalog
+        "masusuka",
+        "naduduwal",
+        "nasusuka",
+        "parang masusuka",
+        "gusto kong sumuka",
+        # Bisaya
+        "gustong musuka",
+        "susukahon",
+    ],
+    "DIZZINESS": [
+        # English
+        "dizzy",
+        "dizziness",
+        "lightheaded",
+        "vertigo",
+        # Tagalog
+        "nahihilo",
+        "hilo",
+        "hilong-hilo",
+        "lumulutang ang paningin",
+        # Bisaya
+        "nalipong",
+        "lipong",
+        "nalipong ra ko",
+        "ginalipong",
     ],
 }
 
@@ -316,7 +460,36 @@ def _is_negated(normalized_text: str, normalized_phrase: str) -> bool:
     if not normalized_phrase:
         return False
 
-    neg_words = ["no", "not", "without", "walang", "walay", "waley", "dili", "di"]
+    neg_words = [
+    # --- ENGLISH ---
+    "no", "not", "without", "none", "never", "negative",
+    "don't", "dont",          # STT might drop the apostrophe
+    "doesn't", "doesnt",
+    "didn't", "didnt",
+    "free from",              # e.g., "pain-free", "free from ubo"
+    
+    # --- TAGALOG ---
+    "wala", "walang",         # Standard "None"
+    "hindi", "di",            # Standard "No"
+    "de",                     # Shortcut for "hindi" (e.g., "de naman masakit")
+    "dehins",                 # Slang for "hindi" (User: "Dehins masakit")
+    "la",                     # Shortcut for "wala" (User: "La naman ako lagnat")
+    "ayaw",                   # Refusal/Don't want (Context: "Ayaw ko nyan")
+    
+    # --- BISAYA (Crucial for Speech) ---
+    "walay",                  # Standard "None" (e.g., "Walay hilanat")
+    "wa",                     # Short for "Wala" (User: "Wa koy ubo")
+    "way",                    # Short for "Walay" (User: "Way labad")
+    "dili",                   # Standard "No" (e.g., "Dili sakit")
+    "di",                     # Short for "Dili"
+    
+    # --- CONYO / MIXED / SLANG ---
+    "wit",                    # Gay lingo/Slang for "Wala/Hindi"
+    "wiz",                    # Variation of "wit"
+    "minus",                  # Medical/Math slang (e.g., "Minus the fever")
+    "absent",                 # e.g., "Absent ang pain"
+    "clear",                  # e.g., "Clear naman sa ubo" (Context dependent)
+]
 
     # Build a small regex window: (neg) (optional word) (optional word) phrase
     # Example: "walang" + "masyadong" + "lagnat" -> still counts as negated
@@ -342,12 +515,23 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
     # Dry cough can be implied by an itchy/tickle throat even if the user
     # doesn't explicitly say "ubo/cough".
     if re.search(
-        r"\b(itchy|scratchy|tickly|makati|makatol)\b(?:\s+\w+){0,3}\s+\b(throat|lalamunan|tutunlan)\b",
+        r"\b(itchy|scratchy|tickly|makati|makatol|kati)\b(?:\s+\w+){0,3}\s+\b(throat|lalamunan|tutunlan)\b",
         normalized_text,
     ):
         return ["COUGH_DRY"]
-    if re.search(r"\b(throat|lalamunan|tutunlan)\b(?:\s+\w+){0,3}\s+\b(itchy|scratchy|tickly|makati|makatol)\b", normalized_text):
+    if re.search(r"\b(throat|lalamunan|tutunlan)\b(?:\s+\w+){0,3}\s+\b(itchy|scratchy|tickly|makati|makatol|kati)\b", normalized_text):
         return ["COUGH_DRY"]
+    # Also handle "kati ng lalamunan" pattern  
+    if re.search(r"\bkati\b(?:\s+\w+){0,2}\s+\blalamunan\b", normalized_text):
+        return ["COUGH_DRY"]
+
+    # Check for plema-only mentions that imply productive cough even without "ubo/cough"
+    plema_only = (
+        _phrase_in_text(normalized_text, "plema")
+        or _phrase_in_text(normalized_text, "phlegm")
+        or re.search(r"\bpure\s+phlegm\b", normalized_text) is not None
+        or re.search(r"\bpure\s+plema\b", normalized_text) is not None
+    )
 
     cough_present = _phrase_in_text(normalized_text, "cough") or _phrase_in_text(normalized_text, "ubo")
     if not cough_present:
@@ -361,7 +545,18 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
                 "gi-ubo",
             )
         )
-    if not cough_present:
+    
+    if not cough_present and not plema_only:
+        return []
+
+    # If plema is mentioned without cough word, treat as productive cough
+    if not cough_present and plema_only:
+        # But check for negation of plema first ("walang plema" is NOT productive)
+        plema_negated = (
+            re.search(r"\b(wala|walang|walay|waley|no|not|without)\b(?:\s+\w+){0,2}\s+\bplema\b", normalized_text) is not None
+        )
+        if not plema_negated:
+            return ["COUGH_PRODUCTIVE"]
         return []
 
     dry_qualifiers = [
@@ -396,6 +591,9 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
         "chest congestion",
         # Tagalog / Taglish
         "may plema",
+        "my plema",
+        "maraming plema",
+        "madaming plema",
         "basang ubo",
         "ubo na may plema",
         # Bisaya / Conyo
@@ -417,7 +615,27 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
         is_dry = True
     if not is_dry and re.search(r"\bwalay(?:\s+\w+){0,2}\s+plema\b", normalized_text):
         is_dry = True
+    
+    # Check if "dry cough" is being NEGATED: "not dry cough" / "hindi dry cough"
+    dry_negated = (
+        re.search(r"\b(not|no|hindi|di|dili|wala|walang)\b(?:\s+\w+){0,1}\s+\bdry\s+cough\b", normalized_text) is not None
+        or re.search(r"\b(not|no|hindi|di|dili|wala|walang)\b(?:\s+\w+){0,1}\s+\bdry\b", normalized_text) is not None
+        or re.search(r"\b(not|no|hindi|di|dili|wala|walang)\b(?:\s+\w+){0,1}\s+\btuyong?\b", normalized_text) is not None
+    )
+    if dry_negated:
+        is_dry = False
+    
     is_wet = any(_phrase_in_text(normalized_text, _normalize(p)) for p in wet_qualifiers)
+    
+    # Also check for "wet siya" / "basa siya" patterns implying productive
+    if not is_wet and re.search(r"\b(wet|basa|basang)\b(?:\s+\w+){0,2}\s*\b(siya|cough|ubo)?\b", normalized_text):
+        if re.search(r"\b(wet|basa)\b", normalized_text):
+            is_wet = True
+
+    # If dry was explicitly negated, favor wet
+    if dry_negated and not is_wet:
+        # "not dry cough" without explicit wet qualifier -> assume wet
+        is_wet = True
 
     # Priority: explicit DRY phrases win over WET.
     if is_dry:
@@ -629,13 +847,17 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches)\b",
+            r"\b(sakit|masakit|sumakit|sumasakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|hirts|ache|aches)\b",
             normalized_text,
         ) is not None
         if not pain_present:
-            # Typo/jejemon rescue: skit->sakit, lbd->labad
+            # Typo/jejemon rescue: skit->sakit, lbd->labad, hirts->hurts
             pain_present = any(
-                (len(t) >= 3 and (_levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "labad", 2)))
+                (len(t) >= 3 and (
+                    _levenshtein_within(t, "sakit", 1)
+                    or _levenshtein_within(t, "labad", 2)
+                    or _levenshtein_within(t, "hurts", 1)
+                ))
                 for t in tokens
             )
 
@@ -654,11 +876,15 @@ def extract_symptoms(user_input: str) -> List[str]:
         for phrase in phrases:
             normalized_phrase = _normalize(phrase)
             if _phrase_in_text(normalized_text, normalized_phrase):
-                # Negation handling for a few key symptoms where users say "no X"
-                if symptom_label in {"FEVER", "HEADACHE", "DIARRHEA"} and _is_negated(normalized_text, normalized_phrase):
+                # Negation handling for key symptoms where users say "no X"
+                if symptom_label in {"FEVER", "HEADACHE", "DIARRHEA", "STOMACH_ACHE", "STOMACH_ACHE_ACID", "RUNNY_NOSE"} and _is_negated(normalized_text, normalized_phrase):
                     continue
                 detected.append(symptom_label)
                 break  # stop checking more phrases for this symptom
+
+    # Merge STOMACH_ACHE_ACID into STOMACH_ACHE for downstream compatibility
+    if "STOMACH_ACHE_ACID" in detected:
+        detected = [d if d != "STOMACH_ACHE_ACID" else "STOMACH_ACHE" for d in detected]
 
     _infer_nasal_label(normalized_text, detected)
 
@@ -694,6 +920,86 @@ def extract_symptoms(user_input: str) -> List[str]:
         )
         if fever_negated:
             detected = [d for d in detected if d != "FEVER"]
+
+    # Cough negation: \"wala akong ubo\" / \"no cough\" / \"dili ubo\"
+    # But NOT "not dry cough" (that negates "dry", not "cough")
+    for cough_label in ["COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"]:
+        if cough_label in detected:
+            # Only negate cough if it's a standalone negation of cough itself
+            # e.g., "wala akong ubo" / "no cough" but NOT "not dry cough"
+            cough_negated_ubo = _is_negated(normalized_text, _normalize("ubo"))
+            cough_negated_eng = (
+                re.search(r"\b(no|not|without|wala|walang|walay|dili|di)\b\s+\bcough\b", normalized_text) is not None
+                and not re.search(r"\b(no|not|without)\b\s+\b(dry|wet|productive)\b\s+\bcough\b", normalized_text)
+            )
+            if cough_negated_ubo or cough_negated_eng:
+                detected = [d for d in detected if d not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}]
+                break
+
+    # Sipon/runny nose negation: "walang sipon"
+    if "RUNNY_NOSE" in detected:
+        sipon_negated = (
+            _is_negated(normalized_text, _normalize("sipon"))
+            or _is_negated(normalized_text, _normalize("runny nose"))
+            or _is_negated(normalized_text, _normalize("sip-on"))
+            or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\bsipon\b", normalized_text)
+        )
+        if sipon_negated:
+            detected = [d for d in detected if d != "RUNNY_NOSE"]
+
+    # Stomach negation: "dili sakit akong tiyan" / "walang sakit tiyan"
+    if "STOMACH_ACHE" in detected:
+        stomach_negated = (
+            _is_negated(normalized_text, _normalize("tiyan"))
+            or _is_negated(normalized_text, _normalize("sikmura"))
+            or _is_negated(normalized_text, _normalize("stomach"))
+            or re.search(r"\b(wala|walang|walay|dili|di|no|not)\b(?:\s+\w+){0,3}\s+\b(tiyan|sikmura|stomach)\b", normalized_text)
+        )
+        if stomach_negated:
+            detected = [d for d in detected if d != "STOMACH_ACHE"]
+
+    # Headache negation override
+    if "HEADACHE" in detected:
+        headache_negated = (
+            re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,3}\s+\b(headache|ulo|head|sakit\s+ulo|masakit\s+ulo)\b", normalized_text)
+            is not None
+            or _is_negated(normalized_text, _normalize("ulo"))
+            or re.search(r"\b(di|dili)\s+(naman\s+)?masakit\s+ulo\b", normalized_text) is not None
+        )
+        if headache_negated:
+            detected = [d for d in detected if d != "HEADACHE"]
+
+    # ── Drug-Mention Inference ──
+    # When user mentions a brand name but no explicit symptom, infer the symptom
+    # from the drug's known use. This handles cases like:
+    #   "Buntis ako, pwede ba uminom ng Advil?" -> HEADACHE/pain implied
+    #   "Highblood ako, bawal ako sa Neozep diba?" -> NASAL_CONGESTION/cold implied
+    if not detected:
+        drug_symptom_map = {
+            "advil":     "HEADACHE",
+            "ibuprofen": "HEADACHE",
+            "biogesic":  "HEADACHE",
+            "mefenamic": "HEADACHE",
+            "neozep":    "NASAL_CONGESTION",
+            "decolgen":  "NASAL_CONGESTION",
+            "sinutab":   "NASAL_CONGESTION",
+            "bioflu":    "FEVER",
+            "solmux":    "COUGH_PRODUCTIVE",
+            "ascof":     "COUGH_PRODUCTIVE",
+            "tuseran":   "COUGH_DRY",
+            "sinecod":   "COUGH_DRY",
+            "kremil":    "STOMACH_ACHE",
+            "diatabs":   "DIARRHEA",
+            "loperamide":"DIARRHEA",
+            "cetirizine":"ALLERGIC_RHINITIS",
+            "claritin":  "ALLERGIC_RHINITIS",
+            "allerta":   "ALLERGIC_RHINITIS",
+            "benadryl":  "ALLERGIC_RHINITIS",
+        }
+        for drug, symptom in drug_symptom_map.items():
+            if re.search(rf"\b{re.escape(drug)}\b", normalized_text):
+                detected.append(symptom)
+                break  # one drug inference is enough
 
     # Distinct list (preserve dictionary order). Since Python 3.7+, dict preserves insertion order.
     return list(dict.fromkeys(detected))

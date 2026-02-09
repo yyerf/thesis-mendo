@@ -44,6 +44,10 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "labad ang ulo",
         "sakit ulo",
         "labad akong ulo",
+        "sumakit ulo ko",
+        "sumasakit ang ulo ko",
+        "may headache",
+        "my head hurts",
     ],
     "COUGH_DRY": [
         "I have a dry cough",
@@ -78,10 +82,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "mataas ang lagnat",
         "nilalagnat ako",
         "mainit ang katawan ko",
+        "mainit lang ang katawan ko",
         "hilanat ko",
         "gihilanat ko",
         "init akong lawas",
         "init kaayo akong lawas",
+        "sinat lang",
+        "may sinat",
+        "trangkaso",
+        "kalintura",
     ],
     "BODY_ACHES": [
         "my body aches",
@@ -89,6 +98,13 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "masakit katawan ko",
         "sakit lawas",
         "ngalay ang katawan",
+        "sakit tibuok lawas",
+        "panuhot sa likod",
+        "sakit sa likod",
+        "mabigat ang katawan",
+        "mabigat ang pakiramdam",
+        "katawan lang ang masakit",
+        "feeling heavy body",
     ],
     "NASAL_CONGESTION": [
         "my nose is blocked",
@@ -134,6 +150,10 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "watery stool",
         "nagtatae ako",
         "nagkalibang ko",
+        "basa akong tae",
+        "gikalibanga",
+        "sige kog kalibang",
+        "lbm since morning",
     ],
     "STOMACH_ACHE": [
         "I have a stomach ache",
@@ -145,6 +165,16 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "sakit tiyan",
         "sakit ang tiyan",
         "sakit akong tiyan",
+        "mahapdi ang sikmura ko",
+        "mahapdi sikmura",
+        "kabag",
+        "grabe ang kabag ko",
+        "aslom akong tiyan",
+        "gihiluan",
+        "masusuka ako at sakit tiyan",
+        "sakit tiyan ko",
+        "acidic stomach",
+        "hyperacidity",
     ],
 }
 
@@ -168,6 +198,11 @@ class EmbeddingSymptomExtractor:
         anchors: Dict[str, List[str]],
         model_name: str = "paraphrase-multilingual-MiniLM-L12-v2",
     ) -> None:
+        # Allow swapping in a fine-tuned/local model without code changes.
+        # Example:
+        #   export MENDO_SENTENCE_TRANSFORMER_MODEL=models/mendo-miniLM-finetuned
+        model_name = os.environ.get("MENDO_SENTENCE_TRANSFORMER_MODEL", model_name)
+
         # Best-effort: reduce third-party noise (progress bars / warnings).
         # These affect only the current process.
         os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")

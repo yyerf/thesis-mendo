@@ -1,0 +1,178 @@
+{% extends "pos/base_admin.html" %}
+{% set active_page = 'transactions' %}
+{% block page_title %}Transaction History{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="toolbar__actions" style="gap:.5rem;display:flex;align-items:center">
+    <a href="{{ url_for('admin.transactions') }}" class="btn btn--sm {% if not status_filter %}btn--primary{% else %}btn--ghost{% endif %}">All</a>
+    <a href="{{ url_for('admin.transactions', status='completed') }}" class="btn btn--sm {% if status_filter=='completed' %}btn--primary{% else %}btn--ghost{% endif %}">Completed</a>
+    <a href="{{ url_for('admin.transactions', status='voided') }}" class="btn btn--sm {% if status_filter=='voided' %}btn--primary{% else %}btn--ghost{% endif %}">Voided</a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card__body" style="overflow-x:auto">
+    {% if transactions %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ref</th>
+          <th>Amount</th>
+          <th>Items</th>
+          <th>Payment</th>
+          <th>Cashier</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td><code>{{ t.transaction_ref }}</code></td>
+          <td class="fw-600">₱{{ "%.2f"|format(t.total_amount) }}</td>
+          <td>{{ t.item_count }}</td>
+          <td>{{ t.payment_method|title }}</td>
+          <td>{{ t.cashier_name or '—' }}</td>
+          <td><span class="badge badge--{{ t.status }}">{{ t.status }}</span></td>
+          <td class="text-sm">{{ t.created_at }}</td>
+          <td class="actions-cell">
+            <button class="btn btn--ghost btn--sm" onclick="viewTransaction({{ t.id }})">
+              <span class="material-icons-round">visibility</span>
+            </button>
+            {% if t.status == 'completed' and user.role == 'admin' %}
+            <button class="btn btn--danger btn--sm" onclick="voidTransaction({{ t.id }}, '{{ t.transaction_ref }}')">
+              <span class="material-icons-round">cancel</span>
+            </button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No transactions found.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="{{ url_for('admin.transactions', page=page-1, status=status_filter) }}" class="btn btn--ghost btn--sm">← Previous</a>
+  {% endif %}
+  <span class="text-muted">Page {{ page }}</span>
+  {% if transactions|length == 20 %}
+  <a href="{{ url_for('admin.transactions', page=page+1, status=status_filter) }}" class="btn btn--ghost btn--sm">Next →</a>
+  {% endif %}
+</div>
+
+<!-- ─── Transaction Detail Modal ─── -->
+<div class="modal-overlay" id="txn-modal">
+  <div class="modal modal--wide">
+    <div class="modal__header">
+      <span class="material-icons-round">receipt_long</span>
+      <span>Transaction Detail</span>
+      <button class="modal__close" onclick="closeModal('txn-modal')">&times;</button>
+    </div>
+    <div class="modal__body" id="txn-detail-body">
+      <p class="text-muted">Loading…</p>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('txn-modal')">Close</button>
+      <button class="btn btn--primary" onclick="printReceipt()">
+        <span class="material-icons-round">print</span> Print Receipt
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+async function viewTransaction(id) {
+  const body = document.getElementById('txn-detail-body');
+  body.innerHTML = '<p class="text-muted">Loading…</p>';
+  document.getElementById('txn-modal').classList.add('show');
+
+  const res = await fetch(`/admin/api/transactions/${id}`);
+  const t = await res.json();
+  if (t.error) { body.innerHTML = `<p class="text-danger">${t.error}</p>`; return; }
+
+  let itemsHtml = t.items.map(i => `
+    <tr>
+      <td>${i.brand}</td>
+      <td>${i.quantity}</td>
+      <td>₱${i.unit_price.toFixed(2)}</td>
+      <td class="fw-600">₱${i.subtotal.toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+  body.innerHTML = `
+    <div class="receipt">
+      <div class="receipt__header">
+        <h3>MENDO PHARMACY</h3>
+        <p class="text-muted">OTC Medicine Dispensary</p>
+        <hr>
+      </div>
+      <div class="receipt__meta">
+        <p><strong>Ref:</strong> ${t.transaction_ref}</p>
+        <p><strong>Date:</strong> ${t.created_at}</p>
+        <p><strong>Cashier:</strong> ${t.cashier_name || '—'}</p>
+        <p><strong>Status:</strong> <span class="badge badge--${t.status}">${t.status}</span></p>
+      </div>
+      <table class="table table--compact">
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+        <tbody>${itemsHtml}</tbody>
+        <tfoot>
+          <tr><td colspan="3" class="text-right fw-600">Total</td><td class="fw-600">₱${t.total_amount.toFixed(2)}</td></tr>
+          <tr><td colspan="3" class="text-right">Tendered</td><td>₱${(t.amount_tendered||0).toFixed(2)}</td></tr>
+          <tr><td colspan="3" class="text-right">Change</td><td>₱${(t.change_amount||0).toFixed(2)}</td></tr>
+        </tfoot>
+      </table>
+      ${t.customer_note ? `<p class="text-muted mt-1"><em>Note: ${t.customer_note}</em></p>` : ''}
+    </div>
+  `;
+}
+
+async function voidTransaction(id, ref) {
+  if (!confirm(`Void transaction ${ref}? Stock will be restored.`)) return;
+  const res = await fetch(`/admin/api/transactions/${id}/void`, { method: 'POST' });
+  const data = await res.json();
+  if (data.success) location.reload();
+  else alert(data.error || 'Failed to void');
+}
+
+function printReceipt() {
+  const content = document.getElementById('txn-detail-body').innerHTML;
+  const win = window.open('', '_blank', 'width=350,height=600');
+  win.document.write(`
+    <html><head><title>Receipt</title>
+    <style>
+      body{font-family:monospace;font-size:12px;padding:10px;max-width:300px;margin:auto}
+      table{width:100%;border-collapse:collapse}
+      th,td{text-align:left;padding:2px 4px;border-bottom:1px dotted #ccc}
+      .fw-600{font-weight:bold}
+      .text-right{text-align:right}
+      .text-muted{color:#666}
+      .badge{padding:2px 6px;border-radius:4px;font-size:10px}
+      .badge--completed{background:#22c55e;color:#fff}
+      .badge--voided{background:#ef4444;color:#fff}
+      hr{border:none;border-top:1px dashed #999;margin:8px 0}
+      h3{margin:0;text-align:center}
+      p{margin:4px 0}
+      .receipt__header{text-align:center}
+    </style></head>
+    <body>${content}<hr><p style="text-align:center">Thank you!</p></body></html>
+  `);
+  win.document.close();
+  win.print();
+}
+</script>
+{% endblock %}
