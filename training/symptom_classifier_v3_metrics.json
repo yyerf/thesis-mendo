@@ -1,0 +1,21 @@
+{
+  "version": "v3",
+  "train_samples": 5170,
+  "test_samples": 776,
+  "micro_f1": 0.7738693467336684,
+  "macro_f1": 0.6977851707263187,
+  "threshold": 0.2,
+  "dataset_breakdown": {
+    "original": 2171,
+    "cebuano": 1000,
+    "tagalog": 1000,
+    "english": 1000
+  },
+  "improvements_over_v2": [
+    "1,500 new training samples",
+    "Better context-dependent word handling (hilo = dizzy/poison)",
+    "Expanded typo coverage",
+    "Modern English slang support",
+    "Better rare dialect phrase detection"
+  ]
+}

@@ -1,14 +1,15 @@
-"""Interactive CLI: compare ML vs Mendo core on any sentence.
+"""Interactive CLI: compare V1 vs V2 models + Mendo core on any sentence.
 
 Usage:
-  python training/compare_models_cli.py --model training/symptom_classifier.joblib
+  python training/compare_models_cli.py
+  python training/compare_models_cli.py --v1 training/symptom_classifier_v1.joblib --v2 training/symptom_classifier_v2.joblib
 """
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import sys
 
@@ -58,23 +59,97 @@ def _predict_ml(text: str, model: dict) -> List[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Compare ML vs Mendo core")
+    parser = argparse.ArgumentParser(description="Compare V1 vs V2 models + Mendo core")
     parser.add_argument(
-        "--model",
+        "--v1",
         type=str,
-        default="training/symptom_classifier.joblib",
-        help="Trained model path",
+        default="training/symptom_classifier_v1.joblib",
+        help="V1 model path (2,170 samples)",
+    )
+    parser.add_argument(
+        "--v2",
+        type=str,
+        default="training/symptom_classifier_v2.joblib",
+        help="V2 model path (3,670 samples)",
+    )
+    parser.add_argument(
+        "--quick-test",
+        action="store_true",
+        help="Run quick test on typo cases and exit",
     )
     args = parser.parse_args()
 
-    model_path = _resolve(args.model)
-    model = joblib.load(model_path)
+    v1_path = _resolve(args.v1)
+    v2_path = _resolve(args.v2)
+    
+    v1_model = None
+    v2_model = None
+    
+    if v1_path.exists():
+        v1_model = joblib.load(v1_path)
+        print(f"✅ Loaded V1: {v1_path.name}")
+    else:
+        print(f"⚠️  V1 not found: {v1_path}")
+    
+    if v2_path.exists():
+        v2_model = joblib.load(v2_path)
+        print(f"✅ Loaded V2: {v2_path.name}")
+    else:
+        print(f"⚠️  V2 not found: {v2_path}")
 
-    print("Type a sentence (or 'exit' to quit).")
+    if args.quick_test:
+        print("\n" + "="*70)
+        print("🧪 QUICK TEST: Typos and Edge Cases")
+        print("="*70)
+        
+        test_cases = [
+            ("sepun ako", "runny_nose"),
+            ("ubu ako grabe", "cough"),
+            ("masaket ulo", "headache"),
+            ("lagnt ko", "fever"),
+            ("moubo ko", "cough"),
+            ("init init katawan", "fever"),
+        ]
+        
+        v1_correct = 0
+        v2_correct = 0
+        
+        for text, expected in test_cases:
+            v1_pred = _predict_ml(text, v1_model) if v1_model else []
+            v2_pred = _predict_ml(text, v2_model) if v2_model else []
+            
+            v1_match = expected in v1_pred
+            v2_match = expected in v2_pred
+            
+            if v1_match:
+                v1_correct += 1
+            if v2_match:
+                v2_correct += 1
+            
+            print(f"\n📝 {text:20s} (expect: {expected})")
+            print(f"   V1: {v1_pred} {'✅' if v1_match else '❌'}")
+            print(f"   V2: {v2_pred} {'✅' if v2_match else '❌'}")
+        
+        print("\n" + "="*70)
+        print(f"V1: {v1_correct}/{len(test_cases)} correct ({v1_correct/len(test_cases):.1%})")
+        print(f"V2: {v2_correct}/{len(test_cases)} correct ({v2_correct/len(test_cases):.1%})")
+        print("="*70)
+        
+        if v2_correct > v1_correct:
+            print("\n🎉 V2 IS BETTER on typos/edge cases!")
+        elif v2_correct == v1_correct:
+            print("\n⚖️  V1 and V2 perform equally")
+        else:
+            print("\n⚠️  V1 performs better - V2 needs review")
+        
+        return 0
+
+    print("\n💡 Type a sentence to compare (or 'exit' to quit)")
+    print("   Try typos like: 'sepun ako', 'ubu grabe', 'masaket ulo'\n")
 
     while True:
         try:
-            text = input("\n> ").strip()
+            text = input("> ").strip()
         except (EOFError, KeyboardInterrupt):
             print("\nBye.")
             break
@@ -83,10 +158,12 @@ def main() -> int:
             print("Bye.")
             break
 
-        ml_labels = _predict_ml(text, model)
+        v1_labels = _predict_ml(text, v1_model) if v1_model else []
+        v2_labels = _predict_ml(text, v2_model) if v2_model else []
         core_labels = _normalize_hybrid(list(extract_symptoms_hybrid(text)))
 
-        print(f"ML:   {ml_labels}")
+        print(f"V1:   {v1_labels}")
+        print(f"V2:   {v2_labels}")
         print(f"Core: {core_labels}")
 
     return 0

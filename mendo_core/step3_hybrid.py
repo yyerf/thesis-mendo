@@ -18,10 +18,48 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
-from typing import List
+from pathlib import Path
+from typing import List, Optional
+
+import joblib
 
 from .step1 import extract_symptoms as extract_symptoms_dictionary
+
+# ==============================================================================
+# ML CLASSIFIER GLOBALS (loaded lazily)
+# ==============================================================================
+_ML_CLASSIFIER = None
+_ML_VECTORIZER = None
+_ML_LABEL_BINARIZER = None
+_ML_VERSION = None  # 'v1', 'v2', or 'v3'
+
+def get_classifier_path(version: Optional[str] = None) -> Path:
+    """Get path to symptom classifier model.
+    
+    Args:
+        version: 'v1' (2,171 samples), 'v2' (3,670 samples), 'v3' (5,170 samples), or None for default (v3)
+    
+    Returns:
+        Path to .joblib file
+    """
+    base = Path(__file__).parent.parent / "training"
+    
+    # Allow environment variable override
+    env_version = os.environ.get("MENDO_ML_VERSION")
+    if env_version:
+        version = env_version
+    
+    if version == "v1":
+        return base / "symptom_classifier_v1.joblib"
+    elif version == "v2":
+        return base / "symptom_classifier_v2.joblib"
+    elif version == "v3":
+        return base / "symptom_classifier_v3.joblib"
+    else:
+        # Default to V3 (current best: 5,170 samples, 77.4% F1)
+        return base / "symptom_classifier_v3.joblib"
 
 
 def _normalize(text: str) -> str:
@@ -78,6 +116,76 @@ def _explicitly_negates_headache(user_input: str) -> bool:
         or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+labad\b(?:\s+\w+){{0,2}}\s+\b(head|ulo)\b", nt)
         is not None
     )
+
+
+# ==============================================================================
+# ML CLASSIFIER (Step 2.5: between dictionary and semantic)
+# ==============================================================================
+
+def _load_ml_classifier(version: Optional[str] = None):
+    """Load trained ML symptom classifier.
+    
+    Args:
+        version: 'v1', 'v2', or None for default
+    """
+    global _ML_CLASSIFIER, _ML_VECTORIZER, _ML_LABEL_BINARIZER, _ML_VERSION, _ML_THRESHOLD
+    
+    if _ML_CLASSIFIER is not None and _ML_VERSION == version:
+        return  # Already loaded correct version
+    
+    model_path = get_classifier_path(version)
+    
+    if not model_path.exists():
+        # Model doesn't exist, will fall back to semantic
+        return
+    
+    try:
+        data = joblib.load(model_path)
+        _ML_VECTORIZER = data["vectorizer"]
+        _ML_CLASSIFIER = data["classifier"]
+        _ML_LABEL_BINARIZER = data["label_binarizer"]
+        _ML_THRESHOLD = data.get("threshold", 0.3)  # Use model's threshold or default
+        _ML_VERSION = version
+    except Exception:
+        # Fail silently, will fall back to other methods
+        pass
+
+
+def _predict_ml_classifier(user_input: str, confidence_threshold: Optional[float] = None) -> List[str]:
+    """Predict symptoms using trained ML classifier.
+    
+    Args:
+        user_input: User's symptom description
+        confidence_threshold: Override threshold (None = use model's threshold)
+    
+    Returns:
+        List of detected symptom labels (e.g., ['cough', 'fever'])
+    """
+    _load_ml_classifier()
+    
+    if _ML_CLASSIFIER is None or _ML_VECTORIZER is None:
+        return []  # Model not available
+    
+    # Use model's threshold if not overridden
+    threshold = confidence_threshold if confidence_threshold is not None else _ML_THRESHOLD
+    
+    try:
+        # Transform input text to features
+        X = _ML_VECTORIZER.transform([user_input])
+        
+        # Get prediction probabilities (OneVsRestClassifier returns binary predictions per class)
+        probs = _ML_CLASSIFIER.predict_proba(X)[0]
+        
+        # Extract symptoms above threshold
+        detected = []
+        for idx, prob in enumerate(probs):
+            if prob >= threshold:
+                symptom = _ML_LABEL_BINARIZER.classes_[idx]
+                detected.append(symptom)
+        
+        return detected
+    except Exception:
+        return []  # Fail silently
 
 
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
@@ -375,14 +483,30 @@ def extract_symptoms_hybrid(
     """Hybrid symptom extraction.
 
     1) Try dictionary-based extraction.
-    2) If nothing found AND fallback enabled, try semantic extraction.
+    2) If nothing found, try ML classifier (if available).
+    3) If still nothing found AND fallback enabled, try semantic extraction.
 
     Returns a distinct list of symptom labels.
     """
 
     detected = extract_symptoms_dictionary(user_input)
-    if detected or not enable_semantic_fallback:
+    if detected:
         return detected
+    
+    if not enable_semantic_fallback:
+        return detected
+    
+    # Step 2.5: Try ML classifier before semantic fallback
+    ml_symptoms = _predict_ml_classifier(user_input)  # Uses model's threshold
+    
+    # Apply negation overrides
+    if _explicitly_negates_fever(user_input):
+        ml_symptoms = [s for s in ml_symptoms if s.upper() != "FEVER"]
+    if _explicitly_negates_headache(user_input):
+        ml_symptoms = [s for s in ml_symptoms if s.upper() != "HEADACHE"]
+    
+    if ml_symptoms:
+        return ml_symptoms
 
     # Lazy import so step3 can still run without sentence-transformers installed
     try:
@@ -452,10 +576,42 @@ def extract_symptoms_hybrid_report(
         }
     )
 
-    if dict_symptoms or not enable_semantic_fallback:
+    if dict_symptoms:
         report["final"]["symptoms"] = dict_symptoms
-        report["final"]["source"] = "dictionary" if dict_symptoms else "dictionary_only"
+        report["final"]["source"] = "dictionary"
         return report
+    
+    if not enable_semantic_fallback:
+        report["final"]["symptoms"] = []
+        report["final"]["source"] = "dictionary_only"
+        return report
+
+    # Stage 2: ML Classifier
+    ml_symptoms = _predict_ml_classifier(user_input)  # Uses model's threshold
+    
+    # Apply negation overrides
+    if _explicitly_negates_fever(user_input):
+        ml_symptoms = [s for s in ml_symptoms if s.upper() != "FEVER"]
+    if _explicitly_negates_headache(user_input):
+        ml_symptoms = [s for s in ml_symptoms if s.upper() != "HEADACHE"]
+    
+    report["stages"].append(
+        {
+            "stage": "ml_classifier",
+            "used": True,
+            "available": _ML_CLASSIFIER is not None,
+            "model_version": _ML_VERSION,
+            "detected": ml_symptoms,
+            "confidence_threshold": 0.3,
+        }
+    )
+
+    if ml_symptoms:
+        report["final"]["symptoms"] = ml_symptoms
+        report["final"]["source"] = "ml_classifier"
+        return report
+
+    # Stage 3: Semantic fallback (only if both dictionary and ML found nothing)
 
     try:
         extractor = _get_semantic_extractor()
@@ -613,18 +769,30 @@ def _print_flow(report: dict, *, debug: bool) -> None:
                 phrases = d.get("matched_phrases", [])
                 print(f"         hit {d.get('symptom')}: {phrases}")
 
-    # Stage 2: semantic
+    # Stage 2: ML Classifier
+    ml_stage = next((s for s in report.get("stages", []) if s.get("stage") == "ml_classifier"), None)
+    if ml_stage is not None:
+        ml_detected = ml_stage.get("detected", [])
+        ml_available = ml_stage.get("available", False)
+        ml_version = ml_stage.get("model_version", "default")
+        ml_threshold = ml_stage.get("confidence_threshold", 0.3)
+        if not ml_available:
+            print(f"STAGE2:  ML CLASSIFIER (not available) -> {ml_detected}")
+        else:
+            print(f"STAGE2:  ML ({ml_version or 'default'}, threshold={ml_threshold}) -> {ml_detected}")
+
+    # Stage 3: semantic
     sem_stage = next((s for s in report.get("stages", []) if s.get("stage") == "semantic"), None)
     if sem_stage is not None:
         if not sem_stage.get("available", True):
-            print(f"STAGE2:  SEMANTIC (unavailable) -> error={sem_stage.get('error')}")
+            print(f"STAGE3:  SEMANTIC (unavailable) -> error={sem_stage.get('error')}")
         else:
             thr = sem_stage.get("threshold")
             top_margin = sem_stage.get("top_margin")
             max_sym = sem_stage.get("max_symptoms")
             raw = sem_stage.get("detected_raw", [])
             selected = sem_stage.get("detected_selected", [])
-            print(f"STAGE2:  SEMANTIC fallback -> selected={selected}")
+            print(f"STAGE3:  SEMANTIC fallback -> selected={selected}")
             if debug:
                 print(f"         params: threshold={thr} top_margin={top_margin} max={max_sym} raw={raw}")
                 for row in sem_stage.get("scores", [])[:6]:

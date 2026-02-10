@@ -1,0 +1,30 @@
+{
+  "version": "v2",
+  "train_samples": 3670,
+  "test_samples": 551,
+  "micro_f1": 0.7484554280670785,
+  "macro_f1": 0.673184234945161,
+  "classes": [
+    "body_aches",
+    "chest_pain",
+    "cough",
+    "diarrhea",
+    "dizziness",
+    "fatigue",
+    "fever",
+    "headache",
+    "nausea",
+    "runny_nose",
+    "shortness_of_breath",
+    "sore_throat",
+    "stomach_ache",
+    "stuffy_nose",
+    "vomiting"
+  ],
+  "dataset_composition": {
+    "original": 2170,
+    "tagalog": 500,
+    "cebuano": 500,
+    "english": 500
+  }
+}

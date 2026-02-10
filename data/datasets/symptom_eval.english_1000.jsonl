@@ -1,0 +1,1000 @@
+{"id": "en001", "text": "My head is killing me right now", "labels": ["headache"]}
+{"id": "en002", "text": "Got a really bad headache", "labels": ["headache"]}
+{"id": "en003", "text": "Head hurts so much", "labels": ["headache"]}
+{"id": "en004", "text": "Splitting headache today", "labels": ["headache"]}
+{"id": "en005", "text": "My head is pounding", "labels": ["headache"]}
+{"id": "en006", "text": "Terrible headache won't go away", "labels": ["headache"]}
+{"id": "en007", "text": "Head feels like it's gonna explode", "labels": ["headache"]}
+{"id": "en008", "text": "Throbbing pain in my head", "labels": ["headache"]}
+{"id": "en009", "text": "Can't stand this headache anymore", "labels": ["headache"]}
+{"id": "en010", "text": "My head has been hurting all day", "labels": ["headache"]}
+{"id": "en011", "text": "I feel really hot like I have a fever", "labels": ["fever"]}
+{"id": "en012", "text": "Running a fever right now", "labels": ["fever"]}
+{"id": "en013", "text": "I'm burning up", "labels": ["fever"]}
+{"id": "en014", "text": "Think I have a fever", "labels": ["fever"]}
+{"id": "en015", "text": "Got the chills but I'm hot", "labels": ["fever"]}
+{"id": "en016", "text": "Fever again", "labels": ["fever"]}
+{"id": "en017", "text": "Feel feverish", "labels": ["fever"]}
+{"id": "en018", "text": "Body temperature feels high", "labels": ["fever"]}
+{"id": "en019", "text": "Shivering but I'm burning up", "labels": ["fever"]}
+{"id": "en020", "text": "My fever came back", "labels": ["fever"]}
+{"id": "en021", "text": "Just coughing a lot", "labels": ["cough"]}
+{"id": "en022", "text": "Can't stop coughing", "labels": ["cough"]}
+{"id": "en023", "text": "Coughing non-stop", "labels": ["cough"]}
+{"id": "en024", "text": "Cough keeps me up at night", "labels": ["cough"]}
+{"id": "en025", "text": "Been coughing since yesterday", "labels": ["cough"]}
+{"id": "en026", "text": "Chest hurts when I cough", "labels": ["cough", "chest_pain"]}
+{"id": "en027", "text": "Dry cough", "labels": ["cough"]}
+{"id": "en028", "text": "Coughing up phlegm", "labels": ["cough"]}
+{"id": "en029", "text": "Wet cough with mucus", "labels": ["cough"]}
+{"id": "en030", "text": "Persistent cough", "labels": ["cough"]}
+{"id": "en031", "text": "Sore throat making me cough", "labels": ["sore_throat", "cough"]}
+{"id": "en032", "text": "Throat hurts really bad", "labels": ["sore_throat"]}
+{"id": "en033", "text": "Painful to swallow", "labels": ["sore_throat"]}
+{"id": "en034", "text": "My throat is so sore", "labels": ["sore_throat"]}
+{"id": "en035", "text": "Throat is swollen and hurts", "labels": ["sore_throat"]}
+{"id": "en036", "text": "Just have a runny nose", "labels": ["runny_nose"]}
+{"id": "en037", "text": "Nose won't stop running", "labels": ["runny_nose"]}
+{"id": "en038", "text": "Runny nose all day", "labels": ["runny_nose"]}
+{"id": "en039", "text": "Slight runny nose", "labels": ["runny_nose"]}
+{"id": "en040", "text": "My nose keeps dripping", "labels": ["runny_nose"]}
+{"id": "en041", "text": "Nose is completely blocked", "labels": ["stuffy_nose"]}
+{"id": "en042", "text": "Can't breathe through my nose", "labels": ["stuffy_nose"]}
+{"id": "en043", "text": "Stuffy nose", "labels": ["stuffy_nose"]}
+{"id": "en044", "text": "Nose feels congested", "labels": ["stuffy_nose"]}
+{"id": "en045", "text": "Both nostrils are blocked", "labels": ["stuffy_nose"]}
+{"id": "en046", "text": "Feeling dizzy when I stand up", "labels": ["dizziness"]}
+{"id": "en047", "text": "Everything is spinning", "labels": ["dizziness"]}
+{"id": "en048", "text": "Feel dizzy and lightheaded", "labels": ["dizziness"]}
+{"id": "en049", "text": "Room is spinning", "labels": ["dizziness"]}
+{"id": "en050", "text": "Dizzy and nauseous", "labels": ["dizziness", "nausea"]}
+{"id": "en051", "text": "Feel like I'm gonna throw up", "labels": ["nausea"]}
+{"id": "en052", "text": "Nauseous right now", "labels": ["nausea"]}
+{"id": "en053", "text": "Feel sick to my stomach", "labels": ["nausea"]}
+{"id": "en054", "text": "Feeling queasy", "labels": ["nausea"]}
+{"id": "en055", "text": "Been throwing up since morning", "labels": ["vomiting"]}
+{"id": "en056", "text": "Can't stop vomiting", "labels": ["vomiting"]}
+{"id": "en057", "text": "Keep throwing up", "labels": ["vomiting"]}
+{"id": "en058", "text": "Threw up after eating", "labels": ["vomiting"]}
+{"id": "en059", "text": "Vomited everything I ate", "labels": ["vomiting"]}
+{"id": "en060", "text": "Having diarrhea since this morning", "labels": ["diarrhea"]}
+{"id": "en061", "text": "Been to the bathroom multiple times", "labels": ["diarrhea"]}
+{"id": "en062", "text": "Watery stool", "labels": ["diarrhea"]}
+{"id": "en063", "text": "Got diarrhea", "labels": ["diarrhea"]}
+{"id": "en064", "text": "Loose bowel movements", "labels": ["diarrhea"]}
+{"id": "en065", "text": "Extremely tired and weak", "labels": ["fatigue"]}
+{"id": "en066", "text": "Feel so weak right now", "labels": ["fatigue"]}
+{"id": "en067", "text": "No energy at all", "labels": ["fatigue"]}
+{"id": "en068", "text": "Exhausted and sleepy", "labels": ["fatigue"]}
+{"id": "en069", "text": "Too tired to do anything", "labels": ["fatigue"]}
+{"id": "en070", "text": "Whole body aches", "labels": ["body_aches"]}
+{"id": "en071", "text": "Body hurts all over", "labels": ["body_aches"]}
+{"id": "en072", "text": "Back and arms hurt", "labels": ["body_aches"]}
+{"id": "en073", "text": "Muscle aches everywhere", "labels": ["body_aches"]}
+{"id": "en074", "text": "Feel like I got beaten up", "labels": ["body_aches"]}
+{"id": "en075", "text": "Hard to breathe", "labels": ["shortness_of_breath"]}
+{"id": "en076", "text": "Short of breath even when resting", "labels": ["shortness_of_breath"]}
+{"id": "en077", "text": "Can't catch my breath", "labels": ["shortness_of_breath"]}
+{"id": "en078", "text": "Breathing is difficult", "labels": ["shortness_of_breath"]}
+{"id": "en079", "text": "Trouble breathing when lying down", "labels": ["shortness_of_breath"]}
+{"id": "en080", "text": "Chest pain right now", "labels": ["chest_pain"]}
+{"id": "en081", "text": "My chest hurts", "labels": ["chest_pain"]}
+{"id": "en082", "text": "Sharp pain in chest when breathing", "labels": ["chest_pain"]}
+{"id": "en083", "text": "Chest feels tight", "labels": ["chest_pain"]}
+{"id": "en084", "text": "Pain in my chest radiating to back", "labels": ["chest_pain"]}
+{"id": "en085", "text": "Stomach hurts so bad", "labels": ["stomach_ache"]}
+{"id": "en086", "text": "Sharp stomach pain", "labels": ["stomach_ache"]}
+{"id": "en087", "text": "Feels like something eating my stomach", "labels": ["stomach_ache"]}
+{"id": "en088", "text": "Burning sensation in stomach", "labels": ["stomach_ache"]}
+{"id": "en089", "text": "Stomach hurts after eating", "labels": ["stomach_ache"]}
+{"id": "en090", "text": "Bloated and gassy", "labels": ["stomach_ache"]}
+{"id": "en091", "text": "Bad headache and fever", "labels": ["headache", "fever"]}
+{"id": "en092", "text": "Cough and runny nose combo", "labels": ["cough", "runny_nose"]}
+{"id": "en093", "text": "Fever and body aches", "labels": ["fever", "body_aches"]}
+{"id": "en094", "text": "Headache and feeling nauseous", "labels": ["headache", "nausea"]}
+{"id": "en095", "text": "Coughing and stuffy nose", "labels": ["cough", "stuffy_nose"]}
+{"id": "en096", "text": "Runny nose cough and fever", "labels": ["runny_nose", "cough", "fever"]}
+{"id": "en097", "text": "Headache body aches and fever", "labels": ["headache", "body_aches", "fever"]}
+{"id": "en098", "text": "Stomach ache and diarrhea", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "en099", "text": "Dizzy and nauseous", "labels": ["dizziness", "nausea"]}
+{"id": "en100", "text": "Coughing with phlegm and runny nose", "labels": ["cough", "runny_nose"]}
+{"id": "en101", "text": "No fever but headache", "labels": ["headache"]}
+{"id": "en102", "text": "Not coughing just runny nose", "labels": ["runny_nose"]}
+{"id": "en103", "text": "No headache but feeling hot", "labels": ["fever"]}
+{"id": "en104", "text": "Not feverish just coughing", "labels": ["cough"]}
+{"id": "en105", "text": "Just headache nothing else", "labels": ["headache"]}
+{"id": "en106", "text": "hedache bad", "labels": ["headache"]}
+{"id": "en107", "text": "fvr right now", "labels": ["fever"]}
+{"id": "en108", "text": "coff alot", "labels": ["cough"]}
+{"id": "en109", "text": "runny nos", "labels": ["runny_nose"]}
+{"id": "en110", "text": "dirrhea non stop", "labels": ["diarrhea"]}
+{"id": "en111", "text": "stomch ache", "labels": ["stomach_ache"]}
+{"id": "en112", "text": "nose blockd", "labels": ["stuffy_nose"]}
+{"id": "en113", "text": "dizzy af", "labels": ["dizziness"]}
+{"id": "en114", "text": "so tierd", "labels": ["fatigue"]}
+{"id": "en115", "text": "body aches", "labels": ["body_aches"]}
+{"id": "en116", "text": "Head hurts only", "labels": ["headache"]}
+{"id": "en117", "text": "Runny nose and cough no fever", "labels": ["runny_nose", "cough"]}
+{"id": "en118", "text": "Just stomach ache I'm fine", "labels": ["stomach_ache"]}
+{"id": "en119", "text": "Dry cough only", "labels": ["cough"]}
+{"id": "en120", "text": "Mild fever", "labels": ["fever"]}
+{"id": "en121", "text": "Ugh my head hurts so much", "labels": ["headache"]}
+{"id": "en122", "text": "Omg this fever is terrible", "labels": ["fever"]}
+{"id": "en123", "text": "Just coughing that's all", "labels": ["cough"]}
+{"id": "en124", "text": "Geez my nose is running like crazy", "labels": ["runny_nose"]}
+{"id": "en125", "text": "God my stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en126", "text": "Probably just a cough", "labels": ["cough"]}
+{"id": "en127", "text": "Think I might have a fever", "labels": ["fever"]}
+{"id": "en128", "text": "Maybe just runny nose", "labels": ["runny_nose"]}
+{"id": "en129", "text": "Looks like stomach ache", "labels": ["stomach_ache"]}
+{"id": "en130", "text": "Headache kinda mild though", "labels": ["headache"]}
+{"id": "en131", "text": "Terrible cough bro", "labels": ["cough"]}
+{"id": "en132", "text": "Damn this headache", "labels": ["headache"]}
+{"id": "en133", "text": "Fever vibes right now", "labels": ["fever"]}
+{"id": "en134", "text": "Runny nose situation", "labels": ["runny_nose"]}
+{"id": "en135", "text": "Not feeling good stomach issues", "labels": ["stomach_ache"]}
+{"id": "en136", "text": "Headache when looking at screen", "labels": ["headache"]}
+{"id": "en137", "text": "Cough gets worse at night", "labels": ["cough"]}
+{"id": "en138", "text": "Feel hot in the afternoon", "labels": ["fever"]}
+{"id": "en139", "text": "Runny nose worse in morning", "labels": ["runny_nose"]}
+{"id": "en140", "text": "Stomach hurts when eating", "labels": ["stomach_ache"]}
+{"id": "en141", "text": "Burning up and sweating", "labels": ["fever"]}
+{"id": "en142", "text": "Something stuck in throat", "labels": ["sore_throat"]}
+{"id": "en143", "text": "Heavy chest feeling", "labels": ["chest_pain"]}
+{"id": "en144", "text": "Headache when stressed", "labels": ["headache"]}
+{"id": "en145", "text": "Hungry but can't swallow", "labels": ["sore_throat"]}
+{"id": "en146", "text": "Need meds for cough", "labels": ["cough"]}
+{"id": "en147", "text": "Need fever reducer", "labels": ["fever"]}
+{"id": "en148", "text": "What's good for runny nose", "labels": ["runny_nose"]}
+{"id": "en149", "text": "Any meds for headache", "labels": ["headache"]}
+{"id": "en150", "text": "What helps stomach ache", "labels": ["stomach_ache"]}
+{"id": "en151", "text": "This headache is unbearable", "labels": ["headache"]}
+{"id": "en152", "text": "So hot like I'm on fire", "labels": ["fever"]}
+{"id": "en153", "text": "Cough won't stop at all", "labels": ["cough"]}
+{"id": "en154", "text": "Feel terrible right now", "labels": ["fatigue"]}
+{"id": "en155", "text": "Completely drained", "labels": ["fatigue"]}
+{"id": "en156", "text": "Seems like runny nose not sure", "labels": ["runny_nose"]}
+{"id": "en157", "text": "Looks like fever again", "labels": ["fever"]}
+{"id": "en158", "text": "Think I'll start coughing soon", "labels": ["cough"]}
+{"id": "en159", "text": "Stomach might hurt tomorrow", "labels": ["stomach_ache"]}
+{"id": "en160", "text": "Maybe cold weather causing fever", "labels": ["fever"]}
+{"id": "en161", "text": "Headache really bad when it's hot", "labels": ["headache"]}
+{"id": "en162", "text": "Cough probably from smoking", "labels": ["cough"]}
+{"id": "en163", "text": "Runny nose from AC", "labels": ["runny_nose"]}
+{"id": "en164", "text": "Stomach hurts cause I'm hungry", "labels": ["stomach_ache"]}
+{"id": "en165", "text": "Lack of sleep causing headache", "labels": ["headache"]}
+{"id": "en166", "text": "Always have this cough", "labels": ["cough"]}
+{"id": "en167", "text": "Fever keeps coming back", "labels": ["fever"]}
+{"id": "en168", "text": "Runny nose frequently lately", "labels": ["runny_nose"]}
+{"id": "en169", "text": "Had this headache for a while", "labels": ["headache"]}
+{"id": "en170", "text": "Stomach always hurts", "labels": ["stomach_ache"]}
+{"id": "en171", "text": "Been coughing since yesterday", "labels": ["cough"]}
+{"id": "en172", "text": "Had fever since last night", "labels": ["fever"]}
+{"id": "en173", "text": "Runny nose started earlier", "labels": ["runny_nose"]}
+{"id": "en174", "text": "Headache for a week now", "labels": ["headache"]}
+{"id": "en175", "text": "Stomach hurting for days", "labels": ["stomach_ache"]}
+{"id": "en176", "text": "Started coughing this afternoon", "labels": ["cough"]}
+{"id": "en177", "text": "Been hot since morning", "labels": ["fever"]}
+{"id": "en178", "text": "Runny nose this morning", "labels": ["runny_nose"]}
+{"id": "en179", "text": "Headache just started", "labels": ["headache"]}
+{"id": "en180", "text": "Stomach suddenly started hurting", "labels": ["stomach_ache"]}
+{"id": "en181", "text": "Throat itchy making me cough", "labels": ["cough", "sore_throat"]}
+{"id": "en182", "text": "So hot but shivering", "labels": ["fever"]}
+{"id": "en183", "text": "Runny nose but nose is dry", "labels": ["runny_nose"]}
+{"id": "en184", "text": "Headache even lying down", "labels": ["headache"]}
+{"id": "en185", "text": "Stomach hurts even without eating", "labels": ["stomach_ache"]}
+{"id": "en186", "text": "Can't eat because sore throat", "labels": ["sore_throat"]}
+{"id": "en187", "text": "Drinking water but throat still dry", "labels": ["sore_throat"]}
+{"id": "en188", "text": "Really hard to breathe feels blocked", "labels": ["shortness_of_breath"]}
+{"id": "en189", "text": "Chest hurts when breathing deep", "labels": ["chest_pain"]}
+{"id": "en190", "text": "Tired immediately when moving", "labels": ["fatigue"]}
+{"id": "en191", "text": "Head getting bigger from pain", "labels": ["headache"]}
+{"id": "en192", "text": "Feel like I'm being cooked inside", "labels": ["fever"]}
+{"id": "en193", "text": "Nose blocked can't breathe", "labels": ["stuffy_nose"]}
+{"id": "en194", "text": "Nose keeps running constantly", "labels": ["runny_nose"]}
+{"id": "en195", "text": "Stomach hurts and rising", "labels": ["stomach_ache", "nausea"]}
+{"id": "en196", "text": "Dizzy and body stiff", "labels": ["dizziness", "body_aches"]}
+{"id": "en197", "text": "Coughing hurts my lungs", "labels": ["cough", "chest_pain"]}
+{"id": "en198", "text": "Fever but feeling cold", "labels": ["fever"]}
+{"id": "en199", "text": "Hot head literally", "labels": ["headache", "fever"]}
+{"id": "en200", "text": "Stomach feels like boiling", "labels": ["stomach_ache"]}
+{"id": "en201", "text": "Headache and neck pain", "labels": ["headache", "body_aches"]}
+{"id": "en202", "text": "Fever but cold hands", "labels": ["fever"]}
+{"id": "en203", "text": "Dry cough and itchy throat", "labels": ["cough", "sore_throat"]}
+{"id": "en204", "text": "Green colored mucus", "labels": ["runny_nose"]}
+{"id": "en205", "text": "Left side stomach pain", "labels": ["stomach_ache"]}
+{"id": "en206", "text": "Stabbing pain in head on the side", "labels": ["headache"]}
+{"id": "en207", "text": "Hot body but normal temperature", "labels": ["fever"]}
+{"id": "en208", "text": "Coughing up blood", "labels": ["cough"]}
+{"id": "en209", "text": "Mucus turned yellow", "labels": ["runny_nose"]}
+{"id": "en210", "text": "Right chest pain", "labels": ["chest_pain"]}
+{"id": "en211", "text": "No taste in food and blocked nose", "labels": ["stuffy_nose"]}
+{"id": "en212", "text": "Can't hear well because of runny nose", "labels": ["runny_nose"]}
+{"id": "en213", "text": "Ear hurts from runny nose", "labels": ["runny_nose"]}
+{"id": "en214", "text": "Headache reaching to teeth", "labels": ["headache"]}
+{"id": "en215", "text": "Hot back and shivering", "labels": ["fever"]}
+{"id": "en216", "text": "Feel like fire inside", "labels": ["fever"]}
+{"id": "en217", "text": "Hungry but don't wanna eat stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en218", "text": "Really dry cough", "labels": ["cough"]}
+{"id": "en219", "text": "Wet cough with phlegm", "labels": ["cough"]}
+{"id": "en220", "text": "Hard to cough up phlegm from chest", "labels": ["cough"]}
+{"id": "en221", "text": "Phlegm comes out when coughing", "labels": ["cough"]}
+{"id": "en222", "text": "No phlegm just dry cough", "labels": ["cough"]}
+{"id": "en223", "text": "Eyes red from runny nose", "labels": ["runny_nose"]}
+{"id": "en224", "text": "Tooth pain reaching head", "labels": ["headache"]}
+{"id": "en225", "text": "Skin itchy and hot", "labels": ["fever"]}
+{"id": "en226", "text": "So cold but I'm burning", "labels": ["fever"]}
+{"id": "en227", "text": "Feel drunk kind of dizzy", "labels": ["dizziness"]}
+{"id": "en228", "text": "World spinning around", "labels": ["dizziness"]}
+{"id": "en229", "text": "Like drunk but I'm not", "labels": ["dizziness"]}
+{"id": "en230", "text": "Can't stand steady", "labels": ["dizziness"]}
+{"id": "en231", "text": "Won't stop spinning around me", "labels": ["dizziness"]}
+{"id": "en232", "text": "Gonna throw up I think", "labels": ["nausea"]}
+{"id": "en233", "text": "Getting worse feeling like vomiting", "labels": ["nausea"]}
+{"id": "en234", "text": "Vomit coming out non-stop", "labels": ["vomiting"]}
+{"id": "en235", "text": "Threw up everything I ate", "labels": ["vomiting"]}
+{"id": "en236", "text": "Stomach hurts and vomiting", "labels": ["stomach_ache", "vomiting"]}
+{"id": "en237", "text": "Watery stool", "labels": ["diarrhea"]}
+{"id": "en238", "text": "Liquid poop", "labels": ["diarrhea"]}
+{"id": "en239", "text": "So much diarrhea", "labels": ["diarrhea"]}
+{"id": "en240", "text": "Keep going to bathroom for diarrhea", "labels": ["diarrhea"]}
+{"id": "en241", "text": "Back and forth bathroom because of LBM", "labels": ["diarrhea"]}
+{"id": "en242", "text": "So weak right now", "labels": ["fatigue"]}
+{"id": "en243", "text": "No energy to move", "labels": ["fatigue"]}
+{"id": "en244", "text": "Body won't get up", "labels": ["fatigue"]}
+{"id": "en245", "text": "So sleepy but can't sleep", "labels": ["fatigue"]}
+{"id": "en246", "text": "Feel like no strength to do anything", "labels": ["fatigue"]}
+{"id": "en247", "text": "Sore entire body", "labels": ["body_aches"]}
+{"id": "en248", "text": "Whole body hurting", "labels": ["body_aches"]}
+{"id": "en249", "text": "Achy body everywhere", "labels": ["body_aches"]}
+{"id": "en250", "text": "Joints hurt", "labels": ["body_aches"]}
+{"id": "en251", "text": "Body stiff from pain", "labels": ["body_aches"]}
+{"id": "en252", "text": "Like got hit by baseball bat", "labels": ["body_aches"]}
+{"id": "en253", "text": "Feel beaten up", "labels": ["body_aches"]}
+{"id": "en254", "text": "Shoulder pain reaching neck", "labels": ["body_aches"]}
+{"id": "en255", "text": "Back hurts can't stand long", "labels": ["body_aches"]}
+{"id": "en256", "text": "Arms and legs hurt", "labels": ["body_aches"]}
+{"id": "en257", "text": "Hard to breathe when eating", "labels": ["shortness_of_breath"]}
+{"id": "en258", "text": "Hard to breathe climbing stairs", "labels": ["shortness_of_breath"]}
+{"id": "en259", "text": "Can't breathe deeply", "labels": ["shortness_of_breath"]}
+{"id": "en260", "text": "Like not enough air", "labels": ["shortness_of_breath"]}
+{"id": "en261", "text": "Breathing heavy just sitting", "labels": ["shortness_of_breath"]}
+{"id": "en262", "text": "Running out of breath", "labels": ["shortness_of_breath"]}
+{"id": "en263", "text": "Chest pain in the middle", "labels": ["chest_pain"]}
+{"id": "en264", "text": "Sharp pain in chest when breathing", "labels": ["chest_pain"]}
+{"id": "en265", "text": "Like something crushing chest", "labels": ["chest_pain"]}
+{"id": "en266", "text": "Tight chest", "labels": ["chest_pain"]}
+{"id": "en267", "text": "Heart area hurts", "labels": ["chest_pain"]}
+{"id": "en268", "text": "Stabbing chest pain", "labels": ["chest_pain"]}
+{"id": "en269", "text": "Upper stomach pain", "labels": ["stomach_ache"]}
+{"id": "en270", "text": "Lower stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en271", "text": "Acidic feeling in stomach", "labels": ["stomach_ache"]}
+{"id": "en272", "text": "Like stomach being eaten inside", "labels": ["stomach_ache"]}
+{"id": "en273", "text": "Burning in stomach", "labels": ["stomach_ache"]}
+{"id": "en274", "text": "Getting more acidic inside", "labels": ["stomach_ache"]}
+{"id": "en275", "text": "Stomach bloating from gas", "labels": ["stomach_ache"]}
+{"id": "en276", "text": "Stomach turning acidic", "labels": ["stomach_ache"]}
+{"id": "en277", "text": "Hyperacidity I think", "labels": ["stomach_ache"]}
+{"id": "en278", "text": "Probably ulcer in stomach", "labels": ["stomach_ache"]}
+{"id": "en279", "text": "Gastritis again maybe", "labels": ["stomach_ache"]}
+{"id": "en280", "text": "Terrible headache like drunk", "labels": ["headache", "dizziness"]}
+{"id": "en281", "text": "Fever cough runny nose all at once", "labels": ["fever", "cough", "runny_nose"]}
+{"id": "en282", "text": "Headache fever and body aches", "labels": ["headache", "fever", "body_aches"]}
+{"id": "en283", "text": "Cough with phlegm and fever", "labels": ["cough", "fever"]}
+{"id": "en284", "text": "Runny nose cough and blocked nose", "labels": ["runny_nose", "cough", "stuffy_nose"]}
+{"id": "en285", "text": "Sore throat and coughing", "labels": ["sore_throat", "cough"]}
+{"id": "en286", "text": "Dizzy and vomiting", "labels": ["dizziness", "nausea"]}
+{"id": "en287", "text": "Stomach ache and diarrhea", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "en288", "text": "Tired and body aches", "labels": ["fatigue", "body_aches"]}
+{"id": "en289", "text": "Hard breathing and chest pain", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "en290", "text": "Headache and coughing too", "labels": ["headache", "cough"]}
+{"id": "en291", "text": "Hot and runny nose", "labels": ["fever", "runny_nose"]}
+{"id": "en292", "text": "Stomach ache and dizzy", "labels": ["stomach_ache", "dizziness"]}
+{"id": "en293", "text": "Blocked nose and headache", "labels": ["stuffy_nose", "headache"]}
+{"id": "en294", "text": "Weak and feverish", "labels": ["fatigue", "fever"]}
+{"id": "en295", "text": "Cough and chest hurts when coughing", "labels": ["cough", "chest_pain"]}
+{"id": "en296", "text": "No fever just coughing", "labels": ["cough"]}
+{"id": "en297", "text": "Head doesn't hurt but hot", "labels": ["fever"]}
+{"id": "en298", "text": "Not coughing just runny nose", "labels": ["runny_nose"]}
+{"id": "en299", "text": "No stomach pain just diarrhea", "labels": ["diarrhea"]}
+{"id": "en300", "text": "Throat not sore but coughing", "labels": ["cough"]}
+{"id": "en301", "text": "Not hot but dizzy", "labels": ["dizziness"]}
+{"id": "en302", "text": "No pain just tired", "labels": ["fatigue"]}
+{"id": "en303", "text": "Not coughing but blocked nose", "labels": ["stuffy_nose"]}
+{"id": "en304", "text": "No fever but body aches", "labels": ["body_aches"]}
+{"id": "en305", "text": "Chest doesn't hurt but hard to breathe", "labels": ["shortness_of_breath"]}
+{"id": "en306", "text": "hed hurt", "labels": ["headache"]}
+{"id": "en307", "text": "fevr now", "labels": ["fever"]}
+{"id": "en308", "text": "coughin", "labels": ["cough"]}
+{"id": "en309", "text": "runy nose", "labels": ["runny_nose"]}
+{"id": "en310", "text": "stomac hurt", "labels": ["stomach_ache"]}
+{"id": "en311", "text": "head hurts eh", "labels": ["headache"]}
+{"id": "en312", "text": "got fevr maybe", "labels": ["fever"]}
+{"id": "en313", "text": "coff coff", "labels": ["cough"]}
+{"id": "en314", "text": "diarhea", "labels": ["diarrhea"]}
+{"id": "en315", "text": "dizy", "labels": ["dizziness"]}
+{"id": "en316", "text": "headake bad", "labels": ["headache"]}
+{"id": "en317", "text": "burning up now", "labels": ["fever"]}
+{"id": "en318", "text": "coffing lots", "labels": ["cough"]}
+{"id": "en319", "text": "nose runing", "labels": ["runny_nose"]}
+{"id": "en320", "text": "stomache hurting", "labels": ["stomach_ache"]}
+{"id": "en321", "text": "hed hurts", "labels": ["headache"]}
+{"id": "en322", "text": "hot hot body", "labels": ["fever"]}
+{"id": "en323", "text": "coff only", "labels": ["cough"]}
+{"id": "en324", "text": "runny nos bad", "labels": ["runny_nose"]}
+{"id": "en325", "text": "belly hurt", "labels": ["stomach_ache"]}
+{"id": "en326", "text": "Dang headache why", "labels": ["headache"]}
+{"id": "en327", "text": "Hot hot hot too much", "labels": ["fever"]}
+{"id": "en328", "text": "Damn cough won't stop", "labels": ["cough"]}
+{"id": "en329", "text": "Shit runny nose again", "labels": ["runny_nose"]}
+{"id": "en330", "text": "Crap stomach hurts bad", "labels": ["stomach_ache"]}
+{"id": "en331", "text": "Head hurts so bad now", "labels": ["headache"]}
+{"id": "en332", "text": "So hot what's happening", "labels": ["fever"]}
+{"id": "en333", "text": "Coughing more and more", "labels": ["cough"]}
+{"id": "en334", "text": "Runny nose mode on", "labels": ["runny_nose"]}
+{"id": "en335", "text": "Stomach hurting again", "labels": ["stomach_ache"]}
+{"id": "en336", "text": "Head could fly from pain", "labels": ["headache"]}
+{"id": "en337", "text": "Burning hot seriously", "labels": ["fever"]}
+{"id": "en338", "text": "Damn cough continuous really", "labels": ["cough"]}
+{"id": "en339", "text": "Terrible runny nose today", "labels": ["runny_nose"]}
+{"id": "en340", "text": "God why stomach hurting", "labels": ["stomach_ache"]}
+{"id": "en341", "text": "Can headache please stop", "labels": ["headache"]}
+{"id": "en342", "text": "Why so hot body", "labels": ["fever"]}
+{"id": "en343", "text": "When will cough stop", "labels": ["cough"]}
+{"id": "en344", "text": "Where runny nose from endless", "labels": ["runny_nose"]}
+{"id": "en345", "text": "Why won't stomach pain go away", "labels": ["stomach_ache"]}
+{"id": "en346", "text": "Headache again tomorrow exam", "labels": ["headache"]}
+{"id": "en347", "text": "Fever again always", "labels": ["fever"]}
+{"id": "en348", "text": "Cough came back", "labels": ["cough"]}
+{"id": "en349", "text": "Still won't go runny nose", "labels": ["runny_nose"]}
+{"id": "en350", "text": "Stomach still hurts until now", "labels": ["stomach_ache"]}
+{"id": "en351", "text": "Head super hurts gonna burst", "labels": ["headache"]}
+{"id": "en352", "text": "Body hot but normal temp on thermometer", "labels": ["fever"]}
+{"id": "en353", "text": "Cough night time only gets worse", "labels": ["cough"]}
+{"id": "en354", "text": "Runny nose morning only mostly", "labels": ["runny_nose"]}
+{"id": "en355", "text": "Stomach when eating hurts", "labels": ["stomach_ache"]}
+{"id": "en356", "text": "Headache when stressed only", "labels": ["headache"]}
+{"id": "en357", "text": "Fever afternoon comes", "labels": ["fever"]}
+{"id": "en358", "text": "Cough when lying down worse", "labels": ["cough"]}
+{"id": "en359", "text": "Runny nose when cold weather", "labels": ["runny_nose"]}
+{"id": "en360", "text": "Stomach when full hurts", "labels": ["stomach_ache"]}
+{"id": "en361", "text": "Migraine maybe this bad pain", "labels": ["headache"]}
+{"id": "en362", "text": "Flu probably cause hot and cough", "labels": ["fever", "cough"]}
+{"id": "en363", "text": "Flu maybe body aches fever", "labels": ["body_aches", "fever"]}
+{"id": "en364", "text": "Common cold maybe runny nose cough", "labels": ["runny_nose", "cough"]}
+{"id": "en365", "text": "LBM again terrible", "labels": ["diarrhea"]}
+{"id": "en366", "text": "Like sore eyes and runny nose", "labels": ["runny_nose"]}
+{"id": "en367", "text": "Tension headache probably from stress", "labels": ["headache"]}
+{"id": "en368", "text": "Gastric problem maybe stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en369", "text": "Vertigo probably this dizzy really", "labels": ["dizziness"]}
+{"id": "en370", "text": "Food poisoning maybe vomiting", "labels": ["vomiting"]}
+{"id": "en371", "text": "Maybe dengue this fever and body aches", "labels": ["fever", "body_aches"]}
+{"id": "en372", "text": "COVID maybe cough fever", "labels": ["cough", "fever"]}
+{"id": "en373", "text": "Allergies probably runny nose and sneezing", "labels": ["runny_nose"]}
+{"id": "en374", "text": "Dehydrated probably dizzy and weak", "labels": ["dizziness", "fatigue"]}
+{"id": "en375", "text": "Lack sleep so headache", "labels": ["headache"]}
+{"id": "en376", "text": "Hungry so stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en377", "text": "Hot weather so I'm hot", "labels": ["fever"]}
+{"id": "en378", "text": "AC so probably runny nose", "labels": ["runny_nose"]}
+{"id": "en379", "text": "Cigarettes probably cause of cough", "labels": ["cough"]}
+{"id": "en380", "text": "Coffee probably why acidic stomach", "labels": ["stomach_ache"]}
+{"id": "en381", "text": "Take painkiller for head", "labels": ["headache"]}
+{"id": "en382", "text": "Need fever reducer pills", "labels": ["fever"]}
+{"id": "en383", "text": "Need cough syrup", "labels": ["cough"]}
+{"id": "en384", "text": "Buy cold medicine for runny nose", "labels": ["runny_nose"]}
+{"id": "en385", "text": "Look for antacid for stomach", "labels": ["stomach_ache"]}
+{"id": "en386", "text": "Where sell cough medicine", "labels": ["cough"]}
+{"id": "en387", "text": "What good medicine for fever", "labels": ["fever"]}
+{"id": "en388", "text": "How to cure headache", "labels": ["headache"]}
+{"id": "en389", "text": "Any medicine here for runny nose", "labels": ["runny_nose"]}
+{"id": "en390", "text": "Can take medicine for stomach", "labels": ["stomach_ache"]}
+{"id": "en391", "text": "Head hurt suddenly earlier", "labels": ["headache"]}
+{"id": "en392", "text": "Fever tonight", "labels": ["fever"]}
+{"id": "en393", "text": "Coughing since yesterday", "labels": ["cough"]}
+{"id": "en394", "text": "Runny nose all day long", "labels": ["runny_nose"]}
+{"id": "en395", "text": "Stomach hurt when ate", "labels": ["stomach_ache"]}
+{"id": "en396", "text": "Terrible really headache now", "labels": ["headache"]}
+{"id": "en397", "text": "Super hot like being cooked", "labels": ["fever"]}
+{"id": "en398", "text": "Continuous really cough won't stop", "labels": ["cough"]}
+{"id": "en399", "text": "So much runny nose terrible", "labels": ["runny_nose"]}
+{"id": "en400", "text": "Can't take it stomach pain", "labels": ["stomach_ache"]}
+{"id": "en401", "text": "Ouch headache really", "labels": ["headache"]}
+{"id": "en402", "text": "Wow hot really me", "labels": ["fever"]}
+{"id": "en403", "text": "Oh no cough again", "labels": ["cough"]}
+{"id": "en404", "text": "Goodness runny nose terrible", "labels": ["runny_nose"]}
+{"id": "en405", "text": "Gosh stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en406", "text": "How to cure head", "labels": ["headache"]}
+{"id": "en407", "text": "When will fever go", "labels": ["fever"]}
+{"id": "en408", "text": "Hope cough goes away", "labels": ["cough"]}
+{"id": "en409", "text": "When will runny nose stop", "labels": ["runny_nose"]}
+{"id": "en410", "text": "Don't want stomach hurts anymore", "labels": ["stomach_ache"]}
+{"id": "en411", "text": "Head really hurts terrible no", "labels": ["headache"]}
+{"id": "en412", "text": "Hot body what is this", "labels": ["fever"]}
+{"id": "en413", "text": "Cough why won't stop", "labels": ["cough"]}
+{"id": "en414", "text": "Runny nose where from this", "labels": ["runny_nose"]}
+{"id": "en415", "text": "Stomach why hurting", "labels": ["stomach_ache"]}
+{"id": "en416", "text": "Headache again today", "labels": ["headache"]}
+{"id": "en417", "text": "Fever mode now", "labels": ["fever"]}
+{"id": "en418", "text": "Coughing more", "labels": ["cough"]}
+{"id": "en419", "text": "Runny nose season again", "labels": ["runny_nose"]}
+{"id": "en420", "text": "Tummy ache issues", "labels": ["stomach_ache"]}
+{"id": "en421", "text": "Annoying headache", "labels": ["headache"]}
+{"id": "en422", "text": "Dammit I'm hot", "labels": ["fever"]}
+{"id": "en423", "text": "Freaking cough", "labels": ["cough"]}
+{"id": "en424", "text": "Hell runny nose again", "labels": ["runny_nose"]}
+{"id": "en425", "text": "Damn stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en426", "text": "Irritating headache", "labels": ["headache"]}
+{"id": "en427", "text": "Tiring always hot", "labels": ["fever"]}
+{"id": "en428", "text": "Annoying cough", "labels": ["cough"]}
+{"id": "en429", "text": "Irritating runny nose", "labels": ["runny_nose"]}
+{"id": "en430", "text": "Painful stomach", "labels": ["stomach_ache"]}
+{"id": "en431", "text": "Damn really headache", "labels": ["headache"]}
+{"id": "en432", "text": "Hell hot body", "labels": ["fever"]}
+{"id": "en433", "text": "Stupid cough won't go", "labels": ["cough"]}
+{"id": "en434", "text": "Damn runny nose won't stop", "labels": ["runny_nose"]}
+{"id": "en435", "text": "Freaking stomach this", "labels": ["stomach_ache"]}
+{"id": "en436", "text": "Like someone poking in head", "labels": ["headache"]}
+{"id": "en437", "text": "Like burning inside", "labels": ["fever"]}
+{"id": "en438", "text": "Like something moving in throat so coughing", "labels": ["cough"]}
+{"id": "en439", "text": "Like faucet water runny nose", "labels": ["runny_nose"]}
+{"id": "en440", "text": "Like something biting stomach", "labels": ["stomach_ache"]}
+{"id": "en441", "text": "Feel head will burst from pain", "labels": ["headache"]}
+{"id": "en442", "text": "Feel feverish but not sure", "labels": ["fever"]}
+{"id": "en443", "text": "Feel will cough again later", "labels": ["cough"]}
+{"id": "en444", "text": "Feel runny nose this but not sure yet", "labels": ["runny_nose"]}
+{"id": "en445", "text": "Feel stomach will hurt tomorrow", "labels": ["stomach_ache"]}
+{"id": "en446", "text": "Seems headache again", "labels": ["headache"]}
+{"id": "en447", "text": "Seems fever again this", "labels": ["fever"]}
+{"id": "en448", "text": "Seems coughing again me", "labels": ["cough"]}
+{"id": "en449", "text": "Seems just runny nose this", "labels": ["runny_nose"]}
+{"id": "en450", "text": "Seems stomach hurting", "labels": ["stomach_ache"]}
+{"id": "en451", "text": "Probably headache from stress", "labels": ["headache"]}
+{"id": "en452", "text": "Probably fever from cold", "labels": ["fever"]}
+{"id": "en453", "text": "Probably cough from smoke", "labels": ["cough"]}
+{"id": "en454", "text": "Probably runny nose from aircon", "labels": ["runny_nose"]}
+{"id": "en455", "text": "Probably stomach hurts from food", "labels": ["stomach_ache"]}
+{"id": "en456", "text": "Maybe headache tomorrow", "labels": ["headache"]}
+{"id": "en457", "text": "Maybe fever again me", "labels": ["fever"]}
+{"id": "en458", "text": "Maybe coughing again", "labels": ["cough"]}
+{"id": "en459", "text": "Maybe runny nose again this", "labels": ["runny_nose"]}
+{"id": "en460", "text": "Maybe stomach hurting", "labels": ["stomach_ache"]}
+{"id": "en461", "text": "Could be headache now", "labels": ["headache"]}
+{"id": "en462", "text": "Could be I'm hot eh", "labels": ["fever"]}
+{"id": "en463", "text": "Could be coughing me", "labels": ["cough"]}
+{"id": "en464", "text": "Could be have runny nose", "labels": ["runny_nose"]}
+{"id": "en465", "text": "Could be stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en466", "text": "Perhaps just headache this", "labels": ["headache"]}
+{"id": "en467", "text": "Perhaps just fever this", "labels": ["fever"]}
+{"id": "en468", "text": "Perhaps just cough anyway this", "labels": ["cough"]}
+{"id": "en469", "text": "Perhaps just runny nose that", "labels": ["runny_nose"]}
+{"id": "en470", "text": "Perhaps just stomach pain", "labels": ["stomach_ache"]}
+{"id": "en471", "text": "Like only head hurting", "labels": ["headache"]}
+{"id": "en472", "text": "Like just hot me", "labels": ["fever"]}
+{"id": "en473", "text": "Like just cough this", "labels": ["cough"]}
+{"id": "en474", "text": "Like just runny nose anyway", "labels": ["runny_nose"]}
+{"id": "en475", "text": "Like just stomach hurting", "labels": ["stomach_ache"]}
+{"id": "en476", "text": "Hurting already head turns out", "labels": ["headache"]}
+{"id": "en477", "text": "Hot already me turns out", "labels": ["fever"]}
+{"id": "en478", "text": "Coughing already turns out", "labels": ["cough"]}
+{"id": "en479", "text": "Have runny nose already turns out", "labels": ["runny_nose"]}
+{"id": "en480", "text": "Hurting already stomach turns out", "labels": ["stomach_ache"]}
+{"id": "en481", "text": "So painful already head now", "labels": ["headache"]}
+{"id": "en482", "text": "So hot already me now", "labels": ["fever"]}
+{"id": "en483", "text": "My cough now terrible", "labels": ["cough"]}
+{"id": "en484", "text": "My runny nose now excessive", "labels": ["runny_nose"]}
+{"id": "en485", "text": "So painful already stomach now", "labels": ["stomach_ache"]}
+{"id": "en486", "text": "Can't eat anymore because sore throat", "labels": ["sore_throat"]}
+{"id": "en487", "text": "Can't sleep anymore because of cough", "labels": ["cough"]}
+{"id": "en488", "text": "Can't move anymore because tired", "labels": ["fatigue"]}
+{"id": "en489", "text": "Can't breathe properly anymore", "labels": ["shortness_of_breath"]}
+{"id": "en490", "text": "Can't move anymore because body aches", "labels": ["body_aches"]}
+{"id": "en491", "text": "So painful really head now", "labels": ["headache"]}
+{"id": "en492", "text": "So hot really me now really", "labels": ["fever"]}
+{"id": "en493", "text": "So coughing really won't stop really", "labels": ["cough"]}
+{"id": "en494", "text": "So runny nose really terrible really", "labels": ["runny_nose"]}
+{"id": "en495", "text": "So painful really stomach really", "labels": ["stomach_ache"]}
+{"id": "en496", "text": "Terrible really now headache can't take it", "labels": ["headache"]}
+{"id": "en497", "text": "Hot too much really like sweating already", "labels": ["fever"]}
+{"id": "en498", "text": "Cough really won't stop whatever I do", "labels": ["cough"]}
+{"id": "en499", "text": "Runny nose really won't stop whatever medicine", "labels": ["runny_nose"]}
+{"id": "en500", "text": "Stomach so painful really don't know what to do", "labels": ["stomach_ache"]}
+{"id": "en501", "text": "Head killing me rn", "labels": ["headache"]}
+{"id": "en502", "text": "Dizzy af omg", "labels": ["dizziness"]}
+{"id": "en503", "text": "Coughing so much cant even", "labels": ["cough"]}
+{"id": "en504", "text": "Fever vibes rn", "labels": ["fever"]}
+{"id": "en505", "text": "Runny nose wont stop ugh", "labels": ["runny_nose"]}
+{"id": "en506", "text": "Stomach hurts bad fr", "labels": ["stomach_ache"]}
+{"id": "en507", "text": "Ngl my head hurts", "labels": ["headache"]}
+{"id": "en508", "text": "Tbh got fever", "labels": ["fever"]}
+{"id": "en509", "text": "Lowkey coughing a lot", "labels": ["cough"]}
+{"id": "en510", "text": "Highkey dizzy rn", "labels": ["dizziness"]}
+{"id": "en511", "text": "Headache hitting different", "labels": ["headache"]}
+{"id": "en512", "text": "This fever aint it", "labels": ["fever"]}
+{"id": "en513", "text": "Cough got me dead", "labels": ["cough"]}
+{"id": "en514", "text": "Runny nose be like", "labels": ["runny_nose"]}
+{"id": "en515", "text": "Stomach pain no cap", "labels": ["stomach_ache"]}
+{"id": "en516", "text": "My head tho omg", "labels": ["headache"]}
+{"id": "en517", "text": "So hot rn not good", "labels": ["fever"]}
+{"id": "en518", "text": "Been coughing fr fr", "labels": ["cough"]}
+{"id": "en519", "text": "Nose running crazy", "labels": ["runny_nose"]}
+{"id": "en520", "text": "Tummy ache hits hard", "labels": ["stomach_ache"]}
+{"id": "en521", "text": "hedake so bad", "labels": ["headache"]}
+{"id": "en522", "text": "fevr again ugh", "labels": ["fever"]}
+{"id": "en523", "text": "coff coff coff", "labels": ["cough"]}
+{"id": "en524", "text": "runy nos bad", "labels": ["runny_nose"]}
+{"id": "en525", "text": "stomch ache", "labels": ["stomach_ache"]}
+{"id": "en526", "text": "hed hurts alot", "labels": ["headache"]}
+{"id": "en527", "text": "fver mode", "labels": ["fever"]}
+{"id": "en528", "text": "coff non stop", "labels": ["cough"]}
+{"id": "en529", "text": "runy nose", "labels": ["runny_nose"]}
+{"id": "en530", "text": "stomac hurting", "labels": ["stomach_ache"]}
+{"id": "en531", "text": "Head hurts cant even focus", "labels": ["headache"]}
+{"id": "en532", "text": "Burning up like crazy", "labels": ["fever"]}
+{"id": "en533", "text": "Coughing my lungs out", "labels": ["cough"]}
+{"id": "en534", "text": "Nose dripping like faucet", "labels": ["runny_nose"]}
+{"id": "en535", "text": "Stomach cramps killing me", "labels": ["stomach_ache"]}
+{"id": "en536", "text": "Dizzy when I stand up smh", "labels": ["dizziness"]}
+{"id": "en537", "text": "Nauseous af right now", "labels": ["nausea"]}
+{"id": "en538", "text": "Throwing up everything", "labels": ["vomiting"]}
+{"id": "en539", "text": "Diarrhea wont stop", "labels": ["diarrhea"]}
+{"id": "en540", "text": "So tired cant move", "labels": ["fatigue"]}
+{"id": "en541", "text": "Whole body aches so bad", "labels": ["body_aches"]}
+{"id": "en542", "text": "Cant breathe properly", "labels": ["shortness_of_breath"]}
+{"id": "en543", "text": "Chest pain fr", "labels": ["chest_pain"]}
+{"id": "en544", "text": "Throat sore cant swallow", "labels": ["sore_throat"]}
+{"id": "en545", "text": "Nose blocked completely", "labels": ["stuffy_nose"]}
+{"id": "en546", "text": "Headache plus fever combo", "labels": ["headache", "fever"]}
+{"id": "en547", "text": "Cough and runny nose together", "labels": ["cough", "runny_nose"]}
+{"id": "en548", "text": "Dizzy and gonna throw up", "labels": ["dizziness", "nausea"]}
+{"id": "en549", "text": "Fever with body aches", "labels": ["fever", "body_aches"]}
+{"id": "en550", "text": "Stomach ache plus diarrhea", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "en551", "text": "My head omg so painful", "labels": ["headache"]}
+{"id": "en552", "text": "Im literally burning up", "labels": ["fever"]}
+{"id": "en553", "text": "This cough tho", "labels": ["cough"]}
+{"id": "en554", "text": "Nose like waterfall", "labels": ["runny_nose"]}
+{"id": "en555", "text": "Tummy hurts so much", "labels": ["stomach_ache"]}
+{"id": "en556", "text": "Cant even stand dizzy", "labels": ["dizziness"]}
+{"id": "en557", "text": "Feeling sick to stomach", "labels": ["nausea"]}
+{"id": "en558", "text": "Keep vomiting help", "labels": ["vomiting"]}
+{"id": "en559", "text": "LBM non stop", "labels": ["diarrhea"]}
+{"id": "en560", "text": "So drained no energy", "labels": ["fatigue"]}
+{"id": "en561", "text": "hdache rn", "labels": ["headache"]}
+{"id": "en562", "text": "fvr bad", "labels": ["fever"]}
+{"id": "en563", "text": "cof alot", "labels": ["cough"]}
+{"id": "en564", "text": "rny nose", "labels": ["runny_nose"]}
+{"id": "en565", "text": "stmch ache", "labels": ["stomach_ache"]}
+{"id": "en566", "text": "dzy af", "labels": ["dizziness"]}
+{"id": "en567", "text": "nausous", "labels": ["nausea"]}
+{"id": "en568", "text": "vomting", "labels": ["vomiting"]}
+{"id": "en569", "text": "diarea", "labels": ["diarrhea"]}
+{"id": "en570", "text": "tird", "labels": ["fatigue"]}
+{"id": "en571", "text": "Head pounding like drum", "labels": ["headache"]}
+{"id": "en572", "text": "Hot and cold at same time", "labels": ["fever"]}
+{"id": "en573", "text": "Dry cough wont go away", "labels": ["cough"]}
+{"id": "en574", "text": "Nose running and eyes watery", "labels": ["runny_nose"]}
+{"id": "en575", "text": "Stomach burning inside", "labels": ["stomach_ache"]}
+{"id": "en576", "text": "Everything spinning around", "labels": ["dizziness"]}
+{"id": "en577", "text": "Feel like throwing up any minute", "labels": ["nausea"]}
+{"id": "en578", "text": "Vomited multiple times already", "labels": ["vomiting"]}
+{"id": "en579", "text": "Bathroom trips endless", "labels": ["diarrhea"]}
+{"id": "en580", "text": "Weak af cant do anything", "labels": ["fatigue"]}
+{"id": "en581", "text": "Body hurts everywhere fr", "labels": ["body_aches"]}
+{"id": "en582", "text": "Hard to catch breath", "labels": ["shortness_of_breath"]}
+{"id": "en583", "text": "Chest tight and painful", "labels": ["chest_pain"]}
+{"id": "en584", "text": "Swallowing hurts so bad", "labels": ["sore_throat"]}
+{"id": "en585", "text": "Cant breathe through nose", "labels": ["stuffy_nose"]}
+{"id": "en586", "text": "hed hurts bad", "labels": ["headache"]}
+{"id": "en587", "text": "hot hot", "labels": ["fever"]}
+{"id": "en588", "text": "cof bad", "labels": ["cough"]}
+{"id": "en589", "text": "nos run", "labels": ["runny_nose"]}
+{"id": "en590", "text": "bely ache", "labels": ["stomach_ache"]}
+{"id": "en591", "text": "Head feels like exploding", "labels": ["headache"]}
+{"id": "en592", "text": "Fever came back again", "labels": ["fever"]}
+{"id": "en593", "text": "Coughing all night long", "labels": ["cough"]}
+{"id": "en594", "text": "Runny nose since morning", "labels": ["runny_nose"]}
+{"id": "en595", "text": "Stomach pain after eating", "labels": ["stomach_ache"]}
+{"id": "en596", "text": "Room spinning cant focus", "labels": ["dizziness"]}
+{"id": "en597", "text": "Nausea getting worse", "labels": ["nausea"]}
+{"id": "en598", "text": "Cant stop throwing up", "labels": ["vomiting"]}
+{"id": "en599", "text": "Watery diarrhea bad", "labels": ["diarrhea"]}
+{"id": "en600", "text": "Exhausted to the max", "labels": ["fatigue"]}
+{"id": "en601", "text": "Muscles aching bad", "labels": ["body_aches"]}
+{"id": "en602", "text": "Breathing difficult rn", "labels": ["shortness_of_breath"]}
+{"id": "en603", "text": "Chest hurts when breathing", "labels": ["chest_pain"]}
+{"id": "en604", "text": "Throat raw and painful", "labels": ["sore_throat"]}
+{"id": "en605", "text": "Nostrils completely blocked", "labels": ["stuffy_nose"]}
+{"id": "en606", "text": "Migraine level headache", "labels": ["headache"]}
+{"id": "en607", "text": "Fever spiking high", "labels": ["fever"]}
+{"id": "en608", "text": "Coughing fit wont stop", "labels": ["cough"]}
+{"id": "en609", "text": "Nose dripping constantly", "labels": ["runny_nose"]}
+{"id": "en610", "text": "Stomach cramping bad", "labels": ["stomach_ache"]}
+{"id": "en611", "text": "Hedache killin me", "labels": ["headache"]}
+{"id": "en612", "text": "Fevr high af", "labels": ["fever"]}
+{"id": "en613", "text": "Coffing lots", "labels": ["cough"]}
+{"id": "en614", "text": "Runee nose", "labels": ["runny_nose"]}
+{"id": "en615", "text": "Stomac pain", "labels": ["stomach_ache"]}
+{"id": "en616", "text": "Dizee rn", "labels": ["dizziness"]}
+{"id": "en617", "text": "Naseous bad", "labels": ["nausea"]}
+{"id": "en618", "text": "Vomiting alot", "labels": ["vomiting"]}
+{"id": "en619", "text": "Diarrrhea", "labels": ["diarrhea"]}
+{"id": "en620", "text": "Fatigued", "labels": ["fatigue"]}
+{"id": "en621", "text": "Omg my head hurts so much", "labels": ["headache"]}
+{"id": "en622", "text": "Dude Im burning up", "labels": ["fever"]}
+{"id": "en623", "text": "Bro this cough is crazy", "labels": ["cough"]}
+{"id": "en624", "text": "Man my nose wont stop", "labels": ["runny_nose"]}
+{"id": "en625", "text": "Bruh stomach hurts", "labels": ["stomach_ache"]}
+{"id": "en626", "text": "So dizzy rn cant even", "labels": ["dizziness"]}
+{"id": "en627", "text": "Nauseous asf", "labels": ["nausea"]}
+{"id": "en628", "text": "Literally vomiting", "labels": ["vomiting"]}
+{"id": "en629", "text": "Diarrhea mode activated", "labels": ["diarrhea"]}
+{"id": "en630", "text": "Dead tired fr", "labels": ["fatigue"]}
+{"id": "en631", "text": "Body aches everywhere", "labels": ["body_aches"]}
+{"id": "en632", "text": "Cant breathe help", "labels": ["shortness_of_breath"]}
+{"id": "en633", "text": "Chest pain scary", "labels": ["chest_pain"]}
+{"id": "en634", "text": "Throat on fire", "labels": ["sore_throat"]}
+{"id": "en635", "text": "Nose completely stuffed", "labels": ["stuffy_nose"]}
+{"id": "en636", "text": "Head throbbing like crazy", "labels": ["headache"]}
+{"id": "en637", "text": "Shivering but hot", "labels": ["fever"]}
+{"id": "en638", "text": "Cough keeping me awake", "labels": ["cough"]}
+{"id": "en639", "text": "Runny nose all day", "labels": ["runny_nose"]}
+{"id": "en640", "text": "Stomach killing me", "labels": ["stomach_ache"]}
+{"id": "en641", "text": "Hed pain bad", "labels": ["headache"]}
+{"id": "en642", "text": "Hot body", "labels": ["fever"]}
+{"id": "en643", "text": "Cof alot", "labels": ["cough"]}
+{"id": "en644", "text": "Nose run", "labels": ["runny_nose"]}
+{"id": "en645", "text": "Tummy hurt", "labels": ["stomach_ache"]}
+{"id": "en646", "text": "Spinnin", "labels": ["dizziness"]}
+{"id": "en647", "text": "Sick feeling", "labels": ["nausea"]}
+{"id": "en648", "text": "Throwin up", "labels": ["vomiting"]}
+{"id": "en649", "text": "LBM again", "labels": ["diarrhea"]}
+{"id": "en650", "text": "So weak", "labels": ["fatigue"]}
+{"id": "en651", "text": "Pounding headache wont stop", "labels": ["headache"]}
+{"id": "en652", "text": "Temperature rising fast", "labels": ["fever"]}
+{"id": "en653", "text": "Hacking cough bad", "labels": ["cough"]}
+{"id": "en654", "text": "Nose like tap water", "labels": ["runny_nose"]}
+{"id": "en655", "text": "Stomach pain intense", "labels": ["stomach_ache"]}
+{"id": "en656", "text": "Light headed and dizzy", "labels": ["dizziness"]}
+{"id": "en657", "text": "Queasy stomach", "labels": ["nausea"]}
+{"id": "en658", "text": "Puking non stop", "labels": ["vomiting"]}
+{"id": "en659", "text": "Loose bowels bad", "labels": ["diarrhea"]}
+{"id": "en660", "text": "Zero energy left", "labels": ["fatigue"]}
+{"id": "en661", "text": "Sore muscles all over", "labels": ["body_aches"]}
+{"id": "en662", "text": "Short of breath bad", "labels": ["shortness_of_breath"]}
+{"id": "en663", "text": "Sharp chest pain", "labels": ["chest_pain"]}
+{"id": "en664", "text": "Sore throat cant talk", "labels": ["sore_throat"]}
+{"id": "en665", "text": "Congested nose bad", "labels": ["stuffy_nose"]}
+{"id": "en666", "text": "Headache and fever ugh", "labels": ["headache", "fever"]}
+{"id": "en667", "text": "Coughing and nose running", "labels": ["cough", "runny_nose"]}
+{"id": "en668", "text": "Dizzy and sick feeling", "labels": ["dizziness", "nausea"]}
+{"id": "en669", "text": "Hot and body aches", "labels": ["fever", "body_aches"]}
+{"id": "en670", "text": "Tummy ache and diarrhea", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "en671", "text": "My head is so bad rn", "labels": ["headache"]}
+{"id": "en672", "text": "Fever hitting hard", "labels": ["fever"]}
+{"id": "en673", "text": "This cough wont quit", "labels": ["cough"]}
+{"id": "en674", "text": "Runny nose situation bad", "labels": ["runny_nose"]}
+{"id": "en675", "text": "Stomach issues fr", "labels": ["stomach_ache"]}
+{"id": "en676", "text": "Hdche", "labels": ["headache"]}
+{"id": "en677", "text": "Fvr", "labels": ["fever"]}
+{"id": "en678", "text": "Cgh", "labels": ["cough"]}
+{"id": "en679", "text": "Rnny nos", "labels": ["runny_nose"]}
+{"id": "en680", "text": "Stmch", "labels": ["stomach_ache"]}
+{"id": "en681", "text": "Splitting headache rn", "labels": ["headache"]}
+{"id": "en682", "text": "Burning up with fever", "labels": ["fever"]}
+{"id": "en683", "text": "Cough from hell", "labels": ["cough"]}
+{"id": "en684", "text": "Runny nose terrible", "labels": ["runny_nose"]}
+{"id": "en685", "text": "Stomach pain awful", "labels": ["stomach_ache"]}
+{"id": "en686", "text": "So dizzy cant walk straight", "labels": ["dizziness"]}
+{"id": "en687", "text": "Nausea hitting hard", "labels": ["nausea"]}
+{"id": "en688", "text": "Vomiting everything out", "labels": ["vomiting"]}
+{"id": "en689", "text": "Diarrhea all day", "labels": ["diarrhea"]}
+{"id": "en690", "text": "Completely exhausted", "labels": ["fatigue"]}
+{"id": "en691", "text": "Aching all over", "labels": ["body_aches"]}
+{"id": "en692", "text": "Gasping for air", "labels": ["shortness_of_breath"]}
+{"id": "en693", "text": "Chest feels heavy", "labels": ["chest_pain"]}
+{"id": "en694", "text": "Throat killing me", "labels": ["sore_throat"]}
+{"id": "en695", "text": "Blocked up nose", "labels": ["stuffy_nose"]}
+{"id": "en696", "text": "Head hurts so bad omg", "labels": ["headache"]}
+{"id": "en697", "text": "Got the fever again", "labels": ["fever"]}
+{"id": "en698", "text": "Coughing fit crazy", "labels": ["cough"]}
+{"id": "en699", "text": "Nose wont stop running", "labels": ["runny_nose"]}
+{"id": "en700", "text": "Stomach cramps insane", "labels": ["stomach_ache"]}
+{"id": "en701", "text": "Hedake", "labels": ["headache"]}
+{"id": "en702", "text": "Feve", "labels": ["fever"]}
+{"id": "en703", "text": "Cogh", "labels": ["cough"]}
+{"id": "en704", "text": "Runy nos", "labels": ["runny_nose"]}
+{"id": "en705", "text": "Stomac", "labels": ["stomach_ache"]}
+{"id": "en706", "text": "Dizzi", "labels": ["dizziness"]}
+{"id": "en707", "text": "Nasea", "labels": ["nausea"]}
+{"id": "en708", "text": "Vomit", "labels": ["vomiting"]}
+{"id": "en709", "text": "Direa", "labels": ["diarrhea"]}
+{"id": "en710", "text": "Tired af", "labels": ["fatigue"]}
+{"id": "en711", "text": "Throbbing head pain", "labels": ["headache"]}
+{"id": "en712", "text": "High fever rn", "labels": ["fever"]}
+{"id": "en713", "text": "Non stop coughing", "labels": ["cough"]}
+{"id": "en714", "text": "Constant runny nose", "labels": ["runny_nose"]}
+{"id": "en715", "text": "Persistent stomach ache", "labels": ["stomach_ache"]}
+{"id": "en716", "text": "Vertigo like dizzy", "labels": ["dizziness"]}
+{"id": "en717", "text": "Sick to my stomach", "labels": ["nausea"]}
+{"id": "en718", "text": "Cant keep food down", "labels": ["vomiting"]}
+{"id": "en719", "text": "Running to bathroom", "labels": ["diarrhea"]}
+{"id": "en720", "text": "Drained of energy", "labels": ["fatigue"]}
+{"id": "en721", "text": "Muscles sore everywhere", "labels": ["body_aches"]}
+{"id": "en722", "text": "Wheezing and breathless", "labels": ["shortness_of_breath"]}
+{"id": "en723", "text": "Stabbing chest pain", "labels": ["chest_pain"]}
+{"id": "en724", "text": "Scratchy sore throat", "labels": ["sore_throat"]}
+{"id": "en725", "text": "Stuffy blocked nose", "labels": ["stuffy_nose"]}
+{"id": "en726", "text": "Headache fever combo", "labels": ["headache", "fever"]}
+{"id": "en727", "text": "Cough runny nose combo", "labels": ["cough", "runny_nose"]}
+{"id": "en728", "text": "Dizzy nauseous combo", "labels": ["dizziness", "nausea"]}
+{"id": "en729", "text": "Fever body aches combo", "labels": ["fever", "body_aches"]}
+{"id": "en730", "text": "Stomach diarrhea combo", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "en731", "text": "Head pounding hard", "labels": ["headache"]}
+{"id": "en732", "text": "Fever really bad", "labels": ["fever"]}
+{"id": "en733", "text": "Coughing really bad", "labels": ["cough"]}
+{"id": "en734", "text": "Runny nose really bad", "labels": ["runny_nose"]}
+{"id": "en735", "text": "Stomach really hurts", "labels": ["stomach_ache"]}
+{"id": "en736", "text": "Hed hurt", "labels": ["headache"]}
+{"id": "en737", "text": "Hot", "labels": ["fever"]}
+{"id": "en738", "text": "Cof", "labels": ["cough"]}
+{"id": "en739", "text": "Nos", "labels": ["runny_nose"]}
+{"id": "en740", "text": "Stom", "labels": ["stomach_ache"]}
+{"id": "en741", "text": "Temple pounding headache", "labels": ["headache"]}
+{"id": "en742", "text": "Chills and fever", "labels": ["fever"]}
+{"id": "en743", "text": "Wet cough phlegm", "labels": ["cough"]}
+{"id": "en744", "text": "Dripping nose bad", "labels": ["runny_nose"]}
+{"id": "en745", "text": "Gnawing stomach pain", "labels": ["stomach_ache"]}
+{"id": "en746", "text": "Spinning dizzy bad", "labels": ["dizziness"]}
+{"id": "en747", "text": "Waves of nausea", "labels": ["nausea"]}
+{"id": "en748", "text": "Projectile vomiting", "labels": ["vomiting"]}
+{"id": "en749", "text": "Explosive diarrhea", "labels": ["diarrhea"]}
+{"id": "en750", "text": "Complete fatigue", "labels": ["fatigue"]}
+{"id": "en751", "text": "Joint aches bad", "labels": ["body_aches"]}
+{"id": "en752", "text": "Labored breathing", "labels": ["shortness_of_breath"]}
+{"id": "en753", "text": "Crushing chest pain", "labels": ["chest_pain"]}
+{"id": "en754", "text": "Inflamed throat", "labels": ["sore_throat"]}
+{"id": "en755", "text": "Completely congested", "labels": ["stuffy_nose"]}
+{"id": "en756", "text": "Ugh headache again", "labels": ["headache"]}
+{"id": "en757", "text": "Omg fever again", "labels": ["fever"]}
+{"id": "en758", "text": "Damn cough again", "labels": ["cough"]}
+{"id": "en759", "text": "Ugh runny nose again", "labels": ["runny_nose"]}
+{"id": "en760", "text": "Omg stomach again", "labels": ["stomach_ache"]}
+{"id": "en761", "text": "Hd ache", "labels": ["headache"]}
+{"id": "en762", "text": "Fvr bad", "labels": ["fever"]}
+{"id": "en763", "text": "Coff bad", "labels": ["cough"]}
+{"id": "en764", "text": "Nos run bad", "labels": ["runny_nose"]}
+{"id": "en765", "text": "Stom hurt", "labels": ["stomach_ache"]}
+{"id": "en766", "text": "Diz bad", "labels": ["dizziness"]}
+{"id": "en767", "text": "Naus bad", "labels": ["nausea"]}
+{"id": "en768", "text": "Vom bad", "labels": ["vomiting"]}
+{"id": "en769", "text": "Diarr bad", "labels": ["diarrhea"]}
+{"id": "en770", "text": "Tire bad", "labels": ["fatigue"]}
+{"id": "en771", "text": "Sinus headache bad", "labels": ["headache"]}
+{"id": "en772", "text": "Low grade fever", "labels": ["fever"]}
+{"id": "en773", "text": "Productive cough", "labels": ["cough"]}
+{"id": "en774", "text": "Clear runny nose", "labels": ["runny_nose"]}
+{"id": "en775", "text": "Upper stomach pain", "labels": ["stomach_ache"]}
+{"id": "en776", "text": "Positional dizziness", "labels": ["dizziness"]}
+{"id": "en777", "text": "Morning nausea", "labels": ["nausea"]}
+{"id": "en778", "text": "Bile vomiting", "labels": ["vomiting"]}
+{"id": "en779", "text": "Chronic diarrhea", "labels": ["diarrhea"]}
+{"id": "en780", "text": "Chronic fatigue", "labels": ["fatigue"]}
+{"id": "en781", "text": "Muscle fatigue", "labels": ["body_aches"]}
+{"id": "en782", "text": "Exercise induced breathing", "labels": ["shortness_of_breath"]}
+{"id": "en783", "text": "Angina chest pain", "labels": ["chest_pain"]}
+{"id": "en784", "text": "Strep throat maybe", "labels": ["sore_throat"]}
+{"id": "en785", "text": "Allergic congestion", "labels": ["stuffy_nose"]}
+{"id": "en786", "text": "Tension headache stress", "labels": ["headache"]}
+{"id": "en787", "text": "Fever and chills", "labels": ["fever"]}
+{"id": "en788", "text": "Dry irritating cough", "labels": ["cough"]}
+{"id": "en789", "text": "Allergic runny nose", "labels": ["runny_nose"]}
+{"id": "en790", "text": "Gastric stomach pain", "labels": ["stomach_ache"]}
+{"id": "en791", "text": "Hedach", "labels": ["headache"]}
+{"id": "en792", "text": "Fevver", "labels": ["fever"]}
+{"id": "en793", "text": "Coff", "labels": ["cough"]}
+{"id": "en794", "text": "Runee nos", "labels": ["runny_nose"]}
+{"id": "en795", "text": "Stomak", "labels": ["stomach_ache"]}
+{"id": "en796", "text": "Dizee", "labels": ["dizziness"]}
+{"id": "en797", "text": "Nawsea", "labels": ["nausea"]}
+{"id": "en798", "text": "Vommit", "labels": ["vomiting"]}
+{"id": "en799", "text": "Diareah", "labels": ["diarrhea"]}
+{"id": "en800", "text": "Tird", "labels": ["fatigue"]}
+{"id": "en801", "text": "Cluster headache type", "labels": ["headache"]}
+{"id": "en802", "text": "Flu like fever", "labels": ["fever"]}
+{"id": "en803", "text": "Whooping cough like", "labels": ["cough"]}
+{"id": "en804", "text": "Hay fever runny nose", "labels": ["runny_nose"]}
+{"id": "en805", "text": "Ulcer stomach pain", "labels": ["stomach_ache"]}
+{"id": "en806", "text": "BPPV dizzy", "labels": ["dizziness"]}
+{"id": "en807", "text": "Motion sickness nausea", "labels": ["nausea"]}
+{"id": "en808", "text": "Food poisoning vomiting", "labels": ["vomiting"]}
+{"id": "en809", "text": "IBS diarrhea", "labels": ["diarrhea"]}
+{"id": "en810", "text": "CFS fatigue", "labels": ["fatigue"]}
+{"id": "en811", "text": "Fibromyalgia body aches", "labels": ["body_aches"]}
+{"id": "en812", "text": "Asthma breathing", "labels": ["shortness_of_breath"]}
+{"id": "en813", "text": "Costochondritis chest", "labels": ["chest_pain"]}
+{"id": "en814", "text": "Tonsillitis throat", "labels": ["sore_throat"]}
+{"id": "en815", "text": "Sinusitis blocked nose", "labels": ["stuffy_nose"]}
+{"id": "en816", "text": "Pounding head wont stop", "labels": ["headache"]}
+{"id": "en817", "text": "Sweating from fever", "labels": ["fever"]}
+{"id": "en818", "text": "Barking cough loud", "labels": ["cough"]}
+{"id": "en819", "text": "Tissues needed runny nose", "labels": ["runny_nose"]}
+{"id": "en820", "text": "Cramping stomach bad", "labels": ["stomach_ache"]}
+{"id": "en821", "text": "Hed bad", "labels": ["headache"]}
+{"id": "en822", "text": "Fev", "labels": ["fever"]}
+{"id": "en823", "text": "Cog", "labels": ["cough"]}
+{"id": "en824", "text": "Nse", "labels": ["runny_nose"]}
+{"id": "en825", "text": "Stm", "labels": ["stomach_ache"]}
+{"id": "en826", "text": "Diz", "labels": ["dizziness"]}
+{"id": "en827", "text": "Nau", "labels": ["nausea"]}
+{"id": "en828", "text": "Vom", "labels": ["vomiting"]}
+{"id": "en829", "text": "Dia", "labels": ["diarrhea"]}
+{"id": "en830", "text": "Fat", "labels": ["fatigue"]}
+{"id": "en831", "text": "Ice pick headache sharp", "labels": ["headache"]}
+{"id": "en832", "text": "Spiking fever high", "labels": ["fever"]}
+{"id": "en833", "text": "Tickling cough throat", "labels": ["cough"]}
+{"id": "en834", "text": "Post nasal drip", "labels": ["runny_nose"]}
+{"id": "en835", "text": "Acid reflux stomach", "labels": ["stomach_ache"]}
+{"id": "en836", "text": "Vertigo spinning", "labels": ["dizziness"]}
+{"id": "en837", "text": "Morning sickness nausea", "labels": ["nausea"]}
+{"id": "en838", "text": "Dry heaving vomiting", "labels": ["vomiting"]}
+{"id": "en839", "text": "Travelers diarrhea", "labels": ["diarrhea"]}
+{"id": "en840", "text": "Extreme fatigue tired", "labels": ["fatigue"]}
+{"id": "en841", "text": "Muscle soreness aches", "labels": ["body_aches"]}
+{"id": "en842", "text": "Dyspnea breathing", "labels": ["shortness_of_breath"]}
+{"id": "en843", "text": "Pleuritic chest pain", "labels": ["chest_pain"]}
+{"id": "en844", "text": "Pharyngitis throat", "labels": ["sore_throat"]}
+{"id": "en845", "text": "Nasal congestion blocked", "labels": ["stuffy_nose"]}
+{"id": "en846", "text": "Brain fog headache", "labels": ["headache"]}
+{"id": "en847", "text": "Night sweats fever", "labels": ["fever"]}
+{"id": "en848", "text": "Persistent cough wont go", "labels": ["cough"]}
+{"id": "en849", "text": "Watery discharge nose", "labels": ["runny_nose"]}
+{"id": "en850", "text": "Bloating stomach pain", "labels": ["stomach_ache"]}
+{"id": "en851", "text": "Hedak bad", "labels": ["headache"]}
+{"id": "en852", "text": "Fevr bad", "labels": ["fever"]}
+{"id": "en853", "text": "Coff bad", "labels": ["cough"]}
+{"id": "en854", "text": "Runny bad", "labels": ["runny_nose"]}
+{"id": "en855", "text": "Belly bad", "labels": ["stomach_ache"]}
+{"id": "en856", "text": "Spinny bad", "labels": ["dizziness"]}
+{"id": "en857", "text": "Sick bad", "labels": ["nausea"]}
+{"id": "en858", "text": "Puke bad", "labels": ["vomiting"]}
+{"id": "en859", "text": "Runny poop", "labels": ["diarrhea"]}
+{"id": "en860", "text": "Sleepy bad", "labels": ["fatigue"]}
+{"id": "en861", "text": "Frontal headache pressure", "labels": ["headache"]}
+{"id": "en862", "text": "Intermittent fever comes goes", "labels": ["fever"]}
+{"id": "en863", "text": "Chronic cough months", "labels": ["cough"]}
+{"id": "en864", "text": "Seasonal runny nose", "labels": ["runny_nose"]}
+{"id": "en865", "text": "Food related stomach", "labels": ["stomach_ache"]}
+{"id": "en866", "text": "Postural dizziness standing", "labels": ["dizziness"]}
+{"id": "en867", "text": "Anxiety nausea", "labels": ["nausea"]}
+{"id": "en868", "text": "Cyclic vomiting", "labels": ["vomiting"]}
+{"id": "en869", "text": "Stress diarrhea", "labels": ["diarrhea"]}
+{"id": "en870", "text": "Adrenal fatigue", "labels": ["fatigue"]}
+{"id": "en871", "text": "Growing pains aches", "labels": ["body_aches"]}
+{"id": "en872", "text": "Panic breathing", "labels": ["shortness_of_breath"]}
+{"id": "en873", "text": "Anxiety chest pain", "labels": ["chest_pain"]}
+{"id": "en874", "text": "Viral sore throat", "labels": ["sore_throat"]}
+{"id": "en875", "text": "Deviated septum nose", "labels": ["stuffy_nose"]}
+{"id": "en876", "text": "Unable to focus headache", "labels": ["headache"]}
+{"id": "en877", "text": "Burning skin fever", "labels": ["fever"]}
+{"id": "en878", "text": "Chest rattling cough", "labels": ["cough"]}
+{"id": "en879", "text": "Colored mucus nose", "labels": ["runny_nose"]}
+{"id": "en880", "text": "Sharp stabbing stomach", "labels": ["stomach_ache"]}
+{"id": "en881", "text": "H ache", "labels": ["headache"]}
+{"id": "en882", "text": "Fvr", "labels": ["fever"]}
+{"id": "en883", "text": "Cgh", "labels": ["cough"]}
+{"id": "en884", "text": "Rny", "labels": ["runny_nose"]}
+{"id": "en885", "text": "Stm", "labels": ["stomach_ache"]}
+{"id": "en886", "text": "Dzz", "labels": ["dizziness"]}
+{"id": "en887", "text": "Nse", "labels": ["nausea"]}
+{"id": "en888", "text": "Vmt", "labels": ["vomiting"]}
+{"id": "en889", "text": "Drr", "labels": ["diarrhea"]}
+{"id": "en890", "text": "Ftig", "labels": ["fatigue"]}
+{"id": "en891", "text": "Occipital headache back head", "labels": ["headache"]}
+{"id": "en892", "text": "Relapsing fever pattern", "labels": ["fever"]}
+{"id": "en893", "text": "Paroxysmal cough fits", "labels": ["cough"]}
+{"id": "en894", "text": "Profuse runny nose", "labels": ["runny_nose"]}
+{"id": "en895", "text": "Colicky stomach pain", "labels": ["stomach_ache"]}
+{"id": "en896", "text": "Orthostatic dizziness", "labels": ["dizziness"]}
+{"id": "en897", "text": "Intractable nausea", "labels": ["nausea"]}
+{"id": "en898", "text": "Intractable vomiting", "labels": ["vomiting"]}
+{"id": "en899", "text": "Osmotic diarrhea", "labels": ["diarrhea"]}
+{"id": "en900", "text": "Profound fatigue", "labels": ["fatigue"]}
+{"id": "en901", "text": "Diffuse body aches", "labels": ["body_aches"]}
+{"id": "en902", "text": "Tachypnea breathing", "labels": ["shortness_of_breath"]}
+{"id": "en903", "text": "Retrosternal chest pain", "labels": ["chest_pain"]}
+{"id": "en904", "text": "Exudative throat", "labels": ["sore_throat"]}
+{"id": "en905", "text": "Bilateral congestion", "labels": ["stuffy_nose"]}
+{"id": "en906", "text": "My head omg rn", "labels": ["headache"]}
+{"id": "en907", "text": "So hot af", "labels": ["fever"]}
+{"id": "en908", "text": "Coughing fr fr", "labels": ["cough"]}
+{"id": "en909", "text": "Nose be running", "labels": ["runny_nose"]}
+{"id": "en910", "text": "Tummy hurts ngl", "labels": ["stomach_ache"]}
+{"id": "en911", "text": "Dizzy lowkey", "labels": ["dizziness"]}
+{"id": "en912", "text": "Nausea highkey", "labels": ["nausea"]}
+{"id": "en913", "text": "Puking deadass", "labels": ["vomiting"]}
+{"id": "en914", "text": "Diarrhea bruh", "labels": ["diarrhea"]}
+{"id": "en915", "text": "Tired asf", "labels": ["fatigue"]}
+{"id": "en916", "text": "Aching fr", "labels": ["body_aches"]}
+{"id": "en917", "text": "Cant breathe fr", "labels": ["shortness_of_breath"]}
+{"id": "en918", "text": "Chest hurts ngl", "labels": ["chest_pain"]}
+{"id": "en919", "text": "Throat hurts lowkey", "labels": ["sore_throat"]}
+{"id": "en920", "text": "Nose blocked highkey", "labels": ["stuffy_nose"]}
+{"id": "en921", "text": "Head pain vibes", "labels": ["headache"]}
+{"id": "en922", "text": "Fever vibes bad", "labels": ["fever"]}
+{"id": "en923", "text": "Cough vibes terrible", "labels": ["cough"]}
+{"id": "en924", "text": "Runny nose vibes", "labels": ["runny_nose"]}
+{"id": "en925", "text": "Stomach pain vibes", "labels": ["stomach_ache"]}
+{"id": "en926", "text": "Dizzy vibes rn", "labels": ["dizziness"]}
+{"id": "en927", "text": "Sick vibes", "labels": ["nausea"]}
+{"id": "en928", "text": "Vomit vibes", "labels": ["vomiting"]}
+{"id": "en929", "text": "Diarrhea vibes", "labels": ["diarrhea"]}
+{"id": "en930", "text": "Tired vibes", "labels": ["fatigue"]}
+{"id": "en931", "text": "Head aint it", "labels": ["headache"]}
+{"id": "en932", "text": "Fever aint it", "labels": ["fever"]}
+{"id": "en933", "text": "Cough aint it", "labels": ["cough"]}
+{"id": "en934", "text": "Runny nose aint it", "labels": ["runny_nose"]}
+{"id": "en935", "text": "Stomach aint it", "labels": ["stomach_ache"]}
+{"id": "en936", "text": "Dizzy aint it", "labels": ["dizziness"]}
+{"id": "en937", "text": "Nausea aint it", "labels": ["nausea"]}
+{"id": "en938", "text": "Vomiting aint it", "labels": ["vomiting"]}
+{"id": "en939", "text": "Diarrhea aint it", "labels": ["diarrhea"]}
+{"id": "en940", "text": "Fatigue aint it", "labels": ["fatigue"]}
+{"id": "en941", "text": "Head hitting different", "labels": ["headache"]}
+{"id": "en942", "text": "Fever hitting different", "labels": ["fever"]}
+{"id": "en943", "text": "Cough hitting different", "labels": ["cough"]}
+{"id": "en944", "text": "Runny nose hitting different", "labels": ["runny_nose"]}
+{"id": "en945", "text": "Stomach hitting different", "labels": ["stomach_ache"]}
+{"id": "en946", "text": "Dizzy hitting different", "labels": ["dizziness"]}
+{"id": "en947", "text": "Nausea hitting different", "labels": ["nausea"]}
+{"id": "en948", "text": "Vomit hitting different", "labels": ["vomiting"]}
+{"id": "en949", "text": "Diarrhea hitting different", "labels": ["diarrhea"]}
+{"id": "en950", "text": "Tired hitting different", "labels": ["fatigue"]}
+{"id": "en951", "text": "Head be like", "labels": ["headache"]}
+{"id": "en952", "text": "Fever be like", "labels": ["fever"]}
+{"id": "en953", "text": "Cough be like", "labels": ["cough"]}
+{"id": "en954", "text": "Runny nose be like", "labels": ["runny_nose"]}
+{"id": "en955", "text": "Stomach be like", "labels": ["stomach_ache"]}
+{"id": "en956", "text": "Dizzy be like", "labels": ["dizziness"]}
+{"id": "en957", "text": "Nausea be like", "labels": ["nausea"]}
+{"id": "en958", "text": "Vomit be like", "labels": ["vomiting"]}
+{"id": "en959", "text": "Diarrhea be like", "labels": ["diarrhea"]}
+{"id": "en960", "text": "Tired be like", "labels": ["fatigue"]}
+{"id": "en961", "text": "Head got me dead", "labels": ["headache"]}
+{"id": "en962", "text": "Fever got me dead", "labels": ["fever"]}
+{"id": "en963", "text": "Cough got me dead", "labels": ["cough"]}
+{"id": "en964", "text": "Runny nose got me dead", "labels": ["runny_nose"]}
+{"id": "en965", "text": "Stomach got me dead", "labels": ["stomach_ache"]}
+{"id": "en966", "text": "Dizzy got me dead", "labels": ["dizziness"]}
+{"id": "en967", "text": "Nausea got me dead", "labels": ["nausea"]}
+{"id": "en968", "text": "Vomit got me dead", "labels": ["vomiting"]}
+{"id": "en969", "text": "Diarrhea got me dead", "labels": ["diarrhea"]}
+{"id": "en970", "text": "Fatigue got me dead", "labels": ["fatigue"]}
+{"id": "en971", "text": "Head no cap", "labels": ["headache"]}
+{"id": "en972", "text": "Fever no cap", "labels": ["fever"]}
+{"id": "en973", "text": "Cough no cap", "labels": ["cough"]}
+{"id": "en974", "text": "Runny nose no cap", "labels": ["runny_nose"]}
+{"id": "en975", "text": "Stomach no cap", "labels": ["stomach_ache"]}
+{"id": "en976", "text": "Dizzy no cap", "labels": ["dizziness"]}
+{"id": "en977", "text": "Nausea no cap", "labels": ["nausea"]}
+{"id": "en978", "text": "Vomit no cap", "labels": ["vomiting"]}
+{"id": "en979", "text": "Diarrhea no cap", "labels": ["diarrhea"]}
+{"id": "en980", "text": "Tired no cap", "labels": ["fatigue"]}
+{"id": "en981", "text": "Head on god", "labels": ["headache"]}
+{"id": "en982", "text": "Fever on god", "labels": ["fever"]}
+{"id": "en983", "text": "Cough on god", "labels": ["cough"]}
+{"id": "en984", "text": "Runny nose on god", "labels": ["runny_nose"]}
+{"id": "en985", "text": "Stomach on god", "labels": ["stomach_ache"]}
+{"id": "en986", "text": "Dizzy on god", "labels": ["dizziness"]}
+{"id": "en987", "text": "Nausea on god", "labels": ["nausea"]}
+{"id": "en988", "text": "Vomit on god", "labels": ["vomiting"]}
+{"id": "en989", "text": "Diarrhea on god", "labels": ["diarrhea"]}
+{"id": "en990", "text": "Tired on god", "labels": ["fatigue"]}
+{"id": "en991", "text": "Head straight up", "labels": ["headache"]}
+{"id": "en992", "text": "Fever straight up", "labels": ["fever"]}
+{"id": "en993", "text": "Cough straight up", "labels": ["cough"]}
+{"id": "en994", "text": "Runny nose straight up", "labels": ["runny_nose"]}
+{"id": "en995", "text": "Stomach straight up", "labels": ["stomach_ache"]}
+{"id": "en996", "text": "Dizzy straight up", "labels": ["dizziness"]}
+{"id": "en997", "text": "Nausea straight up", "labels": ["nausea"]}
+{"id": "en998", "text": "Vomit straight up", "labels": ["vomiting"]}
+{"id": "en999", "text": "Diarrhea straight up", "labels": ["diarrhea"]}
+{"id": "en1000", "text": "Tired straight up", "labels": ["fatigue"]}

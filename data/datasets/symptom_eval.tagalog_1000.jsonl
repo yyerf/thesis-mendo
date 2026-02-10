@@ -1,0 +1,1000 @@
+{"id": "tl001", "text": "Parang binibiyak ang ulo ko", "labels": ["headache"]}
+{"id": "tl002", "text": "Sumasakit ulo ko grabe", "labels": ["headache"]}
+{"id": "tl003", "text": "Parang sasabog ulo ko sa sakit", "labels": ["headache"]}
+{"id": "tl004", "text": "Kirot kirot ulo ko ngayon", "labels": ["headache"]}
+{"id": "tl005", "text": "Masakit ulo ko di naman ako nag inom", "labels": ["headache"]}
+{"id": "tl006", "text": "Sobrang sakit ng ulo ko pati mata ko nasasaktan", "labels": ["headache"]}
+{"id": "tl007", "text": "Parang may tumutuktok sa ulo ko", "labels": ["headache"]}
+{"id": "tl008", "text": "Sumasakit ulo ko kanina pa umaga", "labels": ["headache"]}
+{"id": "tl009", "text": "Di ko na kaya sakit ng ulo ko", "labels": ["headache"]}
+{"id": "tl010", "text": "Lagi na lang masakit ulo ko lately", "labels": ["headache"]}
+{"id": "tl011", "text": "Init init katawan ko parang may lagnat", "labels": ["fever"]}
+{"id": "tl012", "text": "Mainit lang ako walang iba", "labels": ["fever"]}
+{"id": "tl013", "text": "Nanginginig ako sa lamig pero mainit naman ako", "labels": ["fever"]}
+{"id": "tl014", "text": "Nilalagnat ata ako eh", "labels": ["fever"]}
+{"id": "tl015", "text": "Sinat lang siguro to", "labels": ["fever"]}
+{"id": "tl016", "text": "Lagnat na naman ako", "labels": ["fever"]}
+{"id": "tl017", "text": "Parang may lagnat ako pero di ko sure", "labels": ["fever"]}
+{"id": "tl018", "text": "Mainit pakiramdam ko ngayon", "labels": ["fever"]}
+{"id": "tl019", "text": "Binat yata ako kasi bumalik lagnat ko", "labels": ["fever"]}
+{"id": "tl020", "text": "Nanginginig ako tapos mainit", "labels": ["fever"]}
+{"id": "tl021", "text": "Ubo lang naman ako walang iba", "labels": ["cough"]}
+{"id": "tl022", "text": "Tuloy tuloy ubo ko di ko mapigil", "labels": ["cough"]}
+{"id": "tl023", "text": "Sige ubo ko lalo pag gabi", "labels": ["cough"]}
+{"id": "tl024", "text": "Di ako makatulog sa ubo ko", "labels": ["cough"]}
+{"id": "tl025", "text": "Ubo ng ubo ako kanina pa", "labels": ["cough"]}
+{"id": "tl026", "text": "Pag umuubo ako sumasakit dibdib ko", "labels": ["cough", "chest_pain"]}
+{"id": "tl027", "text": "Inuubo ako ng walang plema", "labels": ["cough"]}
+{"id": "tl028", "text": "May plema ubo ko hirap ilabas", "labels": ["cough"]}
+{"id": "tl029", "text": "Ubo ko may kasamang plema na malapot", "labels": ["cough"]}
+{"id": "tl030", "text": "Dry cough lang naman to", "labels": ["cough"]}
+{"id": "tl031", "text": "Makati lalamunan ko kaya umuubo ako", "labels": ["cough", "sore_throat"]}
+{"id": "tl032", "text": "Parang may nakaipit sa lalamunan ko", "labels": ["sore_throat"]}
+{"id": "tl033", "text": "Sakit ng lalamunan ko pag lumalunok", "labels": ["sore_throat"]}
+{"id": "tl034", "text": "Masakit lalamunan ko at dry", "labels": ["sore_throat"]}
+{"id": "tl035", "text": "Namamaga lalamunan ko hirap lumunok", "labels": ["sore_throat"]}
+{"id": "tl036", "text": "Sipon lang naman ako ok pa naman", "labels": ["runny_nose"]}
+{"id": "tl037", "text": "Tuloy tuloy sipon ko ang dami", "labels": ["runny_nose"]}
+{"id": "tl038", "text": "Tumutulo ilong ko kanina pa", "labels": ["runny_nose"]}
+{"id": "tl039", "text": "May sipon ako slight lang", "labels": ["runny_nose"]}
+{"id": "tl040", "text": "Sinisipon ako ng walang tigil", "labels": ["runny_nose"]}
+{"id": "tl041", "text": "Barado ilong ko di ako makahinga", "labels": ["stuffy_nose"]}
+{"id": "tl042", "text": "Barado both sides ng ilong ko", "labels": ["stuffy_nose"]}
+{"id": "tl043", "text": "Di ako makahinga sa ilong parang barado", "labels": ["stuffy_nose"]}
+{"id": "tl044", "text": "Stuffy nose ako ngayon", "labels": ["stuffy_nose"]}
+{"id": "tl045", "text": "Parang may bara sa ilong ko", "labels": ["stuffy_nose"]}
+{"id": "tl046", "text": "Nahihilo ako pag tumatayo", "labels": ["dizziness"]}
+{"id": "tl047", "text": "Umiikot paligid ko", "labels": ["dizziness"]}
+{"id": "tl048", "text": "Parang lasing pag gumagalaw ako", "labels": ["dizziness"]}
+{"id": "tl049", "text": "Hilo hilo ako ngayon", "labels": ["dizziness"]}
+{"id": "tl050", "text": "Nahihilo ako at nasusuka", "labels": ["dizziness", "nausea"]}
+{"id": "tl051", "text": "Parang gusto kong sumuka", "labels": ["nausea"]}
+{"id": "tl052", "text": "Masama pakiramdam ko sa tiyan parang sasuka", "labels": ["nausea"]}
+{"id": "tl053", "text": "Nasusuka ako pero di lumalabas", "labels": ["nausea"]}
+{"id": "tl054", "text": "Naduduwal ako", "labels": ["nausea"]}
+{"id": "tl055", "text": "Sumusuka ako kanina pa", "labels": ["vomiting"]}
+{"id": "tl056", "text": "Di ko mapigil pagsusuka ko", "labels": ["vomiting"]}
+{"id": "tl057", "text": "Suka ng suka ako", "labels": ["vomiting"]}
+{"id": "tl058", "text": "Nagsusuka ako after kumain", "labels": ["vomiting"]}
+{"id": "tl059", "text": "Nilabas ko lahat ng kinain ko", "labels": ["vomiting"]}
+{"id": "tl060", "text": "Pagtatae ako since kaninang umaga", "labels": ["diarrhea"]}
+{"id": "tl061", "text": "Ilang beses na ako sa CR dahil sa LBM", "labels": ["diarrhea"]}
+{"id": "tl062", "text": "Basa tae ko tuloy tuloy", "labels": ["diarrhea"]}
+{"id": "tl063", "text": "Loose bowel movement ako ngayon", "labels": ["diarrhea"]}
+{"id": "tl064", "text": "Diarrhea ata to eh", "labels": ["diarrhea"]}
+{"id": "tl065", "text": "Pagod na pagod ako parang ayaw gumalaw ng katawan ko", "labels": ["fatigue"]}
+{"id": "tl066", "text": "Sobrang hina ko ngayon", "labels": ["fatigue"]}
+{"id": "tl067", "text": "Wala akong lakas kahit gumalaw", "labels": ["fatigue"]}
+{"id": "tl068", "text": "Antok na antok ako at pagod", "labels": ["fatigue"]}
+{"id": "tl069", "text": "Nahihirapan akong gumawa ng kahit ano dahil pagod", "labels": ["fatigue"]}
+{"id": "tl070", "text": "Masakit katawan ko parang nabugbog", "labels": ["body_aches"]}
+{"id": "tl071", "text": "Sakit ng buong katawan ko", "labels": ["body_aches"]}
+{"id": "tl072", "text": "Masakit likod ko at braso ko", "labels": ["body_aches"]}
+{"id": "tl073", "text": "Ngalay na ngalay katawan ko", "labels": ["body_aches"]}
+{"id": "tl074", "text": "Parang nabugbog katawan ko sa sakit", "labels": ["body_aches"]}
+{"id": "tl075", "text": "Hirap akong huminga", "labels": ["shortness_of_breath"]}
+{"id": "tl076", "text": "Hingal na hingal ako kahit di naman gumagalaw", "labels": ["shortness_of_breath"]}
+{"id": "tl077", "text": "Parang kulang hangin ko", "labels": ["shortness_of_breath"]}
+{"id": "tl078", "text": "Di ako makahinga ng maayos", "labels": ["shortness_of_breath"]}
+{"id": "tl079", "text": "Nahihirapan ako huminga lalo pag nakahiga", "labels": ["shortness_of_breath"]}
+{"id": "tl080", "text": "Masakit dibdib ko parang siksik", "labels": ["chest_pain"]}
+{"id": "tl081", "text": "May sumasakit sa dibdib ko", "labels": ["chest_pain"]}
+{"id": "tl082", "text": "Kirot sa dibdib ko pag humihinga", "labels": ["chest_pain"]}
+{"id": "tl083", "text": "Parang may nakadagan sa dibdib ko", "labels": ["chest_pain"]}
+{"id": "tl084", "text": "Chest pain ko umaabot sa likod", "labels": ["chest_pain"]}
+{"id": "tl085", "text": "Masakit tiyan ko grabe", "labels": ["stomach_ache"]}
+{"id": "tl086", "text": "Kirot kirot tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl087", "text": "Parang may kumakain sa loob ng tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl088", "text": "Mahapdi sikmura ko acidic ata", "labels": ["stomach_ache"]}
+{"id": "tl089", "text": "Sumasakit tiyan ko after kumain", "labels": ["stomach_ache"]}
+{"id": "tl090", "text": "Kabag ata to punong puno ng hangin tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl091", "text": "Grabe sakit ng ulo ko tapos lagnat pa", "labels": ["headache", "fever"]}
+{"id": "tl092", "text": "Ubo at sipon combo", "labels": ["cough", "runny_nose"]}
+{"id": "tl093", "text": "Lagnat at masakit katawan ko", "labels": ["fever", "body_aches"]}
+{"id": "tl094", "text": "Sumasakit ulo ko tapos nasusuka pa", "labels": ["headache", "nausea"]}
+{"id": "tl095", "text": "May ubo ako tapos barado pa ilong ko", "labels": ["cough", "stuffy_nose"]}
+{"id": "tl096", "text": "Sipon ubo lagnat combo lahat na", "labels": ["runny_nose", "cough", "fever"]}
+{"id": "tl097", "text": "Masakit ulo katawan lagnat lahat", "labels": ["headache", "body_aches", "fever"]}
+{"id": "tl098", "text": "Sumasakit tiyan ko tapos nagtatae pa", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "tl099", "text": "Nahihilo ako at nasusuka", "labels": ["dizziness", "nausea"]}
+{"id": "tl100", "text": "Ubo ko may plema tapos sipon din", "labels": ["cough", "runny_nose"]}
+{"id": "tl101", "text": "Wala naman akong lagnat pero masakit ulo", "labels": ["headache"]}
+{"id": "tl102", "text": "Hindi naman ako umuubo pero may sipon", "labels": ["runny_nose"]}
+{"id": "tl103", "text": "Walang sakit ng ulo pero mainit katawan", "labels": ["fever"]}
+{"id": "tl104", "text": "Di naman ako nilalagnat ubo lang", "labels": ["cough"]}
+{"id": "tl105", "text": "Wala akong ibang sakit kundi ulo lang", "labels": ["headache"]}
+{"id": "tl106", "text": "masaket ulo ko", "labels": ["headache"]}
+{"id": "tl107", "text": "lagnt ako ngayon", "labels": ["fever"]}
+{"id": "tl108", "text": "ubu ako ng ubu", "labels": ["cough"]}
+{"id": "tl109", "text": "sepun lang naman", "labels": ["runny_nose"]}
+{"id": "tl110", "text": "pagtate ko tuloy tuloy", "labels": ["diarrhea"]}
+{"id": "tl111", "text": "msakit tyan", "labels": ["stomach_ache"]}
+{"id": "tl112", "text": "brdo ilong ko", "labels": ["stuffy_nose"]}
+{"id": "tl113", "text": "hlo ako grabe", "labels": ["dizziness"]}
+{"id": "tl114", "text": "pgod na pgod ako", "labels": ["fatigue"]}
+{"id": "tl115", "text": "skit ktawan", "labels": ["body_aches"]}
+{"id": "tl116", "text": "Ulo lang masakit wala ng iba", "labels": ["headache"]}
+{"id": "tl117", "text": "Sipon ubo lang walang lagnat", "labels": ["runny_nose", "cough"]}
+{"id": "tl118", "text": "Masakit lang tiyan ko ok naman ako", "labels": ["stomach_ache"]}
+{"id": "tl119", "text": "Ubo lang walang plema", "labels": ["cough"]}
+{"id": "tl120", "text": "Konting lagnat lang naman", "labels": ["fever"]}
+{"id": "tl121", "text": "ahhh sakit ng ulo ko talaga", "labels": ["headache"]}
+{"id": "tl122", "text": "grabe grabe lagnat ko sobra", "labels": ["fever"]}
+{"id": "tl123", "text": "ubo ubo ubo lang naman", "labels": ["cough"]}
+{"id": "tl124", "text": "ay nako sipon ko grabe", "labels": ["runny_nose"]}
+{"id": "tl125", "text": "jusko po masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl126", "text": "Baka ubo lang to", "labels": ["cough"]}
+{"id": "tl127", "text": "Parang may lagnat ata", "labels": ["fever"]}
+{"id": "tl128", "text": "Siguro sipon lang", "labels": ["runny_nose"]}
+{"id": "tl129", "text": "Mukhang sakit ng tiyan lang", "labels": ["stomach_ache"]}
+{"id": "tl130", "text": "Medyo masakit lang ulo ko konti", "labels": ["headache"]}
+{"id": "tl131", "text": "Grabi ubu ko sis", "labels": ["cough"]}
+{"id": "tl132", "text": "Shuta sakit ulo ko mars", "labels": ["headache"]}
+{"id": "tl133", "text": "Lagnat yarn mga bes", "labels": ["fever"]}
+{"id": "tl134", "text": "Sepun ako besh", "labels": ["runny_nose"]}
+{"id": "tl135", "text": "Di ako feel good masakit tyan ko bes", "labels": ["stomach_ache"]}
+{"id": "tl136", "text": "Sakit ng ulo ko pag nakatingin sa phone", "labels": ["headache"]}
+{"id": "tl137", "text": "Ubo ko lumalala pag gabi", "labels": ["cough"]}
+{"id": "tl138", "text": "Mainit ako pag tanghali", "labels": ["fever"]}
+{"id": "tl139", "text": "Sipon ko mas malala sa umaga", "labels": ["runny_nose"]}
+{"id": "tl140", "text": "Masakit tiyan ko pag kumakain", "labels": ["stomach_ache"]}
+{"id": "tl141", "text": "Sobrang init ko parang pinapawisan ako", "labels": ["fever"]}
+{"id": "tl142", "text": "Parang may nakabara sa lalamunan", "labels": ["sore_throat"]}
+{"id": "tl143", "text": "Mabigat dibdib ko parang may umuupo", "labels": ["chest_pain"]}
+{"id": "tl144", "text": "Sumasakit ulo ko pag stressed", "labels": ["headache"]}
+{"id": "tl145", "text": "Gutom na gutom pero di makalunok", "labels": ["sore_throat"]}
+{"id": "tl146", "text": "Inumin ko gamot para sa ubo", "labels": ["cough"]}
+{"id": "tl147", "text": "Kelangan ko ng gamot sa lagnat", "labels": ["fever"]}
+{"id": "tl148", "text": "Ano magandang gamot sa sipon", "labels": ["runny_nose"]}
+{"id": "tl149", "text": "May gamot ba para sa sakit ng ulo", "labels": ["headache"]}
+{"id": "tl150", "text": "Ano kaya pwede sa sakit ng tiyan", "labels": ["stomach_ache"]}
+{"id": "tl151", "text": "Super sakit ulo ko di ko na kaya", "labels": ["headache"]}
+{"id": "tl152", "text": "Sobrang init ko parang nilalagnat", "labels": ["fever"]}
+{"id": "tl153", "text": "Tuluy tuloy ubo ko di humihinto", "labels": ["cough"]}
+{"id": "tl154", "text": "Sobrang sama ng pakiramdam ko", "labels": ["fatigue"]}
+{"id": "tl155", "text": "Bagsak na bagsak ako ngayon", "labels": ["fatigue"]}
+{"id": "tl156", "text": "Parang sipon to pero di ako sure", "labels": ["runny_nose"]}
+{"id": "tl157", "text": "Mukhang lagnat nanaman ako", "labels": ["fever"]}
+{"id": "tl158", "text": "Feeling ko uubo nanaman ako", "labels": ["cough"]}
+{"id": "tl159", "text": "Ata masakit tiyan ko bukas", "labels": ["stomach_ache"]}
+{"id": "tl160", "text": "Baka dahil sa lamig kaya ako nilalagnat", "labels": ["fever"]}
+{"id": "tl161", "text": "Sakit talaga ng ulo ko pag mainit", "labels": ["headache"]}
+{"id": "tl162", "text": "Ubo ko dahil sa yosi siguro", "labels": ["cough"]}
+{"id": "tl163", "text": "Sipon ko dahil sa aircon", "labels": ["runny_nose"]}
+{"id": "tl164", "text": "Gutom kaya sumasakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl165", "text": "Kulang tulog kaya masakit ulo ko", "labels": ["headache"]}
+{"id": "tl166", "text": "Lagi na lang ako may ubo", "labels": ["cough"]}
+{"id": "tl167", "text": "Paulit ulit lagnat ko", "labels": ["fever"]}
+{"id": "tl168", "text": "Madalas sipon ko lately", "labels": ["runny_nose"]}
+{"id": "tl169", "text": "Matagal na masakit ulo ko", "labels": ["headache"]}
+{"id": "tl170", "text": "Palagi sumasakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl171", "text": "Kahapon pa ako may ubo", "labels": ["cough"]}
+{"id": "tl172", "text": "Kagabi pa ako nilalagnat", "labels": ["fever"]}
+{"id": "tl173", "text": "Kanina pa ako sipon", "labels": ["runny_nose"]}
+{"id": "tl174", "text": "Isang linggo na sakit ulo ko", "labels": ["headache"]}
+{"id": "tl175", "text": "Ilang araw na masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl176", "text": "Hapon pa lang umuubo na ako", "labels": ["cough"]}
+{"id": "tl177", "text": "Umaga pa init katawan ko", "labels": ["fever"]}
+{"id": "tl178", "text": "Morning pa sipon ko", "labels": ["runny_nose"]}
+{"id": "tl179", "text": "Kanina lang sumasakit ulo ko", "labels": ["headache"]}
+{"id": "tl180", "text": "Ngayon lang sumakit tiyan ko bigla", "labels": ["stomach_ache"]}
+{"id": "tl181", "text": "Parang may kumakati sa lalamunan kaya umuubo", "labels": ["cough", "sore_throat"]}
+{"id": "tl182", "text": "Sobrang init ko pero nanginginig", "labels": ["fever"]}
+{"id": "tl183", "text": "Sipon ako pero dry yung ilong ko", "labels": ["runny_nose"]}
+{"id": "tl184", "text": "Sakit ulo ko kahit nakahiga", "labels": ["headache"]}
+{"id": "tl185", "text": "Masakit tiyan ko kahit wala akong kinain", "labels": ["stomach_ache"]}
+{"id": "tl186", "text": "Di na ako makakain dahil sa sakit ng lalamunan", "labels": ["sore_throat"]}
+{"id": "tl187", "text": "Umiinom ako maraming tubig pero dry pa rin lalamunan", "labels": ["sore_throat"]}
+{"id": "tl188", "text": "Napakahirap huminga parang may bara", "labels": ["shortness_of_breath"]}
+{"id": "tl189", "text": "Sumasakit dibdib ko pag humihinga ng malalim", "labels": ["chest_pain"]}
+{"id": "tl190", "text": "Pagod agad ako pag gumagalaw", "labels": ["fatigue"]}
+{"id": "tl191", "text": "Lumalaki ulo ko sa sakit", "labels": ["headache"]}
+{"id": "tl192", "text": "Para akong pinainit sa loob", "labels": ["fever"]}
+{"id": "tl193", "text": "Parang may bara sa ilong ko kaya di ako makahinga", "labels": ["stuffy_nose"]}
+{"id": "tl194", "text": "Tuloy tuloy agos ng sipon ko", "labels": ["runny_nose"]}
+{"id": "tl195", "text": "Sumasakit tiyan ko tapos tumataas pa", "labels": ["stomach_ache", "nausea"]}
+{"id": "tl196", "text": "Nahihilo at naninigas katawan ko", "labels": ["dizziness", "body_aches"]}
+{"id": "tl197", "text": "Ubo ko pati baga ko sumasakit", "labels": ["cough", "chest_pain"]}
+{"id": "tl198", "text": "Lagnat ko tapos nanlalamig pa", "labels": ["fever"]}
+{"id": "tl199", "text": "Mainit ulo ko literal", "labels": ["headache", "fever"]}
+{"id": "tl200", "text": "Parang may kumukulo sa tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl201", "text": "Sumasakit ulo ko pati leeg ko", "labels": ["headache", "body_aches"]}
+{"id": "tl202", "text": "Lagnat ko pero malamig kamay ko", "labels": ["fever"]}
+{"id": "tl203", "text": "Ubo ko dry tapos makati lalamunan", "labels": ["cough", "sore_throat"]}
+{"id": "tl204", "text": "Sipon ko berde kulay", "labels": ["runny_nose"]}
+{"id": "tl205", "text": "Masakit tiyan ko sa kaliwa", "labels": ["stomach_ache"]}
+{"id": "tl206", "text": "Parang may tumuturok sa ulo ko dito sa tagiliran", "labels": ["headache"]}
+{"id": "tl207", "text": "Init katawan ko pero normal temp", "labels": ["fever"]}
+{"id": "tl208", "text": "Ubo ko may dugo", "labels": ["cough"]}
+{"id": "tl209", "text": "Sipon ko naging yellow na", "labels": ["runny_nose"]}
+{"id": "tl210", "text": "Sumasakit na dibdib ko sa kanan", "labels": ["chest_pain"]}
+{"id": "tl211", "text": "Walang lasa kinakain ko tapos barado ilong", "labels": ["stuffy_nose"]}
+{"id": "tl212", "text": "Di ako makarinig ng maayos dahil sa sipon", "labels": ["runny_nose"]}
+{"id": "tl213", "text": "Sumasakit tenga ko dahil sa sipon", "labels": ["runny_nose"]}
+{"id": "tl214", "text": "Umaabot sa ngipin sakit ng ulo ko", "labels": ["headache"]}
+{"id": "tl215", "text": "Mainit likod ko tapos nanginginig", "labels": ["fever"]}
+{"id": "tl216", "text": "Para akong nilalagyan ng apoy sa loob", "labels": ["fever"]}
+{"id": "tl217", "text": "Parang gutom pero ayaw kumain dahil masakit tiyan", "labels": ["stomach_ache"]}
+{"id": "tl218", "text": "Dry ubo ko sobra", "labels": ["cough"]}
+{"id": "tl219", "text": "Basa ubo ko may plema", "labels": ["cough"]}
+{"id": "tl220", "text": "Hirap ilabas plema ko sa dibdib", "labels": ["cough"]}
+{"id": "tl221", "text": "Pag umuubo ako lumalabas plema", "labels": ["cough"]}
+{"id": "tl222", "text": "Walang plema ubo ko puro tuyo", "labels": ["cough"]}
+{"id": "tl223", "text": "Namumula mata ko dahil sa sipon", "labels": ["runny_nose"]}
+{"id": "tl224", "text": "Masakit ngipin ko umaabot sa ulo", "labels": ["headache"]}
+{"id": "tl225", "text": "Nangangati balat ko tapos mainit", "labels": ["fever"]}
+{"id": "tl226", "text": "Sobrang lamig pero mainit naman ako", "labels": ["fever"]}
+{"id": "tl227", "text": "Parang lango ako sa pakiramdam", "labels": ["dizziness"]}
+{"id": "tl228", "text": "Umiikot mundo ko", "labels": ["dizziness"]}
+{"id": "tl229", "text": "Parang lasing kahit di naman", "labels": ["dizziness"]}
+{"id": "tl230", "text": "Hindi stable tayo ko", "labels": ["dizziness"]}
+{"id": "tl231", "text": "Ayaw tumigil pag-ikot ng paligid", "labels": ["dizziness"]}
+{"id": "tl232", "text": "Masusuka na ata ako", "labels": ["nausea"]}
+{"id": "tl233", "text": "Sumasasamang pakiramdam ko gusto sumuka", "labels": ["nausea"]}
+{"id": "tl234", "text": "Lumalabas suka ko walang tigil", "labels": ["vomiting"]}
+{"id": "tl235", "text": "Tinatapon ko lahat ng kinain ko", "labels": ["vomiting"]}
+{"id": "tl236", "text": "Sumasakit tiyan ko tapos nagsusuka", "labels": ["stomach_ache", "vomiting"]}
+{"id": "tl237", "text": "Dumi ko tubig eh", "labels": ["diarrhea"]}
+{"id": "tl238", "text": "Watery yung tae ko", "labels": ["diarrhea"]}
+{"id": "tl239", "text": "Sobrang dami kong dumi", "labels": ["diarrhea"]}
+{"id": "tl240", "text": "Balik balik ako sa CR dahil sa pagtatae", "labels": ["diarrhea"]}
+{"id": "tl241", "text": "Sunod sunod CR ko dahil LBM", "labels": ["diarrhea"]}
+{"id": "tl242", "text": "Hina hina ko ngayon", "labels": ["fatigue"]}
+{"id": "tl243", "text": "Walang gana gumalaw", "labels": ["fatigue"]}
+{"id": "tl244", "text": "Ayaw bumangon ng katawan ko", "labels": ["fatigue"]}
+{"id": "tl245", "text": "Sobrang antok ko pero di makatulog", "labels": ["fatigue"]}
+{"id": "tl246", "text": "Parang wala akong lakas gawin kahit ano", "labels": ["fatigue"]}
+{"id": "tl247", "text": "Sore buong katawan ko", "labels": ["body_aches"]}
+{"id": "tl248", "text": "Buong katawan ko sumasakit", "labels": ["body_aches"]}
+{"id": "tl249", "text": "Ngalay ngalay katawan ko", "labels": ["body_aches"]}
+{"id": "tl250", "text": "Masakit kasukasuan ko", "labels": ["body_aches"]}
+{"id": "tl251", "text": "Naninigas katawan ko sa sakit", "labels": ["body_aches"]}
+{"id": "tl252", "text": "Parang hinampas ng baseball bat katawan ko", "labels": ["body_aches"]}
+{"id": "tl253", "text": "Pakiramdam ko nabugbog ako", "labels": ["body_aches"]}
+{"id": "tl254", "text": "Sakit balikat ko umaabot sa leeg", "labels": ["body_aches"]}
+{"id": "tl255", "text": "Sakit likod ko di ako makatayo ng matagal", "labels": ["body_aches"]}
+{"id": "tl256", "text": "Masakit braso ko at binti", "labels": ["body_aches"]}
+{"id": "tl257", "text": "Hirap huminga pag kumakain", "labels": ["shortness_of_breath"]}
+{"id": "tl258", "text": "Hirap huminga pag umakyat ng hagdan", "labels": ["shortness_of_breath"]}
+{"id": "tl259", "text": "Di makahinga ng malalim", "labels": ["shortness_of_breath"]}
+{"id": "tl260", "text": "Parang kulang hangin", "labels": ["shortness_of_breath"]}
+{"id": "tl261", "text": "Humihingal ako kahit nakaupo lang", "labels": ["shortness_of_breath"]}
+{"id": "tl262", "text": "Kinakapos ng hininga", "labels": ["shortness_of_breath"]}
+{"id": "tl263", "text": "Sumasakit dibdib ko sa gitna", "labels": ["chest_pain"]}
+{"id": "tl264", "text": "May kirot sa dibdib pag humihinga", "labels": ["chest_pain"]}
+{"id": "tl265", "text": "Parang may nakadurog sa dibdib", "labels": ["chest_pain"]}
+{"id": "tl266", "text": "Sikip dibdib ko", "labels": ["chest_pain"]}
+{"id": "tl267", "text": "Sumasakit puso ko pakiramdam", "labels": ["chest_pain"]}
+{"id": "tl268", "text": "Kumikirut dibdib ko", "labels": ["chest_pain"]}
+{"id": "tl269", "text": "Sumasakit tiyan ko taas", "labels": ["stomach_ache"]}
+{"id": "tl270", "text": "Lower tiyan ko masakit", "labels": ["stomach_ache"]}
+{"id": "tl271", "text": "Acidic pakiramdam ko sa tiyan", "labels": ["stomach_ache"]}
+{"id": "tl272", "text": "Parang kinakain yung loob ng tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl273", "text": "Hapdi sa sikmura", "labels": ["stomach_ache"]}
+{"id": "tl274", "text": "Parang sumasamang asim sa loob", "labels": ["stomach_ache"]}
+{"id": "tl275", "text": "Lumalaki tiyan ko sa kabag", "labels": ["stomach_ache"]}
+{"id": "tl276", "text": "Umaasim sikmura ko", "labels": ["stomach_ache"]}
+{"id": "tl277", "text": "Hyperacidity ata to", "labels": ["stomach_ache"]}
+{"id": "tl278", "text": "Ulcer siguro to sa tiyan", "labels": ["stomach_ache"]}
+{"id": "tl279", "text": "Gastritis nanaman ata", "labels": ["stomach_ache"]}
+{"id": "tl280", "text": "Sobrang sakit ng ulo ko parang lasing", "labels": ["headache", "dizziness"]}
+{"id": "tl281", "text": "Lagnat ubo sipon lahat na meron ako", "labels": ["fever", "cough", "runny_nose"]}
+{"id": "tl282", "text": "Sakit ulo lagnat tapos masakit pa katawan", "labels": ["headache", "fever", "body_aches"]}
+{"id": "tl283", "text": "Ubo may plema tapos lagnat pa", "labels": ["cough", "fever"]}
+{"id": "tl284", "text": "Sipon ubo tapos barado pa ilong", "labels": ["runny_nose", "cough", "stuffy_nose"]}
+{"id": "tl285", "text": "Masakit lalamunan tapos ubo pa", "labels": ["sore_throat", "cough"]}
+{"id": "tl286", "text": "Nahihilo tapos nasusuka ako", "labels": ["dizziness", "nausea"]}
+{"id": "tl287", "text": "Sumasakit tiyan tapos nagtatae", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "tl288", "text": "Pagod tapos masakit pa katawan", "labels": ["fatigue", "body_aches"]}
+{"id": "tl289", "text": "Hirap huminga tapos masakit dibdib", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "tl290", "text": "Sumasakit ulo ko tapos ubo pa ako", "labels": ["headache", "cough"]}
+{"id": "tl291", "text": "Mainit ako tapos sipon din", "labels": ["fever", "runny_nose"]}
+{"id": "tl292", "text": "Masakit tiyan tapos nahihilo", "labels": ["stomach_ache", "dizziness"]}
+{"id": "tl293", "text": "Barado ilong tapos masakit ulo", "labels": ["stuffy_nose", "headache"]}
+{"id": "tl294", "text": "Hina ko tapos lagnat pa", "labels": ["fatigue", "fever"]}
+{"id": "tl295", "text": "Ubo tapos masakit dibdib pag umuubo", "labels": ["cough", "chest_pain"]}
+{"id": "tl296", "text": "Wala akong lagnat pero umuubo lang", "labels": ["cough"]}
+{"id": "tl297", "text": "Hindi naman masakit ulo ko pero mainit", "labels": ["fever"]}
+{"id": "tl298", "text": "Di ako umuubo pero sipon lang", "labels": ["runny_nose"]}
+{"id": "tl299", "text": "Walang sakit ng tiyan pero nagtatae", "labels": ["diarrhea"]}
+{"id": "tl300", "text": "Hindi masakit lalamunan pero umuubo", "labels": ["cough"]}
+{"id": "tl301", "text": "Di ako mainit pero nahihilo", "labels": ["dizziness"]}
+{"id": "tl302", "text": "Wala naman sakit pero pagod lang", "labels": ["fatigue"]}
+{"id": "tl303", "text": "Hindi naman ubo pero barado ilong", "labels": ["stuffy_nose"]}
+{"id": "tl304", "text": "Walang lagnat pero masakit katawan", "labels": ["body_aches"]}
+{"id": "tl305", "text": "Di masakit dibdib pero hirap huminga", "labels": ["shortness_of_breath"]}
+{"id": "tl306", "text": "mskit ulo", "labels": ["headache"]}
+{"id": "tl307", "text": "lgnAt ako", "labels": ["fever"]}
+{"id": "tl308", "text": "umUubo", "labels": ["cough"]}
+{"id": "tl309", "text": "sepOn ko", "labels": ["runny_nose"]}
+{"id": "tl310", "text": "maSkiT tyan", "labels": ["stomach_ache"]}
+{"id": "tl311", "text": "skit ulo ko eh", "labels": ["headache"]}
+{"id": "tl312", "text": "may lgnat ata", "labels": ["fever"]}
+{"id": "tl313", "text": "ubu ng ubu", "labels": ["cough"]}
+{"id": "tl314", "text": "pagtAe ko", "labels": ["diarrhea"]}
+{"id": "tl315", "text": "hhlo ako", "labels": ["dizziness"]}
+{"id": "tl316", "text": "masakit ulu ko grabe", "labels": ["headache"]}
+{"id": "tl317", "text": "ininit ako ngayon", "labels": ["fever"]}
+{"id": "tl318", "text": "umuubu ako madalas", "labels": ["cough"]}
+{"id": "tl319", "text": "tuloy tuloy sepon", "labels": ["runny_nose"]}
+{"id": "tl320", "text": "sumasakit tiyan ko na", "labels": ["stomach_ache"]}
+{"id": "tl321", "text": "sakIt ng olo ko", "labels": ["headache"]}
+{"id": "tl322", "text": "init init kAtawan", "labels": ["fever"]}
+{"id": "tl323", "text": "ubo uBo lng", "labels": ["cough"]}
+{"id": "tl324", "text": "spon ko grbe", "labels": ["runny_nose"]}
+{"id": "tl325", "text": "masaket tian", "labels": ["stomach_ache"]}
+{"id": "tl326", "text": "Paket sakit ulo ko ano ba", "labels": ["headache"]}
+{"id": "tl327", "text": "Init init init sobra", "labels": ["fever"]}
+{"id": "tl328", "text": "Yawa ubo ko di huminto", "labels": ["cough"]}
+{"id": "tl329", "text": "Shet sipon nanaman", "labels": ["runny_nose"]}
+{"id": "tl330", "text": "Pota masakit tiyan ko talaga", "labels": ["stomach_ache"]}
+{"id": "tl331", "text": "Ang sakit naman ng ulo ko ngayon", "labels": ["headache"]}
+{"id": "tl332", "text": "Sobrang init ko ano nangyayari", "labels": ["fever"]}
+{"id": "tl333", "text": "Ubo pa more ako ngayon", "labels": ["cough"]}
+{"id": "tl334", "text": "Sipon mode activated", "labels": ["runny_nose"]}
+{"id": "tl335", "text": "Tiyan ko sumasakit na naman", "labels": ["stomach_ache"]}
+{"id": "tl336", "text": "Ulo ko parang pupwede na lumipad sa sakit", "labels": ["headache"]}
+{"id": "tl337", "text": "Mainit na mainit katawan seriously", "labels": ["fever"]}
+{"id": "tl338", "text": "Pucha ubo ko tuloy tuloy talaga", "labels": ["cough"]}
+{"id": "tl339", "text": "Grabe naman sipon ko today", "labels": ["runny_nose"]}
+{"id": "tl340", "text": "Lord bakit masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl341", "text": "Pwede ba tumigil sakit ng ulo ko", "labels": ["headache"]}
+{"id": "tl342", "text": "Bat ganito ka init katawan ko", "labels": ["fever"]}
+{"id": "tl343", "text": "Kelan ba titigil ubo ko to", "labels": ["cough"]}
+{"id": "tl344", "text": "San galing sipon ko to walang katapusan", "labels": ["runny_nose"]}
+{"id": "tl345", "text": "Bakit hindi mawala sakit ng tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl346", "text": "Masakit na naman ulo ko bukas exam pa", "labels": ["headache"]}
+{"id": "tl347", "text": "Lagnat nanaman ako lagi nalang", "labels": ["fever"]}
+{"id": "tl348", "text": "Ubo ko bumalik nanaman", "labels": ["cough"]}
+{"id": "tl349", "text": "Di pa rin mawala sipon ko", "labels": ["runny_nose"]}
+{"id": "tl350", "text": "Tyan ko masakit pa rin hanggang ngayon", "labels": ["stomach_ache"]}
+{"id": "tl351", "text": "Ulo ko sobrang sakit parang sasabog", "labels": ["headache"]}
+{"id": "tl352", "text": "Katawan ko mainit pero normal temp sa thermo", "labels": ["fever"]}
+{"id": "tl353", "text": "Ubo ko pag gabi lang lumalala", "labels": ["cough"]}
+{"id": "tl354", "text": "Sipon ko pag umaga lang madalas", "labels": ["runny_nose"]}
+{"id": "tl355", "text": "Tiyan ko pag kumakain sumasakit", "labels": ["stomach_ache"]}
+{"id": "tl356", "text": "Sakit ng ulo ko pag stressed lang", "labels": ["headache"]}
+{"id": "tl357", "text": "Lagnat ko pag hapon dumadating", "labels": ["fever"]}
+{"id": "tl358", "text": "Ubo ko pag nakahiga lumalala", "labels": ["cough"]}
+{"id": "tl359", "text": "Sipon ko pag malamig panahon", "labels": ["runny_nose"]}
+{"id": "tl360", "text": "Tiyan ko pag busog sumasakit", "labels": ["stomach_ache"]}
+{"id": "tl361", "text": "Migrane ata to grabe sakit", "labels": ["headache"]}
+{"id": "tl362", "text": "Flu siguro to kasi mainit at ubo", "labels": ["fever", "cough"]}
+{"id": "tl363", "text": "Trangkaso yata sakit katawan lagnat", "labels": ["body_aches", "fever"]}
+{"id": "tl364", "text": "Common cold lang ata sipon ubo", "labels": ["runny_nose", "cough"]}
+{"id": "tl365", "text": "LBM nanaman ako grabe", "labels": ["diarrhea"]}
+{"id": "tl366", "text": "Parang may sore eyes ako tapos sipon", "labels": ["runny_nose"]}
+{"id": "tl367", "text": "Tension headache siguro dahil stress", "labels": ["headache"]}
+{"id": "tl368", "text": "Gastric problem ata masakit tiyan", "labels": ["stomach_ache"]}
+{"id": "tl369", "text": "Vertigo siguro to nahihilo talaga", "labels": ["dizziness"]}
+{"id": "tl370", "text": "Food poisoning yata sumusuka ako", "labels": ["vomiting"]}
+{"id": "tl371", "text": "Baka dengue to lagnat tapos sakit katawan", "labels": ["fever", "body_aches"]}
+{"id": "tl372", "text": "COVID ba to ubo lagnat", "labels": ["cough", "fever"]}
+{"id": "tl373", "text": "Allergies lang siguro sipon at bahing", "labels": ["runny_nose"]}
+{"id": "tl374", "text": "Dehydrated siguro nahihilo at nanghihina", "labels": ["dizziness", "fatigue"]}
+{"id": "tl375", "text": "Kulang tulog kaya masakit ulo", "labels": ["headache"]}
+{"id": "tl376", "text": "Gutom siguro kaya sumasakit tiyan", "labels": ["stomach_ache"]}
+{"id": "tl377", "text": "Init ng panahon kaya mainit ako", "labels": ["fever"]}
+{"id": "tl378", "text": "Aircon kaya siguro sipon ako", "labels": ["runny_nose"]}
+{"id": "tl379", "text": "Yosi siguro dahilan ng ubo ko", "labels": ["cough"]}
+{"id": "tl380", "text": "Kape siguro kaya acidic tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl381", "text": "Inom ko biogesic para sa ulo ko", "labels": ["headache"]}
+{"id": "tl382", "text": "Need ko tempra para sa lagnat", "labels": ["fever"]}
+{"id": "tl383", "text": "Kailangan ko solmux para sa ubo", "labels": ["cough"]}
+{"id": "tl384", "text": "Bili ako neozep para sa sipon", "labels": ["runny_nose"]}
+{"id": "tl385", "text": "Hanap ako kremil para sa tiyan", "labels": ["stomach_ache"]}
+{"id": "tl386", "text": "Saan may nagbebenta ng gamot sa ubo", "labels": ["cough"]}
+{"id": "tl387", "text": "Ano ba magandang gamot sa lagnat", "labels": ["fever"]}
+{"id": "tl388", "text": "Pano ba mawala sakit ng ulo", "labels": ["headache"]}
+{"id": "tl389", "text": "May gamot ba dito sa sipon", "labels": ["runny_nose"]}
+{"id": "tl390", "text": "Pwede ba uminom ng gamot sa tiyan", "labels": ["stomach_ache"]}
+{"id": "tl391", "text": "Sumakit ulo ko bigla kanina", "labels": ["headache"]}
+{"id": "tl392", "text": "Nilalagnat ako ngayong gabi", "labels": ["fever"]}
+{"id": "tl393", "text": "Umuubo ako simula kahapon", "labels": ["cough"]}
+{"id": "tl394", "text": "Sipon ako buong araw", "labels": ["runny_nose"]}
+{"id": "tl395", "text": "Masakit tiyan ko nung kumain ako", "labels": ["stomach_ache"]}
+{"id": "tl396", "text": "Grabe talaga sakit ng ulo ko ngayon", "labels": ["headache"]}
+{"id": "tl397", "text": "Super init ko parang sinaing", "labels": ["fever"]}
+{"id": "tl398", "text": "Tuloy tuloy talaga ubo ko walang tigil", "labels": ["cough"]}
+{"id": "tl399", "text": "Sobrang dami ng sipon ko grabe", "labels": ["runny_nose"]}
+{"id": "tl400", "text": "Hindi ko na kaya sakit ng tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl401", "text": "Aray sakit ng ulo ko talaga", "labels": ["headache"]}
+{"id": "tl402", "text": "Aba mainit nga ako eh", "labels": ["fever"]}
+{"id": "tl403", "text": "Ay nako ubo nanaman", "labels": ["cough"]}
+{"id": "tl404", "text": "Naku sipon ko grabe", "labels": ["runny_nose"]}
+{"id": "tl405", "text": "Diyos ko masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl406", "text": "Paano ba mawala ulo ko", "labels": ["headache"]}
+{"id": "tl407", "text": "Kailan kaya mawawala lagnat ko", "labels": ["fever"]}
+{"id": "tl408", "text": "Sana mawala na ubo ko", "labels": ["cough"]}
+{"id": "tl409", "text": "Kelan ba titigil sipon ko", "labels": ["runny_nose"]}
+{"id": "tl410", "text": "Ayoko na masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl411", "text": "Ulo ko talaga masakit grabe no", "labels": ["headache"]}
+{"id": "tl412", "text": "Init katawan ko ano kaya to", "labels": ["fever"]}
+{"id": "tl413", "text": "Ubo ko bakit di humihinto", "labels": ["cough"]}
+{"id": "tl414", "text": "Sipon ko san ba galing to", "labels": ["runny_nose"]}
+{"id": "tl415", "text": "Tiyan ko bakit sumasakit", "labels": ["stomach_ache"]}
+{"id": "tl416", "text": "Headache nanaman today", "labels": ["headache"]}
+{"id": "tl417", "text": "Fever mode ako ngayon", "labels": ["fever"]}
+{"id": "tl418", "text": "Cough pa more", "labels": ["cough"]}
+{"id": "tl419", "text": "Sipon season nanaman", "labels": ["runny_nose"]}
+{"id": "tl420", "text": "Tummy ache problems", "labels": ["stomach_ache"]}
+{"id": "tl421", "text": "Bwisit sakit ulo ko", "labels": ["headache"]}
+{"id": "tl422", "text": "Tang ina mainit ako", "labels": ["fever"]}
+{"id": "tl423", "text": "Putang ubo to", "labels": ["cough"]}
+{"id": "tl424", "text": "Leche sipon nanaman", "labels": ["runny_nose"]}
+{"id": "tl425", "text": "Peste masakit tiyan", "labels": ["stomach_ache"]}
+{"id": "tl426", "text": "Nakakainis sakit ulo ko", "labels": ["headache"]}
+{"id": "tl427", "text": "Nakakapagod mainit lagi", "labels": ["fever"]}
+{"id": "tl428", "text": "Nakakabwisit ubo ko", "labels": ["cough"]}
+{"id": "tl429", "text": "Nakakainis sipon ko", "labels": ["runny_nose"]}
+{"id": "tl430", "text": "Nakakahinayang sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "tl431", "text": "Tangina talaga sakit ulo ko", "labels": ["headache"]}
+{"id": "tl432", "text": "Punyeta mainit katawan ko", "labels": ["fever"]}
+{"id": "tl433", "text": "Gago ubo ko di mawala", "labels": ["cough"]}
+{"id": "tl434", "text": "Ulol sipon ko ayaw huminto", "labels": ["runny_nose"]}
+{"id": "tl435", "text": "Bwakananginang tiyan to", "labels": ["stomach_ache"]}
+{"id": "tl436", "text": "Parang may kumukurot sa ulo ko", "labels": ["headache"]}
+{"id": "tl437", "text": "Parang may sumusunog sa loob ko", "labels": ["fever"]}
+{"id": "tl438", "text": "Parang may gumagalaw sa lalamunan kaya umuubo", "labels": ["cough"]}
+{"id": "tl439", "text": "Parang tubig gripo sipon ko", "labels": ["runny_nose"]}
+{"id": "tl440", "text": "Parang may kumakagat sa tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl441", "text": "Feeling ko sasabog ulo ko sa sakit", "labels": ["headache"]}
+{"id": "tl442", "text": "Feeling ko nilalagnat ako pero di ko sure", "labels": ["fever"]}
+{"id": "tl443", "text": "Feeling ko uubo nanaman ako mamaya", "labels": ["cough"]}
+{"id": "tl444", "text": "Feeling ko sipon to pero di pa sure", "labels": ["runny_nose"]}
+{"id": "tl445", "text": "Feeling ko masakit tiyan ko bukas", "labels": ["stomach_ache"]}
+{"id": "tl446", "text": "Mukhang masakit ulo ko nanaman", "labels": ["headache"]}
+{"id": "tl447", "text": "Mukhang lagnat na naman to", "labels": ["fever"]}
+{"id": "tl448", "text": "Mukhang ubo nanaman ako", "labels": ["cough"]}
+{"id": "tl449", "text": "Mukhang sipon lang to", "labels": ["runny_nose"]}
+{"id": "tl450", "text": "Mukhang masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl451", "text": "Siguro sakit ulo ko dahil sa stress", "labels": ["headache"]}
+{"id": "tl452", "text": "Siguro lagnat ko dahil sa lamig", "labels": ["fever"]}
+{"id": "tl453", "text": "Siguro ubo ko dahil sa usok", "labels": ["cough"]}
+{"id": "tl454", "text": "Siguro sipon ko dahil sa aircon", "labels": ["runny_nose"]}
+{"id": "tl455", "text": "Siguro masakit tiyan ko dahil sa kain", "labels": ["stomach_ache"]}
+{"id": "tl456", "text": "Ata masakit ulo ko bukas", "labels": ["headache"]}
+{"id": "tl457", "text": "Ata lagnat nanaman ako", "labels": ["fever"]}
+{"id": "tl458", "text": "Ata umuubo nanaman ako", "labels": ["cough"]}
+{"id": "tl459", "text": "Ata sipon nanaman to", "labels": ["runny_nose"]}
+{"id": "tl460", "text": "Ata sumasakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl461", "text": "Yata masakit ulo ko ngayon", "labels": ["headache"]}
+{"id": "tl462", "text": "Yata mainit ako eh", "labels": ["fever"]}
+{"id": "tl463", "text": "Yata umuubo ako", "labels": ["cough"]}
+{"id": "tl464", "text": "Yata may sipon ako", "labels": ["runny_nose"]}
+{"id": "tl465", "text": "Yata masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl466", "text": "Baka sakit ulo ko lang to", "labels": ["headache"]}
+{"id": "tl467", "text": "Baka lagnat lang to", "labels": ["fever"]}
+{"id": "tl468", "text": "Baka ubo lang naman to", "labels": ["cough"]}
+{"id": "tl469", "text": "Baka sipon lang yan", "labels": ["runny_nose"]}
+{"id": "tl470", "text": "Baka sakit tiyan lang", "labels": ["stomach_ache"]}
+{"id": "tl471", "text": "Parang ulo ko lang sumasakit", "labels": ["headache"]}
+{"id": "tl472", "text": "Parang mainit lang ako", "labels": ["fever"]}
+{"id": "tl473", "text": "Parang ubo lang to", "labels": ["cough"]}
+{"id": "tl474", "text": "Parang sipon lang naman", "labels": ["runny_nose"]}
+{"id": "tl475", "text": "Parang tiyan lang sumasakit", "labels": ["stomach_ache"]}
+{"id": "tl476", "text": "Masakit na pala ulo ko pala", "labels": ["headache"]}
+{"id": "tl477", "text": "Mainit na pala ako pala", "labels": ["fever"]}
+{"id": "tl478", "text": "Umuubo na pala ako pala", "labels": ["cough"]}
+{"id": "tl479", "text": "May sipon na pala ako pala", "labels": ["runny_nose"]}
+{"id": "tl480", "text": "Masakit na pala tiyan ko pala", "labels": ["stomach_ache"]}
+{"id": "tl481", "text": "Ang sakit na ng ulo ko na", "labels": ["headache"]}
+{"id": "tl482", "text": "Ang init na ko na", "labels": ["fever"]}
+{"id": "tl483", "text": "Ang ubo ko na grabe", "labels": ["cough"]}
+{"id": "tl484", "text": "Ang sipon ko na sobra", "labels": ["runny_nose"]}
+{"id": "tl485", "text": "Ang sakit na tiyan ko na", "labels": ["stomach_ache"]}
+{"id": "tl486", "text": "Di na ako makakain dahil masakit lalamunan", "labels": ["sore_throat"]}
+{"id": "tl487", "text": "Di na ako makatulog dahil sa ubo", "labels": ["cough"]}
+{"id": "tl488", "text": "Di na ako makagalaw dahil pagod", "labels": ["fatigue"]}
+{"id": "tl489", "text": "Di na ako makahinga ng maayos", "labels": ["shortness_of_breath"]}
+{"id": "tl490", "text": "Di na ako makagalaw dahil sakit katawan", "labels": ["body_aches"]}
+{"id": "tl491", "text": "Sobrang sakit na ng ulo ko talaga", "labels": ["headache"]}
+{"id": "tl492", "text": "Sobrang init ko na ngayon talaga", "labels": ["fever"]}
+{"id": "tl493", "text": "Sobrang ubo ko na walang tigil talaga", "labels": ["cough"]}
+{"id": "tl494", "text": "Sobrang sipon ko na grabe talaga", "labels": ["runny_nose"]}
+{"id": "tl495", "text": "Sobrang sakit na tiyan ko talaga", "labels": ["stomach_ache"]}
+{"id": "tl496", "text": "Grabe na talaga sakit ulo ko di ko na kaya", "labels": ["headache"]}
+{"id": "tl497", "text": "Init ko sobra na talaga parang pinapawisan na", "labels": ["fever"]}
+{"id": "tl498", "text": "Ubo ko di na talaga tumitigil kahit ano gawin ko", "labels": ["cough"]}
+{"id": "tl499", "text": "Sipon ko ayaw na talaga tumigil kahit anong gamot", "labels": ["runny_nose"]}
+{"id": "tl500", "text": "Tiyan ko sobrang sakit na talaga di ko na alam gagawin", "labels": ["stomach_ache"]}
+{"id": "tl501", "text": "Hilo na ako talaga", "labels": ["dizziness"]}
+{"id": "tl502", "text": "Nahihilo ako grabe", "labels": ["dizziness"]}
+{"id": "tl503", "text": "Hilo hilo talaga", "labels": ["dizziness"]}
+{"id": "tl504", "text": "Sobrang hilo ko", "labels": ["dizziness"]}
+{"id": "tl505", "text": "Hilo ko pag tumayo", "labels": ["dizziness"]}
+{"id": "tl506", "text": "Masakit ulo ko sobra", "labels": ["headache"]}
+{"id": "tl507", "text": "Lagnat na naman", "labels": ["fever"]}
+{"id": "tl508", "text": "Ubo ko di humihinto", "labels": ["cough"]}
+{"id": "tl509", "text": "Sipon na naman ako", "labels": ["runny_nose"]}
+{"id": "tl510", "text": "Sumasakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "tl511", "text": "Nahihilo at nasusuka", "labels": ["dizziness", "nausea"]}
+{"id": "tl512", "text": "Hilo tapos suka pa", "labels": ["dizziness", "nausea"]}
+{"id": "tl513", "text": "Parang lasing nahihilo", "labels": ["dizziness"]}
+{"id": "tl514", "text": "Umiikot paligid nahihilo", "labels": ["dizziness"]}
+{"id": "tl515", "text": "Hilo pag gumalaw", "labels": ["dizziness"]}
+{"id": "tl516", "text": "Masakit ulo lagnat pa", "labels": ["headache", "fever"]}
+{"id": "tl517", "text": "Init init pero hilo", "labels": ["fever", "dizziness"]}
+{"id": "tl518", "text": "Ubo sipon lagnat", "labels": ["cough", "runny_nose", "fever"]}
+{"id": "tl519", "text": "Hilo ulo sakit", "labels": ["dizziness", "headache"]}
+{"id": "tl520", "text": "Nahihilo sa sakit ng ulo", "labels": ["dizziness", "headache"]}
+{"id": "tl521", "text": "Hlo ko grabe", "labels": ["dizziness"]}
+{"id": "tl522", "text": "Nhihilo talaga", "labels": ["dizziness"]}
+{"id": "tl523", "text": "Hlo pag tayo", "labels": ["dizziness"]}
+{"id": "tl524", "text": "Msakit ulo ko", "labels": ["headache"]}
+{"id": "tl525", "text": "Lgnat ko", "labels": ["fever"]}
+{"id": "tl526", "text": "Ubu ko", "labels": ["cough"]}
+{"id": "tl527", "text": "Spun ako", "labels": ["runny_nose"]}
+{"id": "tl528", "text": "Tyan ko msakit", "labels": ["stomach_ache"]}
+{"id": "tl529", "text": "Hlo nska", "labels": ["dizziness", "nausea"]}
+{"id": "tl530", "text": "Ulo ko skt", "labels": ["headache"]}
+{"id": "tl531", "text": "Nahihilo ako ngayon", "labels": ["dizziness"]}
+{"id": "tl532", "text": "Paikot ikot nahihilo", "labels": ["dizziness"]}
+{"id": "tl533", "text": "Hilo ako pag bangon", "labels": ["dizziness"]}
+{"id": "tl534", "text": "Lasing ba ako hilo eh", "labels": ["dizziness"]}
+{"id": "tl535", "text": "Nahihilo kahit nakaupo", "labels": ["dizziness"]}
+{"id": "tl536", "text": "Sakit ulo ko mula kaninang umaga", "labels": ["headache"]}
+{"id": "tl537", "text": "Lagnat ko simula kagabi", "labels": ["fever"]}
+{"id": "tl538", "text": "Ubo ko tuloy tuloy di humihinto", "labels": ["cough"]}
+{"id": "tl539", "text": "Sipon ko palabas ng palabas", "labels": ["runny_nose"]}
+{"id": "tl540", "text": "Sumasakit tiyan ko after kumain", "labels": ["stomach_ache"]}
+{"id": "tl541", "text": "Nahihilo tapos nasusuka pa ako", "labels": ["dizziness", "nausea"]}
+{"id": "tl542", "text": "Hilo hilo tapos suka", "labels": ["dizziness", "nausea"]}
+{"id": "tl543", "text": "Parang gumagala paligid ko hilo", "labels": ["dizziness"]}
+{"id": "tl544", "text": "Ayoko na tumayo nahihilo ako", "labels": ["dizziness"]}
+{"id": "tl545", "text": "Hilo ko sobrang lala", "labels": ["dizziness"]}
+{"id": "tl546", "text": "Ulo ko parang binibiyak", "labels": ["headache"]}
+{"id": "tl547", "text": "Init katawan ko nanginginig", "labels": ["fever"]}
+{"id": "tl548", "text": "Ubo ng ubo ako kanina pa", "labels": ["cough"]}
+{"id": "tl549", "text": "Sipon palabas", "labels": ["runny_nose"]}
+{"id": "tl550", "text": "Tiyan ko kirot kirot", "labels": ["stomach_ache"]}
+{"id": "tl551", "text": "Nhlo nman ako", "labels": ["dizziness"]}
+{"id": "tl552", "text": "Hlo gabe", "labels": ["dizziness"]}
+{"id": "tl553", "text": "Nhlo pg bnangon", "labels": ["dizziness"]}
+{"id": "tl554", "text": "Ulo sakt grbe", "labels": ["headache"]}
+{"id": "tl555", "text": "Lgnt na nmn", "labels": ["fever"]}
+{"id": "tl556", "text": "Ubu tly tloy", "labels": ["cough"]}
+{"id": "tl557", "text": "Spn plbas", "labels": ["runny_nose"]}
+{"id": "tl558", "text": "Tyn krot", "labels": ["stomach_ache"]}
+{"id": "tl559", "text": "Hlo ska ako", "labels": ["dizziness", "nausea"]}
+{"id": "tl560", "text": "Ulo mskeet", "labels": ["headache"]}
+{"id": "tl561", "text": "Nahihilo na ako talaga ngayon", "labels": ["dizziness"]}
+{"id": "tl562", "text": "Parang umiikot yung paligid hilo", "labels": ["dizziness"]}
+{"id": "tl563", "text": "Hilo ko hindi mawala", "labels": ["dizziness"]}
+{"id": "tl564", "text": "Sobrang hilo ko di ako makatayo", "labels": ["dizziness"]}
+{"id": "tl565", "text": "Nahihilo ako pag tumitingin sa phone", "labels": ["dizziness"]}
+{"id": "tl566", "text": "Sakit ulo ko pag stressed", "labels": ["headache"]}
+{"id": "tl567", "text": "Lagnat ko bumalik", "labels": ["fever"]}
+{"id": "tl568", "text": "Ubo ko may plema", "labels": ["cough"]}
+{"id": "tl569", "text": "Sipon ko walang tigil", "labels": ["runny_nose"]}
+{"id": "tl570", "text": "Sumasakit tiyan ko pag gutom", "labels": ["stomach_ache"]}
+{"id": "tl571", "text": "Nahihilo nasusuka pa", "labels": ["dizziness", "nausea"]}
+{"id": "tl572", "text": "Hilo tapos masama pakiramdam tiyan", "labels": ["dizziness", "nausea"]}
+{"id": "tl573", "text": "Parang lasing nahihilo pero di naman", "labels": ["dizziness"]}
+{"id": "tl574", "text": "Ayaw tumigil ng hilo ko", "labels": ["dizziness"]}
+{"id": "tl575", "text": "Hilo ko lalo pag nakahiga", "labels": ["dizziness"]}
+{"id": "tl576", "text": "Ulo ko parang sasabog sa sakit", "labels": ["headache"]}
+{"id": "tl577", "text": "Init ko parang niluluto", "labels": ["fever"]}
+{"id": "tl578", "text": "Ubo ko dry walang plema", "labels": ["cough"]}
+{"id": "tl579", "text": "Sipon ko mula kanina", "labels": ["runny_nose"]}
+{"id": "tl580", "text": "Tiyan ko parang may kumakain sa loob", "labels": ["stomach_ache"]}
+{"id": "tl581", "text": "Hlo nska ko gabe", "labels": ["dizziness", "nausea"]}
+{"id": "tl582", "text": "Ulo ko grbe sakt", "labels": ["headache"]}
+{"id": "tl583", "text": "Lgnaat koo", "labels": ["fever"]}
+{"id": "tl584", "text": "Uboo akoo", "labels": ["cough"]}
+{"id": "tl585", "text": "Sipuun nakoo", "labels": ["runny_nose"]}
+{"id": "tl586", "text": "Tyaan sakiit", "labels": ["stomach_ache"]}
+{"id": "tl587", "text": "Hilloo grbe", "labels": ["dizziness"]}
+{"id": "tl588", "text": "Pagodd naa", "labels": ["fatigue"]}
+{"id": "tl589", "text": "Katawaan sakitt", "labels": ["body_aches"]}
+{"id": "tl590", "text": "Ubbo lang", "labels": ["cough"]}
+{"id": "tl591", "text": "Nahihilo talaga ako ngayon ng sobra", "labels": ["dizziness"]}
+{"id": "tl592", "text": "Umiikot yung mundo hilo ako", "labels": ["dizziness"]}
+{"id": "tl593", "text": "Hilo ko hindi ko alam bakit", "labels": ["dizziness"]}
+{"id": "tl594", "text": "Grabe hilo ko di ako makagalaw", "labels": ["dizziness"]}
+{"id": "tl595", "text": "Nahihilo pag gumagalaw ako", "labels": ["dizziness"]}
+{"id": "tl596", "text": "Sakit ulo ko hanggang ngayon", "labels": ["headache"]}
+{"id": "tl597", "text": "Lagnat ko mataas", "labels": ["fever"]}
+{"id": "tl598", "text": "Ubo ko walang patawad", "labels": ["cough"]}
+{"id": "tl599", "text": "Sipon ko ayaw tumigil", "labels": ["runny_nose"]}
+{"id": "tl600", "text": "Sumasakit tiyan ko bigla", "labels": ["stomach_ache"]}
+{"id": "tl601", "text": "Nahihilo suka pa ako", "labels": ["dizziness", "nausea"]}
+{"id": "tl602", "text": "Hilo tapos gusto sumuka", "labels": ["dizziness", "nausea"]}
+{"id": "tl603", "text": "Parang may umiikot hilo", "labels": ["dizziness"]}
+{"id": "tl604", "text": "Di ako makapagtayo ng maayos hilo", "labels": ["dizziness"]}
+{"id": "tl605", "text": "Hilo ko pag madilim", "labels": ["dizziness"]}
+{"id": "tl606", "text": "Ulo ko sumasakit pag maingay", "labels": ["headache"]}
+{"id": "tl607", "text": "Init ko pag hapon", "labels": ["fever"]}
+{"id": "tl608", "text": "Ubo ko pag gabi lumalala", "labels": ["cough"]}
+{"id": "tl609", "text": "Sipon ko umaga palang", "labels": ["runny_nose"]}
+{"id": "tl610", "text": "Tiyan ko sumasakit pag kumakain", "labels": ["stomach_ache"]}
+{"id": "tl611", "text": "Hlo nska gbe", "labels": ["dizziness", "nausea"]}
+{"id": "tl612", "text": "Ulo skt tlga", "labels": ["headache"]}
+{"id": "tl613", "text": "Lngat koo", "labels": ["fever"]}
+{"id": "tl614", "text": "Ubu akoo", "labels": ["cough"]}
+{"id": "tl615", "text": "Spn nkoo", "labels": ["runny_nose"]}
+{"id": "tl616", "text": "Tyn sakiit", "labels": ["stomach_ache"]}
+{"id": "tl617", "text": "Hlo gbe ko", "labels": ["dizziness"]}
+{"id": "tl618", "text": "Pgod naa ko", "labels": ["fatigue"]}
+{"id": "tl619", "text": "Ktwan sakitt", "labels": ["body_aches"]}
+{"id": "tl620", "text": "Ubo lngg", "labels": ["cough"]}
+{"id": "tl621", "text": "Nahihilo ako sobrang lala ngayon", "labels": ["dizziness"]}
+{"id": "tl622", "text": "Parang umiikot lahat hilo talaga", "labels": ["dizziness"]}
+{"id": "tl623", "text": "Hilo ko di ko na kaya", "labels": ["dizziness"]}
+{"id": "tl624", "text": "Sobra sobra hilo ko", "labels": ["dizziness"]}
+{"id": "tl625", "text": "Nahihilo ako kahit nakaupo lang", "labels": ["dizziness"]}
+{"id": "tl626", "text": "Sakit ulo ko kanina pa umaga", "labels": ["headache"]}
+{"id": "tl627", "text": "Lagnat ko buong gabi", "labels": ["fever"]}
+{"id": "tl628", "text": "Ubo ko may kasamang uhog", "labels": ["cough"]}
+{"id": "tl629", "text": "Sipon ko mainit", "labels": ["runny_nose"]}
+{"id": "tl630", "text": "Sumasakit tiyan ko pag tapos kumain", "labels": ["stomach_ache"]}
+{"id": "tl631", "text": "Nahihilo suka talaga", "labels": ["dizziness", "nausea"]}
+{"id": "tl632", "text": "Hilo suka combo", "labels": ["dizziness", "nausea"]}
+{"id": "tl633", "text": "Parang may sumasayaw hilo", "labels": ["dizziness"]}
+{"id": "tl634", "text": "Di makatayo dahil sa hilo", "labels": ["dizziness"]}
+{"id": "tl635", "text": "Hilo ko pag kumakain", "labels": ["dizziness"]}
+{"id": "tl636", "text": "Ulo ko tumutugtog", "labels": ["headache"]}
+{"id": "tl637", "text": "Init katawan nanginginig pa", "labels": ["fever"]}
+{"id": "tl638", "text": "Ubo dry cough lang", "labels": ["cough"]}
+{"id": "tl639", "text": "Sipon green na", "labels": ["runny_nose"]}
+{"id": "tl640", "text": "Tiyan ko acidic", "labels": ["stomach_ache"]}
+{"id": "tl641", "text": "Nhlo skaa", "labels": ["dizziness", "nausea"]}
+{"id": "tl642", "text": "Ulo skt na", "labels": ["headache"]}
+{"id": "tl643", "text": "Lgnat paa", "labels": ["fever"]}
+{"id": "tl644", "text": "Ubu koo", "labels": ["cough"]}
+{"id": "tl645", "text": "Spn paa", "labels": ["runny_nose"]}
+{"id": "tl646", "text": "Tyn skt", "labels": ["stomach_ache"]}
+{"id": "tl647", "text": "Hlo na", "labels": ["dizziness"]}
+{"id": "tl648", "text": "Pgod k", "labels": ["fatigue"]}
+{"id": "tl649", "text": "Ktwan sk", "labels": ["body_aches"]}
+{"id": "tl650", "text": "Ubo na", "labels": ["cough"]}
+{"id": "tl651", "text": "Nahihilo grabe ko kasi", "labels": ["dizziness"]}
+{"id": "tl652", "text": "Ikot ikot paligid hilo", "labels": ["dizziness"]}
+{"id": "tl653", "text": "Hilo ko ayaw huminto", "labels": ["dizziness"]}
+{"id": "tl654", "text": "Grabe talaga hilo ko ngayon", "labels": ["dizziness"]}
+{"id": "tl655", "text": "Nahihilo pag tumatayo lang", "labels": ["dizziness"]}
+{"id": "tl656", "text": "Sakit ulo ko pag mainit", "labels": ["headache"]}
+{"id": "tl657", "text": "Lagnat pag gabi", "labels": ["fever"]}
+{"id": "tl658", "text": "Ubo pag malamig", "labels": ["cough"]}
+{"id": "tl659", "text": "Sipon pag umaga", "labels": ["runny_nose"]}
+{"id": "tl660", "text": "Sumasakit tiyan pag gutom na", "labels": ["stomach_ache"]}
+{"id": "tl661", "text": "Nahihilo nasusuka talaga", "labels": ["dizziness", "nausea"]}
+{"id": "tl662", "text": "Hilo suka na naman", "labels": ["dizziness", "nausea"]}
+{"id": "tl663", "text": "Parang lumulutang hilo", "labels": ["dizziness"]}
+{"id": "tl664", "text": "Di makalakad ng tuwid hilo", "labels": ["dizziness"]}
+{"id": "tl665", "text": "Hilo ko dahil sa init", "labels": ["dizziness"]}
+{"id": "tl666", "text": "Ulo ko parang binubugbog", "labels": ["headache"]}
+{"id": "tl667", "text": "Init ko sobra", "labels": ["fever"]}
+{"id": "tl668", "text": "Ubo ko walang plema", "labels": ["cough"]}
+{"id": "tl669", "text": "Sipon ko yellow", "labels": ["runny_nose"]}
+{"id": "tl670", "text": "Tiyan ko nag aalburuto", "labels": ["stomach_ache"]}
+{"id": "tl671", "text": "Hlo ska ko", "labels": ["dizziness", "nausea"]}
+{"id": "tl672", "text": "Ulo skt ko", "labels": ["headache"]}
+{"id": "tl673", "text": "Lgnt pako", "labels": ["fever"]}
+{"id": "tl674", "text": "Ubu koko", "labels": ["cough"]}
+{"id": "tl675", "text": "Spn pako", "labels": ["runny_nose"]}
+{"id": "tl676", "text": "Tyn sktko", "labels": ["stomach_ache"]}
+{"id": "tl677", "text": "Hlo ako", "labels": ["dizziness"]}
+{"id": "tl678", "text": "Pgod ako", "labels": ["fatigue"]}
+{"id": "tl679", "text": "Ktwan ako", "labels": ["body_aches"]}
+{"id": "tl680", "text": "Ubo ako", "labels": ["cough"]}
+{"id": "tl681", "text": "Nahihilo na naman ako ulit", "labels": ["dizziness"]}
+{"id": "tl682", "text": "Umiikot mundo hilo talaga", "labels": ["dizziness"]}
+{"id": "tl683", "text": "Hilo ko bumabalik", "labels": ["dizziness"]}
+{"id": "tl684", "text": "Sobrang hilo talaga", "labels": ["dizziness"]}
+{"id": "tl685", "text": "Nahihilo pag natitinag", "labels": ["dizziness"]}
+{"id": "tl686", "text": "Sakit ulo ko di mawala", "labels": ["headache"]}
+{"id": "tl687", "text": "Lagnat na tuloy tuloy", "labels": ["fever"]}
+{"id": "tl688", "text": "Ubo na walang tigil", "labels": ["cough"]}
+{"id": "tl689", "text": "Sipon na tuloy", "labels": ["runny_nose"]}
+{"id": "tl690", "text": "Sumasakit tiyan lagi", "labels": ["stomach_ache"]}
+{"id": "tl691", "text": "Nahihilo suka nanaman", "labels": ["dizziness", "nausea"]}
+{"id": "tl692", "text": "Hilo suka ulit", "labels": ["dizziness", "nausea"]}
+{"id": "tl693", "text": "Parang may gumagala hilo", "labels": ["dizziness"]}
+{"id": "tl694", "text": "Di tayo ng maayos hilo", "labels": ["dizziness"]}
+{"id": "tl695", "text": "Hilo ko dahil kulang tulog", "labels": ["dizziness"]}
+{"id": "tl696", "text": "Ulo ko sumasakit lagi", "labels": ["headache"]}
+{"id": "tl697", "text": "Init pag umaga", "labels": ["fever"]}
+{"id": "tl698", "text": "Ubo pag hapon", "labels": ["cough"]}
+{"id": "tl699", "text": "Sipon pag malamig", "labels": ["runny_nose"]}
+{"id": "tl700", "text": "Sumasakit tiyan after", "labels": ["stomach_ache"]}
+{"id": "tl701", "text": "Nhlo ska na", "labels": ["dizziness", "nausea"]}
+{"id": "tl702", "text": "Ulo skt na ko", "labels": ["headache"]}
+{"id": "tl703", "text": "Lgnt pa ko", "labels": ["fever"]}
+{"id": "tl704", "text": "Ubu ko pa", "labels": ["cough"]}
+{"id": "tl705", "text": "Spn pa ko", "labels": ["runny_nose"]}
+{"id": "tl706", "text": "Tyn skt ko", "labels": ["stomach_ache"]}
+{"id": "tl707", "text": "Hlo pa ko", "labels": ["dizziness"]}
+{"id": "tl708", "text": "Pgod pa ko", "labels": ["fatigue"]}
+{"id": "tl709", "text": "Ktwan pa ko", "labels": ["body_aches"]}
+{"id": "tl710", "text": "Ubo pa ko", "labels": ["cough"]}
+{"id": "tl711", "text": "Nahihilo ako dahil sa gutom", "labels": ["dizziness"]}
+{"id": "tl712", "text": "Ikot paligid ko hilo", "labels": ["dizziness"]}
+{"id": "tl713", "text": "Hilo ko di pa rin mawala", "labels": ["dizziness"]}
+{"id": "tl714", "text": "Grabe hilo ko ngayon talaga", "labels": ["dizziness"]}
+{"id": "tl715", "text": "Nahihilo pag nakatingin", "labels": ["dizziness"]}
+{"id": "tl716", "text": "Sakit ulo ko kanina pa", "labels": ["headache"]}
+{"id": "tl717", "text": "Lagnat galing kagabi", "labels": ["fever"]}
+{"id": "tl718", "text": "Ubo galing kahapon", "labels": ["cough"]}
+{"id": "tl719", "text": "Sipon mula umaga", "labels": ["runny_nose"]}
+{"id": "tl720", "text": "Sumasakit tiyan mula kanina", "labels": ["stomach_ache"]}
+{"id": "tl721", "text": "Nahihilo at sumusuka", "labels": ["dizziness", "nausea"]}
+{"id": "tl722", "text": "Hilo at suka pa", "labels": ["dizziness", "nausea"]}
+{"id": "tl723", "text": "Parang sumasayaw hilo", "labels": ["dizziness"]}
+{"id": "tl724", "text": "Di makatayo nang maayos hilo", "labels": ["dizziness"]}
+{"id": "tl725", "text": "Hilo dahil sa stress", "labels": ["dizziness"]}
+{"id": "tl726", "text": "Ulo ko may tumutuktok", "labels": ["headache"]}
+{"id": "tl727", "text": "Init tapos nanginginig", "labels": ["fever"]}
+{"id": "tl728", "text": "Ubo na dry", "labels": ["cough"]}
+{"id": "tl729", "text": "Sipon na malapot", "labels": ["runny_nose"]}
+{"id": "tl730", "text": "Tiyan ko sumasakit talaga", "labels": ["stomach_ache"]}
+{"id": "tl731", "text": "Hlo ska talaga", "labels": ["dizziness", "nausea"]}
+{"id": "tl732", "text": "Ulo skt talaga ko", "labels": ["headache"]}
+{"id": "tl733", "text": "Lgnt talaga ko", "labels": ["fever"]}
+{"id": "tl734", "text": "Ubu talaga ko", "labels": ["cough"]}
+{"id": "tl735", "text": "Spn talaga ko", "labels": ["runny_nose"]}
+{"id": "tl736", "text": "Tyn skt talaga", "labels": ["stomach_ache"]}
+{"id": "tl737", "text": "Hlo talaga", "labels": ["dizziness"]}
+{"id": "tl738", "text": "Pgod talaga", "labels": ["fatigue"]}
+{"id": "tl739", "text": "Ktwan talaga", "labels": ["body_aches"]}
+{"id": "tl740", "text": "Ubo talaga", "labels": ["cough"]}
+{"id": "tl741", "text": "Nahihilo ako ng sobra sobra", "labels": ["dizziness"]}
+{"id": "tl742", "text": "Umiikot lahat paligid hilo", "labels": ["dizziness"]}
+{"id": "tl743", "text": "Hilo ko grabe na", "labels": ["dizziness"]}
+{"id": "tl744", "text": "Sobra talaga hilo ko", "labels": ["dizziness"]}
+{"id": "tl745", "text": "Nahihilo pag tumatagal nakaupo", "labels": ["dizziness"]}
+{"id": "tl746", "text": "Sakit ulo ko sobra sobra", "labels": ["headache"]}
+{"id": "tl747", "text": "Lagnat buong araw", "labels": ["fever"]}
+{"id": "tl748", "text": "Ubo buong gabi", "labels": ["cough"]}
+{"id": "tl749", "text": "Sipon walang patawad", "labels": ["runny_nose"]}
+{"id": "tl750", "text": "Sumasakit tiyan ko bigla bigla", "labels": ["stomach_ache"]}
+{"id": "tl751", "text": "Nahihilo nasusuka pa rin", "labels": ["dizziness", "nausea"]}
+{"id": "tl752", "text": "Hilo suka pa rin", "labels": ["dizziness", "nausea"]}
+{"id": "tl753", "text": "Parang umiikot paikot hilo", "labels": ["dizziness"]}
+{"id": "tl754", "text": "Di makalakad ng maayos hilo", "labels": ["dizziness"]}
+{"id": "tl755", "text": "Hilo ko from kulang tulog", "labels": ["dizziness"]}
+{"id": "tl756", "text": "Ulo ko sumasakit pag uminom", "labels": ["headache"]}
+{"id": "tl757", "text": "Init pag tanghali", "labels": ["fever"]}
+{"id": "tl758", "text": "Ubo pag madaling araw", "labels": ["cough"]}
+{"id": "tl759", "text": "Sipon pag maligamgam", "labels": ["runny_nose"]}
+{"id": "tl760", "text": "Sumasakit tiyan before kumain", "labels": ["stomach_ache"]}
+{"id": "tl761", "text": "Hlo ska grbe", "labels": ["dizziness", "nausea"]}
+{"id": "tl762", "text": "Ulo skt grbe", "labels": ["headache"]}
+{"id": "tl763", "text": "Lgnt grbe", "labels": ["fever"]}
+{"id": "tl764", "text": "Ubu grbe", "labels": ["cough"]}
+{"id": "tl765", "text": "Spn grbe", "labels": ["runny_nose"]}
+{"id": "tl766", "text": "Tyn grbe", "labels": ["stomach_ache"]}
+{"id": "tl767", "text": "Hlo grbe", "labels": ["dizziness"]}
+{"id": "tl768", "text": "Pgod grbe", "labels": ["fatigue"]}
+{"id": "tl769", "text": "Ktwan grbe", "labels": ["body_aches"]}
+{"id": "tl770", "text": "Ubo grbe", "labels": ["cough"]}
+{"id": "tl771", "text": "Nahihilo ako di ko alam bakit talaga", "labels": ["dizziness"]}
+{"id": "tl772", "text": "Ikot mundo hilo eh", "labels": ["dizziness"]}
+{"id": "tl773", "text": "Hilo ko ayaw talaga mawala", "labels": ["dizziness"]}
+{"id": "tl774", "text": "Grabe grabe hilo ko", "labels": ["dizziness"]}
+{"id": "tl775", "text": "Nahihilo pag nakahiga", "labels": ["dizziness"]}
+{"id": "tl776", "text": "Sakit ulo ko palabas mata", "labels": ["headache"]}
+{"id": "tl777", "text": "Lagnat galing buong linggong", "labels": ["fever"]}
+{"id": "tl778", "text": "Ubo galing ilang araw", "labels": ["cough"]}
+{"id": "tl779", "text": "Sipon ilang linggo na", "labels": ["runny_nose"]}
+{"id": "tl780", "text": "Sumasakit tiyan ilang oras", "labels": ["stomach_ache"]}
+{"id": "tl781", "text": "Nahihilo nasusuka nauuhaw", "labels": ["dizziness", "nausea"]}
+{"id": "tl782", "text": "Hilo suka uhaw", "labels": ["dizziness", "nausea"]}
+{"id": "tl783", "text": "Parang spinning hilo", "labels": ["dizziness"]}
+{"id": "tl784", "text": "Di tayo tayo hilo eh", "labels": ["dizziness"]}
+{"id": "tl785", "text": "Hilo ko because of heat", "labels": ["dizziness"]}
+{"id": "tl786", "text": "Ulo ko pounding", "labels": ["headache"]}
+{"id": "tl787", "text": "Init sobra tapos nanginginig pa", "labels": ["fever"]}
+{"id": "tl788", "text": "Ubo na may blood", "labels": ["cough"]}
+{"id": "tl789", "text": "Sipon na colored", "labels": ["runny_nose"]}
+{"id": "tl790", "text": "Tiyan ko burning", "labels": ["stomach_ache"]}
+{"id": "tl791", "text": "Hlo ska ko tlga", "labels": ["dizziness", "nausea"]}
+{"id": "tl792", "text": "Ulo tlga skt", "labels": ["headache"]}
+{"id": "tl793", "text": "Lgnt tlga", "labels": ["fever"]}
+{"id": "tl794", "text": "Ubu tlga", "labels": ["cough"]}
+{"id": "tl795", "text": "Spn tlga", "labels": ["runny_nose"]}
+{"id": "tl796", "text": "Tyn tlga skt", "labels": ["stomach_ache"]}
+{"id": "tl797", "text": "Hlo tlga ako", "labels": ["dizziness"]}
+{"id": "tl798", "text": "Pgod tlga ako", "labels": ["fatigue"]}
+{"id": "tl799", "text": "Ktwan tlga skt", "labels": ["body_aches"]}
+{"id": "tl800", "text": "Ubo tlga ako", "labels": ["cough"]}
+{"id": "tl801", "text": "Nahihilo na ako ng todo todo", "labels": ["dizziness"]}
+{"id": "tl802", "text": "Umiikot umiikot hilo", "labels": ["dizziness"]}
+{"id": "tl803", "text": "Hilo ko ayaw na huminto talaga", "labels": ["dizziness"]}
+{"id": "tl804", "text": "Sobrang sobrang hilo ko", "labels": ["dizziness"]}
+{"id": "tl805", "text": "Nahihilo pag tumitingin sa malayo", "labels": ["dizziness"]}
+{"id": "tl806", "text": "Sakit ulo ko parang bibigat", "labels": ["headache"]}
+{"id": "tl807", "text": "Lagnat ko mula kaninang tanghali", "labels": ["fever"]}
+{"id": "tl808", "text": "Ubo ko mula kaninang umaga", "labels": ["cough"]}
+{"id": "tl809", "text": "Sipon ko mula kagabi pa", "labels": ["runny_nose"]}
+{"id": "tl810", "text": "Sumasakit tiyan ko since kanina", "labels": ["stomach_ache"]}
+{"id": "tl811", "text": "Nahihilo nasusuka nanaman talaga", "labels": ["dizziness", "nausea"]}
+{"id": "tl812", "text": "Hilo suka nanaman", "labels": ["dizziness", "nausea"]}
+{"id": "tl813", "text": "Parang lumalaki hilo", "labels": ["dizziness"]}
+{"id": "tl814", "text": "Di na makatayo hilo na hilo", "labels": ["dizziness"]}
+{"id": "tl815", "text": "Hilo ko worse na", "labels": ["dizziness"]}
+{"id": "tl816", "text": "Ulo ko splitting", "labels": ["headache"]}
+{"id": "tl817", "text": "Init pawisan na", "labels": ["fever"]}
+{"id": "tl818", "text": "Ubo na wet", "labels": ["cough"]}
+{"id": "tl819", "text": "Sipon na watery", "labels": ["runny_nose"]}
+{"id": "tl820", "text": "Tiyan ko cramping", "labels": ["stomach_ache"]}
+{"id": "tl821", "text": "Hlo ska ko na", "labels": ["dizziness", "nausea"]}
+{"id": "tl822", "text": "Ulo skt ko na", "labels": ["headache"]}
+{"id": "tl823", "text": "Lgnt ko na", "labels": ["fever"]}
+{"id": "tl824", "text": "Ubu ko na", "labels": ["cough"]}
+{"id": "tl825", "text": "Spn ko na", "labels": ["runny_nose"]}
+{"id": "tl826", "text": "Tyn skt na", "labels": ["stomach_ache"]}
+{"id": "tl827", "text": "Hlo ko na", "labels": ["dizziness"]}
+{"id": "tl828", "text": "Pgod ko na", "labels": ["fatigue"]}
+{"id": "tl829", "text": "Ktwan ko na", "labels": ["body_aches"]}
+{"id": "tl830", "text": "Ubo ko na", "labels": ["cough"]}
+{"id": "tl831", "text": "Nahihilo ako from morning", "labels": ["dizziness"]}
+{"id": "tl832", "text": "Ikot ikot mundo", "labels": ["dizziness"]}
+{"id": "tl833", "text": "Hilo ko walang cure", "labels": ["dizziness"]}
+{"id": "tl834", "text": "Grabe na talaga hilo", "labels": ["dizziness"]}
+{"id": "tl835", "text": "Nahihilo pag nakatingin sa phone", "labels": ["dizziness"]}
+{"id": "tl836", "text": "Sakit ulo ko non stop", "labels": ["headache"]}
+{"id": "tl837", "text": "Lagnat tuloy tuloy na", "labels": ["fever"]}
+{"id": "tl838", "text": "Ubo non stop na", "labels": ["cough"]}
+{"id": "tl839", "text": "Sipon continuous", "labels": ["runny_nose"]}
+{"id": "tl840", "text": "Sumasakit tiyan constant", "labels": ["stomach_ache"]}
+{"id": "tl841", "text": "Nahihilo sumusuka constantly", "labels": ["dizziness", "nausea"]}
+{"id": "tl842", "text": "Hilo suka always", "labels": ["dizziness", "nausea"]}
+{"id": "tl843", "text": "Parang carousel hilo", "labels": ["dizziness"]}
+{"id": "tl844", "text": "Di stand up hilo", "labels": ["dizziness"]}
+{"id": "tl845", "text": "Hilo caused by vertigo", "labels": ["dizziness"]}
+{"id": "tl846", "text": "Ulo ko throbbing", "labels": ["headache"]}
+{"id": "tl847", "text": "Init shivering", "labels": ["fever"]}
+{"id": "tl848", "text": "Ubo na productive", "labels": ["cough"]}
+{"id": "tl849", "text": "Sipon na clear", "labels": ["runny_nose"]}
+{"id": "tl850", "text": "Tiyan ko bloated", "labels": ["stomach_ache"]}
+{"id": "tl851", "text": "Hlo nska constant", "labels": ["dizziness", "nausea"]}
+{"id": "tl852", "text": "Ulo skt always", "labels": ["headache"]}
+{"id": "tl853", "text": "Lgnt continuous", "labels": ["fever"]}
+{"id": "tl854", "text": "Ubu non stop", "labels": ["cough"]}
+{"id": "tl855", "text": "Spn tuloy", "labels": ["runny_nose"]}
+{"id": "tl856", "text": "Tyn skt ongoing", "labels": ["stomach_ache"]}
+{"id": "tl857", "text": "Hlo ongoing", "labels": ["dizziness"]}
+{"id": "tl858", "text": "Pgod constant", "labels": ["fatigue"]}
+{"id": "tl859", "text": "Ktwan skt persistent", "labels": ["body_aches"]}
+{"id": "tl860", "text": "Ubo persistent", "labels": ["cough"]}
+{"id": "tl861", "text": "Nahihilo ako talaga hindi mawala", "labels": ["dizziness"]}
+{"id": "tl862", "text": "Umiikot ang lahat ng bagay", "labels": ["dizziness"]}
+{"id": "tl863", "text": "Hilo ko walang lunas", "labels": ["dizziness"]}
+{"id": "tl864", "text": "Grabe hilo ko hindi ko na kaya", "labels": ["dizziness"]}
+{"id": "tl865", "text": "Nahihilo pag nakikita bright light", "labels": ["dizziness"]}
+{"id": "tl866", "text": "Sakit ulo ko every day", "labels": ["headache"]}
+{"id": "tl867", "text": "Lagnat araw araw", "labels": ["fever"]}
+{"id": "tl868", "text": "Ubo every night", "labels": ["cough"]}
+{"id": "tl869", "text": "Sipon daily", "labels": ["runny_nose"]}
+{"id": "tl870", "text": "Sumasakit tiyan regularly", "labels": ["stomach_ache"]}
+{"id": "tl871", "text": "Nahihilo sumusuka regularly", "labels": ["dizziness", "nausea"]}
+{"id": "tl872", "text": "Hilo suka daily", "labels": ["dizziness", "nausea"]}
+{"id": "tl873", "text": "Parang ferris wheel hilo", "labels": ["dizziness"]}
+{"id": "tl874", "text": "Di walk straight hilo", "labels": ["dizziness"]}
+{"id": "tl875", "text": "Hilo ko severe na", "labels": ["dizziness"]}
+{"id": "tl876", "text": "Ulo ko pulsating", "labels": ["headache"]}
+{"id": "tl877", "text": "Init chills", "labels": ["fever"]}
+{"id": "tl878", "text": "Ubo na chronic", "labels": ["cough"]}
+{"id": "tl879", "text": "Sipon na thick", "labels": ["runny_nose"]}
+{"id": "tl880", "text": "Tiyan ko gassy", "labels": ["stomach_ache"]}
+{"id": "tl881", "text": "Hlo ska severe", "labels": ["dizziness", "nausea"]}
+{"id": "tl882", "text": "Ulo skt severe", "labels": ["headache"]}
+{"id": "tl883", "text": "Lgnt severe", "labels": ["fever"]}
+{"id": "tl884", "text": "Ubu severe", "labels": ["cough"]}
+{"id": "tl885", "text": "Spn severe", "labels": ["runny_nose"]}
+{"id": "tl886", "text": "Tyn severe", "labels": ["stomach_ache"]}
+{"id": "tl887", "text": "Hlo severe", "labels": ["dizziness"]}
+{"id": "tl888", "text": "Pgod severe", "labels": ["fatigue"]}
+{"id": "tl889", "text": "Ktwan severe", "labels": ["body_aches"]}
+{"id": "tl890", "text": "Ubo severe", "labels": ["cough"]}
+{"id": "tl891", "text": "Nahihilo na ako ng grabe grabe talaga", "labels": ["dizziness"]}
+{"id": "tl892", "text": "Umiikot ang buong mundo ko", "labels": ["dizziness"]}
+{"id": "tl893", "text": "Hilo ko walang gamot", "labels": ["dizziness"]}
+{"id": "tl894", "text": "Sobrang grabe hilo ko hindi huminto", "labels": ["dizziness"]}
+{"id": "tl895", "text": "Nahihilo pag tumatagal nakatingin", "labels": ["dizziness"]}
+{"id": "tl896", "text": "Sakit ulo ko all the time", "labels": ["headache"]}
+{"id": "tl897", "text": "Lagnat palagi", "labels": ["fever"]}
+{"id": "tl898", "text": "Ubo all night", "labels": ["cough"]}
+{"id": "tl899", "text": "Sipon all day", "labels": ["runny_nose"]}
+{"id": "tl900", "text": "Sumasakit tiyan all the time", "labels": ["stomach_ache"]}
+{"id": "tl901", "text": "Nahihilo nasusuka all day", "labels": ["dizziness", "nausea"]}
+{"id": "tl902", "text": "Hilo suka all time", "labels": ["dizziness", "nausea"]}
+{"id": "tl903", "text": "Parang merry go round hilo", "labels": ["dizziness"]}
+{"id": "tl904", "text": "Di balance hilo", "labels": ["dizziness"]}
+{"id": "tl905", "text": "Hilo ko extreme", "labels": ["dizziness"]}
+{"id": "tl906", "text": "Ulo ko migraine", "labels": ["headache"]}
+{"id": "tl907", "text": "Init fever", "labels": ["fever"]}
+{"id": "tl908", "text": "Ubo na persistent", "labels": ["cough"]}
+{"id": "tl909", "text": "Sipon na runny", "labels": ["runny_nose"]}
+{"id": "tl910", "text": "Tiyan ko upset", "labels": ["stomach_ache"]}
+{"id": "tl911", "text": "Hlo ska extreme", "labels": ["dizziness", "nausea"]}
+{"id": "tl912", "text": "Ulo extreme", "labels": ["headache"]}
+{"id": "tl913", "text": "Lgnt extreme", "labels": ["fever"]}
+{"id": "tl914", "text": "Ubu extreme", "labels": ["cough"]}
+{"id": "tl915", "text": "Spn extreme", "labels": ["runny_nose"]}
+{"id": "tl916", "text": "Tyn extreme", "labels": ["stomach_ache"]}
+{"id": "tl917", "text": "Hlo extreme", "labels": ["dizziness"]}
+{"id": "tl918", "text": "Pgod extreme", "labels": ["fatigue"]}
+{"id": "tl919", "text": "Ktwan extreme", "labels": ["body_aches"]}
+{"id": "tl920", "text": "Ubo extreme", "labels": ["cough"]}
+{"id": "tl921", "text": "Nahihilo sobra sobra na talaga ako", "labels": ["dizziness"]}
+{"id": "tl922", "text": "Umiikot lahat sa paligid ko hilo", "labels": ["dizziness"]}
+{"id": "tl923", "text": "Hilo ko walang tigil na", "labels": ["dizziness"]}
+{"id": "tl924", "text": "Grabe na sobra hilo ko talaga", "labels": ["dizziness"]}
+{"id": "tl925", "text": "Nahihilo pag tumatagal nakaupo ako", "labels": ["dizziness"]}
+{"id": "tl926", "text": "Sakit ulo ko every single day", "labels": ["headache"]}
+{"id": "tl927", "text": "Lagnat everyday na", "labels": ["fever"]}
+{"id": "tl928", "text": "Ubo everynight na", "labels": ["cough"]}
+{"id": "tl929", "text": "Sipon everyday moment", "labels": ["runny_nose"]}
+{"id": "tl930", "text": "Sumasakit tiyan ko every single time", "labels": ["stomach_ache"]}
+{"id": "tl931", "text": "Nahihilo nasusuka every single day", "labels": ["dizziness", "nausea"]}
+{"id": "tl932", "text": "Hilo suka everyday", "labels": ["dizziness", "nausea"]}
+{"id": "tl933", "text": "Parang teacup ride hilo", "labels": ["dizziness"]}
+{"id": "tl934", "text": "Di coordinate hilo", "labels": ["dizziness"]}
+{"id": "tl935", "text": "Hilo ko maximum", "labels": ["dizziness"]}
+{"id": "tl936", "text": "Ulo ko tension", "labels": ["headache"]}
+{"id": "tl937", "text": "Init high fever", "labels": ["fever"]}
+{"id": "tl938", "text": "Ubo na continuous", "labels": ["cough"]}
+{"id": "tl939", "text": "Sipon na flowing", "labels": ["runny_nose"]}
+{"id": "tl940", "text": "Tiyan ko aching", "labels": ["stomach_ache"]}
+{"id": "tl941", "text": "Hlo ska maximum", "labels": ["dizziness", "nausea"]}
+{"id": "tl942", "text": "Ulo maximum", "labels": ["headache"]}
+{"id": "tl943", "text": "Lgnt maximum", "labels": ["fever"]}
+{"id": "tl944", "text": "Ubu maximum", "labels": ["cough"]}
+{"id": "tl945", "text": "Spn maximum", "labels": ["runny_nose"]}
+{"id": "tl946", "text": "Tyn maximum", "labels": ["stomach_ache"]}
+{"id": "tl947", "text": "Hlo maximum", "labels": ["dizziness"]}
+{"id": "tl948", "text": "Pgod maximum", "labels": ["fatigue"]}
+{"id": "tl949", "text": "Ktwan maximum", "labels": ["body_aches"]}
+{"id": "tl950", "text": "Ubo maximum", "labels": ["cough"]}
+{"id": "tl951", "text": "Nahihilo ako ng todo todo na talaga", "labels": ["dizziness"]}
+{"id": "tl952", "text": "Umiikot na umiikot mundo", "labels": ["dizziness"]}
+{"id": "tl953", "text": "Hilo ko permanent ba", "labels": ["dizziness"]}
+{"id": "tl954", "text": "Sobrang sobrang grabe hilo ko", "labels": ["dizziness"]}
+{"id": "tl955", "text": "Nahihilo pag nakahiga lang ako", "labels": ["dizziness"]}
+{"id": "tl956", "text": "Sakit ulo ko walang break", "labels": ["headache"]}
+{"id": "tl957", "text": "Lagnat walang break", "labels": ["fever"]}
+{"id": "tl958", "text": "Ubo walang break", "labels": ["cough"]}
+{"id": "tl959", "text": "Sipon walang break", "labels": ["runny_nose"]}
+{"id": "tl960", "text": "Sumasakit tiyan walang break", "labels": ["stomach_ache"]}
+{"id": "tl961", "text": "Nahihilo nasusuka walang break", "labels": ["dizziness", "nausea"]}
+{"id": "tl962", "text": "Hilo suka walang break", "labels": ["dizziness", "nausea"]}
+{"id": "tl963", "text": "Parang roller coaster hilo", "labels": ["dizziness"]}
+{"id": "tl964", "text": "Di steady hilo", "labels": ["dizziness"]}
+{"id": "tl965", "text": "Hilo ko ultimate", "labels": ["dizziness"]}
+{"id": "tl966", "text": "Ulo ko cluster", "labels": ["headache"]}
+{"id": "tl967", "text": "Init burning", "labels": ["fever"]}
+{"id": "tl968", "text": "Ubo na constant", "labels": ["cough"]}
+{"id": "tl969", "text": "Sipon na streaming", "labels": ["runny_nose"]}
+{"id": "tl970", "text": "Tiyan ko painful", "labels": ["stomach_ache"]}
+{"id": "tl971", "text": "Hlo ska ultimate", "labels": ["dizziness", "nausea"]}
+{"id": "tl972", "text": "Ulo ultimate", "labels": ["headache"]}
+{"id": "tl973", "text": "Lgnt ultimate", "labels": ["fever"]}
+{"id": "tl974", "text": "Ubu ultimate", "labels": ["cough"]}
+{"id": "tl975", "text": "Spn ultimate", "labels": ["runny_nose"]}
+{"id": "tl976", "text": "Tyn ultimate", "labels": ["stomach_ache"]}
+{"id": "tl977", "text": "Hlo ultimate", "labels": ["dizziness"]}
+{"id": "tl978", "text": "Pgod ultimate", "labels": ["fatigue"]}
+{"id": "tl979", "text": "Ktwan ultimate", "labels": ["body_aches"]}
+{"id": "tl980", "text": "Ubo ultimate", "labels": ["cough"]}
+{"id": "tl981", "text": "Nahihilo ako worst ever", "labels": ["dizziness"]}
+{"id": "tl982", "text": "Umiikot paikot ikot", "labels": ["dizziness"]}
+{"id": "tl983", "text": "Hilo ko hindi na talaga mawawala", "labels": ["dizziness"]}
+{"id": "tl984", "text": "Grabe sobra lala hilo", "labels": ["dizziness"]}
+{"id": "tl985", "text": "Nahihilo pag nakatingin lang ako", "labels": ["dizziness"]}
+{"id": "tl986", "text": "Sakit ulo ko worst", "labels": ["headache"]}
+{"id": "tl987", "text": "Lagnat worst", "labels": ["fever"]}
+{"id": "tl988", "text": "Ubo worst", "labels": ["cough"]}
+{"id": "tl989", "text": "Sipon worst", "labels": ["runny_nose"]}
+{"id": "tl990", "text": "Sumasakit tiyan worst", "labels": ["stomach_ache"]}
+{"id": "tl991", "text": "Nahihilo nasusuka worst", "labels": ["dizziness", "nausea"]}
+{"id": "tl992", "text": "Hilo suka worst", "labels": ["dizziness", "nausea"]}
+{"id": "tl993", "text": "Parang spinning top hilo", "labels": ["dizziness"]}
+{"id": "tl994", "text": "Di orient hilo", "labels": ["dizziness"]}
+{"id": "tl995", "text": "Hilo ko peak", "labels": ["dizziness"]}
+{"id": "tl996", "text": "Ulo ko sinus", "labels": ["headache"]}
+{"id": "tl997", "text": "Init high grade", "labels": ["fever"]}
+{"id": "tl998", "text": "Ubo na endless", "labels": ["cough"]}
+{"id": "tl999", "text": "Sipon na endless", "labels": ["runny_nose"]}
+{"id": "tl1000", "text": "Tiyan ko upset stomach", "labels": ["stomach_ache"]}

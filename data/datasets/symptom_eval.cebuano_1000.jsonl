@@ -1,0 +1,1000 @@
+{"id": "cb001", "text": "Sakit kaayo akong ulo karon", "labels": ["headache"]}
+{"id": "cb002", "text": "Gatuyok akong ulo grabe", "labels": ["headache"]}
+{"id": "cb003", "text": "Labad kaayo akong ulo", "labels": ["headache"]}
+{"id": "cb004", "text": "Sakit akong ulo dili mawala", "labels": ["headache"]}
+{"id": "cb005", "text": "Nakasakit kaayo akong ulo karon", "labels": ["headache"]}
+{"id": "cb006", "text": "Parang mobuto akong ulo sa kasakit", "labels": ["headache"]}
+{"id": "cb007", "text": "Kasakit sa akong ulo oy", "labels": ["headache"]}
+{"id": "cb008", "text": "Sakit akong ulo sukad ganina pa", "labels": ["headache"]}
+{"id": "cb009", "text": "Dili nako makaya sakit sa akong ulo", "labels": ["headache"]}
+{"id": "cb010", "text": "Kanunay nalang sakit akong ulo karon", "labels": ["headache"]}
+{"id": "cb011", "text": "Init kaayo akong lawas parang hilanat", "labels": ["fever"]}
+{"id": "cb012", "text": "Gihilantan ko karon", "labels": ["fever"]}
+{"id": "cb013", "text": "Hilanat ko oy", "labels": ["fever"]}
+{"id": "cb014", "text": "Mainit akong lawas pero gitugnaw ko", "labels": ["fever"]}
+{"id": "cb015", "text": "Nagkurog ko sa katugnaw pero init man ko", "labels": ["fever"]}
+{"id": "cb016", "text": "Sinat siguro ni", "labels": ["fever"]}
+{"id": "cb017", "text": "Hilanat napud ko", "labels": ["fever"]}
+{"id": "cb018", "text": "Init init akong lawas karon", "labels": ["fever"]}
+{"id": "cb019", "text": "Parang init kaayo ko ron", "labels": ["fever"]}
+{"id": "cb020", "text": "Gihilantan napud ko balik", "labels": ["fever"]}
+{"id": "cb021", "text": "Ubo-ubo lang ko wala laing sakit", "labels": ["cough"]}
+{"id": "cb022", "text": "Padayon akong ubo dili mahunong", "labels": ["cough"]}
+{"id": "cb023", "text": "Moubo ko kanunay", "labels": ["cough"]}
+{"id": "cb024", "text": "Dili ko makatulog tungod sa ubo", "labels": ["cough"]}
+{"id": "cb025", "text": "Grabe akong ubo karon", "labels": ["cough"]}
+{"id": "cb026", "text": "Kung moubo ko sakit akong dughan", "labels": ["cough", "chest_pain"]}
+{"id": "cb027", "text": "Ubo ko walay plema", "labels": ["cough"]}
+{"id": "cb028", "text": "May plema akong ubo lisod pagawas", "labels": ["cough"]}
+{"id": "cb029", "text": "Dry cough lang ni", "labels": ["cough"]}
+{"id": "cb030", "text": "Ubo ko may kasamang plema", "labels": ["cough"]}
+{"id": "cb031", "text": "Sakit akong tutunlan mao moubo ko", "labels": ["sore_throat", "cough"]}
+{"id": "cb032", "text": "Labad kaayo akong tutunlan", "labels": ["sore_throat"]}
+{"id": "cb033", "text": "Sakit sa tutunlan pag motulon", "labels": ["sore_throat"]}
+{"id": "cb034", "text": "Uga kaayo akong tutunlan", "labels": ["sore_throat"]}
+{"id": "cb035", "text": "Hubag akong tutunlan lisod motulon", "labels": ["sore_throat"]}
+{"id": "cb036", "text": "Sip-on lang man ko ok raman", "labels": ["runny_nose"]}
+{"id": "cb037", "text": "Padayon tuluon akong ilong", "labels": ["runny_nose"]}
+{"id": "cb038", "text": "Sipon-sipon lang ko", "labels": ["runny_nose"]}
+{"id": "cb039", "text": "May sipon ko gamay lang", "labels": ["runny_nose"]}
+{"id": "cb040", "text": "Tuluon akong ilong walay hunong", "labels": ["runny_nose"]}
+{"id": "cb041", "text": "Bungol akong ilong dili ko makaginhawa", "labels": ["stuffy_nose"]}
+{"id": "cb042", "text": "Sagmaw akong ilong duha ka kilid", "labels": ["stuffy_nose"]}
+{"id": "cb043", "text": "Dili ko makaginhawa sa ilong parang bungol", "labels": ["stuffy_nose"]}
+{"id": "cb044", "text": "Stuffy nose ko karon", "labels": ["stuffy_nose"]}
+{"id": "cb045", "text": "Parang may sagka sa akong ilong", "labels": ["stuffy_nose"]}
+{"id": "cb046", "text": "Naluya ko pag motindog", "labels": ["dizziness"]}
+{"id": "cb047", "text": "Gatuyok akong pananaw", "labels": ["dizziness"]}
+{"id": "cb048", "text": "Parang hubog ko pag molihok", "labels": ["dizziness"]}
+{"id": "cb049", "text": "Naliyong ko karon", "labels": ["dizziness"]}
+{"id": "cb050", "text": "Naliyong ko ug nasuka pa", "labels": ["dizziness", "nausea"]}
+{"id": "cb051", "text": "Gusto ko mosuka", "labels": ["nausea"]}
+{"id": "cb052", "text": "Dili maayo akong gibati sa tiyan parang mosuka", "labels": ["nausea"]}
+{"id": "cb053", "text": "Mosuka ko pero wala mogawas", "labels": ["nausea"]}
+{"id": "cb054", "text": "Nasukaon ko", "labels": ["nausea"]}
+{"id": "cb055", "text": "Nagsuka ko sukad ganina", "labels": ["vomiting"]}
+{"id": "cb056", "text": "Dili nako mapugngan akong pagsuka", "labels": ["vomiting"]}
+{"id": "cb057", "text": "Padayon ko mosuka", "labels": ["vomiting"]}
+{"id": "cb058", "text": "Nagsuka ko human mokaon", "labels": ["vomiting"]}
+{"id": "cb059", "text": "Gigawas nako tanan akong gikaon", "labels": ["vomiting"]}
+{"id": "cb060", "text": "Himuros ko sukad buntag", "labels": ["diarrhea"]}
+{"id": "cb061", "text": "Daghang beses nako sa CR tungod sa LBM", "labels": ["diarrhea"]}
+{"id": "cb062", "text": "Basa akong tai padayon", "labels": ["diarrhea"]}
+{"id": "cb063", "text": "Hurot-hurot ko karon", "labels": ["diarrhea"]}
+{"id": "cb064", "text": "Diarrhea abi nako ni", "labels": ["diarrhea"]}
+{"id": "cb065", "text": "Gikapoy kaayo ko parang ayaw molihok sa lawas", "labels": ["fatigue"]}
+{"id": "cb066", "text": "Luya kaayo ko karon", "labels": ["fatigue"]}
+{"id": "cb067", "text": "Walay kusog molihok", "labels": ["fatigue"]}
+{"id": "cb068", "text": "Katulgon kaayo ko ug gikapoy", "labels": ["fatigue"]}
+{"id": "cb069", "text": "Lisod kaayo buhaton bisan unsa tungod sa kapoyon", "labels": ["fatigue"]}
+{"id": "cb070", "text": "Sakit akong lawas parang gibunalan", "labels": ["body_aches"]}
+{"id": "cb071", "text": "Sakit sa tibuok lawas", "labels": ["body_aches"]}
+{"id": "cb072", "text": "Sakit akong likod ug kamot", "labels": ["body_aches"]}
+{"id": "cb073", "text": "Ngilu-ngilu akong lawas", "labels": ["body_aches"]}
+{"id": "cb074", "text": "Parang gibunalan akong lawas sa sakit", "labels": ["body_aches"]}
+{"id": "cb075", "text": "Lisod ko moginhawa", "labels": ["shortness_of_breath"]}
+{"id": "cb076", "text": "Gipangos ko bisag wala molihok", "labels": ["shortness_of_breath"]}
+{"id": "cb077", "text": "Parang kulang akong hangin", "labels": ["shortness_of_breath"]}
+{"id": "cb078", "text": "Dili ko makaginhawa og tarung", "labels": ["shortness_of_breath"]}
+{"id": "cb079", "text": "Lisod ko moginhawa labi na pag nahigda", "labels": ["shortness_of_breath"]}
+{"id": "cb080", "text": "Sakit akong dughan parang gipitpit", "labels": ["chest_pain"]}
+{"id": "cb081", "text": "May sakit sa akong dughan", "labels": ["chest_pain"]}
+{"id": "cb082", "text": "Kumirot akong dughan pag moginhawa", "labels": ["chest_pain"]}
+{"id": "cb083", "text": "Parang may nagbutang ibabaw sa dughan", "labels": ["chest_pain"]}
+{"id": "cb084", "text": "Chest pain nako moabot sa likod", "labels": ["chest_pain"]}
+{"id": "cb085", "text": "Sakit akong tiyan grabe", "labels": ["stomach_ache"]}
+{"id": "cb086", "text": "Kumirot akong tiyan", "labels": ["stomach_ache"]}
+{"id": "cb087", "text": "Parang may mokaon sa sulod sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb088", "text": "Ngilo akong tiyan acidic abi", "labels": ["stomach_ache"]}
+{"id": "cb089", "text": "Sakit akong tiyan human mokaon", "labels": ["stomach_ache"]}
+{"id": "cb090", "text": "Kabag abi nako ni puno og hangin tiyan", "labels": ["stomach_ache"]}
+{"id": "cb091", "text": "Grabe sakit akong ulo unya hilanat pa", "labels": ["headache", "fever"]}
+{"id": "cb092", "text": "Ubo ug sipon combo", "labels": ["cough", "runny_nose"]}
+{"id": "cb093", "text": "Hilanat ug sakit lawas", "labels": ["fever", "body_aches"]}
+{"id": "cb094", "text": "Sakit ulo unya mosuka pa", "labels": ["headache", "nausea"]}
+{"id": "cb095", "text": "May ubo ko unya bungol pa ilong", "labels": ["cough", "stuffy_nose"]}
+{"id": "cb096", "text": "Sipon ubo hilanat tanan na", "labels": ["runny_nose", "cough", "fever"]}
+{"id": "cb097", "text": "Sakit ulo lawas hilanat tanan", "labels": ["headache", "body_aches", "fever"]}
+{"id": "cb098", "text": "Sakit tiyan unya himuros pa", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "cb099", "text": "Naliyong ko ug mosuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb100", "text": "Ubo ko may plema unya sipon sad", "labels": ["cough", "runny_nose"]}
+{"id": "cb101", "text": "Wala man ko hilanat pero sakit ulo", "labels": ["headache"]}
+{"id": "cb102", "text": "Dili man ko moubo pero sipon lang", "labels": ["runny_nose"]}
+{"id": "cb103", "text": "Walay sakit sa ulo pero init lawas", "labels": ["fever"]}
+{"id": "cb104", "text": "Dili man ko hilanat ubo lang", "labels": ["cough"]}
+{"id": "cb105", "text": "Wala koy laing sakit gawas sa ulo", "labels": ["headache"]}
+{"id": "cb106", "text": "sakit ulo ko", "labels": ["headache"]}
+{"id": "cb107", "text": "hilanat ko karon", "labels": ["fever"]}
+{"id": "cb108", "text": "ubo ko pirme", "labels": ["cough"]}
+{"id": "cb109", "text": "sipon lang naman", "labels": ["runny_nose"]}
+{"id": "cb110", "text": "himuros ko padayon", "labels": ["diarrhea"]}
+{"id": "cb111", "text": "sakit tyan", "labels": ["stomach_ache"]}
+{"id": "cb112", "text": "bungol ilong ko", "labels": ["stuffy_nose"]}
+{"id": "cb113", "text": "naluya ko grabe", "labels": ["dizziness"]}
+{"id": "cb114", "text": "kapoy kaayo ko", "labels": ["fatigue"]}
+{"id": "cb115", "text": "sakit lawas", "labels": ["body_aches"]}
+{"id": "cb116", "text": "Ulo lang sakit wala nay lain", "labels": ["headache"]}
+{"id": "cb117", "text": "Sipon ubo lang walay hilanat", "labels": ["runny_nose", "cough"]}
+{"id": "cb118", "text": "Sakit lang tiyan ok raman ko", "labels": ["stomach_ache"]}
+{"id": "cb119", "text": "Ubo lang walay plema", "labels": ["cough"]}
+{"id": "cb120", "text": "Gamay lang hilanat", "labels": ["fever"]}
+{"id": "cb121", "text": "ahhh sakit kaayo akong ulo", "labels": ["headache"]}
+{"id": "cb122", "text": "grabe grabe hilanat ko sobra", "labels": ["fever"]}
+{"id": "cb123", "text": "ubo ubo ubo lang man", "labels": ["cough"]}
+{"id": "cb124", "text": "ay nako sipon ko grabe", "labels": ["runny_nose"]}
+{"id": "cb125", "text": "Ginoo ko sakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "cb126", "text": "Tingali ubo lang ni", "labels": ["cough"]}
+{"id": "cb127", "text": "Parang may hilanat abi", "labels": ["fever"]}
+{"id": "cb128", "text": "Siguro sipon lang", "labels": ["runny_nose"]}
+{"id": "cb129", "text": "Tan-awa sakit sa tiyan lang", "labels": ["stomach_ache"]}
+{"id": "cb130", "text": "Medyo sakit lang ulo gamay", "labels": ["headache"]}
+{"id": "cb131", "text": "Grabi ubo ko sis", "labels": ["cough"]}
+{"id": "cb132", "text": "Yawa sakit ulo ko mars", "labels": ["headache"]}
+{"id": "cb133", "text": "Hilanat yarn mga bes", "labels": ["fever"]}
+{"id": "cb134", "text": "Sipon ko besh", "labels": ["runny_nose"]}
+{"id": "cb135", "text": "Dili ko feel good sakit tiyan ko bes", "labels": ["stomach_ache"]}
+{"id": "cb136", "text": "Sakit akong ulo pag motan-aw sa phone", "labels": ["headache"]}
+{"id": "cb137", "text": "Ubo ko mograbe pag gabii", "labels": ["cough"]}
+{"id": "cb138", "text": "Init ko pag udto", "labels": ["fever"]}
+{"id": "cb139", "text": "Sipon ko mas grabe sa buntag", "labels": ["runny_nose"]}
+{"id": "cb140", "text": "Sakit tiyan ko pag mokaon", "labels": ["stomach_ache"]}
+{"id": "cb141", "text": "Sobrang init ko parang nagpawis", "labels": ["fever"]}
+{"id": "cb142", "text": "Parang may sagka sa tutunlan", "labels": ["sore_throat"]}
+{"id": "cb143", "text": "Bug-at akong dughan parang may naglingkod", "labels": ["chest_pain"]}
+{"id": "cb144", "text": "Sakit ulo ko pag stressed", "labels": ["headache"]}
+{"id": "cb145", "text": "Gutom kaayo pero dili makatulon", "labels": ["sore_throat"]}
+{"id": "cb146", "text": "Imnon nako tambal para sa ubo", "labels": ["cough"]}
+{"id": "cb147", "text": "Kinahanglan nako tambal sa hilanat", "labels": ["fever"]}
+{"id": "cb148", "text": "Unsa maayo nga tambal sa sipon", "labels": ["runny_nose"]}
+{"id": "cb149", "text": "May tambal ba para sa sakit sa ulo", "labels": ["headache"]}
+{"id": "cb150", "text": "Unsa kaha pwede sa sakit sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb151", "text": "Super sakit ulo ko dili nako kaya", "labels": ["headache"]}
+{"id": "cb152", "text": "Sobrang init ko parang hilanat", "labels": ["fever"]}
+{"id": "cb153", "text": "Padayon ubo ko dili mohunong", "labels": ["cough"]}
+{"id": "cb154", "text": "Sobrang dili maayo gibati", "labels": ["fatigue"]}
+{"id": "cb155", "text": "Bagsak kaayo ko karon", "labels": ["fatigue"]}
+{"id": "cb156", "text": "Parang sipon ni pero dili ko sure", "labels": ["runny_nose"]}
+{"id": "cb157", "text": "Murag hilanat napud ko", "labels": ["fever"]}
+{"id": "cb158", "text": "Feeling moubo napud ko ugma", "labels": ["cough"]}
+{"id": "cb159", "text": "Abi nako sakit tiyan ugma", "labels": ["stomach_ache"]}
+{"id": "cb160", "text": "Tingali tungod sa katugnaw mao hilanat", "labels": ["fever"]}
+{"id": "cb161", "text": "Sakit jud akong ulo pag init", "labels": ["headache"]}
+{"id": "cb162", "text": "Ubo ko tungod sa sigarilyo siguro", "labels": ["cough"]}
+{"id": "cb163", "text": "Sipon ko tungod sa aircon", "labels": ["runny_nose"]}
+{"id": "cb164", "text": "Gutom mao sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb165", "text": "Kulang tulog mao sakit ulo", "labels": ["headache"]}
+{"id": "cb166", "text": "Kanunay nalang ubo", "labels": ["cough"]}
+{"id": "cb167", "text": "Balik balik hilanat", "labels": ["fever"]}
+{"id": "cb168", "text": "Madalas sipon lately", "labels": ["runny_nose"]}
+{"id": "cb169", "text": "Dugay na sakit ulo", "labels": ["headache"]}
+{"id": "cb170", "text": "Pirme sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb171", "text": "Kagahapon pa ubo", "labels": ["cough"]}
+{"id": "cb172", "text": "Kagabii pa hilanat", "labels": ["fever"]}
+{"id": "cb173", "text": "Ganina pa sipon", "labels": ["runny_nose"]}
+{"id": "cb174", "text": "Usa ka semana na sakit ulo", "labels": ["headache"]}
+{"id": "cb175", "text": "Pila ka adlaw na sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb176", "text": "Hapon pa moubo nako", "labels": ["cough"]}
+{"id": "cb177", "text": "Buntag pa init lawas", "labels": ["fever"]}
+{"id": "cb178", "text": "Morning pa sipon", "labels": ["runny_nose"]}
+{"id": "cb179", "text": "Ganina lang sakit ulo", "labels": ["headache"]}
+{"id": "cb180", "text": "Karon lang kalit sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb181", "text": "Parang may mangati sa tutunlan mao moubo", "labels": ["cough", "sore_throat"]}
+{"id": "cb182", "text": "Sobrang init pero nagkurog", "labels": ["fever"]}
+{"id": "cb183", "text": "Sipon ko pero uga ilong", "labels": ["runny_nose"]}
+{"id": "cb184", "text": "Sakit ulo bisag nahigda", "labels": ["headache"]}
+{"id": "cb185", "text": "Sakit tiyan bisag wala mokaon", "labels": ["stomach_ache"]}
+{"id": "cb186", "text": "Dili nako makakaon tungod sakit tutunlan", "labels": ["sore_throat"]}
+{"id": "cb187", "text": "Moinom daghan tubig pero uga gihapon tutunlan", "labels": ["sore_throat"]}
+{"id": "cb188", "text": "Lisod kaayo moginhawa parang may sagka", "labels": ["shortness_of_breath"]}
+{"id": "cb189", "text": "Sakit dughan pag moginhawa og lawom", "labels": ["chest_pain"]}
+{"id": "cb190", "text": "Gikapoy dayon pag molihok", "labels": ["fatigue"]}
+{"id": "cb191", "text": "Modako ulo sa sakit", "labels": ["headache"]}
+{"id": "cb192", "text": "Para ko gipainit sa sulod", "labels": ["fever"]}
+{"id": "cb193", "text": "Parang may sagka sa ilong mao dili makaginhawa", "labels": ["stuffy_nose"]}
+{"id": "cb194", "text": "Padayon agos sa sipon", "labels": ["runny_nose"]}
+{"id": "cb195", "text": "Sakit tiyan unya mosaka pa", "labels": ["stomach_ache", "nausea"]}
+{"id": "cb196", "text": "Naliyong ug nanig-a lawas", "labels": ["dizziness", "body_aches"]}
+{"id": "cb197", "text": "Ubo pati baga sakit", "labels": ["cough", "chest_pain"]}
+{"id": "cb198", "text": "Hilanat unya gitugnaw pa", "labels": ["fever"]}
+{"id": "cb199", "text": "Init ulo literal", "labels": ["headache", "fever"]}
+{"id": "cb200", "text": "Parang may mobukal sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb201", "text": "Sakit ulo pati liog", "labels": ["headache", "body_aches"]}
+{"id": "cb202", "text": "Hilanat pero bugnaw kamot", "labels": ["fever"]}
+{"id": "cb203", "text": "Ubo dry unya mangati tutunlan", "labels": ["cough", "sore_throat"]}
+{"id": "cb204", "text": "Sipon berde kolor", "labels": ["runny_nose"]}
+{"id": "cb205", "text": "Sakit tiyan sa wala", "labels": ["stomach_ache"]}
+{"id": "cb206", "text": "Parang may motusok sa ulo diri sa kilid", "labels": ["headache"]}
+{"id": "cb207", "text": "Init lawas pero normal temp", "labels": ["fever"]}
+{"id": "cb208", "text": "Ubo may dugo", "labels": ["cough"]}
+{"id": "cb209", "text": "Sipon nahimong yellow na", "labels": ["runny_nose"]}
+{"id": "cb210", "text": "Sakit na dughan sa tuo", "labels": ["chest_pain"]}
+{"id": "cb211", "text": "Walay lami gikaon unya bungol ilong", "labels": ["stuffy_nose"]}
+{"id": "cb212", "text": "Dili maayo pandungog tungod sa sipon", "labels": ["runny_nose"]}
+{"id": "cb213", "text": "Sakit dulunggan tungod sa sipon", "labels": ["runny_nose"]}
+{"id": "cb214", "text": "Moabot sa ngipon sakit sa ulo", "labels": ["headache"]}
+{"id": "cb215", "text": "Init likod unya nagkurog", "labels": ["fever"]}
+{"id": "cb216", "text": "Para ko gibutangan kalayo sa sulod", "labels": ["fever"]}
+{"id": "cb217", "text": "Parang gutom pero dili gusto mokaon tungod sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb218", "text": "Dry ubo sobra", "labels": ["cough"]}
+{"id": "cb219", "text": "Basa ubo may plema", "labels": ["cough"]}
+{"id": "cb220", "text": "Lisod pagawas plema sa dughan", "labels": ["cough"]}
+{"id": "cb221", "text": "Pag moubo mogawas plema", "labels": ["cough"]}
+{"id": "cb222", "text": "Walay plema ubo puro uga", "labels": ["cough"]}
+{"id": "cb223", "text": "Namula mata tungod sa sipon", "labels": ["runny_nose"]}
+{"id": "cb224", "text": "Sakit ngipon moabot sa ulo", "labels": ["headache"]}
+{"id": "cb225", "text": "Mangati panit unya init", "labels": ["fever"]}
+{"id": "cb226", "text": "Sobrang tugnaw pero init man ko", "labels": ["fever"]}
+{"id": "cb227", "text": "Parang lango sa gibati", "labels": ["dizziness"]}
+{"id": "cb228", "text": "Gatuyok kalibutan", "labels": ["dizziness"]}
+{"id": "cb229", "text": "Parang hubog bisag dili naman", "labels": ["dizziness"]}
+{"id": "cb230", "text": "Dili stable tindog", "labels": ["dizziness"]}
+{"id": "cb231", "text": "Ayaw mohunong pagtuyok sa palibot", "labels": ["dizziness"]}
+{"id": "cb232", "text": "Mosuka na abi ko", "labels": ["nausea"]}
+{"id": "cb233", "text": "Mosamot dili maayo gibati gusto mosuka", "labels": ["nausea"]}
+{"id": "cb234", "text": "Mogawas suka walay hunong", "labels": ["vomiting"]}
+{"id": "cb235", "text": "Gilabay na nako tanan gikaon", "labels": ["vomiting"]}
+{"id": "cb236", "text": "Sakit tiyan unya mosuka", "labels": ["stomach_ache", "vomiting"]}
+{"id": "cb237", "text": "Hugaw tubig eh", "labels": ["diarrhea"]}
+{"id": "cb238", "text": "Watery tai", "labels": ["diarrhea"]}
+{"id": "cb239", "text": "Sobrang dami hugaw", "labels": ["diarrhea"]}
+{"id": "cb240", "text": "Balik balik ko sa CR tungod pagtai", "labels": ["diarrhea"]}
+{"id": "cb241", "text": "Sunod sunod CR tungod LBM", "labels": ["diarrhea"]}
+{"id": "cb242", "text": "Luya luya ko karon", "labels": ["fatigue"]}
+{"id": "cb243", "text": "Walay gana molihok", "labels": ["fatigue"]}
+{"id": "cb244", "text": "Ayaw mobangon sa lawas", "labels": ["fatigue"]}
+{"id": "cb245", "text": "Sobrang katulgon pero dili makatulog", "labels": ["fatigue"]}
+{"id": "cb246", "text": "Parang wala koy kusog buhaton bisan unsa", "labels": ["fatigue"]}
+{"id": "cb247", "text": "Sore tibuok lawas", "labels": ["body_aches"]}
+{"id": "cb248", "text": "Tibuok lawas sakit", "labels": ["body_aches"]}
+{"id": "cb249", "text": "Ngilu-ngilu lawas", "labels": ["body_aches"]}
+{"id": "cb250", "text": "Sakit kasukasuan", "labels": ["body_aches"]}
+{"id": "cb251", "text": "Nanig-a lawas sa sakit", "labels": ["body_aches"]}
+{"id": "cb252", "text": "Parang gihampas baseball bat lawas", "labels": ["body_aches"]}
+{"id": "cb253", "text": "Gibati gibunalan", "labels": ["body_aches"]}
+{"id": "cb254", "text": "Sakit abaga moabot sa liog", "labels": ["body_aches"]}
+{"id": "cb255", "text": "Sakit likod dili makatindog og dugay", "labels": ["body_aches"]}
+{"id": "cb256", "text": "Sakit braso ug tiil", "labels": ["body_aches"]}
+{"id": "cb257", "text": "Lisod moginhawa pag mokaon", "labels": ["shortness_of_breath"]}
+{"id": "cb258", "text": "Lisod moginhawa pag mosaka hagdanan", "labels": ["shortness_of_breath"]}
+{"id": "cb259", "text": "Dili makaginhawa og lawom", "labels": ["shortness_of_breath"]}
+{"id": "cb260", "text": "Parang kulang hangin", "labels": ["shortness_of_breath"]}
+{"id": "cb261", "text": "Gipangos bisag naglingkod lang", "labels": ["shortness_of_breath"]}
+{"id": "cb262", "text": "Kinakapos sa ginhawa", "labels": ["shortness_of_breath"]}
+{"id": "cb263", "text": "Sakit dughan sa tunga", "labels": ["chest_pain"]}
+{"id": "cb264", "text": "May kurot sa dughan pag moginhawa", "labels": ["chest_pain"]}
+{"id": "cb265", "text": "Parang may nagdugmok sa dughan", "labels": ["chest_pain"]}
+{"id": "cb266", "text": "Higpit dughan", "labels": ["chest_pain"]}
+{"id": "cb267", "text": "Sakit kasingkasing gibati", "labels": ["chest_pain"]}
+{"id": "cb268", "text": "Kumirot dughan", "labels": ["chest_pain"]}
+{"id": "cb269", "text": "Sakit tiyan taas", "labels": ["stomach_ache"]}
+{"id": "cb270", "text": "Lower tiyan sakit", "labels": ["stomach_ache"]}
+{"id": "cb271", "text": "Acidic gibati sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb272", "text": "Parang mokaon sulod sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb273", "text": "Ngilo sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb274", "text": "Parang mosamot asim sa sulod", "labels": ["stomach_ache"]}
+{"id": "cb275", "text": "Modako tiyan sa kabag", "labels": ["stomach_ache"]}
+{"id": "cb276", "text": "Moasim tiyan", "labels": ["stomach_ache"]}
+{"id": "cb277", "text": "Hyperacidity abi ni", "labels": ["stomach_ache"]}
+{"id": "cb278", "text": "Ulcer siguro ni sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb279", "text": "Gastritis napud abi", "labels": ["stomach_ache"]}
+{"id": "cb280", "text": "Sobrang sakit ulo parang hubog", "labels": ["headache", "dizziness"]}
+{"id": "cb281", "text": "Hilanat ubo sipon tanan na naa", "labels": ["fever", "cough", "runny_nose"]}
+{"id": "cb282", "text": "Sakit ulo hilanat unya sakit pa lawas", "labels": ["headache", "fever", "body_aches"]}
+{"id": "cb283", "text": "Ubo may plema unya hilanat pa", "labels": ["cough", "fever"]}
+{"id": "cb284", "text": "Sipon ubo unya bungol pa ilong", "labels": ["runny_nose", "cough", "stuffy_nose"]}
+{"id": "cb285", "text": "Sakit tutunlan unya ubo pa", "labels": ["sore_throat", "cough"]}
+{"id": "cb286", "text": "Naliyong unya mosuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb287", "text": "Sakit tiyan unya himuros", "labels": ["stomach_ache", "diarrhea"]}
+{"id": "cb288", "text": "Gikapoy unya sakit pa lawas", "labels": ["fatigue", "body_aches"]}
+{"id": "cb289", "text": "Lisod moginhawa unya sakit dughan", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "cb290", "text": "Sakit ulo unya ubo pa ko", "labels": ["headache", "cough"]}
+{"id": "cb291", "text": "Init ko unya sipon sad", "labels": ["fever", "runny_nose"]}
+{"id": "cb292", "text": "Sakit tiyan unya naliyong", "labels": ["stomach_ache", "dizziness"]}
+{"id": "cb293", "text": "Bungol ilong unya sakit ulo", "labels": ["stuffy_nose", "headache"]}
+{"id": "cb294", "text": "Luya ko unya hilanat pa", "labels": ["fatigue", "fever"]}
+{"id": "cb295", "text": "Ubo unya sakit dughan pag moubo", "labels": ["cough", "chest_pain"]}
+{"id": "cb296", "text": "Wala koy hilanat pero moubo lang", "labels": ["cough"]}
+{"id": "cb297", "text": "Dili man sakit ulo pero init", "labels": ["fever"]}
+{"id": "cb298", "text": "Dili moubo pero sipon lang", "labels": ["runny_nose"]}
+{"id": "cb299", "text": "Walay sakit tiyan pero himuros", "labels": ["diarrhea"]}
+{"id": "cb300", "text": "Dili sakit tutunlan pero moubo", "labels": ["cough"]}
+{"id": "cb301", "text": "Dili init pero naliyong", "labels": ["dizziness"]}
+{"id": "cb302", "text": "Wala man sakit pero gikapoy lang", "labels": ["fatigue"]}
+{"id": "cb303", "text": "Dili man ubo pero bungol ilong", "labels": ["stuffy_nose"]}
+{"id": "cb304", "text": "Walay hilanat pero sakit lawas", "labels": ["body_aches"]}
+{"id": "cb305", "text": "Dili sakit dughan pero lisod moginhawa", "labels": ["shortness_of_breath"]}
+{"id": "cb306", "text": "skit ulo", "labels": ["headache"]}
+{"id": "cb307", "text": "hlnat ko karon", "labels": ["fever"]}
+{"id": "cb308", "text": "mouUbo", "labels": ["cough"]}
+{"id": "cb309", "text": "sipOn", "labels": ["runny_nose"]}
+{"id": "cb310", "text": "saKiT tyan", "labels": ["stomach_ache"]}
+{"id": "cb311", "text": "skit ulo ko eh", "labels": ["headache"]}
+{"id": "cb312", "text": "may hlnat abi", "labels": ["fever"]}
+{"id": "cb313", "text": "ubu og ubu", "labels": ["cough"]}
+{"id": "cb314", "text": "himurOs ko", "labels": ["diarrhea"]}
+{"id": "cb315", "text": "naluya ako", "labels": ["dizziness"]}
+{"id": "cb316", "text": "sakit ulu ko grabe", "labels": ["headache"]}
+{"id": "cb317", "text": "gipainit ko karon", "labels": ["fever"]}
+{"id": "cb318", "text": "moubu ko madalas", "labels": ["cough"]}
+{"id": "cb319", "text": "padayon sipun", "labels": ["runny_nose"]}
+{"id": "cb320", "text": "sakit tiyan ko na", "labels": ["stomach_ache"]}
+{"id": "cb321", "text": "sakIt ng olo ko", "labels": ["headache"]}
+{"id": "cb322", "text": "init init lAwas", "labels": ["fever"]}
+{"id": "cb323", "text": "ubo uBo lng", "labels": ["cough"]}
+{"id": "cb324", "text": "sipun ko grbe", "labels": ["runny_nose"]}
+{"id": "cb325", "text": "sakit tian", "labels": ["stomach_ache"]}
+{"id": "cb326", "text": "Paket sakit ulo ko unsa ba", "labels": ["headache"]}
+{"id": "cb327", "text": "Init init init sobra", "labels": ["fever"]}
+{"id": "cb328", "text": "Yawa ubo ko dili mohunong", "labels": ["cough"]}
+{"id": "cb329", "text": "Shet sipon napud", "labels": ["runny_nose"]}
+{"id": "cb330", "text": "Pota sakit tiyan ko jud", "labels": ["stomach_ache"]}
+{"id": "cb331", "text": "Ang sakit naman ulo ko karon", "labels": ["headache"]}
+{"id": "cb332", "text": "Sobrang init ko unsa nahitabo", "labels": ["fever"]}
+{"id": "cb333", "text": "Ubo pa more ako karon", "labels": ["cough"]}
+{"id": "cb334", "text": "Sipon mode activated", "labels": ["runny_nose"]}
+{"id": "cb335", "text": "Tiyan ko sakit na napud", "labels": ["stomach_ache"]}
+{"id": "cb336", "text": "Ulo ko parang pwede na molupad sa sakit", "labels": ["headache"]}
+{"id": "cb337", "text": "Init na init lawas seriously", "labels": ["fever"]}
+{"id": "cb338", "text": "Pucha ubo ko padayon jud", "labels": ["cough"]}
+{"id": "cb339", "text": "Grabe naman sipon ko today", "labels": ["runny_nose"]}
+{"id": "cb340", "text": "Ginoo ngano sakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "cb341", "text": "Pwede ba mohunong sakit ulo", "labels": ["headache"]}
+{"id": "cb342", "text": "Ngano ka init lawas ko", "labels": ["fever"]}
+{"id": "cb343", "text": "Kanus-a ba mohunong ubo ko ni", "labels": ["cough"]}
+{"id": "cb344", "text": "Asa gikan sipon ko ni walay katapusan", "labels": ["runny_nose"]}
+{"id": "cb345", "text": "Ngano dili mawala sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb346", "text": "Sakit napud ulo ugma exam pa", "labels": ["headache"]}
+{"id": "cb347", "text": "Hilanat napud pirmi nalang", "labels": ["fever"]}
+{"id": "cb348", "text": "Ubo mibalik napud", "labels": ["cough"]}
+{"id": "cb349", "text": "Dili pa rin mawala sipon", "labels": ["runny_nose"]}
+{"id": "cb350", "text": "Tiyan sakit gihapon hangtud karon", "labels": ["stomach_ache"]}
+{"id": "cb351", "text": "Ulo sobrang sakit parang mobuto", "labels": ["headache"]}
+{"id": "cb352", "text": "Lawas init pero normal temp sa thermo", "labels": ["fever"]}
+{"id": "cb353", "text": "Ubo pag gabii lang mograbe", "labels": ["cough"]}
+{"id": "cb354", "text": "Sipon pag buntag lang madalas", "labels": ["runny_nose"]}
+{"id": "cb355", "text": "Tiyan pag mokaon sakit", "labels": ["stomach_ache"]}
+{"id": "cb356", "text": "Sakit ulo pag stressed lang", "labels": ["headache"]}
+{"id": "cb357", "text": "Hilanat pag hapon moabot", "labels": ["fever"]}
+{"id": "cb358", "text": "Ubo pag nahigda mograbe", "labels": ["cough"]}
+{"id": "cb359", "text": "Sipon pag bugnaw panahon", "labels": ["runny_nose"]}
+{"id": "cb360", "text": "Tiyan pag busog sakit", "labels": ["stomach_ache"]}
+{"id": "cb361", "text": "Migraine abi ni grabe sakit", "labels": ["headache"]}
+{"id": "cb362", "text": "Flu siguro kay init ug ubo", "labels": ["fever", "cough"]}
+{"id": "cb363", "text": "Trangkaso yata sakit lawas hilanat", "labels": ["body_aches", "fever"]}
+{"id": "cb364", "text": "Common cold lang abi sipon ubo", "labels": ["runny_nose", "cough"]}
+{"id": "cb365", "text": "LBM napud grabe", "labels": ["diarrhea"]}
+{"id": "cb366", "text": "Parang may sore eyes unya sipon", "labels": ["runny_nose"]}
+{"id": "cb367", "text": "Tension headache siguro tungod stress", "labels": ["headache"]}
+{"id": "cb368", "text": "Gastric problem abi sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb369", "text": "Vertigo siguro ni naliyong jud", "labels": ["dizziness"]}
+{"id": "cb370", "text": "Food poisoning yata mosuka ko", "labels": ["vomiting"]}
+{"id": "cb371", "text": "Tingali dengue ni hilanat unya sakit lawas", "labels": ["fever", "body_aches"]}
+{"id": "cb372", "text": "COVID ba ni ubo hilanat", "labels": ["cough", "fever"]}
+{"id": "cb373", "text": "Allergies lang siguro sipon ug bahing", "labels": ["runny_nose"]}
+{"id": "cb374", "text": "Dehydrated siguro naliyong ug naluya", "labels": ["dizziness", "fatigue"]}
+{"id": "cb375", "text": "Kulang tulog mao sakit ulo", "labels": ["headache"]}
+{"id": "cb376", "text": "Gutom siguro mao sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb377", "text": "Init panahon mao init ko", "labels": ["fever"]}
+{"id": "cb378", "text": "Aircon mao siguro sipon", "labels": ["runny_nose"]}
+{"id": "cb379", "text": "Sigarilyo siguro hinungdan sa ubo", "labels": ["cough"]}
+{"id": "cb380", "text": "Kape siguro mao acidic tiyan", "labels": ["stomach_ache"]}
+{"id": "cb381", "text": "Inom biogesic para sa ulo", "labels": ["headache"]}
+{"id": "cb382", "text": "Need tempra para sa hilanat", "labels": ["fever"]}
+{"id": "cb383", "text": "Kinahanglan solmux para sa ubo", "labels": ["cough"]}
+{"id": "cb384", "text": "Palit neozep para sa sipon", "labels": ["runny_nose"]}
+{"id": "cb385", "text": "Pangita kremil para sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb386", "text": "Asa may nagbaligya tambal sa ubo", "labels": ["cough"]}
+{"id": "cb387", "text": "Unsa ba maayo tambal sa hilanat", "labels": ["fever"]}
+{"id": "cb388", "text": "Pano ba mawala sakit ulo", "labels": ["headache"]}
+{"id": "cb389", "text": "May tambal ba diri sa sipon", "labels": ["runny_nose"]}
+{"id": "cb390", "text": "Pwede ba moinom tambal sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb391", "text": "Misakit ulo kalit ganina", "labels": ["headache"]}
+{"id": "cb392", "text": "Gihilantan karon gabii", "labels": ["fever"]}
+{"id": "cb393", "text": "Moubo sukad kagahapon", "labels": ["cough"]}
+{"id": "cb394", "text": "Sipon tibuok adlaw", "labels": ["runny_nose"]}
+{"id": "cb395", "text": "Sakit tiyan pag mikaon", "labels": ["stomach_ache"]}
+{"id": "cb396", "text": "Grabe jud sakit ulo karon", "labels": ["headache"]}
+{"id": "cb397", "text": "Super init ko parang sinaing", "labels": ["fever"]}
+{"id": "cb398", "text": "Padayon jud ubo walay hunong", "labels": ["cough"]}
+{"id": "cb399", "text": "Sobrang dami sipon grabe", "labels": ["runny_nose"]}
+{"id": "cb400", "text": "Dili nako kaya sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb401", "text": "Aray sakit ulo jud", "labels": ["headache"]}
+{"id": "cb402", "text": "Aba init jud ko eh", "labels": ["fever"]}
+{"id": "cb403", "text": "Ay nako ubo napud", "labels": ["cough"]}
+{"id": "cb404", "text": "Naku sipon ko grabe", "labels": ["runny_nose"]}
+{"id": "cb405", "text": "Ginoo ko sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb406", "text": "Unsaon ba mawala ulo", "labels": ["headache"]}
+{"id": "cb407", "text": "Kanus-a kaha mawala hilanat", "labels": ["fever"]}
+{"id": "cb408", "text": "Sana mawala na ubo", "labels": ["cough"]}
+{"id": "cb409", "text": "Kanus-a ba mohunong sipon", "labels": ["runny_nose"]}
+{"id": "cb410", "text": "Ayoko na sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb411", "text": "Ulo jud sakit grabe no", "labels": ["headache"]}
+{"id": "cb412", "text": "Init lawas unsa kaha ni", "labels": ["fever"]}
+{"id": "cb413", "text": "Ubo ngano dili mohunong", "labels": ["cough"]}
+{"id": "cb414", "text": "Sipon asa ba gikan ni", "labels": ["runny_nose"]}
+{"id": "cb415", "text": "Tiyan ngano sakit", "labels": ["stomach_ache"]}
+{"id": "cb416", "text": "Headache napud today", "labels": ["headache"]}
+{"id": "cb417", "text": "Fever mode karon", "labels": ["fever"]}
+{"id": "cb418", "text": "Cough pa more", "labels": ["cough"]}
+{"id": "cb419", "text": "Sipon season napud", "labels": ["runny_nose"]}
+{"id": "cb420", "text": "Tummy ache problems", "labels": ["stomach_ache"]}
+{"id": "cb421", "text": "Bwisit sakit ulo", "labels": ["headache"]}
+{"id": "cb422", "text": "Yawa init ko", "labels": ["fever"]}
+{"id": "cb423", "text": "Putang ubo ni", "labels": ["cough"]}
+{"id": "cb424", "text": "Leche sipon napud", "labels": ["runny_nose"]}
+{"id": "cb425", "text": "Peste sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb426", "text": "Nakapalagot sakit ulo", "labels": ["headache"]}
+{"id": "cb427", "text": "Nakakapoy init pirmi", "labels": ["fever"]}
+{"id": "cb428", "text": "Nakabwisit ubo", "labels": ["cough"]}
+{"id": "cb429", "text": "Nakalagot sipon", "labels": ["runny_nose"]}
+{"id": "cb430", "text": "Nakaluoy sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb431", "text": "Yawa jud sakit ulo", "labels": ["headache"]}
+{"id": "cb432", "text": "Punyeta init lawas", "labels": ["fever"]}
+{"id": "cb433", "text": "Gago ubo dili mawala", "labels": ["cough"]}
+{"id": "cb434", "text": "Ulol sipon ayaw mohunong", "labels": ["runny_nose"]}
+{"id": "cb435", "text": "Bwakananginang tiyan ni", "labels": ["stomach_ache"]}
+{"id": "cb436", "text": "Parang may motusok sa ulo", "labels": ["headache"]}
+{"id": "cb437", "text": "Parang may mosunog sa sulod", "labels": ["fever"]}
+{"id": "cb438", "text": "Parang may molihok sa tutunlan mao moubo", "labels": ["cough"]}
+{"id": "cb439", "text": "Parang tubig gripo sipon", "labels": ["runny_nose"]}
+{"id": "cb440", "text": "Parang may mukagat sa tiyan", "labels": ["stomach_ache"]}
+{"id": "cb441", "text": "Gibati mobuto ulo sa sakit", "labels": ["headache"]}
+{"id": "cb442", "text": "Gibati gihilantan pero dili sure", "labels": ["fever"]}
+{"id": "cb443", "text": "Gibati moubo napud ugma", "labels": ["cough"]}
+{"id": "cb444", "text": "Gibati sipon ni pero dili pa sure", "labels": ["runny_nose"]}
+{"id": "cb445", "text": "Gibati sakit tiyan ugma", "labels": ["stomach_ache"]}
+{"id": "cb446", "text": "Murag sakit ulo napud", "labels": ["headache"]}
+{"id": "cb447", "text": "Murag hilanat napud ni", "labels": ["fever"]}
+{"id": "cb448", "text": "Murag ubo napud ko", "labels": ["cough"]}
+{"id": "cb449", "text": "Murag sipon lang ni", "labels": ["runny_nose"]}
+{"id": "cb450", "text": "Murag sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb451", "text": "Siguro sakit ulo tungod stress", "labels": ["headache"]}
+{"id": "cb452", "text": "Siguro hilanat tungod katugnaw", "labels": ["fever"]}
+{"id": "cb453", "text": "Siguro ubo tungod aso", "labels": ["cough"]}
+{"id": "cb454", "text": "Siguro sipon tungod aircon", "labels": ["runny_nose"]}
+{"id": "cb455", "text": "Siguro sakit tiyan tungod kaon", "labels": ["stomach_ache"]}
+{"id": "cb456", "text": "Abi sakit ulo ugma", "labels": ["headache"]}
+{"id": "cb457", "text": "Abi hilanat napud ko", "labels": ["fever"]}
+{"id": "cb458", "text": "Abi moubo napud", "labels": ["cough"]}
+{"id": "cb459", "text": "Abi sipon napud ni", "labels": ["runny_nose"]}
+{"id": "cb460", "text": "Abi sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb461", "text": "Tingali sakit ulo karon", "labels": ["headache"]}
+{"id": "cb462", "text": "Tingali init ko eh", "labels": ["fever"]}
+{"id": "cb463", "text": "Tingali moubo ko", "labels": ["cough"]}
+{"id": "cb464", "text": "Tingali may sipon ko", "labels": ["runny_nose"]}
+{"id": "cb465", "text": "Tingali sakit tiyan", "labels": ["stomach_ache"]}
+{"id": "cb466", "text": "Basin sakit ulo lang ni", "labels": ["headache"]}
+{"id": "cb467", "text": "Basin hilanat lang ni", "labels": ["fever"]}
+{"id": "cb468", "text": "Basin ubo lang naman ni", "labels": ["cough"]}
+{"id": "cb469", "text": "Basin sipon lang yan", "labels": ["runny_nose"]}
+{"id": "cb470", "text": "Basin sakit tiyan lang", "labels": ["stomach_ache"]}
+{"id": "cb471", "text": "Parang ulo lang sakit", "labels": ["headache"]}
+{"id": "cb472", "text": "Parang init lang ko", "labels": ["fever"]}
+{"id": "cb473", "text": "Parang ubo lang ni", "labels": ["cough"]}
+{"id": "cb474", "text": "Parang sipon lang naman", "labels": ["runny_nose"]}
+{"id": "cb475", "text": "Parang tiyan lang sakit", "labels": ["stomach_ache"]}
+{"id": "cb476", "text": "Sakit na diay ulo pala", "labels": ["headache"]}
+{"id": "cb477", "text": "Init na diay ko pala", "labels": ["fever"]}
+{"id": "cb478", "text": "Moubo na diay pala", "labels": ["cough"]}
+{"id": "cb479", "text": "May sipon na diay pala", "labels": ["runny_nose"]}
+{"id": "cb480", "text": "Sakit na diay tiyan pala", "labels": ["stomach_ache"]}
+{"id": "cb481", "text": "Ang sakit na ulo na", "labels": ["headache"]}
+{"id": "cb482", "text": "Ang init na ko na", "labels": ["fever"]}
+{"id": "cb483", "text": "Ang ubo ko na grabe", "labels": ["cough"]}
+{"id": "cb484", "text": "Ang sipon ko na sobra", "labels": ["runny_nose"]}
+{"id": "cb485", "text": "Ang sakit na tiyan na", "labels": ["stomach_ache"]}
+{"id": "cb486", "text": "Dili nako makakaon tungod sakit tutunlan", "labels": ["sore_throat"]}
+{"id": "cb487", "text": "Dili nako makatulog tungod ubo", "labels": ["cough"]}
+{"id": "cb488", "text": "Dili nako makagalaw tungod gikapoy", "labels": ["fatigue"]}
+{"id": "cb489", "text": "Dili nako makaginhawa og maayo", "labels": ["shortness_of_breath"]}
+{"id": "cb490", "text": "Dili nako makagalaw tungod sakit lawas", "labels": ["body_aches"]}
+{"id": "cb491", "text": "Sobrang sakit na ulo jud", "labels": ["headache"]}
+{"id": "cb492", "text": "Sobrang init ko na karon jud", "labels": ["fever"]}
+{"id": "cb493", "text": "Sobrang ubo na walay hunong jud", "labels": ["cough"]}
+{"id": "cb494", "text": "Sobrang sipon na grabe jud", "labels": ["runny_nose"]}
+{"id": "cb495", "text": "Sobrang sakit na tiyan jud", "labels": ["stomach_ache"]}
+{"id": "cb496", "text": "Grabe na jud sakit ulo dili nako kaya", "labels": ["headache"]}
+{"id": "cb497", "text": "Init ko sobra na jud parang nagpawis na", "labels": ["fever"]}
+{"id": "cb498", "text": "Ubo dili na jud mohunong bisag unsa buhaton", "labels": ["cough"]}
+{"id": "cb499", "text": "Sipon ayaw na jud mohunong bisag unsa tambal", "labels": ["runny_nose"]}
+{"id": "cb500", "text": "Tiyan sobrang sakit na jud dili nako kabalo buhaton", "labels": ["stomach_ache"]}
+{"id": "cb501", "text": "Nahilo kaayo ko karon", "labels": ["dizziness"]}
+{"id": "cb502", "text": "Sakit akong ulo grabe", "labels": ["headache"]}
+{"id": "cb503", "text": "Hilanat napud ko", "labels": ["fever"]}
+{"id": "cb504", "text": "Ubo ubo ko pirmi", "labels": ["cough"]}
+{"id": "cb505", "text": "Sip-on lang ko gamay", "labels": ["runny_nose"]}
+{"id": "cb506", "text": "Sakit akong tiyan baya", "labels": ["stomach_ache"]}
+{"id": "cb507", "text": "Gatuyok akong mga mata", "labels": ["dizziness"]}
+{"id": "cb508", "text": "Kamingaw akong lawas", "labels": ["fatigue"]}
+{"id": "cb509", "text": "Sakit tibuok lawas", "labels": ["body_aches"]}
+{"id": "cb510", "text": "Nagka ubo ubo napud", "labels": ["cough"]}
+{"id": "cb511", "text": "Nahilo ko pag bangon", "labels": ["dizziness"]}
+{"id": "cb512", "text": "Sukit ulo ko diri", "labels": ["headache"]}
+{"id": "cb513", "text": "Init kaayo lawas", "labels": ["fever"]}
+{"id": "cb514", "text": "Sipon ra gyud ko", "labels": ["runny_nose"]}
+{"id": "cb515", "text": "Lisod ginhawa", "labels": ["shortness_of_breath"]}
+{"id": "cb516", "text": "Sakit dughan pag ginhawa", "labels": ["chest_pain"]}
+{"id": "cb517", "text": "Nausea kaayo ko", "labels": ["nausea"]}
+{"id": "cb518", "text": "Gusto ko mosuka", "labels": ["nausea"]}
+{"id": "cb519", "text": "Nagsuka ko kanina", "labels": ["vomiting"]}
+{"id": "cb520", "text": "Pagkahilantan jud", "labels": ["fever"]}
+{"id": "cb521", "text": "Nahilo ug nasuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb522", "text": "Ubo ug sipon", "labels": ["cough", "runny_nose"]}
+{"id": "cb523", "text": "Ulo ug lawas sakit", "labels": ["headache", "body_aches"]}
+{"id": "cb524", "text": "Init tapos hilak ulo", "labels": ["fever", "headache"]}
+{"id": "cb525", "text": "Lisud tulog tungod sa ubo", "labels": ["cough"]}
+{"id": "cb526", "text": "Barado ilong dili makaginhawa", "labels": ["stuffy_nose"]}
+{"id": "cb527", "text": "Sakit liog pag tulon", "labels": ["sore_throat"]}
+{"id": "cb528", "text": "Hilabihan kasakit ulo", "labels": ["headache"]}
+{"id": "cb529", "text": "Grabe init lawas ko", "labels": ["fever"]}
+{"id": "cb530", "text": "Dili na mahunong ubo", "labels": ["cough"]}
+{"id": "cb531", "text": "Sipon tuloy tuloy", "labels": ["runny_nose"]}
+{"id": "cb532", "text": "Giuhaw pero masakit liog", "labels": ["sore_throat"]}
+{"id": "cb533", "text": "Gatuyok pa gihapon", "labels": ["dizziness"]}
+{"id": "cb534", "text": "Labad labad ulo ko", "labels": ["headache"]}
+{"id": "cb535", "text": "Gihilanat ko gabii", "labels": ["fever"]}
+{"id": "cb536", "text": "Nag ubo ko plema", "labels": ["cough"]}
+{"id": "cb537", "text": "Nagkatulo ilong", "labels": ["runny_nose"]}
+{"id": "cb538", "text": "Masakit tiyan human kaon", "labels": ["stomach_ache"]}
+{"id": "cb539", "text": "Kapoy kapoy lawas", "labels": ["fatigue"]}
+{"id": "cb540", "text": "Sakit tibuok2 lawas", "labels": ["body_aches"]}
+{"id": "cb541", "text": "Nahlo ko ug nasuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb542", "text": "Ulo saket grabe", "labels": ["headache"]}
+{"id": "cb543", "text": "Hlanat kaayu", "labels": ["fever"]}
+{"id": "cb544", "text": "Ubu ko pirme", "labels": ["cough"]}
+{"id": "cb545", "text": "Sepun lang", "labels": ["runny_nose"]}
+{"id": "cb546", "text": "Sakeet tyan ko", "labels": ["stomach_ache"]}
+{"id": "cb547", "text": "Gtuyok ko grabe", "labels": ["dizziness"]}
+{"id": "cb548", "text": "Kapooy lawas nko", "labels": ["fatigue"]}
+{"id": "cb549", "text": "Saket tibuok", "labels": ["body_aches"]}
+{"id": "cb550", "text": "Nag ubu napud", "labels": ["cough"]}
+{"id": "cb551", "text": "Nahilo ko pag barug", "labels": ["dizziness"]}
+{"id": "cb552", "text": "Sakit ulo pag init", "labels": ["headache"]}
+{"id": "cb553", "text": "Init init ako", "labels": ["fever"]}
+{"id": "cb554", "text": "Sipon ko dli mohunong", "labels": ["runny_nose"]}
+{"id": "cb555", "text": "Lisud ginhawa pag higda", "labels": ["shortness_of_breath"]}
+{"id": "cb556", "text": "Sakit dughan pag ubo", "labels": ["cough", "chest_pain"]}
+{"id": "cb557", "text": "Naduduwal jud ko", "labels": ["nausea"]}
+{"id": "cb558", "text": "Gusto mosuka pero dili", "labels": ["nausea"]}
+{"id": "cb559", "text": "Nagsuka human kaon", "labels": ["vomiting"]}
+{"id": "cb560", "text": "Gihilanat ko hangtod karon", "labels": ["fever"]}
+{"id": "cb561", "text": "Nahilo ug masakit ulo", "labels": ["dizziness", "headache"]}
+{"id": "cb562", "text": "Ubo ug sakit dughan", "labels": ["cough", "chest_pain"]}
+{"id": "cb563", "text": "Ulo ug init", "labels": ["headache", "fever"]}
+{"id": "cb564", "text": "Init ug sakit lawas", "labels": ["fever", "body_aches"]}
+{"id": "cb565", "text": "Dili na makatulog sa ubo", "labels": ["cough"]}
+{"id": "cb566", "text": "Barado kaayo ilong", "labels": ["stuffy_nose"]}
+{"id": "cb567", "text": "Liog sakit pag lunok", "labels": ["sore_throat"]}
+{"id": "cb568", "text": "Kasakit sa ulo", "labels": ["headache"]}
+{"id": "cb569", "text": "Init lawas ug kulasingin", "labels": ["fever"]}
+{"id": "cb570", "text": "Ubo ubo kanina pa", "labels": ["cough"]}
+{"id": "cb571", "text": "Sipon gikan buntag", "labels": ["runny_nose"]}
+{"id": "cb572", "text": "Sakit liog ug ulo", "labels": ["sore_throat", "headache"]}
+{"id": "cb573", "text": "Gatuyok kalibutan ko", "labels": ["dizziness"]}
+{"id": "cb574", "text": "Labad ulo hangtod karon", "labels": ["headache"]}
+{"id": "cb575", "text": "Gihilanat gikan gabii", "labels": ["fever"]}
+{"id": "cb576", "text": "Ubo nga may plema", "labels": ["cough"]}
+{"id": "cb577", "text": "Nagatulo ilong pirmi", "labels": ["runny_nose"]}
+{"id": "cb578", "text": "Sakit tiyan after mag kaon", "labels": ["stomach_ache"]}
+{"id": "cb579", "text": "Kapoy nga wala nabuhat", "labels": ["fatigue"]}
+{"id": "cb580", "text": "Sakit sa tibuok lawas", "labels": ["body_aches"]}
+{"id": "cb581", "text": "Nhilo ug nsuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb582", "text": "Ulu saket", "labels": ["headache"]}
+{"id": "cb583", "text": "Hlnat krun", "labels": ["fever"]}
+{"id": "cb584", "text": "Ubu prmi", "labels": ["cough"]}
+{"id": "cb585", "text": "Spun ko", "labels": ["runny_nose"]}
+{"id": "cb586", "text": "Skeet tyn", "labels": ["stomach_ache"]}
+{"id": "cb587", "text": "Gtyk ako", "labels": ["dizziness"]}
+{"id": "cb588", "text": "Kpoy lws", "labels": ["fatigue"]}
+{"id": "cb589", "text": "Sket tbuk", "labels": ["body_aches"]}
+{"id": "cb590", "text": "Ng ubu ko", "labels": ["cough"]}
+{"id": "cb591", "text": "Nahilo ko karun baya", "labels": ["dizziness"]}
+{"id": "cb592", "text": "Sakit ulo tungod sa init", "labels": ["headache"]}
+{"id": "cb593", "text": "Init kaayo diri sa lawas", "labels": ["fever"]}
+{"id": "cb594", "text": "Sipon lang dili grabe", "labels": ["runny_nose"]}
+{"id": "cb595", "text": "Lisod ug ginhawa grabe", "labels": ["shortness_of_breath"]}
+{"id": "cb596", "text": "Sakit dughan kung muubo", "labels": ["cough", "chest_pain"]}
+{"id": "cb597", "text": "Naduwal pero wala musuka", "labels": ["nausea"]}
+{"id": "cb598", "text": "Gusto gyud mosuka", "labels": ["nausea"]}
+{"id": "cb599", "text": "Nagsuka ko pag buntag", "labels": ["vomiting"]}
+{"id": "cb600", "text": "Gihilanat ko tibuok adlaw", "labels": ["fever"]}
+{"id": "cb601", "text": "Nahilo ug kapoy", "labels": ["dizziness", "fatigue"]}
+{"id": "cb602", "text": "Ubo ug barado ilong", "labels": ["cough", "stuffy_nose"]}
+{"id": "cb603", "text": "Ulo lawas ug init", "labels": ["headache", "body_aches", "fever"]}
+{"id": "cb604", "text": "Init lawas sakit ulo", "labels": ["fever", "headache"]}
+{"id": "cb605", "text": "Dili makatulog ubo kaayo", "labels": ["cough"]}
+{"id": "cb606", "text": "Barado duha ka buho", "labels": ["stuffy_nose"]}
+{"id": "cb607", "text": "Liog masakit pag tulon", "labels": ["sore_throat"]}
+{"id": "cb608", "text": "Hilabihan sakit ulo ko", "labels": ["headache"]}
+{"id": "cb609", "text": "Init sa lawas nanginginig", "labels": ["fever"]}
+{"id": "cb610", "text": "Ubo nga dry", "labels": ["cough"]}
+{"id": "cb611", "text": "Sipon tuloy tuloy dili", "labels": ["runny_nose"]}
+{"id": "cb612", "text": "Sakit liog dili makainom", "labels": ["sore_throat"]}
+{"id": "cb613", "text": "Gatuyok palibot", "labels": ["dizziness"]}
+{"id": "cb614", "text": "Labad ulo ko karon", "labels": ["headache"]}
+{"id": "cb615", "text": "Gihilanat pag udto", "labels": ["fever"]}
+{"id": "cb616", "text": "Ubo may plema kaayo", "labels": ["cough"]}
+{"id": "cb617", "text": "Nagatulo sipon nako", "labels": ["runny_nose"]}
+{"id": "cb618", "text": "Sakit tiyan human mag kaon ug", "labels": ["stomach_ache"]}
+{"id": "cb619", "text": "Kapoy bisan wala mubuhat", "labels": ["fatigue"]}
+{"id": "cb620", "text": "Sakit tibuok lawas parehas nabugbog", "labels": ["body_aches"]}
+{"id": "cb621", "text": "Hlo ug ska", "labels": ["dizziness", "nausea"]}
+{"id": "cb622", "text": "Ulu msakit", "labels": ["headache"]}
+{"id": "cb623", "text": "Hlnat jd", "labels": ["fever"]}
+{"id": "cb624", "text": "Ubu ka2", "labels": ["cough"]}
+{"id": "cb625", "text": "Spun lng", "labels": ["runny_nose"]}
+{"id": "cb626", "text": "Skt tyn", "labels": ["stomach_ache"]}
+{"id": "cb627", "text": "Gtuyk", "labels": ["dizziness"]}
+{"id": "cb628", "text": "Kpy lws", "labels": ["fatigue"]}
+{"id": "cb629", "text": "Skt tbk", "labels": ["body_aches"]}
+{"id": "cb630", "text": "Ng ubu", "labels": ["cough"]}
+{"id": "cb631", "text": "Nahilo ko tungod sa init", "labels": ["dizziness"]}
+{"id": "cb632", "text": "Sakit ulo dili mawala", "labels": ["headache"]}
+{"id": "cb633", "text": "Init lawas ug masakit ulo", "labels": ["fever", "headache"]}
+{"id": "cb634", "text": "Sipon gamay lang kaayo", "labels": ["runny_nose"]}
+{"id": "cb635", "text": "Lisod ginhawa kung naghigda", "labels": ["shortness_of_breath"]}
+{"id": "cb636", "text": "Sakit dughan pag taas ginhawa", "labels": ["chest_pain"]}
+{"id": "cb637", "text": "Naduwal ug kapoy", "labels": ["nausea", "fatigue"]}
+{"id": "cb638", "text": "Gusto mosuka dili makaprevent", "labels": ["nausea"]}
+{"id": "cb639", "text": "Nagsuka gabii pa", "labels": ["vomiting"]}
+{"id": "cb640", "text": "Gihilanat gikan kagabii", "labels": ["fever"]}
+{"id": "cb641", "text": "Nahilo sakit ulo", "labels": ["dizziness", "headache"]}
+{"id": "cb642", "text": "Ubo barado ilong", "labels": ["cough", "stuffy_nose"]}
+{"id": "cb643", "text": "Ulo lawas init tanan", "labels": ["headache", "body_aches", "fever"]}
+{"id": "cb644", "text": "Init sakit lawas", "labels": ["fever", "body_aches"]}
+{"id": "cb645", "text": "Dili makatulog tungod ubo", "labels": ["cough"]}
+{"id": "cb646", "text": "Barado tibuok ilong", "labels": ["stuffy_nose"]}
+{"id": "cb647", "text": "Liog masakit mutulon", "labels": ["sore_throat"]}
+{"id": "cb648", "text": "Grabe kasakit ulo", "labels": ["headache"]}
+{"id": "cb649", "text": "Init nanginginig pa", "labels": ["fever"]}
+{"id": "cb650", "text": "Ubo walang plema", "labels": ["cough"]}
+{"id": "cb651", "text": "Sipon kanina buntag pa", "labels": ["runny_nose"]}
+{"id": "cb652", "text": "Sakit liog dili makakaon", "labels": ["sore_throat"]}
+{"id": "cb653", "text": "Gatuyok akong mga mata diri", "labels": ["dizziness"]}
+{"id": "cb654", "text": "Labad ulo pag stress", "labels": ["headache"]}
+{"id": "cb655", "text": "Gihilanat pa gihapon", "labels": ["fever"]}
+{"id": "cb656", "text": "Ubo dry lang", "labels": ["cough"]}
+{"id": "cb657", "text": "Nagatulo ilong gikan buntag", "labels": ["runny_nose"]}
+{"id": "cb658", "text": "Sakit tiyan gutom siguro", "labels": ["stomach_ache"]}
+{"id": "cb659", "text": "Kapoy kaayo wala tulog", "labels": ["fatigue"]}
+{"id": "cb660", "text": "Sakit lawas parehas bugbog", "labels": ["body_aches"]}
+{"id": "cb661", "text": "Nhi ug nsk", "labels": ["dizziness", "nausea"]}
+{"id": "cb662", "text": "Ul msk", "labels": ["headache"]}
+{"id": "cb663", "text": "Hln kro", "labels": ["fever"]}
+{"id": "cb664", "text": "Ub prm", "labels": ["cough"]}
+{"id": "cb665", "text": "Spn ra", "labels": ["runny_nose"]}
+{"id": "cb666", "text": "Tyn sk", "labels": ["stomach_ache"]}
+{"id": "cb667", "text": "Gtyk k", "labels": ["dizziness"]}
+{"id": "cb668", "text": "Kpy k", "labels": ["fatigue"]}
+{"id": "cb669", "text": "Sk tbk", "labels": ["body_aches"]}
+{"id": "cb670", "text": "Ubu k", "labels": ["cough"]}
+{"id": "cb671", "text": "Nahilo grabe ko karon", "labels": ["dizziness"]}
+{"id": "cb672", "text": "Sakit ulo ko dugay na", "labels": ["headache"]}
+{"id": "cb673", "text": "Init kaayo pag gabii", "labels": ["fever"]}
+{"id": "cb674", "text": "Sipon ulit na sad", "labels": ["runny_nose"]}
+{"id": "cb675", "text": "Lisod ginhawa permi", "labels": ["shortness_of_breath"]}
+{"id": "cb676", "text": "Sakit dughan diri sa tunga", "labels": ["chest_pain"]}
+{"id": "cb677", "text": "Naduwal kaayo gusto mosuka", "labels": ["nausea"]}
+{"id": "cb678", "text": "Gusto mosuka dili gawas", "labels": ["nausea"]}
+{"id": "cb679", "text": "Nagsuka tibuok buntag", "labels": ["vomiting"]}
+{"id": "cb680", "text": "Gihilanat karong gabiona", "labels": ["fever"]}
+{"id": "cb681", "text": "Nahilo kapoy pa", "labels": ["dizziness", "fatigue"]}
+{"id": "cb682", "text": "Ubo sipon", "labels": ["cough", "runny_nose"]}
+{"id": "cb683", "text": "Ulo lawas", "labels": ["headache", "body_aches"]}
+{"id": "cb684", "text": "Init lawas", "labels": ["fever"]}
+{"id": "cb685", "text": "Dili makatulog kay ubo", "labels": ["cough"]}
+{"id": "cb686", "text": "Barado ilong tanan", "labels": ["stuffy_nose"]}
+{"id": "cb687", "text": "Liog sakit lunok", "labels": ["sore_throat"]}
+{"id": "cb688", "text": "Kasakit ulo ko run", "labels": ["headache"]}
+{"id": "cb689", "text": "Init nanginginig ko", "labels": ["fever"]}
+{"id": "cb690", "text": "Ubo dry kaayo", "labels": ["cough"]}
+{"id": "cb691", "text": "Sipon gikan gabii pa", "labels": ["runny_nose"]}
+{"id": "cb692", "text": "Sakit liog hirap tulon", "labels": ["sore_throat"]}
+{"id": "cb693", "text": "Gatuyok mundo ko", "labels": ["dizziness"]}
+{"id": "cb694", "text": "Labad kaayo ulo", "labels": ["headache"]}
+{"id": "cb695", "text": "Gihilanat na sad", "labels": ["fever"]}
+{"id": "cb696", "text": "Ubo plema grabe", "labels": ["cough"]}
+{"id": "cb697", "text": "Nagatulo sipon pirmi", "labels": ["runny_nose"]}
+{"id": "cb698", "text": "Sakit tiyan kanina human kaon", "labels": ["stomach_ache"]}
+{"id": "cb699", "text": "Kapoy wala gani mubuhat", "labels": ["fatigue"]}
+{"id": "cb700", "text": "Sakit lawas nabugbog ba", "labels": ["body_aches"]}
+{"id": "cb701", "text": "Nho nsk ko", "labels": ["dizziness", "nausea"]}
+{"id": "cb702", "text": "Ulo ko skt", "labels": ["headache"]}
+{"id": "cb703", "text": "Hlnt kyo ko", "labels": ["fever"]}
+{"id": "cb704", "text": "Ub kyo", "labels": ["cough"]}
+{"id": "cb705", "text": "Spn gmd", "labels": ["runny_nose"]}
+{"id": "cb706", "text": "Tyn sk ko", "labels": ["stomach_ache"]}
+{"id": "cb707", "text": "Gtyk kyo", "labels": ["dizziness"]}
+{"id": "cb708", "text": "Kpy kyo", "labels": ["fatigue"]}
+{"id": "cb709", "text": "Skt lwas", "labels": ["body_aches"]}
+{"id": "cb710", "text": "Ub lng", "labels": ["cough"]}
+{"id": "cb711", "text": "Nahilo baya ko pag bangon", "labels": ["dizziness"]}
+{"id": "cb712", "text": "Sakit ulo kanina buntag", "labels": ["headache"]}
+{"id": "cb713", "text": "Init init ko diri", "labels": ["fever"]}
+{"id": "cb714", "text": "Sipon ko balik na", "labels": ["runny_nose"]}
+{"id": "cb715", "text": "Lisod ginhawa karon", "labels": ["shortness_of_breath"]}
+{"id": "cb716", "text": "Sakit dughan pag deep breath", "labels": ["chest_pain"]}
+{"id": "cb717", "text": "Naduwal ko grabe", "labels": ["nausea"]}
+{"id": "cb718", "text": "Gusto mosuka talaga", "labels": ["nausea"]}
+{"id": "cb719", "text": "Nagsuka ko kanina lang", "labels": ["vomiting"]}
+{"id": "cb720", "text": "Gihilanat ko tibuok gabii", "labels": ["fever"]}
+{"id": "cb721", "text": "Nahilo ug init", "labels": ["dizziness", "fever"]}
+{"id": "cb722", "text": "Ubo init", "labels": ["cough", "fever"]}
+{"id": "cb723", "text": "Ulo sakit lawas sakit", "labels": ["headache", "body_aches"]}
+{"id": "cb724", "text": "Init grabe lawas", "labels": ["fever"]}
+{"id": "cb725", "text": "Dili makatulog sa ubo ko", "labels": ["cough"]}
+{"id": "cb726", "text": "Barado tanan buho", "labels": ["stuffy_nose"]}
+{"id": "cb727", "text": "Liog masakit pag lunok ug", "labels": ["sore_throat"]}
+{"id": "cb728", "text": "Sakit ulo dili ko concentrate", "labels": ["headache"]}
+{"id": "cb729", "text": "Init lawas kulasingin", "labels": ["fever"]}
+{"id": "cb730", "text": "Ubo ko tuloy tuloy", "labels": ["cough"]}
+{"id": "cb731", "text": "Sipon kanina adlaw pa", "labels": ["runny_nose"]}
+{"id": "cb732", "text": "Sakit liog dili kaayo makakaon", "labels": ["sore_throat"]}
+{"id": "cb733", "text": "Gatuyok kalibutan nako", "labels": ["dizziness"]}
+{"id": "cb734", "text": "Labad ulo dugay na kaayo", "labels": ["headache"]}
+{"id": "cb735", "text": "Gihilanat ko pag buntag", "labels": ["fever"]}
+{"id": "cb736", "text": "Ubo may plema dili malabas", "labels": ["cough"]}
+{"id": "cb737", "text": "Nagatulo ilong kanina pa", "labels": ["runny_nose"]}
+{"id": "cb738", "text": "Sakit tiyan lisod pa kahigda", "labels": ["stomach_ache"]}
+{"id": "cb739", "text": "Kapoy bisan wala magwork", "labels": ["fatigue"]}
+{"id": "cb740", "text": "Sakit lawas parehas gipang bugbog", "labels": ["body_aches"]}
+{"id": "cb741", "text": "Nhlo nska", "labels": ["dizziness", "nausea"]}
+{"id": "cb742", "text": "Ulo mskt", "labels": ["headache"]}
+{"id": "cb743", "text": "Hlnt run", "labels": ["fever"]}
+{"id": "cb744", "text": "Ubu pir", "labels": ["cough"]}
+{"id": "cb745", "text": "Spn gm", "labels": ["runny_nose"]}
+{"id": "cb746", "text": "Tyn sk", "labels": ["stomach_ache"]}
+{"id": "cb747", "text": "Gtk ko", "labels": ["dizziness"]}
+{"id": "cb748", "text": "Kpy ko", "labels": ["fatigue"]}
+{"id": "cb749", "text": "Skt tb", "labels": ["body_aches"]}
+{"id": "cb750", "text": "Ubu na", "labels": ["cough"]}
+{"id": "cb751", "text": "Nahilo ko human mokaon", "labels": ["dizziness"]}
+{"id": "cb752", "text": "Sakit ulo pag sikit", "labels": ["headache"]}
+{"id": "cb753", "text": "Init ko pag gabii", "labels": ["fever"]}
+{"id": "cb754", "text": "Sipon lang kaayo gamay", "labels": ["runny_nose"]}
+{"id": "cb755", "text": "Lisod ug ginhawa karon ko", "labels": ["shortness_of_breath"]}
+{"id": "cb756", "text": "Sakit dughan pag lihok", "labels": ["chest_pain"]}
+{"id": "cb757", "text": "Naduwal ko kanina buntag", "labels": ["nausea"]}
+{"id": "cb758", "text": "Gusto gyud mosuka karon", "labels": ["nausea"]}
+{"id": "cb759", "text": "Nagsuka human mag inum", "labels": ["vomiting"]}
+{"id": "cb760", "text": "Gihilanat na usab ko", "labels": ["fever"]}
+{"id": "cb761", "text": "Nahilo init pa", "labels": ["dizziness", "fever"]}
+{"id": "cb762", "text": "Ubo dughan sakit", "labels": ["cough", "chest_pain"]}
+{"id": "cb763", "text": "Ulo tiyan", "labels": ["headache", "stomach_ache"]}
+{"id": "cb764", "text": "Init ulo", "labels": ["fever", "headache"]}
+{"id": "cb765", "text": "Dili matulog ubo", "labels": ["cough"]}
+{"id": "cb766", "text": "Barado buho sa ilong", "labels": ["stuffy_nose"]}
+{"id": "cb767", "text": "Liog sakit kaon", "labels": ["sore_throat"]}
+{"id": "cb768", "text": "Grabe sakit ulo", "labels": ["headache"]}
+{"id": "cb769", "text": "Init nanginginig", "labels": ["fever"]}
+{"id": "cb770", "text": "Ubo walay tigil", "labels": ["cough"]}
+{"id": "cb771", "text": "Sipon gikan gabii", "labels": ["runny_nose"]}
+{"id": "cb772", "text": "Sakit liog hirap", "labels": ["sore_throat"]}
+{"id": "cb773", "text": "Gatuyok ko dugay na", "labels": ["dizziness"]}
+{"id": "cb774", "text": "Labad ulo stress", "labels": ["headache"]}
+{"id": "cb775", "text": "Gihilanat tibuok", "labels": ["fever"]}
+{"id": "cb776", "text": "Ubo plema dili", "labels": ["cough"]}
+{"id": "cb777", "text": "Nagatulo sipon ko", "labels": ["runny_nose"]}
+{"id": "cb778", "text": "Sakit tiyan human", "labels": ["stomach_ache"]}
+{"id": "cb779", "text": "Kapoy wala tulog", "labels": ["fatigue"]}
+{"id": "cb780", "text": "Sakit lawas bugbog", "labels": ["body_aches"]}
+{"id": "cb781", "text": "Nh nsk k", "labels": ["dizziness", "nausea"]}
+{"id": "cb782", "text": "Ul sk k", "labels": ["headache"]}
+{"id": "cb783", "text": "Hln kr", "labels": ["fever"]}
+{"id": "cb784", "text": "Ub pr", "labels": ["cough"]}
+{"id": "cb785", "text": "Sp gm", "labels": ["runny_nose"]}
+{"id": "cb786", "text": "Ty sk", "labels": ["stomach_ache"]}
+{"id": "cb787", "text": "Gt ko", "labels": ["dizziness"]}
+{"id": "cb788", "text": "Kp ko", "labels": ["fatigue"]}
+{"id": "cb789", "text": "Sk tb", "labels": ["body_aches"]}
+{"id": "cb790", "text": "Ub k", "labels": ["cough"]}
+{"id": "cb791", "text": "Nahilo ko karon gid", "labels": ["dizziness"]}
+{"id": "cb792", "text": "Sakit ulo buntag buntag", "labels": ["headache"]}
+{"id": "cb793", "text": "Init ko permi karon", "labels": ["fever"]}
+{"id": "cb794", "text": "Sipon balik balik", "labels": ["runny_nose"]}
+{"id": "cb795", "text": "Lisod ginhawa baya", "labels": ["shortness_of_breath"]}
+{"id": "cb796", "text": "Sakit dughan pag ubo ug ginhawa", "labels": ["cough", "chest_pain"]}
+{"id": "cb797", "text": "Naduwal grabe kaayo", "labels": ["nausea"]}
+{"id": "cb798", "text": "Gusto mosuka dili malaban", "labels": ["nausea"]}
+{"id": "cb799", "text": "Nagsuka human mag breakfast", "labels": ["vomiting"]}
+{"id": "cb800", "text": "Gihilanat gikan adlaw", "labels": ["fever"]}
+{"id": "cb801", "text": "Nahilo sakit tiyan", "labels": ["dizziness", "stomach_ache"]}
+{"id": "cb802", "text": "Ubo sipon combo", "labels": ["cough", "runny_nose"]}
+{"id": "cb803", "text": "Ulo lawas init combo", "labels": ["headache", "body_aches", "fever"]}
+{"id": "cb804", "text": "Init lawas grabe kaayo", "labels": ["fever"]}
+{"id": "cb805", "text": "Dili matulog tungod ubo", "labels": ["cough"]}
+{"id": "cb806", "text": "Barado ilong dugay na", "labels": ["stuffy_nose"]}
+{"id": "cb807", "text": "Liog masakit hirap lunok", "labels": ["sore_throat"]}
+{"id": "cb808", "text": "Sakit ulo stress siguro", "labels": ["headache"]}
+{"id": "cb809", "text": "Init nanginginig ko grabe", "labels": ["fever"]}
+{"id": "cb810", "text": "Ubo dry lang naman", "labels": ["cough"]}
+{"id": "cb811", "text": "Sipon gikan buntag hangtod karon", "labels": ["runny_nose"]}
+{"id": "cb812", "text": "Sakit liog dili makainom tubig", "labels": ["sore_throat"]}
+{"id": "cb813", "text": "Gatuyok palibot ko", "labels": ["dizziness"]}
+{"id": "cb814", "text": "Labad ulo pag init", "labels": ["headache"]}
+{"id": "cb815", "text": "Gihilanat pa gani", "labels": ["fever"]}
+{"id": "cb816", "text": "Ubo may plema lisod ilabas", "labels": ["cough"]}
+{"id": "cb817", "text": "Nagatulo sipon walay hunong", "labels": ["runny_nose"]}
+{"id": "cb818", "text": "Sakit tiyan human mag lunch", "labels": ["stomach_ache"]}
+{"id": "cb819", "text": "Kapoy wala nag work", "labels": ["fatigue"]}
+{"id": "cb820", "text": "Sakit lawas nabugbog siguro", "labels": ["body_aches"]}
+{"id": "cb821", "text": "Nh ug sk", "labels": ["dizziness", "nausea"]}
+{"id": "cb822", "text": "Ul msk ko", "labels": ["headache"]}
+{"id": "cb823", "text": "Hnt kyo", "labels": ["fever"]}
+{"id": "cb824", "text": "Ub kyo ko", "labels": ["cough"]}
+{"id": "cb825", "text": "Spn gmd ko", "labels": ["runny_nose"]}
+{"id": "cb826", "text": "Tn sk ko", "labels": ["stomach_ache"]}
+{"id": "cb827", "text": "Gtk kayo", "labels": ["dizziness"]}
+{"id": "cb828", "text": "Kpy kayo", "labels": ["fatigue"]}
+{"id": "cb829", "text": "Skt lws ko", "labels": ["body_aches"]}
+{"id": "cb830", "text": "Ub lng ko", "labels": ["cough"]}
+{"id": "cb831", "text": "Nahilo ko pag taas", "labels": ["dizziness"]}
+{"id": "cb832", "text": "Sakit ulo ko nanay", "labels": ["headache"]}
+{"id": "cb833", "text": "Init init lawas ko", "labels": ["fever"]}
+{"id": "cb834", "text": "Sipon ko na usab", "labels": ["runny_nose"]}
+{"id": "cb835", "text": "Lisod ginhawa ko run", "labels": ["shortness_of_breath"]}
+{"id": "cb836", "text": "Sakit dughan pag taas hininga", "labels": ["chest_pain"]}
+{"id": "cb837", "text": "Naduwal kaayo gusto", "labels": ["nausea"]}
+{"id": "cb838", "text": "Gusto mosuka pero wala", "labels": ["nausea"]}
+{"id": "cb839", "text": "Nagsuka ko pag buntag", "labels": ["vomiting"]}
+{"id": "cb840", "text": "Gihilanat run ko", "labels": ["fever"]}
+{"id": "cb841", "text": "Nahilo ulo sakit", "labels": ["dizziness", "headache"]}
+{"id": "cb842", "text": "Ubo init ko", "labels": ["cough", "fever"]}
+{"id": "cb843", "text": "Ulo sakit tiyan sakit", "labels": ["headache", "stomach_ache"]}
+{"id": "cb844", "text": "Init lawas sakit", "labels": ["fever", "body_aches"]}
+{"id": "cb845", "text": "Dili matulog sa ka ubo", "labels": ["cough"]}
+{"id": "cb846", "text": "Barado tanan side", "labels": ["stuffy_nose"]}
+{"id": "cb847", "text": "Liog sakit lunok sakit", "labels": ["sore_throat"]}
+{"id": "cb848", "text": "Sakit ulo walay tigil", "labels": ["headache"]}
+{"id": "cb849", "text": "Init nanginginig ako", "labels": ["fever"]}
+{"id": "cb850", "text": "Ubo permi ko", "labels": ["cough"]}
+{"id": "cb851", "text": "Sipon dugay na kaayo ko", "labels": ["runny_nose"]}
+{"id": "cb852", "text": "Sakit liog di makalunok", "labels": ["sore_throat"]}
+{"id": "cb853", "text": "Gatuyok mata ko", "labels": ["dizziness"]}
+{"id": "cb854", "text": "Labad ulo kaayo karun", "labels": ["headache"]}
+{"id": "cb855", "text": "Gihilanat ko gabii pa", "labels": ["fever"]}
+{"id": "cb856", "text": "Ubo plema grabe kaayo", "labels": ["cough"]}
+{"id": "cb857", "text": "Nagatulo ilong pirmi nako", "labels": ["runny_nose"]}
+{"id": "cb858", "text": "Sakit tiyan human mag kaon ko", "labels": ["stomach_ache"]}
+{"id": "cb859", "text": "Kapoy bisan wa mu trabaho", "labels": ["fatigue"]}
+{"id": "cb860", "text": "Sakit lawas parehas nabugbog ko", "labels": ["body_aches"]}
+{"id": "cb861", "text": "Nhlo nska ko", "labels": ["dizziness", "nausea"]}
+{"id": "cb862", "text": "Ulo mskt kaayo", "labels": ["headache"]}
+{"id": "cb863", "text": "Hlnt run ko", "labels": ["fever"]}
+{"id": "cb864", "text": "Ubu pir ko", "labels": ["cough"]}
+{"id": "cb865", "text": "Spn gm ko", "labels": ["runny_nose"]}
+{"id": "cb866", "text": "Tyn sk kaayo", "labels": ["stomach_ache"]}
+{"id": "cb867", "text": "Gtk ko karon", "labels": ["dizziness"]}
+{"id": "cb868", "text": "Kpy ko kaayo", "labels": ["fatigue"]}
+{"id": "cb869", "text": "Skt tb ko", "labels": ["body_aches"]}
+{"id": "cb870", "text": "Ubu na ko", "labels": ["cough"]}
+{"id": "cb871", "text": "Nahilo ko pag bangon nako", "labels": ["dizziness"]}
+{"id": "cb872", "text": "Sakit ulo tungod sa stress", "labels": ["headache"]}
+{"id": "cb873", "text": "Init ko pag gabii kaayo", "labels": ["fever"]}
+{"id": "cb874", "text": "Sipon lang gamay ra", "labels": ["runny_nose"]}
+{"id": "cb875", "text": "Lisod ginhawa ko run baya", "labels": ["shortness_of_breath"]}
+{"id": "cb876", "text": "Sakit dughan pag lihok ko", "labels": ["chest_pain"]}
+{"id": "cb877", "text": "Naduwal ko kanina pa", "labels": ["nausea"]}
+{"id": "cb878", "text": "Gusto mosuka grabe kaayo", "labels": ["nausea"]}
+{"id": "cb879", "text": "Nagsuka human mag dinner", "labels": ["vomiting"]}
+{"id": "cb880", "text": "Gihilanat ko tibuok adlaw", "labels": ["fever"]}
+{"id": "cb881", "text": "Nahilo nasuka pa", "labels": ["dizziness", "nausea"]}
+{"id": "cb882", "text": "Ubo barado", "labels": ["cough", "stuffy_nose"]}
+{"id": "cb883", "text": "Ulo lawas tanan", "labels": ["headache", "body_aches"]}
+{"id": "cb884", "text": "Init sakit ulo", "labels": ["fever", "headache"]}
+{"id": "cb885", "text": "Dili matulog kay sa ubo", "labels": ["cough"]}
+{"id": "cb886", "text": "Barado buho ilong", "labels": ["stuffy_nose"]}
+{"id": "cb887", "text": "Liog sakit lunok", "labels": ["sore_throat"]}
+{"id": "cb888", "text": "Grabe sakit ulo ko", "labels": ["headache"]}
+{"id": "cb889", "text": "Init nanginginig grabe", "labels": ["fever"]}
+{"id": "cb890", "text": "Ubo walay tigil ko", "labels": ["cough"]}
+{"id": "cb891", "text": "Sipon gikan gabii pa ko", "labels": ["runny_nose"]}
+{"id": "cb892", "text": "Sakit liog hirap kaayo", "labels": ["sore_throat"]}
+{"id": "cb893", "text": "Gatuyok mundo", "labels": ["dizziness"]}
+{"id": "cb894", "text": "Labad ulo stress na", "labels": ["headache"]}
+{"id": "cb895", "text": "Gihilanat tibuok gabii", "labels": ["fever"]}
+{"id": "cb896", "text": "Ubo plema dili gawas", "labels": ["cough"]}
+{"id": "cb897", "text": "Nagatulo sipon walay stop", "labels": ["runny_nose"]}
+{"id": "cb898", "text": "Sakit tiyan human kaon ug", "labels": ["stomach_ache"]}
+{"id": "cb899", "text": "Kapoy wala nag work ko", "labels": ["fatigue"]}
+{"id": "cb900", "text": "Sakit lawas bugbog kaayo", "labels": ["body_aches"]}
+{"id": "cb901", "text": "Nhilo nsuka ako", "labels": ["dizziness", "nausea"]}
+{"id": "cb902", "text": "Ulo sakit ko", "labels": ["headache"]}
+{"id": "cb903", "text": "Hilanat karon", "labels": ["fever"]}
+{"id": "cb904", "text": "Ubo pirmi", "labels": ["cough"]}
+{"id": "cb905", "text": "Sipon gamay", "labels": ["runny_nose"]}
+{"id": "cb906", "text": "Tiyan sakit", "labels": ["stomach_ache"]}
+{"id": "cb907", "text": "Gatuyok ko", "labels": ["dizziness"]}
+{"id": "cb908", "text": "Kapoy ako", "labels": ["fatigue"]}
+{"id": "cb909", "text": "Sakit lawas", "labels": ["body_aches"]}
+{"id": "cb910", "text": "Ubo lang", "labels": ["cough"]}
+{"id": "cb911", "text": "Nahilo ko tungod init", "labels": ["dizziness"]}
+{"id": "cb912", "text": "Sakit ulo dili mawala kay", "labels": ["headache"]}
+{"id": "cb913", "text": "Init lawas ulo sakit", "labels": ["fever", "headache"]}
+{"id": "cb914", "text": "Sipon gamay lang gid", "labels": ["runny_nose"]}
+{"id": "cb915", "text": "Lisod ginhawa pag higda ko", "labels": ["shortness_of_breath"]}
+{"id": "cb916", "text": "Sakit dughan pag taas ginhawa ko", "labels": ["chest_pain"]}
+{"id": "cb917", "text": "Naduwal kapoy pa ko", "labels": ["nausea", "fatigue"]}
+{"id": "cb918", "text": "Gusto mosuka dili ma prevent", "labels": ["nausea"]}
+{"id": "cb919", "text": "Nagsuka gabii pa ko", "labels": ["vomiting"]}
+{"id": "cb920", "text": "Gihilanat gikan kagabii pa", "labels": ["fever"]}
+{"id": "cb921", "text": "Nahilo sakit ulo ko", "labels": ["dizziness", "headache"]}
+{"id": "cb922", "text": "Ubo barado ilong ko", "labels": ["cough", "stuffy_nose"]}
+{"id": "cb923", "text": "Ulo lawas init", "labels": ["headache", "body_aches", "fever"]}
+{"id": "cb924", "text": "Init sakit lawas ko", "labels": ["fever", "body_aches"]}
+{"id": "cb925", "text": "Dili makatulog tungod sa ubo", "labels": ["cough"]}
+{"id": "cb926", "text": "Barado tibuok ilong ko", "labels": ["stuffy_nose"]}
+{"id": "cb927", "text": "Liog masakit pag tulon ko", "labels": ["sore_throat"]}
+{"id": "cb928", "text": "Grabe kasakit ulo ko", "labels": ["headache"]}
+{"id": "cb929", "text": "Init nanginginig pa ko", "labels": ["fever"]}
+{"id": "cb930", "text": "Ubo walang plema ko", "labels": ["cough"]}
+{"id": "cb931", "text": "Sipon kanina buntag pa ko", "labels": ["runny_nose"]}
+{"id": "cb932", "text": "Sakit liog dili makakaon ko", "labels": ["sore_throat"]}
+{"id": "cb933", "text": "Gatuyok mata diri ko", "labels": ["dizziness"]}
+{"id": "cb934", "text": "Labad ulo pag stress ko", "labels": ["headache"]}
+{"id": "cb935", "text": "Gihilanat pa gihapon ko", "labels": ["fever"]}
+{"id": "cb936", "text": "Ubo dry lang ko", "labels": ["cough"]}
+{"id": "cb937", "text": "Nagatulo ilong gikan buntag ko", "labels": ["runny_nose"]}
+{"id": "cb938", "text": "Sakit tiyan gutom siguro ko", "labels": ["stomach_ache"]}
+{"id": "cb939", "text": "Kapoy kaayo wala tulog ko", "labels": ["fatigue"]}
+{"id": "cb940", "text": "Sakit lawas parehas bugbog ko", "labels": ["body_aches"]}
+{"id": "cb941", "text": "Nahilo nasuka", "labels": ["dizziness", "nausea"]}
+{"id": "cb942", "text": "Ulo masakit", "labels": ["headache"]}
+{"id": "cb943", "text": "Hilanat ako", "labels": ["fever"]}
+{"id": "cb944", "text": "Ubo ako", "labels": ["cough"]}
+{"id": "cb945", "text": "Sipon ko", "labels": ["runny_nose"]}
+{"id": "cb946", "text": "Tiyan ko", "labels": ["stomach_ache"]}
+{"id": "cb947", "text": "Gatuyok", "labels": ["dizziness"]}
+{"id": "cb948", "text": "Kapoy", "labels": ["fatigue"]}
+{"id": "cb949", "text": "Lawas sakit", "labels": ["body_aches"]}
+{"id": "cb950", "text": "Ubo ra", "labels": ["cough"]}
+{"id": "cb951", "text": "Nahilo grabe ko karon baya", "labels": ["dizziness"]}
+{"id": "cb952", "text": "Sakit ulo ko dugay na kaayo", "labels": ["headache"]}
+{"id": "cb953", "text": "Init kaayo pag gabii ko", "labels": ["fever"]}
+{"id": "cb954", "text": "Sipon ulit na sad ko", "labels": ["runny_nose"]}
+{"id": "cb955", "text": "Lisod ginhawa permi ko", "labels": ["shortness_of_breath"]}
+{"id": "cb956", "text": "Sakit dughan diri sa tunga ko", "labels": ["chest_pain"]}
+{"id": "cb957", "text": "Naduwal kaayo gusto mosuka ko", "labels": ["nausea"]}
+{"id": "cb958", "text": "Gusto mosuka dili gawas ko", "labels": ["nausea"]}
+{"id": "cb959", "text": "Nagsuka tibuok buntag ko", "labels": ["vomiting"]}
+{"id": "cb960", "text": "Gihilanat karong gabiona ko", "labels": ["fever"]}
+{"id": "cb961", "text": "Nahilo kapoy pa ko", "labels": ["dizziness", "fatigue"]}
+{"id": "cb962", "text": "Ubo sipon ko", "labels": ["cough", "runny_nose"]}
+{"id": "cb963", "text": "Ulo lawas ko", "labels": ["headache", "body_aches"]}
+{"id": "cb964", "text": "Init lawas ko", "labels": ["fever"]}
+{"id": "cb965", "text": "Dili makatulog kay ubo ko", "labels": ["cough"]}
+{"id": "cb966", "text": "Barado ilong tanan ko", "labels": ["stuffy_nose"]}
+{"id": "cb967", "text": "Liog sakit lunok ko", "labels": ["sore_throat"]}
+{"id": "cb968", "text": "Kasakit ulo ko run baya", "labels": ["headache"]}
+{"id": "cb969", "text": "Init nanginginig ko baya", "labels": ["fever"]}
+{"id": "cb970", "text": "Ubo dry kaayo ko", "labels": ["cough"]}
+{"id": "cb971", "text": "Sipon gikan gabii pa nako", "labels": ["runny_nose"]}
+{"id": "cb972", "text": "Sakit liog hirap tulon nako", "labels": ["sore_throat"]}
+{"id": "cb973", "text": "Gatuyok mundo ko baya", "labels": ["dizziness"]}
+{"id": "cb974", "text": "Labad kaayo ulo nako", "labels": ["headache"]}
+{"id": "cb975", "text": "Gihilanat na sad nako", "labels": ["fever"]}
+{"id": "cb976", "text": "Ubo plema grabe nako", "labels": ["cough"]}
+{"id": "cb977", "text": "Nagatulo sipon pirmi nako", "labels": ["runny_nose"]}
+{"id": "cb978", "text": "Sakit tiyan kanina human kaon nako", "labels": ["stomach_ache"]}
+{"id": "cb979", "text": "Kapoy wala gani mubuhat ko", "labels": ["fatigue"]}
+{"id": "cb980", "text": "Sakit lawas nabugbog ba nako", "labels": ["body_aches"]}
+{"id": "cb981", "text": "Hilo suka", "labels": ["dizziness", "nausea"]}
+{"id": "cb982", "text": "Ulo ko", "labels": ["headache"]}
+{"id": "cb983", "text": "Init ko", "labels": ["fever"]}
+{"id": "cb984", "text": "Ubo ko", "labels": ["cough"]}
+{"id": "cb985", "text": "Sipon", "labels": ["runny_nose"]}
+{"id": "cb986", "text": "Tiyan", "labels": ["stomach_ache"]}
+{"id": "cb987", "text": "Hilo", "labels": ["dizziness"]}
+{"id": "cb988", "text": "Kapoy kaayo", "labels": ["fatigue"]}
+{"id": "cb989", "text": "Lawas", "labels": ["body_aches"]}
+{"id": "cb990", "text": "Ubo", "labels": ["cough"]}
+{"id": "cb991", "text": "Nahilo baya ko pag bangon ko", "labels": ["dizziness"]}
+{"id": "cb992", "text": "Sakit ulo kanina buntag pa", "labels": ["headache"]}
+{"id": "cb993", "text": "Init init ko diri sa lawas", "labels": ["fever"]}
+{"id": "cb994", "text": "Sipon ko balik na usab", "labels": ["runny_nose"]}
+{"id": "cb995", "text": "Lisod ginhawa karon ko", "labels": ["shortness_of_breath"]}
+{"id": "cb996", "text": "Sakit dughan pag deep breath ko", "labels": ["chest_pain"]}
+{"id": "cb997", "text": "Naduwal ko grabe kaayo", "labels": ["nausea"]}
+{"id": "cb998", "text": "Gusto mosuka talaga ko", "labels": ["nausea"]}
+{"id": "cb999", "text": "Nagsuka ko kanina lang baya", "labels": ["vomiting"]}
+{"id": "cb1000", "text": "Gihilanat ko tibuok gabii ug adlaw", "labels": ["fever"]}
