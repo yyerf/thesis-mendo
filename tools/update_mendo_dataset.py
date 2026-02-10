@@ -1,7 +1,7 @@
-"""Update data/Mendo-Datasets.json from data/Mendo-Datasets-latest.json.
+"""Update data/datasets/Mendo-Datasets.json from data/datasets/Mendo-Datasets-latest.json.
 
 Why this exists
-- The app historically reads data/Mendo-Datasets.json and expects a "Minimum Age" column.
+- The app historically reads data/datasets/Mendo-Datasets.json and expects a "Minimum Age" column.
 - Newer exports may include "Age Group" instead and may contain NaN values.
 
 This tool:
@@ -12,8 +12,8 @@ This tool:
 
 Run:
   python tools/update_mendo_dataset.py \
-    --latest data/Mendo-Datasets-latest.json \
-    --out data/Mendo-Datasets.json
+    --latest data/datasets/Mendo-Datasets-latest.json \
+    --out data/datasets/Mendo-Datasets.json
 """
 
 from __future__ import annotations
@@ -80,8 +80,8 @@ def _clean(obj: Any) -> Any:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Update Mendo-Datasets.json from latest export")
-    ap.add_argument("--latest", default="data/Mendo-Datasets-latest.json", help="Input latest dataset JSON")
-    ap.add_argument("--out", default="data/Mendo-Datasets.json", help="Output path for app dataset JSON")
+    ap.add_argument("--latest", default="data/datasets/Mendo-Datasets-latest.json", help="Input latest dataset JSON")
+    ap.add_argument("--out", default="data/datasets/Mendo-Datasets.json", help="Output path for app dataset JSON")
     args = ap.parse_args()
 
     latest_path = Path(args.latest)

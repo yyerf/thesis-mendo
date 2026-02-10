@@ -1,0 +1,22 @@
+{
+  "ml": {
+    "micro_f1": 0.9609042060403928,
+    "macro_f1": 0.9593335848105906,
+    "micro_precision": 0.9340778097982709,
+    "micro_recall": 0.9893170545593285
+  },
+  "baseline_rules": {
+    "micro_f1": 0.7646676769863607,
+    "macro_f1": 0.7578471496143114,
+    "micro_precision": 0.8838838838838838,
+    "micro_recall": 0.673788630293781
+  },
+  "baseline_hybrid": {
+    "micro_f1": 0.7179257934734019,
+    "macro_f1": 0.5665382527851047,
+    "micro_precision": 0.8667026443604965,
+    "micro_recall": 0.6127432277756582
+  },
+  "dataset": "/home/yyerf/school/mendo-testing/data/datasets/symptom_eval.synthetic.jsonl",
+  "count": 1800
+}

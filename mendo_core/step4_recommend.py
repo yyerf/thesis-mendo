@@ -7,7 +7,7 @@ Inputs:
 
 Outputs:
 - Detected symptom intents (uses the hybrid pipeline)
-- A short recommendation list of medicine brands from Mendo-Datasets.json
+- A short recommendation list of medicine brands from data/datasets/Mendo-Datasets.json
 - If cough is ambiguous (COUGH_GENERAL), ask a clarifying question
 
 This script is deterministic in its recommendation rules.
@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from .step3_hybrid import extract_symptoms_hybrid_report
 
 
-DATASET_DEFAULT = str((Path(__file__).resolve().parents[1] / "data" / "Mendo-Datasets.json"))
+DATASET_DEFAULT = str((Path(__file__).resolve().parents[1] / "data" / "datasets" / "Mendo-Datasets.json"))
 
 
 @dataclass(frozen=True)

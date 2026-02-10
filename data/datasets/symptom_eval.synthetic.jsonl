@@ -1,0 +1,1800 @@
+{"id": "syn0001", "text": "Ubo ako", "labels": ["cough"]}
+{"id": "syn0002", "text": "Umuubo ako since yesterday", "labels": ["cough"]}
+{"id": "syn0003", "text": "Coughing ako, walang tigil", "labels": ["cough"]}
+{"id": "syn0004", "text": "May ubo ako", "labels": ["cough"]}
+{"id": "syn0005", "text": "Kahapon pa ako umuubo", "labels": ["cough"]}
+{"id": "syn0006", "text": "Ubo ng ubo", "labels": ["cough"]}
+{"id": "syn0007", "text": "Dry cough ako", "labels": ["cough"]}
+{"id": "syn0008", "text": "Ubo with plema", "labels": ["cough"]}
+{"id": "syn0009", "text": "Masakit ulo ko", "labels": ["headache"]}
+{"id": "syn0010", "text": "Labad ulo ko", "labels": ["headache"]}
+{"id": "syn0011", "text": "Headache ako ngayon", "labels": ["headache"]}
+{"id": "syn0012", "text": "My head hurts", "labels": ["headache"]}
+{"id": "syn0013", "text": "Sumasakit ang ulo ko", "labels": ["headache"]}
+{"id": "syn0014", "text": "Sakit ng ulo ko", "labels": ["headache"]}
+{"id": "syn0015", "text": "Headache and stress", "labels": ["headache"]}
+{"id": "syn0016", "text": "May lagnat ako", "labels": ["fever"]}
+{"id": "syn0017", "text": "Nilalagnat ako", "labels": ["fever"]}
+{"id": "syn0018", "text": "Mainit ang katawan ko", "labels": ["fever"]}
+{"id": "syn0019", "text": "I have fever", "labels": ["fever"]}
+{"id": "syn0020", "text": "Sinat lang siguro", "labels": ["fever"]}
+{"id": "syn0021", "text": "Parang may lagnat", "labels": ["fever"]}
+{"id": "syn0022", "text": "Masakit lalamunan ko", "labels": ["sore_throat"]}
+{"id": "syn0023", "text": "Makati lalamunan ko", "labels": ["sore_throat"]}
+{"id": "syn0024", "text": "Sore throat", "labels": ["sore_throat"]}
+{"id": "syn0025", "text": "My throat is sore", "labels": ["sore_throat"]}
+{"id": "syn0026", "text": "Sakit ng lalamunan", "labels": ["sore_throat"]}
+{"id": "syn0027", "text": "May sipon ako", "labels": ["runny_nose"]}
+{"id": "syn0028", "text": "Sipon lang", "labels": ["runny_nose"]}
+{"id": "syn0029", "text": "Runny nose", "labels": ["runny_nose"]}
+{"id": "syn0030", "text": "Sinisipon ako", "labels": ["runny_nose"]}
+{"id": "syn0031", "text": "Tumutulo ilong ko", "labels": ["runny_nose"]}
+{"id": "syn0032", "text": "Barado ilong ko", "labels": ["stuffy_nose"]}
+{"id": "syn0033", "text": "Stuffy nose", "labels": ["stuffy_nose"]}
+{"id": "syn0034", "text": "Nasal congestion", "labels": ["stuffy_nose"]}
+{"id": "syn0035", "text": "Hirap huminga dahil barado ilong", "labels": ["stuffy_nose"]}
+{"id": "syn0036", "text": "Nahihilo ako", "labels": ["dizziness"]}
+{"id": "syn0037", "text": "Dizzy ako", "labels": ["dizziness"]}
+{"id": "syn0038", "text": "Parang umiikot ulo ko", "labels": ["dizziness"]}
+{"id": "syn0039", "text": "Hilo ko", "labels": ["dizziness"]}
+{"id": "syn0040", "text": "Nasusuka ako", "labels": ["nausea"]}
+{"id": "syn0041", "text": "Nauseous ako", "labels": ["nausea"]}
+{"id": "syn0042", "text": "Parang masusuka", "labels": ["nausea"]}
+{"id": "syn0043", "text": "Naduduwal ako", "labels": ["nausea"]}
+{"id": "syn0044", "text": "Sumusuka ako", "labels": ["vomiting"]}
+{"id": "syn0045", "text": "Nagvomit ako", "labels": ["vomiting"]}
+{"id": "syn0046", "text": "Pagsusuka since umaga", "labels": ["vomiting"]}
+{"id": "syn0047", "text": "Vomiting ako", "labels": ["vomiting"]}
+{"id": "syn0048", "text": "Nagtatae ako", "labels": ["diarrhea"]}
+{"id": "syn0049", "text": "Loose stool ako", "labels": ["diarrhea"]}
+{"id": "syn0050", "text": "Diarrhea since yesterday", "labels": ["diarrhea"]}
+{"id": "syn0051", "text": "Pabalik balik CR", "labels": ["diarrhea"]}
+{"id": "syn0052", "text": "Pagod na pagod ako", "labels": ["fatigue"]}
+{"id": "syn0053", "text": "Walang energy", "labels": ["fatigue"]}
+{"id": "syn0054", "text": "I feel tired", "labels": ["fatigue"]}
+{"id": "syn0055", "text": "Hina ng katawan", "labels": ["fatigue"]}
+{"id": "syn0056", "text": "Masakit katawan ko", "labels": ["body_aches"]}
+{"id": "syn0057", "text": "Body aches", "labels": ["body_aches"]}
+{"id": "syn0058", "text": "Ngawngaw katawan", "labels": ["body_aches"]}
+{"id": "syn0059", "text": "Sakit ng katawan", "labels": ["body_aches"]}
+{"id": "syn0060", "text": "Hirap huminga", "labels": ["shortness_of_breath"]}
+{"id": "syn0061", "text": "Shortness of breath", "labels": ["shortness_of_breath"]}
+{"id": "syn0062", "text": "Nangingibabaw ang hininga", "labels": ["shortness_of_breath"]}
+{"id": "syn0063", "text": "Di ako makahinga nang maayos", "labels": ["shortness_of_breath"]}
+{"id": "syn0064", "text": "Masakit dibdib ko", "labels": ["chest_pain"]}
+{"id": "syn0065", "text": "Chest pain", "labels": ["chest_pain"]}
+{"id": "syn0066", "text": "Sakit sa dibdib", "labels": ["chest_pain"]}
+{"id": "syn0067", "text": "Masakit tiyan ko", "labels": ["stomach_ache"]}
+{"id": "syn0068", "text": "Stomach ache", "labels": ["stomach_ache"]}
+{"id": "syn0069", "text": "Sakit ng tiyan", "labels": ["stomach_ache"]}
+{"id": "syn0070", "text": "Sumasakit sikmura ko", "labels": ["stomach_ache"]}
+{"id": "syn0071", "text": "May ubo at lagnat ako", "labels": ["cough", "fever"]}
+{"id": "syn0072", "text": "Ubo at sipon", "labels": ["cough", "runny_nose"]}
+{"id": "syn0073", "text": "Lagnat at sakit ng ulo", "labels": ["fever", "headache"]}
+{"id": "syn0074", "text": "Sipon at barado ilong", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0075", "text": "Nahihilo ako at nasusuka", "labels": ["dizziness", "nausea"]}
+{"id": "syn0076", "text": "Nagtatae ako at masakit tiyan", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0077", "text": "Masakit katawan ko at nilalagnat", "labels": ["body_aches", "fever"]}
+{"id": "syn0078", "text": "Masakit lalamunan at ubo", "labels": ["sore_throat", "cough"]}
+{"id": "syn0079", "text": "Barado ilong ko at sakit ulo", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0080", "text": "Pagod ako at masakit ulo", "labels": ["fatigue", "headache"]}
+{"id": "syn0081", "text": "Hirap huminga at masakit dibdib", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0082", "text": "Ubo ako kanina pa", "labels": ["cough"]}
+{"id": "syn0083", "text": "Umuubo ako since yesterday kanina pa", "labels": ["cough"]}
+{"id": "syn0084", "text": "Coughing ako, walang tigil kanina pa", "labels": ["cough"]}
+{"id": "syn0085", "text": "May ubo ako kanina pa", "labels": ["cough"]}
+{"id": "syn0086", "text": "Kahapon pa ako umuubo kanina pa", "labels": ["cough"]}
+{"id": "syn0087", "text": "Ubo ng ubo kanina pa", "labels": ["cough"]}
+{"id": "syn0088", "text": "Dry cough ako kanina pa", "labels": ["cough"]}
+{"id": "syn0089", "text": "Ubo with plema kanina pa", "labels": ["cough"]}
+{"id": "syn0090", "text": "Masakit ulo ko kanina pa", "labels": ["headache"]}
+{"id": "syn0091", "text": "Labad ulo ko kanina pa", "labels": ["headache"]}
+{"id": "syn0092", "text": "Headache ako ngayon kanina pa", "labels": ["headache"]}
+{"id": "syn0093", "text": "My head hurts kanina pa", "labels": ["headache"]}
+{"id": "syn0094", "text": "Sumasakit ang ulo ko kanina pa", "labels": ["headache"]}
+{"id": "syn0095", "text": "Sakit ng ulo ko kanina pa", "labels": ["headache"]}
+{"id": "syn0096", "text": "Headache and stress kanina pa", "labels": ["headache"]}
+{"id": "syn0097", "text": "May lagnat ako kanina pa", "labels": ["fever"]}
+{"id": "syn0098", "text": "Nilalagnat ako kanina pa", "labels": ["fever"]}
+{"id": "syn0099", "text": "Mainit ang katawan ko kanina pa", "labels": ["fever"]}
+{"id": "syn0100", "text": "I have fever kanina pa", "labels": ["fever"]}
+{"id": "syn0101", "text": "Sinat lang siguro kanina pa", "labels": ["fever"]}
+{"id": "syn0102", "text": "Parang may lagnat kanina pa", "labels": ["fever"]}
+{"id": "syn0103", "text": "Masakit lalamunan ko kanina pa", "labels": ["sore_throat"]}
+{"id": "syn0104", "text": "Makati lalamunan ko kanina pa", "labels": ["sore_throat"]}
+{"id": "syn0105", "text": "Sore throat kanina pa", "labels": ["sore_throat"]}
+{"id": "syn0106", "text": "My throat is sore kanina pa", "labels": ["sore_throat"]}
+{"id": "syn0107", "text": "Sakit ng lalamunan kanina pa", "labels": ["sore_throat"]}
+{"id": "syn0108", "text": "May sipon ako kanina pa", "labels": ["runny_nose"]}
+{"id": "syn0109", "text": "Sipon lang kanina pa", "labels": ["runny_nose"]}
+{"id": "syn0110", "text": "Runny nose kanina pa", "labels": ["runny_nose"]}
+{"id": "syn0111", "text": "Sinisipon ako kanina pa", "labels": ["runny_nose"]}
+{"id": "syn0112", "text": "Tumutulo ilong ko kanina pa", "labels": ["runny_nose"]}
+{"id": "syn0113", "text": "Barado ilong ko kanina pa", "labels": ["stuffy_nose"]}
+{"id": "syn0114", "text": "Stuffy nose kanina pa", "labels": ["stuffy_nose"]}
+{"id": "syn0115", "text": "Nasal congestion kanina pa", "labels": ["stuffy_nose"]}
+{"id": "syn0116", "text": "Hirap huminga dahil barado ilong kanina pa", "labels": ["stuffy_nose"]}
+{"id": "syn0117", "text": "Nahihilo ako kanina pa", "labels": ["dizziness"]}
+{"id": "syn0118", "text": "Dizzy ako kanina pa", "labels": ["dizziness"]}
+{"id": "syn0119", "text": "Parang umiikot ulo ko kanina pa", "labels": ["dizziness"]}
+{"id": "syn0120", "text": "Hilo ko kanina pa", "labels": ["dizziness"]}
+{"id": "syn0121", "text": "Nasusuka ako kanina pa", "labels": ["nausea"]}
+{"id": "syn0122", "text": "Nauseous ako kanina pa", "labels": ["nausea"]}
+{"id": "syn0123", "text": "Parang masusuka kanina pa", "labels": ["nausea"]}
+{"id": "syn0124", "text": "Naduduwal ako kanina pa", "labels": ["nausea"]}
+{"id": "syn0125", "text": "Sumusuka ako kanina pa", "labels": ["vomiting"]}
+{"id": "syn0126", "text": "Nagvomit ako kanina pa", "labels": ["vomiting"]}
+{"id": "syn0127", "text": "Pagsusuka since umaga kanina pa", "labels": ["vomiting"]}
+{"id": "syn0128", "text": "Vomiting ako kanina pa", "labels": ["vomiting"]}
+{"id": "syn0129", "text": "Nagtatae ako kanina pa", "labels": ["diarrhea"]}
+{"id": "syn0130", "text": "Loose stool ako kanina pa", "labels": ["diarrhea"]}
+{"id": "syn0131", "text": "Diarrhea since yesterday kanina pa", "labels": ["diarrhea"]}
+{"id": "syn0132", "text": "Pabalik balik CR kanina pa", "labels": ["diarrhea"]}
+{"id": "syn0133", "text": "Pagod na pagod ako kanina pa", "labels": ["fatigue"]}
+{"id": "syn0134", "text": "Walang energy kanina pa", "labels": ["fatigue"]}
+{"id": "syn0135", "text": "I feel tired kanina pa", "labels": ["fatigue"]}
+{"id": "syn0136", "text": "Hina ng katawan kanina pa", "labels": ["fatigue"]}
+{"id": "syn0137", "text": "Masakit katawan ko kanina pa", "labels": ["body_aches"]}
+{"id": "syn0138", "text": "Body aches kanina pa", "labels": ["body_aches"]}
+{"id": "syn0139", "text": "Ngawngaw katawan kanina pa", "labels": ["body_aches"]}
+{"id": "syn0140", "text": "Sakit ng katawan kanina pa", "labels": ["body_aches"]}
+{"id": "syn0141", "text": "Hirap huminga kanina pa", "labels": ["shortness_of_breath"]}
+{"id": "syn0142", "text": "Shortness of breath kanina pa", "labels": ["shortness_of_breath"]}
+{"id": "syn0143", "text": "Nangingibabaw ang hininga kanina pa", "labels": ["shortness_of_breath"]}
+{"id": "syn0144", "text": "Di ako makahinga nang maayos kanina pa", "labels": ["shortness_of_breath"]}
+{"id": "syn0145", "text": "Masakit dibdib ko kanina pa", "labels": ["chest_pain"]}
+{"id": "syn0146", "text": "Chest pain kanina pa", "labels": ["chest_pain"]}
+{"id": "syn0147", "text": "Sakit sa dibdib kanina pa", "labels": ["chest_pain"]}
+{"id": "syn0148", "text": "Masakit tiyan ko kanina pa", "labels": ["stomach_ache"]}
+{"id": "syn0149", "text": "Stomach ache kanina pa", "labels": ["stomach_ache"]}
+{"id": "syn0150", "text": "Sakit ng tiyan kanina pa", "labels": ["stomach_ache"]}
+{"id": "syn0151", "text": "Sumasakit sikmura ko kanina pa", "labels": ["stomach_ache"]}
+{"id": "syn0152", "text": "May ubo at lagnat ako kanina pa", "labels": ["cough", "fever"]}
+{"id": "syn0153", "text": "Ubo at sipon kanina pa", "labels": ["cough", "runny_nose"]}
+{"id": "syn0154", "text": "Lagnat at sakit ng ulo kanina pa", "labels": ["fever", "headache"]}
+{"id": "syn0155", "text": "Sipon at barado ilong kanina pa", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0156", "text": "Nahihilo ako at nasusuka kanina pa", "labels": ["dizziness", "nausea"]}
+{"id": "syn0157", "text": "Nagtatae ako at masakit tiyan kanina pa", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0158", "text": "Masakit katawan ko at nilalagnat kanina pa", "labels": ["body_aches", "fever"]}
+{"id": "syn0159", "text": "Masakit lalamunan at ubo kanina pa", "labels": ["sore_throat", "cough"]}
+{"id": "syn0160", "text": "Barado ilong ko at sakit ulo kanina pa", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0161", "text": "Pagod ako at masakit ulo kanina pa", "labels": ["fatigue", "headache"]}
+{"id": "syn0162", "text": "Hirap huminga at masakit dibdib kanina pa", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0163", "text": "Ubo ako since yesterday", "labels": ["cough"]}
+{"id": "syn0164", "text": "Umuubo ako since yesterday since yesterday", "labels": ["cough"]}
+{"id": "syn0165", "text": "Coughing ako, walang tigil since yesterday", "labels": ["cough"]}
+{"id": "syn0166", "text": "May ubo ako since yesterday", "labels": ["cough"]}
+{"id": "syn0167", "text": "Kahapon pa ako umuubo since yesterday", "labels": ["cough"]}
+{"id": "syn0168", "text": "Ubo ng ubo since yesterday", "labels": ["cough"]}
+{"id": "syn0169", "text": "Dry cough ako since yesterday", "labels": ["cough"]}
+{"id": "syn0170", "text": "Ubo with plema since yesterday", "labels": ["cough"]}
+{"id": "syn0171", "text": "Masakit ulo ko since yesterday", "labels": ["headache"]}
+{"id": "syn0172", "text": "Labad ulo ko since yesterday", "labels": ["headache"]}
+{"id": "syn0173", "text": "Headache ako ngayon since yesterday", "labels": ["headache"]}
+{"id": "syn0174", "text": "My head hurts since yesterday", "labels": ["headache"]}
+{"id": "syn0175", "text": "Sumasakit ang ulo ko since yesterday", "labels": ["headache"]}
+{"id": "syn0176", "text": "Sakit ng ulo ko since yesterday", "labels": ["headache"]}
+{"id": "syn0177", "text": "Headache and stress since yesterday", "labels": ["headache"]}
+{"id": "syn0178", "text": "May lagnat ako since yesterday", "labels": ["fever"]}
+{"id": "syn0179", "text": "Nilalagnat ako since yesterday", "labels": ["fever"]}
+{"id": "syn0180", "text": "Mainit ang katawan ko since yesterday", "labels": ["fever"]}
+{"id": "syn0181", "text": "I have fever since yesterday", "labels": ["fever"]}
+{"id": "syn0182", "text": "Sinat lang siguro since yesterday", "labels": ["fever"]}
+{"id": "syn0183", "text": "Parang may lagnat since yesterday", "labels": ["fever"]}
+{"id": "syn0184", "text": "Masakit lalamunan ko since yesterday", "labels": ["sore_throat"]}
+{"id": "syn0185", "text": "Makati lalamunan ko since yesterday", "labels": ["sore_throat"]}
+{"id": "syn0186", "text": "Sore throat since yesterday", "labels": ["sore_throat"]}
+{"id": "syn0187", "text": "My throat is sore since yesterday", "labels": ["sore_throat"]}
+{"id": "syn0188", "text": "Sakit ng lalamunan since yesterday", "labels": ["sore_throat"]}
+{"id": "syn0189", "text": "May sipon ako since yesterday", "labels": ["runny_nose"]}
+{"id": "syn0190", "text": "Sipon lang since yesterday", "labels": ["runny_nose"]}
+{"id": "syn0191", "text": "Runny nose since yesterday", "labels": ["runny_nose"]}
+{"id": "syn0192", "text": "Sinisipon ako since yesterday", "labels": ["runny_nose"]}
+{"id": "syn0193", "text": "Tumutulo ilong ko since yesterday", "labels": ["runny_nose"]}
+{"id": "syn0194", "text": "Barado ilong ko since yesterday", "labels": ["stuffy_nose"]}
+{"id": "syn0195", "text": "Stuffy nose since yesterday", "labels": ["stuffy_nose"]}
+{"id": "syn0196", "text": "Nasal congestion since yesterday", "labels": ["stuffy_nose"]}
+{"id": "syn0197", "text": "Hirap huminga dahil barado ilong since yesterday", "labels": ["stuffy_nose"]}
+{"id": "syn0198", "text": "Nahihilo ako since yesterday", "labels": ["dizziness"]}
+{"id": "syn0199", "text": "Dizzy ako since yesterday", "labels": ["dizziness"]}
+{"id": "syn0200", "text": "Parang umiikot ulo ko since yesterday", "labels": ["dizziness"]}
+{"id": "syn0201", "text": "Hilo ko since yesterday", "labels": ["dizziness"]}
+{"id": "syn0202", "text": "Nasusuka ako since yesterday", "labels": ["nausea"]}
+{"id": "syn0203", "text": "Nauseous ako since yesterday", "labels": ["nausea"]}
+{"id": "syn0204", "text": "Parang masusuka since yesterday", "labels": ["nausea"]}
+{"id": "syn0205", "text": "Naduduwal ako since yesterday", "labels": ["nausea"]}
+{"id": "syn0206", "text": "Sumusuka ako since yesterday", "labels": ["vomiting"]}
+{"id": "syn0207", "text": "Nagvomit ako since yesterday", "labels": ["vomiting"]}
+{"id": "syn0208", "text": "Pagsusuka since umaga since yesterday", "labels": ["vomiting"]}
+{"id": "syn0209", "text": "Vomiting ako since yesterday", "labels": ["vomiting"]}
+{"id": "syn0210", "text": "Nagtatae ako since yesterday", "labels": ["diarrhea"]}
+{"id": "syn0211", "text": "Loose stool ako since yesterday", "labels": ["diarrhea"]}
+{"id": "syn0212", "text": "Diarrhea since yesterday since yesterday", "labels": ["diarrhea"]}
+{"id": "syn0213", "text": "Pabalik balik CR since yesterday", "labels": ["diarrhea"]}
+{"id": "syn0214", "text": "Pagod na pagod ako since yesterday", "labels": ["fatigue"]}
+{"id": "syn0215", "text": "Walang energy since yesterday", "labels": ["fatigue"]}
+{"id": "syn0216", "text": "I feel tired since yesterday", "labels": ["fatigue"]}
+{"id": "syn0217", "text": "Hina ng katawan since yesterday", "labels": ["fatigue"]}
+{"id": "syn0218", "text": "Masakit katawan ko since yesterday", "labels": ["body_aches"]}
+{"id": "syn0219", "text": "Body aches since yesterday", "labels": ["body_aches"]}
+{"id": "syn0220", "text": "Ngawngaw katawan since yesterday", "labels": ["body_aches"]}
+{"id": "syn0221", "text": "Sakit ng katawan since yesterday", "labels": ["body_aches"]}
+{"id": "syn0222", "text": "Hirap huminga since yesterday", "labels": ["shortness_of_breath"]}
+{"id": "syn0223", "text": "Shortness of breath since yesterday", "labels": ["shortness_of_breath"]}
+{"id": "syn0224", "text": "Nangingibabaw ang hininga since yesterday", "labels": ["shortness_of_breath"]}
+{"id": "syn0225", "text": "Di ako makahinga nang maayos since yesterday", "labels": ["shortness_of_breath"]}
+{"id": "syn0226", "text": "Masakit dibdib ko since yesterday", "labels": ["chest_pain"]}
+{"id": "syn0227", "text": "Chest pain since yesterday", "labels": ["chest_pain"]}
+{"id": "syn0228", "text": "Sakit sa dibdib since yesterday", "labels": ["chest_pain"]}
+{"id": "syn0229", "text": "Masakit tiyan ko since yesterday", "labels": ["stomach_ache"]}
+{"id": "syn0230", "text": "Stomach ache since yesterday", "labels": ["stomach_ache"]}
+{"id": "syn0231", "text": "Sakit ng tiyan since yesterday", "labels": ["stomach_ache"]}
+{"id": "syn0232", "text": "Sumasakit sikmura ko since yesterday", "labels": ["stomach_ache"]}
+{"id": "syn0233", "text": "May ubo at lagnat ako since yesterday", "labels": ["cough", "fever"]}
+{"id": "syn0234", "text": "Ubo at sipon since yesterday", "labels": ["cough", "runny_nose"]}
+{"id": "syn0235", "text": "Lagnat at sakit ng ulo since yesterday", "labels": ["fever", "headache"]}
+{"id": "syn0236", "text": "Sipon at barado ilong since yesterday", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0237", "text": "Nahihilo ako at nasusuka since yesterday", "labels": ["dizziness", "nausea"]}
+{"id": "syn0238", "text": "Nagtatae ako at masakit tiyan since yesterday", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0239", "text": "Masakit katawan ko at nilalagnat since yesterday", "labels": ["body_aches", "fever"]}
+{"id": "syn0240", "text": "Masakit lalamunan at ubo since yesterday", "labels": ["sore_throat", "cough"]}
+{"id": "syn0241", "text": "Barado ilong ko at sakit ulo since yesterday", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0242", "text": "Pagod ako at masakit ulo since yesterday", "labels": ["fatigue", "headache"]}
+{"id": "syn0243", "text": "Hirap huminga at masakit dibdib since yesterday", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0244", "text": "Ubo ako medyo", "labels": ["cough"]}
+{"id": "syn0245", "text": "Umuubo ako since yesterday medyo", "labels": ["cough"]}
+{"id": "syn0246", "text": "Coughing ako, walang tigil medyo", "labels": ["cough"]}
+{"id": "syn0247", "text": "May ubo ako medyo", "labels": ["cough"]}
+{"id": "syn0248", "text": "Kahapon pa ako umuubo medyo", "labels": ["cough"]}
+{"id": "syn0249", "text": "Ubo ng ubo medyo", "labels": ["cough"]}
+{"id": "syn0250", "text": "Dry cough ako medyo", "labels": ["cough"]}
+{"id": "syn0251", "text": "Ubo with plema medyo", "labels": ["cough"]}
+{"id": "syn0252", "text": "Masakit ulo ko medyo", "labels": ["headache"]}
+{"id": "syn0253", "text": "Labad ulo ko medyo", "labels": ["headache"]}
+{"id": "syn0254", "text": "Headache ako ngayon medyo", "labels": ["headache"]}
+{"id": "syn0255", "text": "My head hurts medyo", "labels": ["headache"]}
+{"id": "syn0256", "text": "Sumasakit ang ulo ko medyo", "labels": ["headache"]}
+{"id": "syn0257", "text": "Sakit ng ulo ko medyo", "labels": ["headache"]}
+{"id": "syn0258", "text": "Headache and stress medyo", "labels": ["headache"]}
+{"id": "syn0259", "text": "May lagnat ako medyo", "labels": ["fever"]}
+{"id": "syn0260", "text": "Nilalagnat ako medyo", "labels": ["fever"]}
+{"id": "syn0261", "text": "Mainit ang katawan ko medyo", "labels": ["fever"]}
+{"id": "syn0262", "text": "I have fever medyo", "labels": ["fever"]}
+{"id": "syn0263", "text": "Sinat lang siguro medyo", "labels": ["fever"]}
+{"id": "syn0264", "text": "Parang may lagnat medyo", "labels": ["fever"]}
+{"id": "syn0265", "text": "Masakit lalamunan ko medyo", "labels": ["sore_throat"]}
+{"id": "syn0266", "text": "Makati lalamunan ko medyo", "labels": ["sore_throat"]}
+{"id": "syn0267", "text": "Sore throat medyo", "labels": ["sore_throat"]}
+{"id": "syn0268", "text": "My throat is sore medyo", "labels": ["sore_throat"]}
+{"id": "syn0269", "text": "Sakit ng lalamunan medyo", "labels": ["sore_throat"]}
+{"id": "syn0270", "text": "May sipon ako medyo", "labels": ["runny_nose"]}
+{"id": "syn0271", "text": "Sipon lang medyo", "labels": ["runny_nose"]}
+{"id": "syn0272", "text": "Runny nose medyo", "labels": ["runny_nose"]}
+{"id": "syn0273", "text": "Sinisipon ako medyo", "labels": ["runny_nose"]}
+{"id": "syn0274", "text": "Tumutulo ilong ko medyo", "labels": ["runny_nose"]}
+{"id": "syn0275", "text": "Barado ilong ko medyo", "labels": ["stuffy_nose"]}
+{"id": "syn0276", "text": "Stuffy nose medyo", "labels": ["stuffy_nose"]}
+{"id": "syn0277", "text": "Nasal congestion medyo", "labels": ["stuffy_nose"]}
+{"id": "syn0278", "text": "Hirap huminga dahil barado ilong medyo", "labels": ["stuffy_nose"]}
+{"id": "syn0279", "text": "Nahihilo ako medyo", "labels": ["dizziness"]}
+{"id": "syn0280", "text": "Dizzy ako medyo", "labels": ["dizziness"]}
+{"id": "syn0281", "text": "Parang umiikot ulo ko medyo", "labels": ["dizziness"]}
+{"id": "syn0282", "text": "Hilo ko medyo", "labels": ["dizziness"]}
+{"id": "syn0283", "text": "Nasusuka ako medyo", "labels": ["nausea"]}
+{"id": "syn0284", "text": "Nauseous ako medyo", "labels": ["nausea"]}
+{"id": "syn0285", "text": "Parang masusuka medyo", "labels": ["nausea"]}
+{"id": "syn0286", "text": "Naduduwal ako medyo", "labels": ["nausea"]}
+{"id": "syn0287", "text": "Sumusuka ako medyo", "labels": ["vomiting"]}
+{"id": "syn0288", "text": "Nagvomit ako medyo", "labels": ["vomiting"]}
+{"id": "syn0289", "text": "Pagsusuka since umaga medyo", "labels": ["vomiting"]}
+{"id": "syn0290", "text": "Vomiting ako medyo", "labels": ["vomiting"]}
+{"id": "syn0291", "text": "Nagtatae ako medyo", "labels": ["diarrhea"]}
+{"id": "syn0292", "text": "Loose stool ako medyo", "labels": ["diarrhea"]}
+{"id": "syn0293", "text": "Diarrhea since yesterday medyo", "labels": ["diarrhea"]}
+{"id": "syn0294", "text": "Pabalik balik CR medyo", "labels": ["diarrhea"]}
+{"id": "syn0295", "text": "Pagod na pagod ako medyo", "labels": ["fatigue"]}
+{"id": "syn0296", "text": "Walang energy medyo", "labels": ["fatigue"]}
+{"id": "syn0297", "text": "I feel tired medyo", "labels": ["fatigue"]}
+{"id": "syn0298", "text": "Hina ng katawan medyo", "labels": ["fatigue"]}
+{"id": "syn0299", "text": "Masakit katawan ko medyo", "labels": ["body_aches"]}
+{"id": "syn0300", "text": "Body aches medyo", "labels": ["body_aches"]}
+{"id": "syn0301", "text": "Ngawngaw katawan medyo", "labels": ["body_aches"]}
+{"id": "syn0302", "text": "Sakit ng katawan medyo", "labels": ["body_aches"]}
+{"id": "syn0303", "text": "Hirap huminga medyo", "labels": ["shortness_of_breath"]}
+{"id": "syn0304", "text": "Shortness of breath medyo", "labels": ["shortness_of_breath"]}
+{"id": "syn0305", "text": "Nangingibabaw ang hininga medyo", "labels": ["shortness_of_breath"]}
+{"id": "syn0306", "text": "Di ako makahinga nang maayos medyo", "labels": ["shortness_of_breath"]}
+{"id": "syn0307", "text": "Masakit dibdib ko medyo", "labels": ["chest_pain"]}
+{"id": "syn0308", "text": "Chest pain medyo", "labels": ["chest_pain"]}
+{"id": "syn0309", "text": "Sakit sa dibdib medyo", "labels": ["chest_pain"]}
+{"id": "syn0310", "text": "Masakit tiyan ko medyo", "labels": ["stomach_ache"]}
+{"id": "syn0311", "text": "Stomach ache medyo", "labels": ["stomach_ache"]}
+{"id": "syn0312", "text": "Sakit ng tiyan medyo", "labels": ["stomach_ache"]}
+{"id": "syn0313", "text": "Sumasakit sikmura ko medyo", "labels": ["stomach_ache"]}
+{"id": "syn0314", "text": "May ubo at lagnat ako medyo", "labels": ["cough", "fever"]}
+{"id": "syn0315", "text": "Ubo at sipon medyo", "labels": ["cough", "runny_nose"]}
+{"id": "syn0316", "text": "Lagnat at sakit ng ulo medyo", "labels": ["fever", "headache"]}
+{"id": "syn0317", "text": "Sipon at barado ilong medyo", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0318", "text": "Nahihilo ako at nasusuka medyo", "labels": ["dizziness", "nausea"]}
+{"id": "syn0319", "text": "Nagtatae ako at masakit tiyan medyo", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0320", "text": "Masakit katawan ko at nilalagnat medyo", "labels": ["body_aches", "fever"]}
+{"id": "syn0321", "text": "Masakit lalamunan at ubo medyo", "labels": ["sore_throat", "cough"]}
+{"id": "syn0322", "text": "Barado ilong ko at sakit ulo medyo", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0323", "text": "Pagod ako at masakit ulo medyo", "labels": ["fatigue", "headache"]}
+{"id": "syn0324", "text": "Hirap huminga at masakit dibdib medyo", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0325", "text": "Ubo ako grabe", "labels": ["cough"]}
+{"id": "syn0326", "text": "Umuubo ako since yesterday grabe", "labels": ["cough"]}
+{"id": "syn0327", "text": "Coughing ako, walang tigil grabe", "labels": ["cough"]}
+{"id": "syn0328", "text": "May ubo ako grabe", "labels": ["cough"]}
+{"id": "syn0329", "text": "Kahapon pa ako umuubo grabe", "labels": ["cough"]}
+{"id": "syn0330", "text": "Ubo ng ubo grabe", "labels": ["cough"]}
+{"id": "syn0331", "text": "Dry cough ako grabe", "labels": ["cough"]}
+{"id": "syn0332", "text": "Ubo with plema grabe", "labels": ["cough"]}
+{"id": "syn0333", "text": "Masakit ulo ko grabe", "labels": ["headache"]}
+{"id": "syn0334", "text": "Labad ulo ko grabe", "labels": ["headache"]}
+{"id": "syn0335", "text": "Headache ako ngayon grabe", "labels": ["headache"]}
+{"id": "syn0336", "text": "My head hurts grabe", "labels": ["headache"]}
+{"id": "syn0337", "text": "Sumasakit ang ulo ko grabe", "labels": ["headache"]}
+{"id": "syn0338", "text": "Sakit ng ulo ko grabe", "labels": ["headache"]}
+{"id": "syn0339", "text": "Headache and stress grabe", "labels": ["headache"]}
+{"id": "syn0340", "text": "May lagnat ako grabe", "labels": ["fever"]}
+{"id": "syn0341", "text": "Nilalagnat ako grabe", "labels": ["fever"]}
+{"id": "syn0342", "text": "Mainit ang katawan ko grabe", "labels": ["fever"]}
+{"id": "syn0343", "text": "I have fever grabe", "labels": ["fever"]}
+{"id": "syn0344", "text": "Sinat lang siguro grabe", "labels": ["fever"]}
+{"id": "syn0345", "text": "Parang may lagnat grabe", "labels": ["fever"]}
+{"id": "syn0346", "text": "Masakit lalamunan ko grabe", "labels": ["sore_throat"]}
+{"id": "syn0347", "text": "Makati lalamunan ko grabe", "labels": ["sore_throat"]}
+{"id": "syn0348", "text": "Sore throat grabe", "labels": ["sore_throat"]}
+{"id": "syn0349", "text": "My throat is sore grabe", "labels": ["sore_throat"]}
+{"id": "syn0350", "text": "Sakit ng lalamunan grabe", "labels": ["sore_throat"]}
+{"id": "syn0351", "text": "May sipon ako grabe", "labels": ["runny_nose"]}
+{"id": "syn0352", "text": "Sipon lang grabe", "labels": ["runny_nose"]}
+{"id": "syn0353", "text": "Runny nose grabe", "labels": ["runny_nose"]}
+{"id": "syn0354", "text": "Sinisipon ako grabe", "labels": ["runny_nose"]}
+{"id": "syn0355", "text": "Tumutulo ilong ko grabe", "labels": ["runny_nose"]}
+{"id": "syn0356", "text": "Barado ilong ko grabe", "labels": ["stuffy_nose"]}
+{"id": "syn0357", "text": "Stuffy nose grabe", "labels": ["stuffy_nose"]}
+{"id": "syn0358", "text": "Nasal congestion grabe", "labels": ["stuffy_nose"]}
+{"id": "syn0359", "text": "Hirap huminga dahil barado ilong grabe", "labels": ["stuffy_nose"]}
+{"id": "syn0360", "text": "Nahihilo ako grabe", "labels": ["dizziness"]}
+{"id": "syn0361", "text": "Dizzy ako grabe", "labels": ["dizziness"]}
+{"id": "syn0362", "text": "Parang umiikot ulo ko grabe", "labels": ["dizziness"]}
+{"id": "syn0363", "text": "Hilo ko grabe", "labels": ["dizziness"]}
+{"id": "syn0364", "text": "Nasusuka ako grabe", "labels": ["nausea"]}
+{"id": "syn0365", "text": "Nauseous ako grabe", "labels": ["nausea"]}
+{"id": "syn0366", "text": "Parang masusuka grabe", "labels": ["nausea"]}
+{"id": "syn0367", "text": "Naduduwal ako grabe", "labels": ["nausea"]}
+{"id": "syn0368", "text": "Sumusuka ako grabe", "labels": ["vomiting"]}
+{"id": "syn0369", "text": "Nagvomit ako grabe", "labels": ["vomiting"]}
+{"id": "syn0370", "text": "Pagsusuka since umaga grabe", "labels": ["vomiting"]}
+{"id": "syn0371", "text": "Vomiting ako grabe", "labels": ["vomiting"]}
+{"id": "syn0372", "text": "Nagtatae ako grabe", "labels": ["diarrhea"]}
+{"id": "syn0373", "text": "Loose stool ako grabe", "labels": ["diarrhea"]}
+{"id": "syn0374", "text": "Diarrhea since yesterday grabe", "labels": ["diarrhea"]}
+{"id": "syn0375", "text": "Pabalik balik CR grabe", "labels": ["diarrhea"]}
+{"id": "syn0376", "text": "Pagod na pagod ako grabe", "labels": ["fatigue"]}
+{"id": "syn0377", "text": "Walang energy grabe", "labels": ["fatigue"]}
+{"id": "syn0378", "text": "I feel tired grabe", "labels": ["fatigue"]}
+{"id": "syn0379", "text": "Hina ng katawan grabe", "labels": ["fatigue"]}
+{"id": "syn0380", "text": "Masakit katawan ko grabe", "labels": ["body_aches"]}
+{"id": "syn0381", "text": "Body aches grabe", "labels": ["body_aches"]}
+{"id": "syn0382", "text": "Ngawngaw katawan grabe", "labels": ["body_aches"]}
+{"id": "syn0383", "text": "Sakit ng katawan grabe", "labels": ["body_aches"]}
+{"id": "syn0384", "text": "Hirap huminga grabe", "labels": ["shortness_of_breath"]}
+{"id": "syn0385", "text": "Shortness of breath grabe", "labels": ["shortness_of_breath"]}
+{"id": "syn0386", "text": "Nangingibabaw ang hininga grabe", "labels": ["shortness_of_breath"]}
+{"id": "syn0387", "text": "Di ako makahinga nang maayos grabe", "labels": ["shortness_of_breath"]}
+{"id": "syn0388", "text": "Masakit dibdib ko grabe", "labels": ["chest_pain"]}
+{"id": "syn0389", "text": "Chest pain grabe", "labels": ["chest_pain"]}
+{"id": "syn0390", "text": "Sakit sa dibdib grabe", "labels": ["chest_pain"]}
+{"id": "syn0391", "text": "Masakit tiyan ko grabe", "labels": ["stomach_ache"]}
+{"id": "syn0392", "text": "Stomach ache grabe", "labels": ["stomach_ache"]}
+{"id": "syn0393", "text": "Sakit ng tiyan grabe", "labels": ["stomach_ache"]}
+{"id": "syn0394", "text": "Sumasakit sikmura ko grabe", "labels": ["stomach_ache"]}
+{"id": "syn0395", "text": "May ubo at lagnat ako grabe", "labels": ["cough", "fever"]}
+{"id": "syn0396", "text": "Ubo at sipon grabe", "labels": ["cough", "runny_nose"]}
+{"id": "syn0397", "text": "Lagnat at sakit ng ulo grabe", "labels": ["fever", "headache"]}
+{"id": "syn0398", "text": "Sipon at barado ilong grabe", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0399", "text": "Nahihilo ako at nasusuka grabe", "labels": ["dizziness", "nausea"]}
+{"id": "syn0400", "text": "Nagtatae ako at masakit tiyan grabe", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0401", "text": "Masakit katawan ko at nilalagnat grabe", "labels": ["body_aches", "fever"]}
+{"id": "syn0402", "text": "Masakit lalamunan at ubo grabe", "labels": ["sore_throat", "cough"]}
+{"id": "syn0403", "text": "Barado ilong ko at sakit ulo grabe", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0404", "text": "Pagod ako at masakit ulo grabe", "labels": ["fatigue", "headache"]}
+{"id": "syn0405", "text": "Hirap huminga at masakit dibdib grabe", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0406", "text": "Ubo ako pero ok naman", "labels": ["cough"]}
+{"id": "syn0407", "text": "Umuubo ako since yesterday pero ok naman", "labels": ["cough"]}
+{"id": "syn0408", "text": "Coughing ako, walang tigil pero ok naman", "labels": ["cough"]}
+{"id": "syn0409", "text": "May ubo ako pero ok naman", "labels": ["cough"]}
+{"id": "syn0410", "text": "Kahapon pa ako umuubo pero ok naman", "labels": ["cough"]}
+{"id": "syn0411", "text": "Ubo ng ubo pero ok naman", "labels": ["cough"]}
+{"id": "syn0412", "text": "Dry cough ako pero ok naman", "labels": ["cough"]}
+{"id": "syn0413", "text": "Ubo with plema pero ok naman", "labels": ["cough"]}
+{"id": "syn0414", "text": "Masakit ulo ko pero ok naman", "labels": ["headache"]}
+{"id": "syn0415", "text": "Labad ulo ko pero ok naman", "labels": ["headache"]}
+{"id": "syn0416", "text": "Headache ako ngayon pero ok naman", "labels": ["headache"]}
+{"id": "syn0417", "text": "My head hurts pero ok naman", "labels": ["headache"]}
+{"id": "syn0418", "text": "Sumasakit ang ulo ko pero ok naman", "labels": ["headache"]}
+{"id": "syn0419", "text": "Sakit ng ulo ko pero ok naman", "labels": ["headache"]}
+{"id": "syn0420", "text": "Headache and stress pero ok naman", "labels": ["headache"]}
+{"id": "syn0421", "text": "May lagnat ako pero ok naman", "labels": ["fever"]}
+{"id": "syn0422", "text": "Nilalagnat ako pero ok naman", "labels": ["fever"]}
+{"id": "syn0423", "text": "Mainit ang katawan ko pero ok naman", "labels": ["fever"]}
+{"id": "syn0424", "text": "I have fever pero ok naman", "labels": ["fever"]}
+{"id": "syn0425", "text": "Sinat lang siguro pero ok naman", "labels": ["fever"]}
+{"id": "syn0426", "text": "Parang may lagnat pero ok naman", "labels": ["fever"]}
+{"id": "syn0427", "text": "Masakit lalamunan ko pero ok naman", "labels": ["sore_throat"]}
+{"id": "syn0428", "text": "Makati lalamunan ko pero ok naman", "labels": ["sore_throat"]}
+{"id": "syn0429", "text": "Sore throat pero ok naman", "labels": ["sore_throat"]}
+{"id": "syn0430", "text": "My throat is sore pero ok naman", "labels": ["sore_throat"]}
+{"id": "syn0431", "text": "Sakit ng lalamunan pero ok naman", "labels": ["sore_throat"]}
+{"id": "syn0432", "text": "May sipon ako pero ok naman", "labels": ["runny_nose"]}
+{"id": "syn0433", "text": "Sipon lang pero ok naman", "labels": ["runny_nose"]}
+{"id": "syn0434", "text": "Runny nose pero ok naman", "labels": ["runny_nose"]}
+{"id": "syn0435", "text": "Sinisipon ako pero ok naman", "labels": ["runny_nose"]}
+{"id": "syn0436", "text": "Tumutulo ilong ko pero ok naman", "labels": ["runny_nose"]}
+{"id": "syn0437", "text": "Barado ilong ko pero ok naman", "labels": ["stuffy_nose"]}
+{"id": "syn0438", "text": "Stuffy nose pero ok naman", "labels": ["stuffy_nose"]}
+{"id": "syn0439", "text": "Nasal congestion pero ok naman", "labels": ["stuffy_nose"]}
+{"id": "syn0440", "text": "Hirap huminga dahil barado ilong pero ok naman", "labels": ["stuffy_nose"]}
+{"id": "syn0441", "text": "Nahihilo ako pero ok naman", "labels": ["dizziness"]}
+{"id": "syn0442", "text": "Dizzy ako pero ok naman", "labels": ["dizziness"]}
+{"id": "syn0443", "text": "Parang umiikot ulo ko pero ok naman", "labels": ["dizziness"]}
+{"id": "syn0444", "text": "Hilo ko pero ok naman", "labels": ["dizziness"]}
+{"id": "syn0445", "text": "Nasusuka ako pero ok naman", "labels": ["nausea"]}
+{"id": "syn0446", "text": "Nauseous ako pero ok naman", "labels": ["nausea"]}
+{"id": "syn0447", "text": "Parang masusuka pero ok naman", "labels": ["nausea"]}
+{"id": "syn0448", "text": "Naduduwal ako pero ok naman", "labels": ["nausea"]}
+{"id": "syn0449", "text": "Sumusuka ako pero ok naman", "labels": ["vomiting"]}
+{"id": "syn0450", "text": "Nagvomit ako pero ok naman", "labels": ["vomiting"]}
+{"id": "syn0451", "text": "Pagsusuka since umaga pero ok naman", "labels": ["vomiting"]}
+{"id": "syn0452", "text": "Vomiting ako pero ok naman", "labels": ["vomiting"]}
+{"id": "syn0453", "text": "Nagtatae ako pero ok naman", "labels": ["diarrhea"]}
+{"id": "syn0454", "text": "Loose stool ako pero ok naman", "labels": ["diarrhea"]}
+{"id": "syn0455", "text": "Diarrhea since yesterday pero ok naman", "labels": ["diarrhea"]}
+{"id": "syn0456", "text": "Pabalik balik CR pero ok naman", "labels": ["diarrhea"]}
+{"id": "syn0457", "text": "Pagod na pagod ako pero ok naman", "labels": ["fatigue"]}
+{"id": "syn0458", "text": "Walang energy pero ok naman", "labels": ["fatigue"]}
+{"id": "syn0459", "text": "I feel tired pero ok naman", "labels": ["fatigue"]}
+{"id": "syn0460", "text": "Hina ng katawan pero ok naman", "labels": ["fatigue"]}
+{"id": "syn0461", "text": "Masakit katawan ko pero ok naman", "labels": ["body_aches"]}
+{"id": "syn0462", "text": "Body aches pero ok naman", "labels": ["body_aches"]}
+{"id": "syn0463", "text": "Ngawngaw katawan pero ok naman", "labels": ["body_aches"]}
+{"id": "syn0464", "text": "Sakit ng katawan pero ok naman", "labels": ["body_aches"]}
+{"id": "syn0465", "text": "Hirap huminga pero ok naman", "labels": ["shortness_of_breath"]}
+{"id": "syn0466", "text": "Shortness of breath pero ok naman", "labels": ["shortness_of_breath"]}
+{"id": "syn0467", "text": "Nangingibabaw ang hininga pero ok naman", "labels": ["shortness_of_breath"]}
+{"id": "syn0468", "text": "Di ako makahinga nang maayos pero ok naman", "labels": ["shortness_of_breath"]}
+{"id": "syn0469", "text": "Masakit dibdib ko pero ok naman", "labels": ["chest_pain"]}
+{"id": "syn0470", "text": "Chest pain pero ok naman", "labels": ["chest_pain"]}
+{"id": "syn0471", "text": "Sakit sa dibdib pero ok naman", "labels": ["chest_pain"]}
+{"id": "syn0472", "text": "Masakit tiyan ko pero ok naman", "labels": ["stomach_ache"]}
+{"id": "syn0473", "text": "Stomach ache pero ok naman", "labels": ["stomach_ache"]}
+{"id": "syn0474", "text": "Sakit ng tiyan pero ok naman", "labels": ["stomach_ache"]}
+{"id": "syn0475", "text": "Sumasakit sikmura ko pero ok naman", "labels": ["stomach_ache"]}
+{"id": "syn0476", "text": "May ubo at lagnat ako pero ok naman", "labels": ["cough", "fever"]}
+{"id": "syn0477", "text": "Ubo at sipon pero ok naman", "labels": ["cough", "runny_nose"]}
+{"id": "syn0478", "text": "Lagnat at sakit ng ulo pero ok naman", "labels": ["fever", "headache"]}
+{"id": "syn0479", "text": "Sipon at barado ilong pero ok naman", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0480", "text": "Nahihilo ako at nasusuka pero ok naman", "labels": ["dizziness", "nausea"]}
+{"id": "syn0481", "text": "Nagtatae ako at masakit tiyan pero ok naman", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0482", "text": "Masakit katawan ko at nilalagnat pero ok naman", "labels": ["body_aches", "fever"]}
+{"id": "syn0483", "text": "Masakit lalamunan at ubo pero ok naman", "labels": ["sore_throat", "cough"]}
+{"id": "syn0484", "text": "Barado ilong ko at sakit ulo pero ok naman", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0485", "text": "Pagod ako at masakit ulo pero ok naman", "labels": ["fatigue", "headache"]}
+{"id": "syn0486", "text": "Hirap huminga at masakit dibdib pero ok naman", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0487", "text": "Ubo ako tapos", "labels": ["cough"]}
+{"id": "syn0488", "text": "Umuubo ako since yesterday tapos", "labels": ["cough"]}
+{"id": "syn0489", "text": "Coughing ako, walang tigil tapos", "labels": ["cough"]}
+{"id": "syn0490", "text": "May ubo ako tapos", "labels": ["cough"]}
+{"id": "syn0491", "text": "Kahapon pa ako umuubo tapos", "labels": ["cough"]}
+{"id": "syn0492", "text": "Ubo ng ubo tapos", "labels": ["cough"]}
+{"id": "syn0493", "text": "Dry cough ako tapos", "labels": ["cough"]}
+{"id": "syn0494", "text": "Ubo with plema tapos", "labels": ["cough"]}
+{"id": "syn0495", "text": "Masakit ulo ko tapos", "labels": ["headache"]}
+{"id": "syn0496", "text": "Labad ulo ko tapos", "labels": ["headache"]}
+{"id": "syn0497", "text": "Headache ako ngayon tapos", "labels": ["headache"]}
+{"id": "syn0498", "text": "My head hurts tapos", "labels": ["headache"]}
+{"id": "syn0499", "text": "Sumasakit ang ulo ko tapos", "labels": ["headache"]}
+{"id": "syn0500", "text": "Sakit ng ulo ko tapos", "labels": ["headache"]}
+{"id": "syn0501", "text": "Headache and stress tapos", "labels": ["headache"]}
+{"id": "syn0502", "text": "May lagnat ako tapos", "labels": ["fever"]}
+{"id": "syn0503", "text": "Nilalagnat ako tapos", "labels": ["fever"]}
+{"id": "syn0504", "text": "Mainit ang katawan ko tapos", "labels": ["fever"]}
+{"id": "syn0505", "text": "I have fever tapos", "labels": ["fever"]}
+{"id": "syn0506", "text": "Sinat lang siguro tapos", "labels": ["fever"]}
+{"id": "syn0507", "text": "Parang may lagnat tapos", "labels": ["fever"]}
+{"id": "syn0508", "text": "Masakit lalamunan ko tapos", "labels": ["sore_throat"]}
+{"id": "syn0509", "text": "Makati lalamunan ko tapos", "labels": ["sore_throat"]}
+{"id": "syn0510", "text": "Sore throat tapos", "labels": ["sore_throat"]}
+{"id": "syn0511", "text": "My throat is sore tapos", "labels": ["sore_throat"]}
+{"id": "syn0512", "text": "Sakit ng lalamunan tapos", "labels": ["sore_throat"]}
+{"id": "syn0513", "text": "May sipon ako tapos", "labels": ["runny_nose"]}
+{"id": "syn0514", "text": "Sipon lang tapos", "labels": ["runny_nose"]}
+{"id": "syn0515", "text": "Runny nose tapos", "labels": ["runny_nose"]}
+{"id": "syn0516", "text": "Sinisipon ako tapos", "labels": ["runny_nose"]}
+{"id": "syn0517", "text": "Tumutulo ilong ko tapos", "labels": ["runny_nose"]}
+{"id": "syn0518", "text": "Barado ilong ko tapos", "labels": ["stuffy_nose"]}
+{"id": "syn0519", "text": "Stuffy nose tapos", "labels": ["stuffy_nose"]}
+{"id": "syn0520", "text": "Nasal congestion tapos", "labels": ["stuffy_nose"]}
+{"id": "syn0521", "text": "Hirap huminga dahil barado ilong tapos", "labels": ["stuffy_nose"]}
+{"id": "syn0522", "text": "Nahihilo ako tapos", "labels": ["dizziness"]}
+{"id": "syn0523", "text": "Dizzy ako tapos", "labels": ["dizziness"]}
+{"id": "syn0524", "text": "Parang umiikot ulo ko tapos", "labels": ["dizziness"]}
+{"id": "syn0525", "text": "Hilo ko tapos", "labels": ["dizziness"]}
+{"id": "syn0526", "text": "Nasusuka ako tapos", "labels": ["nausea"]}
+{"id": "syn0527", "text": "Nauseous ako tapos", "labels": ["nausea"]}
+{"id": "syn0528", "text": "Parang masusuka tapos", "labels": ["nausea"]}
+{"id": "syn0529", "text": "Naduduwal ako tapos", "labels": ["nausea"]}
+{"id": "syn0530", "text": "Sumusuka ako tapos", "labels": ["vomiting"]}
+{"id": "syn0531", "text": "Nagvomit ako tapos", "labels": ["vomiting"]}
+{"id": "syn0532", "text": "Pagsusuka since umaga tapos", "labels": ["vomiting"]}
+{"id": "syn0533", "text": "Vomiting ako tapos", "labels": ["vomiting"]}
+{"id": "syn0534", "text": "Nagtatae ako tapos", "labels": ["diarrhea"]}
+{"id": "syn0535", "text": "Loose stool ako tapos", "labels": ["diarrhea"]}
+{"id": "syn0536", "text": "Diarrhea since yesterday tapos", "labels": ["diarrhea"]}
+{"id": "syn0537", "text": "Pabalik balik CR tapos", "labels": ["diarrhea"]}
+{"id": "syn0538", "text": "Pagod na pagod ako tapos", "labels": ["fatigue"]}
+{"id": "syn0539", "text": "Walang energy tapos", "labels": ["fatigue"]}
+{"id": "syn0540", "text": "I feel tired tapos", "labels": ["fatigue"]}
+{"id": "syn0541", "text": "Hina ng katawan tapos", "labels": ["fatigue"]}
+{"id": "syn0542", "text": "Masakit katawan ko tapos", "labels": ["body_aches"]}
+{"id": "syn0543", "text": "Body aches tapos", "labels": ["body_aches"]}
+{"id": "syn0544", "text": "Ngawngaw katawan tapos", "labels": ["body_aches"]}
+{"id": "syn0545", "text": "Sakit ng katawan tapos", "labels": ["body_aches"]}
+{"id": "syn0546", "text": "Hirap huminga tapos", "labels": ["shortness_of_breath"]}
+{"id": "syn0547", "text": "Shortness of breath tapos", "labels": ["shortness_of_breath"]}
+{"id": "syn0548", "text": "Nangingibabaw ang hininga tapos", "labels": ["shortness_of_breath"]}
+{"id": "syn0549", "text": "Di ako makahinga nang maayos tapos", "labels": ["shortness_of_breath"]}
+{"id": "syn0550", "text": "Masakit dibdib ko tapos", "labels": ["chest_pain"]}
+{"id": "syn0551", "text": "Chest pain tapos", "labels": ["chest_pain"]}
+{"id": "syn0552", "text": "Sakit sa dibdib tapos", "labels": ["chest_pain"]}
+{"id": "syn0553", "text": "Masakit tiyan ko tapos", "labels": ["stomach_ache"]}
+{"id": "syn0554", "text": "Stomach ache tapos", "labels": ["stomach_ache"]}
+{"id": "syn0555", "text": "Sakit ng tiyan tapos", "labels": ["stomach_ache"]}
+{"id": "syn0556", "text": "Sumasakit sikmura ko tapos", "labels": ["stomach_ache"]}
+{"id": "syn0557", "text": "May ubo at lagnat ako tapos", "labels": ["cough", "fever"]}
+{"id": "syn0558", "text": "Ubo at sipon tapos", "labels": ["cough", "runny_nose"]}
+{"id": "syn0559", "text": "Lagnat at sakit ng ulo tapos", "labels": ["fever", "headache"]}
+{"id": "syn0560", "text": "Sipon at barado ilong tapos", "labels": ["runny_nose", "stuffy_nose"]}
+{"id": "syn0561", "text": "Nahihilo ako at nasusuka tapos", "labels": ["dizziness", "nausea"]}
+{"id": "syn0562", "text": "Nagtatae ako at masakit tiyan tapos", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "syn0563", "text": "Masakit katawan ko at nilalagnat tapos", "labels": ["body_aches", "fever"]}
+{"id": "syn0564", "text": "Masakit lalamunan at ubo tapos", "labels": ["sore_throat", "cough"]}
+{"id": "syn0565", "text": "Barado ilong ko at sakit ulo tapos", "labels": ["stuffy_nose", "headache"]}
+{"id": "syn0566", "text": "Pagod ako at masakit ulo tapos", "labels": ["fatigue", "headache"]}
+{"id": "syn0567", "text": "Hirap huminga at masakit dibdib tapos", "labels": ["shortness_of_breath", "chest_pain"]}
+{"id": "syn0568", "text": "Ubo ako ngayon", "labels": ["cough"]}
+{"id": "syn0569", "text": "Umuubo ako since yesterday ngayon", "labels": ["cough"]}
+{"id": "syn0570", "text": "Coughing ako, walang tigil ngayon", "labels": ["cough"]}
+{"id": "syn0571", "text": "May ubo ako ngayon", "labels": ["cough"]}
+{"id": "syn0572", "text": "Kahapon pa ako umuubo ngayon", "labels": ["cough"]}
+{"id": "syn0573", "text": "Ubo ng ubo ngayon", "labels": ["cough"]}
+{"id": "syn0574", "text": "Dry cough ako ngayon", "labels": ["cough"]}
+{"id": "syn0575", "text": "Ubo with plema ngayon", "labels": ["cough"]}
+{"id": "syn0576", "text": "Masakit ulo ko ngayon", "labels": ["headache"]}
+{"id": "syn0577", "text": "Labad ulo ko ngayon", "labels": ["headache"]}
+{"id": "syn0578", "text": "Headache ako ngayon ngayon", "labels": ["headache"]}
+{"id": "syn0579", "text": "My head hurts ngayon", "labels": ["headache"]}
+{"id": "syn0580", "text": "Sumasakit ang ulo ko ngayon", "labels": ["headache"]}
+{"id": "syn0581", "text": "Sakit ng ulo ko ngayon", "labels": ["headache"]}
+{"id": "syn0582", "text": "Headache and stress ngayon", "labels": ["headache"]}
+{"id": "syn0583", "text": "May lagnat ako ngayon", "labels": ["fever"]}
+{"id": "syn0584", "text": "Nilalagnat ako ngayon", "labels": ["fever"]}
+{"id": "syn0585", "text": "Mainit ang katawan ko ngayon", "labels": ["fever"]}
+{"id": "syn0586", "text": "I have fever ngayon", "labels": ["fever"]}
+{"id": "syn0587", "text": "Sinat lang siguro ngayon", "labels": ["fever"]}
+{"id": "syn0588", "text": "Parang may lagnat ngayon", "labels": ["fever"]}
+{"id": "syn0589", "text": "Masakit lalamunan ko ngayon", "labels": ["sore_throat"]}
+{"id": "syn0590", "text": "Makati lalamunan ko ngayon", "labels": ["sore_throat"]}
+{"id": "syn0591", "text": "Sore throat ngayon", "labels": ["sore_throat"]}
+{"id": "syn0592", "text": "My throat is sore ngayon", "labels": ["sore_throat"]}
+{"id": "syn0593", "text": "Sakit ng lalamunan ngayon", "labels": ["sore_throat"]}
+{"id": "syn0594", "text": "May sipon ako ngayon", "labels": ["runny_nose"]}
+{"id": "syn0595", "text": "Sipon lang ngayon", "labels": ["runny_nose"]}
+{"id": "syn0596", "text": "Runny nose ngayon", "labels": ["runny_nose"]}
+{"id": "syn0597", "text": "Sinisipon ako ngayon", "labels": ["runny_nose"]}
+{"id": "syn0598", "text": "Tumutulo ilong ko ngayon", "labels": ["runny_nose"]}
+{"id": "syn0599", "text": "Barado ilong ko ngayon", "labels": ["stuffy_nose"]}
+{"id": "syn0600", "text": "Stuffy nose ngayon", "labels": ["stuffy_nose"]}
+{"id":"ex601","text":"Grabe ang ubo ko, di ako makatulog","labels":["cough"]}
+{"id":"ex602","text":"I can't stop coughing since kagabi","labels":["cough"]}
+{"id":"ex603","text":"Gi-ubo ko ug maayo","labels":["cough"]}
+{"id":"ex604","text":"Ang kati ng lalamunan ko, ubo ako ng ubo","labels":["cough"]}
+{"id":"ex605","text":"Coughing so hard, ang sakit sa dibdib","labels":["cough"]}
+{"id":"ex606","text":"Walay hunong akong ubo","labels":["cough"]}
+{"id":"ex607","text":"Inuubo ako kanina pa","labels":["cough"]}
+{"id":"ex608","text":"My cough is so dry and annoying","labels":["cough"]}
+{"id":"ex609","text":"Kusog kaayo akong ubo, maka-disturb","labels":["cough"]}
+{"id":"ex610","text":"May ubo ako, pahingi gamot","labels":["cough"]}
+{"id":"ex611","text":"Sakit kaayo akong ulo, mura'g mabuang","labels":["headache"]}
+{"id":"ex612","text":"My head is throbbing, sobrang sakit","labels":["headache"]}
+{"id":"ex613","text":"Labad akong ulo, need ko Biogesic","labels":["headache"]}
+{"id":"ex614","text":"Ang sakit ng ulo ko sa init","labels":["headache"]}
+{"id":"ex615","text":"Super headache talaga, di ko kaya","labels":["headache"]}
+{"id":"ex616","text":"Kumikirot ang ulo ko","labels":["headache"]}
+{"id":"ex617","text":"Sakit sa ulo, mura kog gihapak","labels":["headache"]}
+{"id":"ex618","text":"Head hurts so bad right now","labels":["headache"]}
+{"id":"ex619","text":"Sumasakit ang ulo ko sa stress","labels":["headache"]}
+{"id":"ex620","text":"Labad sa ulo bai, grabe","labels":["headache"]}
+{"id":"ex621","text":"Nilalagnat ako, ang init ng balat ko","labels":["fever"]}
+{"id":"ex622","text":"I have a high fever","labels":["fever"]}
+{"id":"ex623","text":"Gihilanat ko, init kaayo akong paminaw","labels":["fever"]}
+{"id":"ex624","text":"Ang taas ng lagnat ko, 39 degrees","labels":["fever"]}
+{"id":"ex625","text":"Feeling feverish and hot","labels":["fever"]}
+{"id":"ex626","text":"Init kaayo akong lawas","labels":["fever"]}
+{"id":"ex627","text":"May sinat ako, mainit pakiramdam","labels":["fever"]}
+{"id":"ex628","text":"Burning up with fever","labels":["fever"]}
+{"id":"ex629","text":"Gibalik akong hilanat","labels":["fever"]}
+{"id":"ex630","text":"Mainit ang katawan ko, lagnat yata to","labels":["fever"]}
+{"id":"ex631","text":"Ang sakit lumunok, sore throat","labels":["sore_throat"]}
+{"id":"ex632","text":"My throat hurts so much","labels":["sore_throat"]}
+{"id":"ex633","text":"Sakit akong tutunlan ig tulon","labels":["sore_throat"]}
+{"id":"ex634","text":"Sobrang sakit ng lalamunan ko","labels":["sore_throat"]}
+{"id":"ex635","text":"Scratchy and painful throat","labels":["sore_throat"]}
+{"id":"ex636","text":"Hapdos kaayo akong tutunlan","labels":["sore_throat"]}
+{"id":"ex637","text":"Makati at masakit ang lalamunan","labels":["sore_throat"]}
+{"id":"ex638","text":"I have a bad sore throat","labels":["sore_throat"]}
+{"id":"ex639","text":"Di ko katulon sa sakit sa tutunlan","labels":["sore_throat"]}
+{"id":"ex640","text":"Namamaga lalamunan ko","labels":["sore_throat"]}
+{"id":"ex641","text":"Tumutulo sipon ko, kainis","labels":["runny_nose"]}
+{"id":"ex642","text":"Gisip-on ko, sige tulo","labels":["runny_nose"]}
+{"id":"ex643","text":"My nose is running non-stop","labels":["runny_nose"]}
+{"id":"ex644","text":"Sinisipon ako, need tissue","labels":["runny_nose"]}
+{"id":"ex645","text":"Basa kaayo akong ilong, sip-on","labels":["runny_nose"]}
+{"id":"ex646","text":"I have a runny nose","labels":["runny_nose"]}
+{"id":"ex647","text":"Tulo ng tulo ang sipon ko","labels":["runny_nose"]}
+{"id":"ex648","text":"Kusog kaayo akong sip-on","labels":["runny_nose"]}
+{"id":"ex649","text":"Grabe ang sipon ko ngayon","labels":["runny_nose"]}
+{"id":"ex650","text":"Watery nose, sige kog trapo","labels":["runny_nose"]}
+{"id":"ex651","text":"Barado ilong ko, di ako makahinga","labels":["stuffy_nose"]}
+{"id":"ex652","text":"My nose is so clogged","labels":["stuffy_nose"]}
+{"id":"ex653","text":"Barado akong ilong, lisod iginhawa","labels":["stuffy_nose"]}
+{"id":"ex654","text":"Super stuffy nose, wala akong maamoy","labels":["stuffy_nose"]}
+{"id":"ex655","text":"Puno ang ilong ko, barado","labels":["stuffy_nose"]}
+{"id":"ex656","text":"Clogged nose talaga, hirap matulog","labels":["stuffy_nose"]}
+{"id":"ex657","text":"Di kaginhawa akong ilong","labels":["stuffy_nose"]}
+{"id":"ex658","text":"I have nasal congestion","labels":["stuffy_nose"]}
+{"id":"ex659","text":"Naka-block ang ilong ko","labels":["stuffy_nose"]}
+{"id":"ex660","text":"Huot sa ilong, barado","labels":["stuffy_nose"]}
+{"id":"ex661","text":"Nahihilo ako, umiikot paningin ko","labels":["dizziness"]}
+{"id":"ex662","text":"I feel dizzy and lightheaded","labels":["dizziness"]}
+{"id":"ex663","text":"Nalipong ko, tuyok ang kalibutan","labels":["dizziness"]}
+{"id":"ex664","text":"Hilo na hilo ako sa biyahe","labels":["dizziness"]}
+{"id":"ex665","text":"So dizzy, parang matutumba","labels":["dizziness"]}
+{"id":"ex666","text":"Sakit sa ulo unya nalipong","labels":["dizziness"]}
+{"id":"ex667","text":"Feeling faint and dizzy","labels":["dizziness"]}
+{"id":"ex668","text":"Grabe akong lipong ron","labels":["dizziness"]}
+{"id":"ex669","text":"Para akong lutang at nahihilo","labels":["dizziness"]}
+{"id":"ex670","text":"My head is spinning","labels":["dizziness"]}
+{"id":"ex671","text":"Nasusuka ako, iba pakiramdam ko","labels":["nausea"]}
+{"id":"ex672","text":"I feel nauseous, parang masusuka","labels":["nausea"]}
+{"id":"ex673","text":"Gikasukaon ko, lain sa tiyan","labels":["nausea"]}
+{"id":"ex674","text":"Parang aakyat yung kinain ko, nasusuka","labels":["nausea"]}
+{"id":"ex675","text":"Feeling sick like I want to throw up","labels":["nausea"]}
+{"id":"ex676","text":"Baliktad ang sikmura ko, nasusuka","labels":["nausea"]}
+{"id":"ex677","text":"Kasukaon ko permi","labels":["nausea"]}
+{"id":"ex678","text":"Queasy stomach, feel nauseous","labels":["nausea"]}
+{"id":"ex679","text":"Naduduwal ako","labels":["nausea"]}
+{"id":"ex680","text":"Lain akong paminaw mura kog kasukaon","labels":["nausea"]}
+{"id":"ex681","text":"Nagsuka ako kanina pa","labels":["vomiting"]}
+{"id":"ex682","text":"I vomited my breakfast","labels":["vomiting"]}
+{"id":"ex683","text":"Nagsuka ko, pait kaayo","labels":["vomiting"]}
+{"id":"ex684","text":"Suka ako ng suka, wala nang laman","labels":["vomiting"]}
+{"id":"ex685","text":"Throwing up everything I eat","labels":["vomiting"]}
+{"id":"ex686","text":"Gisuka nako tanan","labels":["vomiting"]}
+{"id":"ex687","text":"Nasuka ako sa CR","labels":["vomiting"]}
+{"id":"ex688","text":"I keep vomiting","labels":["vomiting"]}
+{"id":"ex689","text":"Nagsuka ko ug dugo","labels":["vomiting"]}
+{"id":"ex690","text":"Puke ng puke ang bata","labels":["vomiting"]}
+{"id":"ex691","text":"Nagtatae ako, pabalik-balik sa CR","labels":["diarrhea"]}
+{"id":"ex692","text":"I have bad diarrhea","labels":["diarrhea"]}
+{"id":"ex693","text":"Gikalibanga ko, tubig na ang tae","labels":["diarrhea"]}
+{"id":"ex694","text":"LBM malala, di ako makaalis","labels":["diarrhea"]}
+{"id":"ex695","text":"Watery stool ko, diarrhea yata","labels":["diarrhea"]}
+{"id":"ex696","text":"Sige kog kalibang, sakit sa tiyan","labels":["diarrhea"]}
+{"id":"ex697","text":"Diarrhea all day, weak na ako","labels":["diarrhea"]}
+{"id":"ex698","text":"Basa kaayo akong hugaw (stool)","labels":["diarrhea"]}
+{"id":"ex699","text":"Loose bowel movement ko","labels":["diarrhea"]}
+{"id":"ex700","text":"Puro tubig ang dumi ko","labels":["diarrhea"]}
+{"id":"ex701","text":"Sobrang pagod ko, walang energy","labels":["fatigue"]}
+{"id":"ex702","text":"I feel so fatigued and tired","labels":["fatigue"]}
+{"id":"ex703","text":"Kapoy kaayo akong lawas","labels":["fatigue"]}
+{"id":"ex704","text":"Lata ang katawan ko, fatigue","labels":["fatigue"]}
+{"id":"ex705","text":"Exhausted, parang drained","labels":["fatigue"]}
+{"id":"ex706","text":"Wala koy kusog, luya kaayo","labels":["fatigue"]}
+{"id":"ex707","text":"Pagod na pagod kahit walang ginawa","labels":["fatigue"]}
+{"id":"ex708","text":"Feeling weak and fatigued","labels":["fatigue"]}
+{"id":"ex709","text":"Hapo ang katawan ko","labels":["fatigue"]}
+{"id":"ex710","text":"Luya akong paminaw, kapoy","labels":["fatigue"]}
+{"id":"ex711","text":"Masakit ang buong katawan ko","labels":["body_aches"]}
+{"id":"ex712","text":"My body aches all over","labels":["body_aches"]}
+{"id":"ex713","text":"Sakit akong kalawasan","labels":["body_aches"]}
+{"id":"ex714","text":"Ang sakit ng muscles ko, body pain","labels":["body_aches"]}
+{"id":"ex715","text":"Achy body, parang binugbog","labels":["body_aches"]}
+{"id":"ex716","text":"Pamaol akong lawas","labels":["body_aches"]}
+{"id":"ex717","text":"Sakit ng likod at katawan","labels":["body_aches"]}
+{"id":"ex718","text":"Everything hurts, body aches","labels":["body_aches"]}
+{"id":"ex719","text":"Mura kog gikulata sa sakit sa lawas","labels":["body_aches"]}
+{"id":"ex720","text":"Nananakit ang katawan ko","labels":["body_aches"]}
+{"id":"ex721","text":"Hirap ako huminga","labels":["shortness_of_breath"]}
+{"id":"ex722","text":"Shortness of breath, parang kulang sa hangin","labels":["shortness_of_breath"]}
+{"id":"ex723","text":"Maglisod kog ginhawa","labels":["shortness_of_breath"]}
+{"id":"ex724","text":"Hinihingal ako kahit nakaupo","labels":["shortness_of_breath"]}
+{"id":"ex725","text":"Can't catch my breath","labels":["shortness_of_breath"]}
+{"id":"ex726","text":"Gihangak ko, lisod iginhawa","labels":["shortness_of_breath"]}
+{"id":"ex727","text":"Parang kinakapos ako ng hininga","labels":["shortness_of_breath"]}
+{"id":"ex728","text":"Hard to breathe lately","labels":["shortness_of_breath"]}
+{"id":"ex729","text":"Mabaw akong ginhawa","labels":["shortness_of_breath"]}
+{"id":"ex730","text":"Sakit ihigop ug hangin","labels":["shortness_of_breath"]}
+{"id":"ex731","text":"Masakit ang dibdib ko","labels":["chest_pain"]}
+{"id":"ex732","text":"I have chest pain","labels":["chest_pain"]}
+{"id":"ex733","text":"Sakit akong dughan","labels":["chest_pain"]}
+{"id":"ex734","text":"Kumikirot ang dibdib ko","labels":["chest_pain"]}
+{"id":"ex735","text":"Tightness and pain in chest","labels":["chest_pain"]}
+{"id":"ex736","text":"Mura kog gi-tusok sa dughan","labels":["chest_pain"]}
+{"id":"ex737","text":"Masakit sa heart banda","labels":["chest_pain"]}
+{"id":"ex738","text":"Sharp chest pain","labels":["chest_pain"]}
+{"id":"ex739","text":"Bug-at sa dughan, sakit","labels":["chest_pain"]}
+{"id":"ex740","text":"Naninikip ang dibdib ko","labels":["chest_pain"]}
+{"id":"ex741","text":"Sakit ang tiyan ko","labels":["stomach_ache"]}
+{"id":"ex742","text":"My stomach hurts","labels":["stomach_ache"]}
+{"id":"ex743","text":"Sakit akong tiyan","labels":["stomach_ache"]}
+{"id":"ex744","text":"Kumukulo at masakit ang tiyan","labels":["stomach_ache"]}
+{"id":"ex745","text":"Bad stomach ache","labels":["stomach_ache"]}
+{"id":"ex746","text":"Hilab akong tiyan","labels":["stomach_ache"]}
+{"id":"ex747","text":"Masakit ang sikmura ko","labels":["stomach_ache"]}
+{"id":"ex748","text":"Tummy ache since kanina","labels":["stomach_ache"]}
+{"id":"ex749","text":"Sakit akong kuto-kuto","labels":["stomach_ache"]}
+{"id":"ex750","text":"Makirot ang tiyan","labels":["stomach_ache"]}
+{"id":"ex751","text":"Ubo ng ubo, walang tigil","labels":["cough"]}
+{"id":"ex752","text":"Labad ulo, grabe ang pulsation","labels":["headache"]}
+{"id":"ex753","text":"Init kaayo akong pamati, hilanat","labels":["fever"]}
+{"id":"ex754","text":"Sakit ilunok, sore throat","labels":["sore_throat"]}
+{"id":"ex755","text":"Tulo sip-on, hasol kaayo","labels":["runny_nose"]}
+{"id":"ex756","text":"Huot ilong, barado","labels":["stuffy_nose"]}
+{"id":"ex757","text":"Lipong kaayo, mura kog matumba","labels":["dizziness"]}
+{"id":"ex758","text":"Kasukaon ko, lain paminaw","labels":["nausea"]}
+{"id":"ex759","text":"Suka ko ganina, pait","labels":["vomiting"]}
+{"id":"ex760","text":"Kalibanga, sige balik CR","labels":["diarrhea"]}
+{"id":"ex761","text":"Kapoy lawas, way kusog","labels":["fatigue"]}
+{"id":"ex762","text":"Sakit lawas, mura kog bun-og","labels":["body_aches"]}
+{"id":"ex763","text":"Lisod ginhawa, hangak","labels":["shortness_of_breath"]}
+{"id":"ex764","text":"Sakit dughan, huot","labels":["chest_pain"]}
+{"id":"ex765","text":"Sakit tiyan, gikumot","labels":["stomach_ache"]}
+{"id":"ex766","text":"Hacking cough, sakit sa ribs","labels":["cough"]}
+{"id":"ex767","text":"Splitting headache, sakit kaayo","labels":["headache"]}
+{"id":"ex768","text":"Nilalagnat ako, 38.5","labels":["fever"]}
+{"id":"ex769","text":"Makati lalamunan, sore throat","labels":["sore_throat"]}
+{"id":"ex770","text":"Sipon is real, daming tissue","labels":["runny_nose"]}
+{"id":"ex771","text":"Barado ilong, mouth breather mode","labels":["stuffy_nose"]}
+{"id":"ex772","text":"Hilo ako, spinning room","labels":["dizziness"]}
+{"id":"ex773","text":"Nauseous, parang masusuka","labels":["nausea"]}
+{"id":"ex774","text":"Vomited my lunch, sakit","labels":["vomiting"]}
+{"id":"ex775","text":"LBM, watery stool","labels":["diarrhea"]}
+{"id":"ex776","text":"Fatigued, bagsak katawan","labels":["fatigue"]}
+{"id":"ex777","text":"Body pain, parang bugbog","labels":["body_aches"]}
+{"id":"ex778","text":"Short breath, hingal","labels":["shortness_of_breath"]}
+{"id":"ex779","text":"Chest pain, sharp","labels":["chest_pain"]}
+{"id":"ex780","text":"Stomach ache, cramps","labels":["stomach_ache"]}
+{"id":"ex781","text":"Coughing phlegm, green","labels":["cough"]}
+{"id":"ex782","text":"Headache sa likod ng mata","labels":["headache"]}
+{"id":"ex783","text":"Feverish feeling, mainit","labels":["fever"]}
+{"id":"ex784","text":"Sore throat, hurts to talk","labels":["sore_throat"]}
+{"id":"ex785","text":"Runny nose, clear mucus","labels":["runny_nose"]}
+{"id":"ex786","text":"Stuffy nose, can't smell","labels":["stuffy_nose"]}
+{"id":"ex787","text":"Dizzy spell, blackout slight","labels":["dizziness"]}
+{"id":"ex788","text":"Nausea, queasy tummy","labels":["nausea"]}
+{"id":"ex789","text":"Puke, nagsuka na naman","labels":["vomiting"]}
+{"id":"ex790","text":"Diarrhea, loose bowel","labels":["diarrhea"]}
+{"id":"ex791","text":"Tired all the time, fatigue","labels":["fatigue"]}
+{"id":"ex792","text":"Achy muscles, body pain","labels":["body_aches"]}
+{"id":"ex793","text":"Hard to breathe, shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex794","text":"Pain in chest, left side","labels":["chest_pain"]}
+{"id":"ex795","text":"Pain in stomach, lower right","labels":["stomach_ache"]}
+{"id":"ex796","text":"Gi-ubo, dry cough","labels":["cough"]}
+{"id":"ex797","text":"Sakit ulo, migraines","labels":["headache"]}
+{"id":"ex798","text":"Lagnat laki, taas hilanat","labels":["fever"]}
+{"id":"ex799","text":"Sakit tutunlan, hubag","labels":["sore_throat"]}
+{"id":"ex800","text":"Sip-on, tulo ilong","labels":["runny_nose"]}
+{"id":"ex801","text":"Inuubo ako tapos ang taas ng lagnat ko","labels":["cough","fever"]}
+{"id":"ex802","text":"Sakit sa ulo unya gikasukaon ko","labels":["headache","nausea"]}
+{"id":"ex803","text":"Masakit tiyan ko tapos nagtatae kanina pa","labels":["stomach_ache","diarrhea"]}
+{"id":"ex804","text":"I feel dizzy and I want to vomit","labels":["dizziness","vomiting"]}
+{"id":"ex805","text":"Grabe ang fatigue ko, sakit pa ng katawan","labels":["fatigue","body_aches"]}
+{"id":"ex806","text":"Shortness of breath and chest pain, kinakabahan ako","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex807","text":"Barado ilong ko at makati lalamunan","labels":["stuffy_nose","sore_throat"]}
+{"id":"ex808","text":"Gi-ubo ko unya gisip-on pud","labels":["cough","runny_nose"]}
+{"id":"ex809","text":"Nilalagnat ako at masakit ang ulo","labels":["fever","headache"]}
+{"id":"ex810","text":"Nagsusuka ako at nagtatae, dehydration na yata","labels":["vomiting","diarrhea"]}
+{"id":"ex811","text":"Sakit akong tutunlan unya gihilanat ko","labels":["sore_throat","fever"]}
+{"id":"ex812","text":"Runny nose and sneezing, plus headache","labels":["runny_nose","headache"]}
+{"id":"ex813","text":"Hirap huminga at masakit ang dibdib","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex814","text":"Nalipong ko unya nagsuka","labels":["dizziness","vomiting"]}
+{"id":"ex815","text":"Body aches and chills, feeling feverish","labels":["body_aches","fever"]}
+{"id":"ex816","text":"Stomach ache tapos parang nasusuka","labels":["stomach_ache","nausea"]}
+{"id":"ex817","text":"Pagod na pagod ako at hinihingal","labels":["fatigue","shortness_of_breath"]}
+{"id":"ex818","text":"Sakit sa ulo ug ubo","labels":["headache","cough"]}
+{"id":"ex819","text":"Sipon at ubo, classic combo","labels":["runny_nose","cough"]}
+{"id":"ex820","text":"My throat hurts and I have a fever","labels":["sore_throat","fever"]}
+{"id":"ex821","text":"Diarrhea and stomach cramps, sakit talaga","labels":["diarrhea","stomach_ache"]}
+{"id":"ex822","text":"Nahihilo ako at nanlalambot","labels":["dizziness","fatigue"]}
+{"id":"ex823","text":"Vomiting and diarrhea since kagabi","labels":["vomiting","diarrhea"]}
+{"id":"ex824","text":"Chest pain and shortness of breath, delikado ba?","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex825","text":"Barado ilong at sakit ng ulo","labels":["stuffy_nose","headache"]}
+{"id":"ex826","text":"Ubo ng ubo at masakit lalamunan","labels":["cough","sore_throat"]}
+{"id":"ex827","text":"Gihilanat ko unya sakit akong lawas","labels":["fever","body_aches"]}
+{"id":"ex828","text":"Nausea and dizziness, parang motion sickness","labels":["nausea","dizziness"]}
+{"id":"ex829","text":"Runny nose and itchy throat","labels":["runny_nose","sore_throat"]}
+{"id":"ex830","text":"Sakit tiyan at nasusuka","labels":["stomach_ache","nausea"]}
+{"id":"ex831","text":"Fatigue and shortness of breath pag umaakyat","labels":["fatigue","shortness_of_breath"]}
+{"id":"ex832","text":"Headache and fever, trangkaso yata","labels":["headache","fever"]}
+{"id":"ex833","text":"Cough and cold, standard sakit","labels":["cough","runny_nose"]}
+{"id":"ex834","text":"Sakit dughan ug maglisod ginhawa","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex835","text":"Vomiting and stomach ache, food poisoning siguro","labels":["vomiting","stomach_ache"]}
+{"id":"ex836","text":"Diarrhea and fatigue, dehydrated na","labels":["diarrhea","fatigue"]}
+{"id":"ex837","text":"Body aches and headache, stress lang siguro","labels":["body_aches","headache"]}
+{"id":"ex838","text":"Stuffy nose and fever, sinu-sinusitis","labels":["stuffy_nose","fever"]}
+{"id":"ex839","text":"Sore throat and runny nose, allergy yata","labels":["sore_throat","runny_nose"]}
+{"id":"ex840","text":"Dizziness and chest pain, need doctor?","labels":["dizziness","chest_pain"]}
+{"id":"ex841","text":"Ubo at hirap huminga","labels":["cough","shortness_of_breath"]}
+{"id":"ex842","text":"Lagnat at nagsusuka","labels":["fever","vomiting"]}
+{"id":"ex843","text":"Sakit ulo ug sakit tiyan","labels":["headache","stomach_ache"]}
+{"id":"ex844","text":"Nagtatae at nahihilo","labels":["diarrhea","dizziness"]}
+{"id":"ex845","text":"Fatigue and body aches, flu symptoms","labels":["fatigue","body_aches"]}
+{"id":"ex846","text":"Sipon at barado ilong","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex847","text":"Ubo at sakit ng katawan","labels":["cough","body_aches"]}
+{"id":"ex848","text":"Fever and sore throat, tonsillitis?","labels":["fever","sore_throat"]}
+{"id":"ex849","text":"Nausea and vomiting, stomach flu","labels":["nausea","vomiting"]}
+{"id":"ex850","text":"Chest pain and dizziness","labels":["chest_pain","dizziness"]}
+{"id":"ex851","text":"Shortness of breath and fatigue","labels":["shortness_of_breath","fatigue"]}
+{"id":"ex852","text":"Headache and runny nose","labels":["headache","runny_nose"]}
+{"id":"ex853","text":"Stomach ache and fever","labels":["stomach_ache","fever"]}
+{"id":"ex854","text":"Diarrhea and nausea","labels":["diarrhea","nausea"]}
+{"id":"ex855","text":"Body aches and sore throat","labels":["body_aches","sore_throat"]}
+{"id":"ex856","text":"Cough and stuffy nose","labels":["cough","stuffy_nose"]}
+{"id":"ex857","text":"Fever and chills, plus body pain","labels":["fever","body_aches"]}
+{"id":"ex858","text":"Vomiting and headache","labels":["vomiting","headache"]}
+{"id":"ex859","text":"Dizziness and fatigue","labels":["dizziness","fatigue"]}
+{"id":"ex860","text":"Shortness of breath and cough","labels":["shortness_of_breath","cough"]}
+{"id":"ex861","text":"Chest pain and nausea","labels":["chest_pain","nausea"]}
+{"id":"ex862","text":"Stomach ache and body aches","labels":["stomach_ache","body_aches"]}
+{"id":"ex863","text":"Runny nose and sneezing with fever","labels":["runny_nose","fever"]}
+{"id":"ex864","text":"Sore throat and stuffy nose","labels":["sore_throat","stuffy_nose"]}
+{"id":"ex865","text":"Diarrhea and vomiting, sabay talaga","labels":["diarrhea","vomiting"]}
+{"id":"ex866","text":"Headache and dizziness, high blood?","labels":["headache","dizziness"]}
+{"id":"ex867","text":"Fatigue and fever","labels":["fatigue","fever"]}
+{"id":"ex868","text":"Cough and chest pain, masakit umubo","labels":["cough","chest_pain"]}
+{"id":"ex869","text":"Body aches and runny nose","labels":["body_aches","runny_nose"]}
+{"id":"ex870","text":"Nausea and stomach ache","labels":["nausea","stomach_ache"]}
+{"id":"ex871","text":"Shortness of breath and dizziness","labels":["shortness_of_breath","dizziness"]}
+{"id":"ex872","text":"Fever and vomiting","labels":["fever","vomiting"]}
+{"id":"ex873","text":"Sore throat and headache","labels":["sore_throat","headache"]}
+{"id":"ex874","text":"Stuffy nose and runny nose, mixed","labels":["stuffy_nose","runny_nose"]}
+{"id":"ex875","text":"Diarrhea and fever","labels":["diarrhea","fever"]}
+{"id":"ex876","text":"Chest pain and fatigue","labels":["chest_pain","fatigue"]}
+{"id":"ex877","text":"Cough and nausea","labels":["cough","nausea"]}
+{"id":"ex878","text":"Body aches and chills, feverish","labels":["body_aches","fever"]}
+{"id":"ex879","text":"Headache and stomach ache","labels":["headache","stomach_ache"]}
+{"id":"ex880","text":"Dizziness and runny nose","labels":["dizziness","runny_nose"]}
+{"id":"ex881","text":"Vomiting and fatigue","labels":["vomiting","fatigue"]}
+{"id":"ex882","text":"Shortness of breath and body aches","labels":["shortness_of_breath","body_aches"]}
+{"id":"ex883","text":"Fever and cough and runny nose","labels":["fever","cough","runny_nose"]}
+{"id":"ex884","text":"Sore throat and fever and headache","labels":["sore_throat","fever","headache"]}
+{"id":"ex885","text":"Nausea and vomiting and diarrhea","labels":["nausea","vomiting","diarrhea"]}
+{"id":"ex886","text":"Chest pain and shortness of breath and dizziness","labels":["chest_pain","shortness_of_breath","dizziness"]}
+{"id":"ex887","text":"Stomach ache and nausea and vomiting","labels":["stomach_ache","nausea","vomiting"]}
+{"id":"ex888","text":"Body aches and fever and fatigue","labels":["body_aches","fever","fatigue"]}
+{"id":"ex889","text":"Cough and sore throat and runny nose","labels":["cough","sore_throat","runny_nose"]}
+{"id":"ex890","text":"Headache and dizziness and nausea","labels":["headache","dizziness","nausea"]}
+{"id":"ex891","text":"Stuffy nose and headache and fever","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex892","text":"Diarrhea and stomach ache and fatigue","labels":["diarrhea","stomach_ache","fatigue"]}
+{"id":"ex893","text":"Vomiting and fever and body aches","labels":["vomiting","fever","body_aches"]}
+{"id":"ex894","text":"Shortness of breath and chest pain and fatigue","labels":["shortness_of_breath","chest_pain","fatigue"]}
+{"id":"ex895","text":"Sore throat and cough and fever","labels":["sore_throat","cough","fever"]}
+{"id":"ex896","text":"Runny nose and stuffy nose and sneezing","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex897","text":"Dizziness and nausea and headache","labels":["dizziness","nausea","headache"]}
+{"id":"ex898","text":"Body aches and fatigue and cough","labels":["body_aches","fatigue","cough"]}
+{"id":"ex899","text":"Stomach ache and diarrhea and fever","labels":["stomach_ache","diarrhea","fever"]}
+{"id":"ex900","text":"Chest pain and dizziness and shortness of breath","labels":["chest_pain","dizziness","shortness_of_breath"]}
+{"id":"ex901","text":"Inuubo, sinisipon, at nilalagnat ako","labels":["cough","runny_nose","fever"]}
+{"id":"ex902","text":"Sakit ulo, hilo, at nasusuka","labels":["headache","dizziness","nausea"]}
+{"id":"ex903","text":"Gi-ubo, gisip-on, ug gihilanat","labels":["cough","runny_nose","fever"]}
+{"id":"ex904","text":"Labad ulo, lipong, ug kasukaon","labels":["headache","dizziness","nausea"]}
+{"id":"ex905","text":"Coughing, sneezing, and fever","labels":["cough","runny_nose","fever"]}
+{"id":"ex906","text":"Headache, dizziness, and vomiting","labels":["headache","dizziness","vomiting"]}
+{"id":"ex907","text":"Masakit katawan, pagod, at may lagnat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex908","text":"Sakit sa lawas, kapoy, ug hilanat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex909","text":"Body aches, fatigue, and chills","labels":["body_aches","fatigue","fever"]}
+{"id":"ex910","text":"Nagtatae, masakit tiyan, at nasusuka","labels":["diarrhea","stomach_ache","nausea"]}
+{"id":"ex911","text":"Kalibanga, sakit tiyan, ug kasukaon","labels":["diarrhea","stomach_ache","nausea"]}
+{"id":"ex912","text":"Diarrhea, stomach cramps, and nausea","labels":["diarrhea","stomach_ache","nausea"]}
+{"id":"ex913","text":"Masakit lalamunan, ubo, at sipon","labels":["sore_throat","cough","runny_nose"]}
+{"id":"ex914","text":"Sakit tutunlan, ubo, ug sip-on","labels":["sore_throat","cough","runny_nose"]}
+{"id":"ex915","text":"Sore throat, cough, and runny nose","labels":["sore_throat","cough","runny_nose"]}
+{"id":"ex916","text":"Hirap huminga, sakit dibdib, at hilo","labels":["shortness_of_breath","chest_pain","dizziness"]}
+{"id":"ex917","text":"Lisod ginhawa, sakit dughan, ug lipong","labels":["shortness_of_breath","chest_pain","dizziness"]}
+{"id":"ex918","text":"Shortness of breath, chest pain, and lightheadedness","labels":["shortness_of_breath","chest_pain","dizziness"]}
+{"id":"ex919","text":"Barado ilong, sakit ulo, at lagnat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex920","text":"Barado ilong, labad ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex921","text":"Stuffy nose, headache, and fever","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex922","text":"Nagsusuka, nagtatae, at sakit tiyan","labels":["vomiting","diarrhea","stomach_ache"]}
+{"id":"ex923","text":"Gisuka, gikalibanga, ug sakit tiyan","labels":["vomiting","diarrhea","stomach_ache"]}
+{"id":"ex924","text":"Vomiting, diarrhea, and stomach pain","labels":["vomiting","diarrhea","stomach_ache"]}
+{"id":"ex925","text":"Pagod, hinihingal, at masakit katawan","labels":["fatigue","shortness_of_breath","body_aches"]}
+{"id":"ex926","text":"Kapoy, gihangak, ug sakit lawas","labels":["fatigue","shortness_of_breath","body_aches"]}
+{"id":"ex927","text":"Fatigue, shortness of breath, and body aches","labels":["fatigue","shortness_of_breath","body_aches"]}
+{"id":"ex928","text":"Ubo, sakit dibdib, at lagnat","labels":["cough","chest_pain","fever"]}
+{"id":"ex929","text":"Ubo, sakit dughan, ug hilanat","labels":["cough","chest_pain","fever"]}
+{"id":"ex930","text":"Cough, chest pain, and fever","labels":["cough","chest_pain","fever"]}
+{"id":"ex931","text":"Sakit ulo, sipon, at masakit lalamunan","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex932","text":"Labad ulo, sip-on, ug sakit tutunlan","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex933","text":"Headache, runny nose, and sore throat","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex934","text":"Nausea, dizziness, and fatigue","labels":["nausea","dizziness","fatigue"]}
+{"id":"ex935","text":"Kasukaon, lipong, ug kapoy","labels":["nausea","dizziness","fatigue"]}
+{"id":"ex936","text":"Nasusuka, nahihilo, at pagod","labels":["nausea","dizziness","fatigue"]}
+{"id":"ex937","text":"Stomach ache, fever, and vomiting","labels":["stomach_ache","fever","vomiting"]}
+{"id":"ex938","text":"Sakit tiyan, hilanat, ug suka","labels":["stomach_ache","fever","vomiting"]}
+{"id":"ex939","text":"Masakit tiyan, lagnat, at pagsusuka","labels":["stomach_ache","fever","vomiting"]}
+{"id":"ex940","text":"Chest pain, sweating, and nausea","labels":["chest_pain","nausea"]}
+{"id":"ex941","text":"Sakit dughan, singot, ug kasukaon","labels":["chest_pain","nausea"]}
+{"id":"ex942","text":"Shortness of breath, cough, and fatigue","labels":["shortness_of_breath","cough","fatigue"]}
+{"id":"ex943","text":"Hirap huminga, ubo, at pagod","labels":["shortness_of_breath","cough","fatigue"]}
+{"id":"ex944","text":"Lisod ginhawa, ubo, ug kapoy","labels":["shortness_of_breath","cough","fatigue"]}
+{"id":"ex945","text":"Body aches, headache, and runny nose","labels":["body_aches","headache","runny_nose"]}
+{"id":"ex946","text":"Sakit lawas, labad ulo, ug sip-on","labels":["body_aches","headache","runny_nose"]}
+{"id":"ex947","text":"Masakit katawan, sakit ulo, at sipon","labels":["body_aches","headache","runny_nose"]}
+{"id":"ex948","text":"Diarrhea, fever, and chills","labels":["diarrhea","fever"]}
+{"id":"ex949","text":"Kalibanga, hilanat, ug tugnaw","labels":["diarrhea","fever"]}
+{"id":"ex950","text":"Nagtatae, lagnat, at giniginaw","labels":["diarrhea","fever"]}
+{"id":"ex951","text":"Sore throat, swollen glands, and fever","labels":["sore_throat","fever"]}
+{"id":"ex952","text":"Sakit tutunlan, hubag, ug hilanat","labels":["sore_throat","fever"]}
+{"id":"ex953","text":"Masakit lalamunan, maga, at lagnat","labels":["sore_throat","fever"]}
+{"id":"ex954","text":"Stuffy nose, sneezing, and watery eyes","labels":["stuffy_nose","runny_nose"]}
+{"id":"ex955","text":"Barado ilong, hatsing, ug luhaon mata","labels":["stuffy_nose","runny_nose"]}
+{"id":"ex956","text":"Barado ilong, bahing, at nagluluhang mata","labels":["stuffy_nose","runny_nose"]}
+{"id":"ex957","text":"Dizziness, blurred vision, and headache","labels":["dizziness","headache"]}
+{"id":"ex958","text":"Lipong, hanap panan-aw, ug labad ulo","labels":["dizziness","headache"]}
+{"id":"ex959","text":"Hilo, labo paningin, at sakit ulo","labels":["dizziness","headache"]}
+{"id":"ex960","text":"Vomiting, stomach pain, and diarrhea","labels":["vomiting","stomach_ache","diarrhea"]}
+{"id":"ex961","text":"Suka, sakit tiyan, ug kalibanga","labels":["vomiting","stomach_ache","diarrhea"]}
+{"id":"ex962","text":"Pagsusuka, sakit ng tiyan, at pagtatae","labels":["vomiting","stomach_ache","diarrhea"]}
+{"id":"ex963","text":"Fatigue, loss of appetite, and nausea","labels":["fatigue","nausea"]}
+{"id":"ex964","text":"Kapoy, wa gana kaon, ug kasukaon","labels":["fatigue","nausea"]}
+{"id":"ex965","text":"Pagod, walang gana kumain, at nasusuka","labels":["fatigue","nausea"]}
+{"id":"ex966","text":"Chest pain, arm pain, and shortness of breath","labels":["chest_pain","body_aches","shortness_of_breath"]}
+{"id":"ex967","text":"Sakit dughan, sakit bukton, ug lisod ginhawa","labels":["chest_pain","body_aches","shortness_of_breath"]}
+{"id":"ex968","text":"Masakit dibdib, sakit braso, at hirap huminga","labels":["chest_pain","body_aches","shortness_of_breath"]}
+{"id":"ex969","text":"Cough, wheezing, and shortness of breath","labels":["cough","shortness_of_breath"]}
+{"id":"ex970","text":"Ubo, huni sa dughan, ug lisod ginhawa","labels":["cough","shortness_of_breath"]}
+{"id":"ex971","text":"Ubo, huni, at hirap huminga","labels":["cough","shortness_of_breath"]}
+{"id":"ex972","text":"Headache, neck stiffness, and fever","labels":["headache","body_aches","fever"]}
+{"id":"ex973","text":"Labad ulo, gahi liog, ug hilanat","labels":["headache","body_aches","fever"]}
+{"id":"ex974","text":"Sakit ulo,igas leeg, at lagnat","labels":["headache","body_aches","fever"]}
+{"id":"ex975","text":"Stomach ache, gas, and bloating","labels":["stomach_ache"]}
+{"id":"ex976","text":"Sakit tiyan, kabag, ugburot","labels":["stomach_ache"]}
+{"id":"ex977","text":"Masakit tiyan, kabag, at bloated","labels":["stomach_ache"]}
+{"id":"ex978","text":"Runny nose, cough, and congestion","labels":["runny_nose","cough","stuffy_nose"]}
+{"id":"ex979","text":"Sip-on, ubo, ug huot ilong","labels":["runny_nose","cough","stuffy_nose"]}
+{"id":"ex980","text":"Sipon, ubo, at baradong ilong","labels":["runny_nose","cough","stuffy_nose"]}
+{"id":"ex981","text":"Fever, rash, and joint pain","labels":["fever","body_aches"]}
+{"id":"ex982","text":"Hilanat, katol, ug sakit lutahan","labels":["fever","body_aches"]}
+{"id":"ex983","text":"Lagnat, pantal, at sakit ng kasu-kasuan","labels":["fever","body_aches"]}
+{"id":"ex984","text":"Sore throat, hoarseness, and cough","labels":["sore_throat","cough"]}
+{"id":"ex985","text":"Sakit tutunlan, pagaw, ug ubo","labels":["sore_throat","cough"]}
+{"id":"ex986","text":"Masakit lalamunan, paos, at ubo","labels":["sore_throat","cough"]}
+{"id":"ex987","text":"Dizziness, ear pain, and nausea","labels":["dizziness","nausea"]}
+{"id":"ex988","text":"Lipong, sakit dunggan, ug kasukaon","labels":["dizziness","nausea"]}
+{"id":"ex989","text":"Hilo, sakit tenga, at nasusuka","labels":["dizziness","nausea"]}
+{"id":"ex990","text":"Body aches, weakness, and fever","labels":["body_aches","fatigue","fever"]}
+{"id":"ex991","text":"Sakit lawas, luya, ug hilanat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex992","text":"Masakit katawan, panghihina, at lagnat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex993","text":"Diarrhea, dehydration, and weakness","labels":["diarrhea","fatigue"]}
+{"id":"ex994","text":"Kalibanga, kuwang tubig, ug luya","labels":["diarrhea","fatigue"]}
+{"id":"ex995","text":"Nagtatae, tuyo, at nanghihina","labels":["diarrhea","fatigue"]}
+{"id":"ex996","text":"Chest pain, palpitations, and sweating","labels":["chest_pain"]}
+{"id":"ex997","text":"Sakit dughan, kubo-kuba, ug singot","labels":["chest_pain"]}
+{"id":"ex998","text":"Masakit dibdib, kabog, at pawis","labels":["chest_pain"]}
+{"id":"ex999","text":"Headache, light sensitivity, and nausea","labels":["headache","nausea"]}
+{"id":"ex1000","text":"Labad ulo, sakit sa hayag, ug kasukaon","labels":["headache","nausea"]}
+{"id":"ex1001","text":"Walang lagnat, pero masakit ang ulo ko","labels":["headache"]}
+{"id":"ex1002","text":"I don't have a cough, just a runny nose","labels":["runny_nose"]}
+{"id":"ex1003","text":"Wa koy hilanat, labad lang akong ulo","labels":["headache"]}
+{"id":"ex1004","text":"Hindi ako nasusuka, nahihilo lang","labels":["dizziness"]}
+{"id":"ex1005","text":"No stomach ache, but I have diarrhea","labels":["diarrhea"]}
+{"id":"ex1006","text":"Walay ubo, sip-on ra","labels":["runny_nose"]}
+{"id":"ex1007","text":"Not feeling fatigued, just body aches","labels":["body_aches"]}
+{"id":"ex1008","text":"Wala naman akong sipon, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1009","text":"Di masakit dibdib ko, hirap lang huminga","labels":["shortness_of_breath"]}
+{"id":"ex1010","text":"No vomiting, just nausea","labels":["nausea"]}
+{"id":"ex1011","text":"Walang sore throat, ubo lang","labels":["cough"]}
+{"id":"ex1012","text":"Dili sakit akong tiyan, nalipong ra ko","labels":["dizziness"]}
+{"id":"ex1013","text":"I don't have chest pain, just fatigue","labels":["fatigue"]}
+{"id":"ex1014","text":"Hindi masakit katawan ko, lagnat lang","labels":["fever"]}
+{"id":"ex1015","text":"No diarrhea, just stomach ache","labels":["stomach_ache"]}
+{"id":"ex1016","text":"Wa koy labad, gihilanat ra ko","labels":["fever"]}
+{"id":"ex1017","text":"Not short of breath, just coughing","labels":["cough"]}
+{"id":"ex1018","text":"Walang hilo, sakit lang ng ulo","labels":["headache"]}
+{"id":"ex1019","text":"Di ako nilalagnat, sinisipon lang","labels":["runny_nose"]}
+{"id":"ex1020","text":"No body aches, but I have a fever","labels":["fever"]}
+{"id":"ex1021","text":"Walay kasukaon, kalibanga lang","labels":["diarrhea"]}
+{"id":"ex1022","text":"I don't have a runny nose, just stuffy","labels":["stuffy_nose"]}
+{"id":"ex1023","text":"Hindi ako pagod, masakit lang lalamunan","labels":["sore_throat"]}
+{"id":"ex1024","text":"No headache, only dizziness","labels":["dizziness"]}
+{"id":"ex1025","text":"Wa koy ubo, sakit ra akong dughan","labels":["chest_pain"]}
+{"id":"ex1026","text":"Not sneezing, just coughing","labels":["cough"]}
+{"id":"ex1027","text":"Walang sakit sa tiyan, nasusuka lang","labels":["nausea"]}
+{"id":"ex1028","text":"Di naman ako hinihingal, masakit lang dibdib","labels":["chest_pain"]}
+{"id":"ex1029","text":"No fever, just chills and body aches","labels":["body_aches"]}
+{"id":"ex1030","text":"Walay sip-on, ubo ra jud","labels":["cough"]}
+{"id":"ex1031","text":"I don't feel nauseous, just a headache","labels":["headache"]}
+{"id":"ex1032","text":"Hindi ako nagtatae, masakit lang tiyan","labels":["stomach_ache"]}
+{"id":"ex1033","text":"No sore throat, just runny nose","labels":["runny_nose"]}
+{"id":"ex1034","text":"Wa koy hilanat pero sakit akong lawas","labels":["body_aches"]}
+{"id":"ex1035","text":"Not dizzy, just tired","labels":["fatigue"]}
+{"id":"ex1036","text":"Walang ubo, lagnat lang meron ako","labels":["fever"]}
+{"id":"ex1037","text":"Di masakit ulo ko, nahihilo lang talaga","labels":["dizziness"]}
+{"id":"ex1038","text":"No vomiting, just stomach pain","labels":["stomach_ache"]}
+{"id":"ex1039","text":"Walay labad sa ulo, sip-on lang","labels":["runny_nose"]}
+{"id":"ex1040","text":"I don't have chest pain, I just can't breathe well","labels":["shortness_of_breath"]}
+{"id":"ex1041","text":"Hindi barado ilong ko, tumutulo lang sipon","labels":["runny_nose"]}
+{"id":"ex1042","text":"No fatigue, just a bad cough","labels":["cough"]}
+{"id":"ex1043","text":"Wala koy kalibanga, nagsuka ra ko","labels":["vomiting"]}
+{"id":"ex1044","text":"Not hot, no fever, just headache","labels":["headache"]}
+{"id":"ex1045","text":"Walang sakit sa katawan, lalamunan lang","labels":["sore_throat"]}
+{"id":"ex1046","text":"Di ako nasusuka, hilo lang","labels":["dizziness"]}
+{"id":"ex1047","text":"No shortness of breath, just chest pain","labels":["chest_pain"]}
+{"id":"ex1048","text":"Walay ubo, hilanat ra","labels":["fever"]}
+{"id":"ex1049","text":"I don't have a stuffy nose, it's running","labels":["runny_nose"]}
+{"id":"ex1050","text":"Hindi masakit ulo ko, katawan lang","labels":["body_aches"]}
+{"id":"ex1051","text":"No nausea, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1052","text":"Wa koy sakit sa dughan, gihangak lang","labels":["shortness_of_breath"]}
+{"id":"ex1053","text":"Not coughing, just sore throat","labels":["sore_throat"]}
+{"id":"ex1054","text":"Walang lagnat, pero giniginaw at masakit katawan","labels":["body_aches"]}
+{"id":"ex1055","text":"Di ako nahihilo, antok lang at pagod","labels":["fatigue"]}
+{"id":"ex1056","text":"No stomach ache, just feel like vomiting","labels":["nausea"]}
+{"id":"ex1057","text":"Walay sip-on, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1058","text":"I don't have a headache, my face hurts from stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1059","text":"Hindi ako nagsusuka, nagtatae lang","labels":["diarrhea"]}
+{"id":"ex1060","text":"No fever, but my throat hurts","labels":["sore_throat"]}
+{"id":"ex1061","text":"Wala koy labad, gikapoy lang ko","labels":["fatigue"]}
+{"id":"ex1062","text":"Not body aches, just stomach ache","labels":["stomach_ache"]}
+{"id":"ex1063","text":"Walang ubo, pero hirap huminga","labels":["shortness_of_breath"]}
+{"id":"ex1064","text":"Di masakit lalamunan ko, inuubo lang","labels":["cough"]}
+{"id":"ex1065","text":"No dizziness, just a bad headache","labels":["headache"]}
+{"id":"ex1066","text":"Walay hilanat, sip-on ug ubo ra","labels":["runny_nose","cough"]}
+{"id":"ex1067","text":"I don't have diarrhea, I'm constipated but stomach hurts","labels":["stomach_ache"]}
+{"id":"ex1068","text":"Hindi mainit pakiramdam ko, walang lagnat, ubo lang","labels":["cough"]}
+{"id":"ex1069","text":"No chest pain, just coughing a lot","labels":["cough"]}
+{"id":"ex1070","text":"Wa koy kasukaon, nalipong lang","labels":["dizziness"]}
+{"id":"ex1071","text":"Not tired, just legs hurt, body aches","labels":["body_aches"]}
+{"id":"ex1072","text":"Walang sipon, ubo lang ng ubo","labels":["cough"]}
+{"id":"ex1073","text":"Di masakit tiyan, pero nasusuka","labels":["nausea"]}
+{"id":"ex1074","text":"No runny nose, just can't breathe through nose","labels":["stuffy_nose"]}
+{"id":"ex1075","text":"Walay sakit sa lawas, labad ra sa ulo","labels":["headache"]}
+{"id":"ex1076","text":"I don't have a fever, just a sore throat","labels":["sore_throat"]}
+{"id":"ex1077","text":"Hindi ako hinihingal, masakit lang dibdib ko","labels":["chest_pain"]}
+{"id":"ex1078","text":"No headache, just feeling hot, fever","labels":["fever"]}
+{"id":"ex1079","text":"Wala koy ubo, gihilanat ra","labels":["fever"]}
+{"id":"ex1080","text":"Not vomiting anymore, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1081","text":"Walang hilo, sakit lang ng tiyan","labels":["stomach_ache"]}
+{"id":"ex1082","text":"Di ako sinisipon, barado lang talaga ilong","labels":["stuffy_nose"]}
+{"id":"ex1083","text":"No body pain, just exhausted, fatigue","labels":["fatigue"]}
+{"id":"ex1084","text":"Walay labad, pero nagsuka ko","labels":["vomiting"]}
+{"id":"ex1085","text":"I don't have a cough, just short of breath","labels":["shortness_of_breath"]}
+{"id":"ex1086","text":"Hindi masakit lalamunan, may sipon lang","labels":["runny_nose"]}
+{"id":"ex1087","text":"No diarrhea, just stomach cramping","labels":["stomach_ache"]}
+{"id":"ex1088","text":"Wala koy hilanat, sakit ra akong dughan","labels":["chest_pain"]}
+{"id":"ex1089","text":"Not dizzy, just headache","labels":["headache"]}
+{"id":"ex1090","text":"Walang ubo at sipon, lagnat lang","labels":["fever"]}
+{"id":"ex1091","text":"Di masakit katawan, pagod lang","labels":["fatigue"]}
+{"id":"ex1092","text":"No nausea, just bad stomach ache","labels":["stomach_ache"]}
+{"id":"ex1093","text":"Walay sip-on, ubo lang","labels":["cough"]}
+{"id":"ex1094","text":"I don't have a fever, but I'm shivering and body hurts","labels":["body_aches"]}
+{"id":"ex1095","text":"Hindi ako nasusuka, nahihilo lang talaga","labels":["dizziness"]}
+{"id":"ex1096","text":"No chest pain, just stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1097","text":"Wa koy ubo, sakit ra tutunlan","labels":["sore_throat"]}
+{"id":"ex1098","text":"Not short of breath, just tired","labels":["fatigue"]}
+{"id":"ex1099","text":"Walang lagnat, pero nagsusuka","labels":["vomiting"]}
+{"id":"ex1100","text":"Di masakit ulo, sinisipon lang","labels":["runny_nose"]}
+{"id":"ex1101","text":"skit ng ulo q","labels":["headache"]}
+{"id":"ex1102","text":"my ubo aq","labels":["cough"]}
+{"id":"ex1103","text":"lbd ulo","labels":["headache"]}
+{"id":"ex1104","text":"snisipon me","labels":["runny_nose"]}
+{"id":"ex1105","text":"skit tyan","labels":["stomach_ache"]}
+{"id":"ex1106","text":"hilo aq","labels":["dizziness"]}
+{"id":"ex1107","text":"lbm since kagabi","labels":["diarrhea"]}
+{"id":"ex1108","text":"feverish feels","labels":["fever"]}
+{"id":"ex1109","text":"skt ng ktwan","labels":["body_aches"]}
+{"id":"ex1110","text":"hirap hminga","labels":["shortness_of_breath"]}
+{"id":"ex1111","text":"nasusuka q","labels":["nausea"]}
+{"id":"ex1112","text":"brado ilong","labels":["stuffy_nose"]}
+{"id":"ex1113","text":"skt lalamunan","labels":["sore_throat"]}
+{"id":"ex1114","text":"pagod n pagod","labels":["fatigue"]}
+{"id":"ex1115","text":"my lagnat yta","labels":["fever"]}
+{"id":"ex1116","text":"skt dibdib","labels":["chest_pain"]}
+{"id":"ex1117","text":"ngsusuka n","labels":["vomiting"]}
+{"id":"ex1118","text":"ubo ng ubo","labels":["cough"]}
+{"id":"ex1119","text":"sipon malala","labels":["runny_nose"]}
+{"id":"ex1120","text":"hilong hilo","labels":["dizziness"]}
+{"id":"ex1121","text":"sakit tyan q","labels":["stomach_ache"]}
+{"id":"ex1122","text":"diarhea","labels":["diarrhea"]}
+{"id":"ex1123","text":"sakit body","labels":["body_aches"]}
+{"id":"ex1124","text":"kpoy n katawan","labels":["fatigue"]}
+{"id":"ex1125","text":"hngal aq","labels":["shortness_of_breath"]}
+{"id":"ex1126","text":"skit ulo","labels":["headache"]}
+{"id":"ex1127","text":"ubo nd sipon","labels":["cough","runny_nose"]}
+{"id":"ex1128","text":"lgnat nd skt ulo","labels":["fever","headache"]}
+{"id":"ex1129","text":"nsusuka","labels":["nausea"]}
+{"id":"ex1130","text":"brdo ilong q","labels":["stuffy_nose"]}
+{"id":"ex1131","text":"sore throat skt","labels":["sore_throat"]}
+{"id":"ex1132","text":"lbm malala","labels":["diarrhea"]}
+{"id":"ex1133","text":"sakit chest","labels":["chest_pain"]}
+{"id":"ex1134","text":"puke ng puke","labels":["vomiting"]}
+{"id":"ex1135","text":"headache sakit","labels":["headache"]}
+{"id":"ex1136","text":"sinisipn","labels":["runny_nose"]}
+{"id":"ex1137","text":"hilo mxado","labels":["dizziness"]}
+{"id":"ex1138","text":"stomach ache aray","labels":["stomach_ache"]}
+{"id":"ex1139","text":"fatigue na me","labels":["fatigue"]}
+{"id":"ex1140","text":"body pain grabe","labels":["body_aches"]}
+{"id":"ex1141","text":"short breath","labels":["shortness_of_breath"]}
+{"id":"ex1142","text":"chest pain masakit","labels":["chest_pain"]}
+{"id":"ex1143","text":"fvr","labels":["fever"]}
+{"id":"ex1144","text":"cgh","labels":["cough"]}
+{"id":"ex1145","text":"rnny nse","labels":["runny_nose"]}
+{"id":"ex1146","text":"stffy nse","labels":["stuffy_nose"]}
+{"id":"ex1147","text":"dzzy","labels":["dizziness"]}
+{"id":"ex1148","text":"nusea","labels":["nausea"]}
+{"id":"ex1149","text":"vmiting","labels":["vomiting"]}
+{"id":"ex1150","text":"diarrhea sakit tyan","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1151","text":"ftigue","labels":["fatigue"]}
+{"id":"ex1152","text":"bdy aches","labels":["body_aches"]}
+{"id":"ex1153","text":"shrtness of brth","labels":["shortness_of_breath"]}
+{"id":"ex1154","text":"chst pain","labels":["chest_pain"]}
+{"id":"ex1155","text":"stmch ache","labels":["stomach_ache"]}
+{"id":"ex1156","text":"my ubo at lgnat","labels":["cough","fever"]}
+{"id":"ex1157","text":"sakit ulo at hilo","labels":["headache","dizziness"]}
+{"id":"ex1158","text":"sipon at brado ilong","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex1159","text":"skt lalamunan at ubo","labels":["sore_throat","cough"]}
+{"id":"ex1160","text":"lbm at skt tyan","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1161","text":"nsusuka at hilo","labels":["nausea","dizziness"]}
+{"id":"ex1162","text":"ngsusuka at lbm","labels":["vomiting","diarrhea"]}
+{"id":"ex1163","text":"skt ktwan at lgnat","labels":["body_aches","fever"]}
+{"id":"ex1164","text":"hrp hminga at skt dibdib","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1165","text":"pgod at skt ulo","labels":["fatigue","headache"]}
+{"id":"ex1166","text":"ubo ubo","labels":["cough"]}
+{"id":"ex1167","text":"lagnat pa more","labels":["fever"]}
+{"id":"ex1168","text":"sipon forever","labels":["runny_nose"]}
+{"id":"ex1169","text":"hilo to da max","labels":["dizziness"]}
+{"id":"ex1170","text":"sakit tyan huhu","labels":["stomach_ache"]}
+{"id":"ex1171","text":"skt ng lalamunan q","labels":["sore_throat"]}
+{"id":"ex1172","text":"diarhea help","labels":["diarrhea"]}
+{"id":"ex1173","text":"vomit aq","labels":["vomiting"]}
+{"id":"ex1174","text":"sakit ng body ko","labels":["body_aches"]}
+{"id":"ex1175","text":"hingal much","labels":["shortness_of_breath"]}
+{"id":"ex1176","text":"chest pain aray ko","labels":["chest_pain"]}
+{"id":"ex1177","text":"barado ilong kainis","labels":["stuffy_nose"]}
+{"id":"ex1178","text":"pagod na me","labels":["fatigue"]}
+{"id":"ex1179","text":"nasusuka feeling","labels":["nausea"]}
+{"id":"ex1180","text":"sakit ng head","labels":["headache"]}
+{"id":"ex1181","text":"ubo ng ubo sakit","labels":["cough"]}
+{"id":"ex1182","text":"lagnat taas","labels":["fever"]}
+{"id":"ex1183","text":"sipon tulo","labels":["runny_nose"]}
+{"id":"ex1184","text":"hilo ikot","labels":["dizziness"]}
+{"id":"ex1185","text":"sakit tummy","labels":["stomach_ache"]}
+{"id":"ex1186","text":"diarrhea watery","labels":["diarrhea"]}
+{"id":"ex1187","text":"suka ng suka","labels":["vomiting"]}
+{"id":"ex1188","text":"body pain sakit","labels":["body_aches"]}
+{"id":"ex1189","text":"hirap breathe","labels":["shortness_of_breath"]}
+{"id":"ex1190","text":"chest pain sakit","labels":["chest_pain"]}
+{"id":"ex1191","text":"stuffy nose barado","labels":["stuffy_nose"]}
+{"id":"ex1192","text":"sore throat makati","labels":["sore_throat"]}
+{"id":"ex1193","text":"fatigue pagod","labels":["fatigue"]}
+{"id":"ex1194","text":"nausea nasusuka","labels":["nausea"]}
+{"id":"ex1195","text":"headache labad","labels":["headache"]}
+{"id":"ex1196","text":"my fever","labels":["fever"]}
+{"id":"ex1197","text":"my cough","labels":["cough"]}
+{"id":"ex1198","text":"my colds","labels":["runny_nose"]}
+{"id":"ex1199","text":"dizzy me","labels":["dizziness"]}
+{"id":"ex1200","text":"pain stomach","labels":["stomach_ache"]}
+{"id":"ex1201","text":"I have a headache","labels":["headache"]}
+{"id":"ex1202","text":"I have a cough","labels":["cough"]}
+{"id":"ex1203","text":"I have a fever","labels":["fever"]}
+{"id":"ex1204","text":"I have a sore throat","labels":["sore_throat"]}
+{"id":"ex1205","text":"I have a runny nose","labels":["runny_nose"]}
+{"id":"ex1206","text":"I have a stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1207","text":"I feel dizzy","labels":["dizziness"]}
+{"id":"ex1208","text":"I feel nauseous","labels":["nausea"]}
+{"id":"ex1209","text":"I am vomiting","labels":["vomiting"]}
+{"id":"ex1210","text":"I have diarrhea","labels":["diarrhea"]}
+{"id":"ex1211","text":"I feel fatigued","labels":["fatigue"]}
+{"id":"ex1212","text":"I have body aches","labels":["body_aches"]}
+{"id":"ex1213","text":"I have shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex1214","text":"I have chest pain","labels":["chest_pain"]}
+{"id":"ex1215","text":"I have a stomach ache","labels":["stomach_ache"]}
+{"id":"ex1216","text":"My head hurts","labels":["headache"]}
+{"id":"ex1217","text":"My throat is sore","labels":["sore_throat"]}
+{"id":"ex1218","text":"My nose is runny","labels":["runny_nose"]}
+{"id":"ex1219","text":"My nose is blocked","labels":["stuffy_nose"]}
+{"id":"ex1220","text":"My stomach hurts","labels":["stomach_ache"]}
+{"id":"ex1221","text":"My chest hurts","labels":["chest_pain"]}
+{"id":"ex1222","text":"My body aches","labels":["body_aches"]}
+{"id":"ex1223","text":"I am coughing","labels":["cough"]}
+{"id":"ex1224","text":"I am sneezing and have a runny nose","labels":["runny_nose"]}
+{"id":"ex1225","text":"I feel sick to my stomach","labels":["nausea"]}
+{"id":"ex1226","text":"I threw up","labels":["vomiting"]}
+{"id":"ex1227","text":"I have loose stools","labels":["diarrhea"]}
+{"id":"ex1228","text":"I am very tired","labels":["fatigue"]}
+{"id":"ex1229","text":"I can't breathe well","labels":["shortness_of_breath"]}
+{"id":"ex1230","text":"I feel hot and feverish","labels":["fever"]}
+{"id":"ex1231","text":"Severe headache","labels":["headache"]}
+{"id":"ex1232","text":"Bad cough","labels":["cough"]}
+{"id":"ex1233","text":"High fever","labels":["fever"]}
+{"id":"ex1234","text":"Painful throat","labels":["sore_throat"]}
+{"id":"ex1235","text":"Congested nose","labels":["stuffy_nose"]}
+{"id":"ex1236","text":"Feeling lightheaded","labels":["dizziness"]}
+{"id":"ex1237","text":"Upset stomach","labels":["stomach_ache"]}
+{"id":"ex1238","text":"Muscle pain","labels":["body_aches"]}
+{"id":"ex1239","text":"Difficulty breathing","labels":["shortness_of_breath"]}
+{"id":"ex1240","text":"Pain in the chest","labels":["chest_pain"]}
+{"id":"ex1241","text":"I have a cold and a cough","labels":["runny_nose","cough"]}
+{"id":"ex1242","text":"Headache and nausea","labels":["headache","nausea"]}
+{"id":"ex1243","text":"Fever and body aches","labels":["fever","body_aches"]}
+{"id":"ex1244","text":"Sore throat and runny nose","labels":["sore_throat","runny_nose"]}
+{"id":"ex1245","text":"Diarrhea and stomach cramps","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1246","text":"Vomiting and dizziness","labels":["vomiting","dizziness"]}
+{"id":"ex1247","text":"Fatigue and shortness of breath","labels":["fatigue","shortness_of_breath"]}
+{"id":"ex1248","text":"Stuffy nose and headache","labels":["stuffy_nose","headache"]}
+{"id":"ex1249","text":"Chest pain and sweating","labels":["chest_pain"]}
+{"id":"ex1250","text":"I feel weak and tired","labels":["fatigue"]}
+{"id":"ex1251","text":"My head is pounding","labels":["headache"]}
+{"id":"ex1252","text":"I have a hacking cough","labels":["cough"]}
+{"id":"ex1253","text":"My temperature is high","labels":["fever"]}
+{"id":"ex1254","text":"It hurts to swallow","labels":["sore_throat"]}
+{"id":"ex1255","text":"I need a tissue for my nose","labels":["runny_nose"]}
+{"id":"ex1256","text":"I can't smell anything","labels":["stuffy_nose"]}
+{"id":"ex1257","text":"Everything is spinning","labels":["dizziness"]}
+{"id":"ex1258","text":"I feel like I'm going to puke","labels":["nausea"]}
+{"id":"ex1259","text":"I can't keep food down","labels":["vomiting"]}
+{"id":"ex1260","text":"I'm running to the bathroom","labels":["diarrhea"]}
+{"id":"ex1261","text":"I have no energy","labels":["fatigue"]}
+{"id":"ex1262","text":"My muscles are sore","labels":["body_aches"]}
+{"id":"ex1263","text":"I'm gasping for air","labels":["shortness_of_breath"]}
+{"id":"ex1264","text":"Sharp pain in my chest","labels":["chest_pain"]}
+{"id":"ex1265","text":"My belly hurts","labels":["stomach_ache"]}
+{"id":"ex1266","text":"Throbbing headache","labels":["headache"]}
+{"id":"ex1267","text":"Dry cough","labels":["cough"]}
+{"id":"ex1268","text":"Chills and fever","labels":["fever"]}
+{"id":"ex1269","text":"Scratchy throat","labels":["sore_throat"]}
+{"id":"ex1270","text":"Dripping nose","labels":["runny_nose"]}
+{"id":"ex1271","text":"Blocked sinuses","labels":["stuffy_nose"]}
+{"id":"ex1272","text":"Vertigo","labels":["dizziness"]}
+{"id":"ex1273","text":"Queasy feeling","labels":["nausea"]}
+{"id":"ex1274","text":"Retching","labels":["vomiting"]}
+{"id":"ex1275","text":"Watery diarrhea","labels":["diarrhea"]}
+{"id":"ex1276","text":"Exhaustion","labels":["fatigue"]}
+{"id":"ex1277","text":"General aches","labels":["body_aches"]}
+{"id":"ex1278","text":"Winded easily","labels":["shortness_of_breath"]}
+{"id":"ex1279","text":"Tightness in chest","labels":["chest_pain"]}
+{"id":"ex1280","text":"Abdominal pain","labels":["stomach_ache"]}
+{"id":"ex1281","text":"Migraine","labels":["headache"]}
+{"id":"ex1282","text":"Bronchitis symptoms","labels":["cough","shortness_of_breath"]}
+{"id":"ex1283","text":"Flu-like symptoms","labels":["fever","body_aches","fatigue"]}
+{"id":"ex1284","text":"Strep throat feeling","labels":["sore_throat","fever"]}
+{"id":"ex1285","text":"Sinus infection symptoms","labels":["stuffy_nose","headache"]}
+{"id":"ex1286","text":"Food poisoning symptoms","labels":["vomiting","diarrhea","stomach_ache"]}
+{"id":"ex1287","text":"Motion sickness","labels":["nausea","dizziness"]}
+{"id":"ex1288","text":"Dehydration signs","labels":["dizziness","fatigue"]}
+{"id":"ex1289","text":"Asthma flare up","labels":["shortness_of_breath","cough"]}
+{"id":"ex1290","text":"Heartburn pain","labels":["chest_pain","stomach_ache"]}
+{"id":"ex1291","text":"Tension headache","labels":["headache"]}
+{"id":"ex1292","text":"Productive cough","labels":["cough"]}
+{"id":"ex1293","text":"Low grade fever","labels":["fever"]}
+{"id":"ex1294","text":"Hoarse throat","labels":["sore_throat"]}
+{"id":"ex1295","text":"Allergy nose","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex1296","text":"Faintness","labels":["dizziness"]}
+{"id":"ex1297","text":"Morning sickness","labels":["nausea","vomiting"]}
+{"id":"ex1298","text":"Stomach bug","labels":["vomiting","diarrhea"]}
+{"id":"ex1299","text":"Chronic fatigue","labels":["fatigue"]}
+{"id":"ex1300","text":"Joint pain","labels":["body_aches"]}
+{"id":"ex1301","text":"Walang lagnat, pero masakit ang ulo","labels":["headache"]}
+{"id":"ex1302","text":"I don't have a cough, just a runny nose","labels":["runny_nose"]}
+{"id":"ex1303","text":"Wa koy hilanat, labad lang sa ulo","labels":["headache"]}
+{"id":"ex1304","text":"Hindi ako nasusuka, nahihilo lang talaga","labels":["dizziness"]}
+{"id":"ex1305","text":"No stomach ache, but I have diarrhea","labels":["diarrhea"]}
+{"id":"ex1306","text":"Walay ubo, sip-on ra jud","labels":["runny_nose"]}
+{"id":"ex1307","text":"Not feeling fatigued, just body aches","labels":["body_aches"]}
+{"id":"ex1308","text":"Wala naman akong sipon, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1309","text":"Di masakit dibdib ko, hirap lang huminga","labels":["shortness_of_breath"]}
+{"id":"ex1310","text":"No vomiting, just nausea","labels":["nausea"]}
+{"id":"ex1311","text":"Walang sore throat, ubo lang meron ako","labels":["cough"]}
+{"id":"ex1312","text":"Dili sakit akong tiyan, nalipong ra ko","labels":["dizziness"]}
+{"id":"ex1313","text":"I don't have chest pain, just fatigue","labels":["fatigue"]}
+{"id":"ex1314","text":"Hindi masakit katawan ko, lagnat lang","labels":["fever"]}
+{"id":"ex1315","text":"No diarrhea, just stomach ache","labels":["stomach_ache"]}
+{"id":"ex1316","text":"Wa koy labad, gihilanat ra ko","labels":["fever"]}
+{"id":"ex1317","text":"Not short of breath, just coughing a lot","labels":["cough"]}
+{"id":"ex1318","text":"Walang hilo, sakit lang ng ulo","labels":["headache"]}
+{"id":"ex1319","text":"Di ako nilalagnat, sinisipon lang","labels":["runny_nose"]}
+{"id":"ex1320","text":"No body aches, but I have a high fever","labels":["fever"]}
+{"id":"ex1321","text":"Walay kasukaon, kalibanga lang","labels":["diarrhea"]}
+{"id":"ex1322","text":"I don't have a runny nose, just stuffy","labels":["stuffy_nose"]}
+{"id":"ex1323","text":"Hindi ako pagod, masakit lang lalamunan","labels":["sore_throat"]}
+{"id":"ex1324","text":"No headache, only dizziness","labels":["dizziness"]}
+{"id":"ex1325","text":"Wa koy ubo, sakit ra akong dughan","labels":["chest_pain"]}
+{"id":"ex1326","text":"Not sneezing, just coughing","labels":["cough"]}
+{"id":"ex1327","text":"Walang sakit sa tiyan, nasusuka lang","labels":["nausea"]}
+{"id":"ex1328","text":"Di naman ako hinihingal, masakit lang dibdib","labels":["chest_pain"]}
+{"id":"ex1329","text":"No fever, just chills and body aches","labels":["body_aches"]}
+{"id":"ex1330","text":"Walay sip-on, ubo ra jud","labels":["cough"]}
+{"id":"ex1331","text":"I don't feel nauseous, just a bad headache","labels":["headache"]}
+{"id":"ex1332","text":"Hindi ako nagtatae, masakit lang tiyan ko","labels":["stomach_ache"]}
+{"id":"ex1333","text":"No sore throat, just runny nose","labels":["runny_nose"]}
+{"id":"ex1334","text":"Wa koy hilanat pero sakit akong lawas","labels":["body_aches"]}
+{"id":"ex1335","text":"Not dizzy, just tired","labels":["fatigue"]}
+{"id":"ex1336","text":"Walang ubo, lagnat lang meron ako","labels":["fever"]}
+{"id":"ex1337","text":"Di masakit ulo ko, nahihilo lang talaga","labels":["dizziness"]}
+{"id":"ex1338","text":"No vomiting, just stomach pain","labels":["stomach_ache"]}
+{"id":"ex1339","text":"Walay labad sa ulo, sip-on lang","labels":["runny_nose"]}
+{"id":"ex1340","text":"I don't have chest pain, I just can't breathe well","labels":["shortness_of_breath"]}
+{"id":"ex1341","text":"Hindi barado ilong ko, tumutulo lang sipon","labels":["runny_nose"]}
+{"id":"ex1342","text":"No fatigue, just a hacking cough","labels":["cough"]}
+{"id":"ex1343","text":"Wala koy kalibanga, nagsuka ra ko","labels":["vomiting"]}
+{"id":"ex1344","text":"Not hot, no fever, just headache","labels":["headache"]}
+{"id":"ex1345","text":"Walang sakit sa katawan, lalamunan lang","labels":["sore_throat"]}
+{"id":"ex1346","text":"Di ako nasusuka, hilo lang","labels":["dizziness"]}
+{"id":"ex1347","text":"No shortness of breath, just chest pain","labels":["chest_pain"]}
+{"id":"ex1348","text":"Walay ubo, hilanat ra","labels":["fever"]}
+{"id":"ex1349","text":"I don't have a stuffy nose, it's running","labels":["runny_nose"]}
+{"id":"ex1350","text":"Hindi masakit ulo ko, katawan lang","labels":["body_aches"]}
+{"id":"ex1351","text":"No nausea, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1352","text":"Wa koy sakit sa dughan, gihangak lang","labels":["shortness_of_breath"]}
+{"id":"ex1353","text":"Not coughing, just sore throat","labels":["sore_throat"]}
+{"id":"ex1354","text":"Walang lagnat, pero giniginaw at masakit katawan","labels":["body_aches"]}
+{"id":"ex1355","text":"Di ako nahihilo, antok lang at pagod","labels":["fatigue"]}
+{"id":"ex1356","text":"No stomach ache, just feel like vomiting","labels":["nausea"]}
+{"id":"ex1357","text":"Walay sip-on, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1358","text":"I don't have a headache, my face hurts from stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1359","text":"Hindi ako nagsusuka, nagtatae lang","labels":["diarrhea"]}
+{"id":"ex1360","text":"No fever, but my throat hurts","labels":["sore_throat"]}
+{"id":"ex1361","text":"Wala koy labad, gikapoy lang ko","labels":["fatigue"]}
+{"id":"ex1362","text":"Not body aches, just stomach ache","labels":["stomach_ache"]}
+{"id":"ex1363","text":"Walang ubo, pero hirap huminga","labels":["shortness_of_breath"]}
+{"id":"ex1364","text":"Di masakit lalamunan ko, inuubo lang","labels":["cough"]}
+{"id":"ex1365","text":"No dizziness, just a bad headache","labels":["headache"]}
+{"id":"ex1366","text":"Walay hilanat, sip-on ug ubo ra","labels":["runny_nose","cough"]}
+{"id":"ex1367","text":"I don't have diarrhea, I'm constipated but stomach hurts","labels":["stomach_ache"]}
+{"id":"ex1368","text":"Hindi mainit pakiramdam ko, walang lagnat, ubo lang","labels":["cough"]}
+{"id":"ex1369","text":"No chest pain, just coughing a lot","labels":["cough"]}
+{"id":"ex1370","text":"Wa koy kasukaon, nalipong lang","labels":["dizziness"]}
+{"id":"ex1371","text":"Not tired, just legs hurt, body aches","labels":["body_aches"]}
+{"id":"ex1372","text":"Walang sipon, ubo lang ng ubo","labels":["cough"]}
+{"id":"ex1373","text":"Di masakit tiyan, pero nasusuka","labels":["nausea"]}
+{"id":"ex1374","text":"No runny nose, just can't breathe through nose","labels":["stuffy_nose"]}
+{"id":"ex1375","text":"Walay sakit sa lawas, labad ra sa ulo","labels":["headache"]}
+{"id":"ex1376","text":"I don't have a fever, just a sore throat","labels":["sore_throat"]}
+{"id":"ex1377","text":"Hindi ako hinihingal, masakit lang dibdib ko","labels":["chest_pain"]}
+{"id":"ex1378","text":"No headache, just feeling hot, fever","labels":["fever"]}
+{"id":"ex1379","text":"Wala koy ubo, gihilanat ra","labels":["fever"]}
+{"id":"ex1380","text":"Not vomiting anymore, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1381","text":"Walang hilo, sakit lang ng tiyan","labels":["stomach_ache"]}
+{"id":"ex1382","text":"Di ako sinisipon, barado lang talaga ilong","labels":["stuffy_nose"]}
+{"id":"ex1383","text":"No body pain, just exhausted, fatigue","labels":["fatigue"]}
+{"id":"ex1384","text":"Walay labad, pero nagsuka ko","labels":["vomiting"]}
+{"id":"ex1385","text":"I don't have a cough, just short of breath","labels":["shortness_of_breath"]}
+{"id":"ex1386","text":"Hindi masakit lalamunan, may sipon lang","labels":["runny_nose"]}
+{"id":"ex1387","text":"No diarrhea, just stomach cramping","labels":["stomach_ache"]}
+{"id":"ex1388","text":"Wala koy hilanat, sakit ra akong dughan","labels":["chest_pain"]}
+{"id":"ex1389","text":"Not dizzy, just headache","labels":["headache"]}
+{"id":"ex1390","text":"Walang ubo at sipon, lagnat lang","labels":["fever"]}
+{"id":"ex1391","text":"Di masakit katawan, pagod lang","labels":["fatigue"]}
+{"id":"ex1392","text":"No nausea, just bad stomach ache","labels":["stomach_ache"]}
+{"id":"ex1393","text":"Walay sip-on, ubo lang","labels":["cough"]}
+{"id":"ex1394","text":"I don't have a fever, but I'm shivering and body hurts","labels":["body_aches"]}
+{"id":"ex1395","text":"Hindi ako nasusuka, nahihilo lang talaga","labels":["dizziness"]}
+{"id":"ex1396","text":"No chest pain, just stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1397","text":"Wa koy ubo, sakit ra tutunlan","labels":["sore_throat"]}
+{"id":"ex1398","text":"Not short of breath, just tired","labels":["fatigue"]}
+{"id":"ex1399","text":"Walang lagnat, pero nagsusuka","labels":["vomiting"]}
+{"id":"ex1400","text":"Di masakit ulo, sinisipon lang","labels":["runny_nose"]}
+{"id":"ex1401","text":"Masakit katawan ko pero walang lagnat","labels":["body_aches"]}
+{"id":"ex1402","text":"No runny nose, only cough","labels":["cough"]}
+{"id":"ex1403","text":"Dili sakit akong tutunlan, ubo ra","labels":["cough"]}
+{"id":"ex1404","text":"Hindi ako pagod, masakit lang ulo","labels":["headache"]}
+{"id":"ex1405","text":"No vomiting, just dizzy","labels":["dizziness"]}
+{"id":"ex1406","text":"Walay kalibanga, sakit ra tiyan","labels":["stomach_ache"]}
+{"id":"ex1407","text":"Not stuffy, just runny nose","labels":["runny_nose"]}
+{"id":"ex1408","text":"Walang sakit sa dibdib, ubo lang","labels":["cough"]}
+{"id":"ex1409","text":"Di ako nilalagnat, pagod lang","labels":["fatigue"]}
+{"id":"ex1410","text":"No body aches, just fever","labels":["fever"]}
+{"id":"ex1411","text":"Wa koy labad, sip-on ra","labels":["runny_nose"]}
+{"id":"ex1412","text":"Not short of breath, just chest pain","labels":["chest_pain"]}
+{"id":"ex1413","text":"Walang hilo, nasusuka lang","labels":["nausea"]}
+{"id":"ex1414","text":"Di masakit lalamunan, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1415","text":"No diarrhea, just nausea","labels":["nausea"]}
+{"id":"ex1416","text":"Walay hilanat, sakit ra lawas","labels":["body_aches"]}
+{"id":"ex1417","text":"I don't have a headache, just tired","labels":["fatigue"]}
+{"id":"ex1418","text":"Hindi ako sinisipon, inuubo lang","labels":["cough"]}
+{"id":"ex1419","text":"No stomach pain, just vomiting","labels":["vomiting"]}
+{"id":"ex1420","text":"Wala koy ubo, gihangak lang","labels":["shortness_of_breath"]}
+{"id":"ex1421","text":"Not sneezing, just stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1422","text":"Walang lagnat, pero masakit lalamunan","labels":["sore_throat"]}
+{"id":"ex1423","text":"Di masakit katawan, ulo lang","labels":["headache"]}
+{"id":"ex1424","text":"No chest pain, just shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex1425","text":"Walay kasukaon, sakit ra tiyan","labels":["stomach_ache"]}
+{"id":"ex1426","text":"Not dizzy, just nausea","labels":["nausea"]}
+{"id":"ex1427","text":"Walang ubo, sipon lang","labels":["runny_nose"]}
+{"id":"ex1428","text":"Di ako nagtatae, masakit lang tiyan","labels":["stomach_ache"]}
+{"id":"ex1429","text":"No fever, just body aches","labels":["body_aches"]}
+{"id":"ex1430","text":"Wa koy sip-on, barado ra ilong","labels":["stuffy_nose"]}
+{"id":"ex1431","text":"Not tired, just headache","labels":["headache"]}
+{"id":"ex1432","text":"Walang sakit sa dibdib, hingal lang","labels":["shortness_of_breath"]}
+{"id":"ex1433","text":"Di masakit lalamunan, lagnat lang","labels":["fever"]}
+{"id":"ex1434","text":"No vomiting, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1435","text":"Walay labad, gikapoy ra","labels":["fatigue"]}
+{"id":"ex1436","text":"I don't have a cough, just fever","labels":["fever"]}
+{"id":"ex1437","text":"Hindi ako nahihilo, nasusuka lang","labels":["nausea"]}
+{"id":"ex1438","text":"No stomach ache, just gas and diarrhea","labels":["diarrhea"]}
+{"id":"ex1439","text":"Wala koy ubo, sakit ra tutunlan","labels":["sore_throat"]}
+{"id":"ex1440","text":"Not stuffy, just sneezing and runny","labels":["runny_nose"]}
+{"id":"ex1441","text":"Walang lagnat, pero masakit ulo","labels":["headache"]}
+{"id":"ex1442","text":"Di masakit katawan, pagod lang talaga","labels":["fatigue"]}
+{"id":"ex1443","text":"No chest pain, just heart racing and short breath","labels":["shortness_of_breath"]}
+{"id":"ex1444","text":"Walay kasukaon, nagsuka lang","labels":["vomiting"]}
+{"id":"ex1445","text":"Not dizzy, just lightheaded and headache","labels":["headache","dizziness"]}
+{"id":"ex1446","text":"Walang ubo, pero barado ilong","labels":["stuffy_nose"]}
+{"id":"ex1447","text":"Di ako nagtatae, constipated pero sakit tiyan","labels":["stomach_ache"]}
+{"id":"ex1448","text":"No fever, just chills and headache","labels":["headache"]}
+{"id":"ex1449","text":"Wa koy sip-on, ubo ra","labels":["cough"]}
+{"id":"ex1450","text":"Not tired, just shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex1451","text":"Walang sakit sa dibdib, masakit lang likod at katawan","labels":["body_aches"]}
+{"id":"ex1452","text":"Di masakit lalamunan, ubo lang","labels":["cough"]}
+{"id":"ex1453","text":"No vomiting, just dry heaving and nausea","labels":["nausea"]}
+{"id":"ex1454","text":"Walay labad, sip-on ra","labels":["runny_nose"]}
+{"id":"ex1455","text":"I don't have a cough, just stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1456","text":"Hindi ako nahihilo, masakit lang mata at ulo","labels":["headache"]}
+{"id":"ex1457","text":"No stomach ache, just loose stools","labels":["diarrhea"]}
+{"id":"ex1458","text":"Wala koy ubo, gihilanat ra ko","labels":["fever"]}
+{"id":"ex1459","text":"Not stuffy, just runny nose","labels":["runny_nose"]}
+{"id":"ex1460","text":"Walang lagnat, masakit lang katawan","labels":["body_aches"]}
+{"id":"ex1461","text":"Di masakit ulo, barado ilong","labels":["stuffy_nose"]}
+{"id":"ex1462","text":"No chest pain, just coughing","labels":["cough"]}
+{"id":"ex1463","text":"Walay kasukaon, kalibanga ra","labels":["diarrhea"]}
+{"id":"ex1464","text":"Not dizzy, just tired","labels":["fatigue"]}
+{"id":"ex1465","text":"Walang ubo, sipon lang","labels":["runny_nose"]}
+{"id":"ex1466","text":"Di ako nagtatae, masakit lang tiyan","labels":["stomach_ache"]}
+{"id":"ex1467","text":"No fever, just sore throat","labels":["sore_throat"]}
+{"id":"ex1468","text":"Wa koy sip-on, sakit ra tutunlan","labels":["sore_throat"]}
+{"id":"ex1469","text":"Not tired, just body aches","labels":["body_aches"]}
+{"id":"ex1470","text":"Walang sakit sa dibdib, hingal lang","labels":["shortness_of_breath"]}
+{"id":"ex1471","text":"Di masakit lalamunan, lagnat lang","labels":["fever"]}
+{"id":"ex1472","text":"No vomiting, just nausea","labels":["nausea"]}
+{"id":"ex1473","text":"Walay labad, gikapoy ra","labels":["fatigue"]}
+{"id":"ex1474","text":"I don't have a cough, just runny nose","labels":["runny_nose"]}
+{"id":"ex1475","text":"Hindi ako nahihilo, nasusuka lang","labels":["nausea"]}
+{"id":"ex1476","text":"No stomach ache, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1477","text":"Wala koy ubo, gihilanat ra","labels":["fever"]}
+{"id":"ex1478","text":"Not stuffy, just sneezing","labels":["runny_nose"]}
+{"id":"ex1479","text":"Walang lagnat, pero masakit ulo","labels":["headache"]}
+{"id":"ex1480","text":"Di masakit katawan, pagod lang","labels":["fatigue"]}
+{"id":"ex1481","text":"No chest pain, just shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex1482","text":"Walay kasukaon, nagsuka lang","labels":["vomiting"]}
+{"id":"ex1483","text":"Not dizzy, just headache","labels":["headache"]}
+{"id":"ex1484","text":"Walang ubo, barado lang ilong","labels":["stuffy_nose"]}
+{"id":"ex1485","text":"Di ako nagtatae, masakit lang tiyan","labels":["stomach_ache"]}
+{"id":"ex1486","text":"No fever, just chills","labels":["fever"]}
+{"id":"ex1487","text":"Wa koy sip-on, ubo ra","labels":["cough"]}
+{"id":"ex1488","text":"Not tired, just shortness of breath","labels":["shortness_of_breath"]}
+{"id":"ex1489","text":"Walang sakit sa dibdib, masakit lang katawan","labels":["body_aches"]}
+{"id":"ex1490","text":"Di masakit lalamunan, ubo lang","labels":["cough"]}
+{"id":"ex1491","text":"No vomiting, just nausea","labels":["nausea"]}
+{"id":"ex1492","text":"Walay labad, sip-on ra","labels":["runny_nose"]}
+{"id":"ex1493","text":"I don't have a cough, just stuffy nose","labels":["stuffy_nose"]}
+{"id":"ex1494","text":"Hindi ako nahihilo, masakit lang ulo","labels":["headache"]}
+{"id":"ex1495","text":"No stomach ache, just diarrhea","labels":["diarrhea"]}
+{"id":"ex1496","text":"Wala koy ubo, gihilanat ra","labels":["fever"]}
+{"id":"ex1497","text":"Not stuffy, just runny nose","labels":["runny_nose"]}
+{"id":"ex1498","text":"Walang lagnat, masakit lang katawan","labels":["body_aches"]}
+{"id":"ex1499","text":"Di masakit ulo, barado ilong","labels":["stuffy_nose"]}
+{"id":"ex1500","text":"No chest pain, just coughing","labels":["cough"]}
+{"id":"ex1501","text":"Masakit ang ulo ko tapos nilalagnat","labels":["headache","fever"]}
+{"id":"ex1502","text":"I have a cough and my throat hurts","labels":["cough","sore_throat"]}
+{"id":"ex1503","text":"Labad akong ulo unya gihilanat","labels":["headache","fever"]}
+{"id":"ex1504","text":"Nagtatae ako at masakit ang tiyan","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1505","text":"Dizzy and nauseous, parang masusuka","labels":["dizziness","nausea"]}
+{"id":"ex1506","text":"Sakit sa lawas ug gikapoy","labels":["body_aches","fatigue"]}
+{"id":"ex1507","text":"Chest pain tapos hirap huminga","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1508","text":"Ubo ng ubo at may sipon","labels":["cough","runny_nose"]}
+{"id":"ex1509","text":"Vomiting and diarrhea, dehydrating na","labels":["vomiting","diarrhea"]}
+{"id":"ex1510","text":"Sakit tutunlan ug ubo","labels":["sore_throat","cough"]}
+{"id":"ex1511","text":"Runny nose and stuffy nose alternate","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex1512","text":"Lagnat at masakit ang katawan","labels":["fever","body_aches"]}
+{"id":"ex1513","text":"Headache and dizziness, need rest","labels":["headache","dizziness"]}
+{"id":"ex1514","text":"Gikasukaon ko unya sakit akong tiyan","labels":["nausea","stomach_ache"]}
+{"id":"ex1515","text":"Pagod na pagod at hinihingal","labels":["fatigue","shortness_of_breath"]}
+{"id":"ex1516","text":"Sore throat and fever, can't swallow","labels":["sore_throat","fever"]}
+{"id":"ex1517","text":"Barado ilong at sakit ng ulo","labels":["stuffy_nose","headache"]}
+{"id":"ex1518","text":"Nagsuka ko ug nagkalibanga","labels":["vomiting","diarrhea"]}
+{"id":"ex1519","text":"Chest pain and shortness of breath","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1520","text":"Ubo, sipon, at lagnat","labels":["cough","runny_nose","fever"]}
+{"id":"ex1521","text":"Body aches and fatigue, flu yata","labels":["body_aches","fatigue"]}
+{"id":"ex1522","text":"Sakit ulo ug lipong","labels":["headache","dizziness"]}
+{"id":"ex1523","text":"Stomach ache and nausea","labels":["stomach_ache","nausea"]}
+{"id":"ex1524","text":"Fever and chills with headache","labels":["fever","headache"]}
+{"id":"ex1525","text":"Gihangak ko ug sakit dughan","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1526","text":"Runny nose and sneezing and cough","labels":["runny_nose","cough"]}
+{"id":"ex1527","text":"Masakit lalamunan at inuubo","labels":["sore_throat","cough"]}
+{"id":"ex1528","text":"Diarrhea and stomach cramps","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1529","text":"Vomiting and fever","labels":["vomiting","fever"]}
+{"id":"ex1530","text":"Labad ulo ug hilanat","labels":["headache","fever"]}
+{"id":"ex1531","text":"Fatigue and dizziness","labels":["fatigue","dizziness"]}
+{"id":"ex1532","text":"Sipon at barado ilong","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex1533","text":"Body aches and sore throat","labels":["body_aches","sore_throat"]}
+{"id":"ex1534","text":"Nausea and vomiting","labels":["nausea","vomiting"]}
+{"id":"ex1535","text":"Sakit tiyan ug kalibanga","labels":["stomach_ache","diarrhea"]}
+{"id":"ex1536","text":"Shortness of breath and fatigue","labels":["shortness_of_breath","fatigue"]}
+{"id":"ex1537","text":"Chest pain and dizziness","labels":["chest_pain","dizziness"]}
+{"id":"ex1538","text":"Ubo at hirap huminga","labels":["cough","shortness_of_breath"]}
+{"id":"ex1539","text":"Lagnat at nagsusuka","labels":["fever","vomiting"]}
+{"id":"ex1540","text":"Sakit tutunlan ug sip-on","labels":["sore_throat","runny_nose"]}
+{"id":"ex1541","text":"Headache and nausea","labels":["headache","nausea"]}
+{"id":"ex1542","text":"Stomach ache and fever","labels":["stomach_ache","fever"]}
+{"id":"ex1543","text":"Diarrhea and fatigue","labels":["diarrhea","fatigue"]}
+{"id":"ex1544","text":"Body aches and headache","labels":["body_aches","headache"]}
+{"id":"ex1545","text":"Gihilanat ug gi-ubo","labels":["fever","cough"]}
+{"id":"ex1546","text":"Runny nose and stuffy nose","labels":["runny_nose","stuffy_nose"]}
+{"id":"ex1547","text":"Sore throat and body aches","labels":["sore_throat","body_aches"]}
+{"id":"ex1548","text":"Dizziness and shortness of breath","labels":["dizziness","shortness_of_breath"]}
+{"id":"ex1549","text":"Chest pain and nausea","labels":["chest_pain","nausea"]}
+{"id":"ex1550","text":"Vomiting and stomach ache","labels":["vomiting","stomach_ache"]}
+{"id":"ex1551","text":"Labad ulo ug sip-on","labels":["headache","runny_nose"]}
+{"id":"ex1552","text":"Fatigue and fever","labels":["fatigue","fever"]}
+{"id":"ex1553","text":"Ubo at sakit ng dibdib","labels":["cough","chest_pain"]}
+{"id":"ex1554","text":"Nagtatae at nahihilo","labels":["diarrhea","dizziness"]}
+{"id":"ex1555","text":"Masakit katawan at nilalagnat","labels":["body_aches","fever"]}
+{"id":"ex1556","text":"Sakit tutunlan ug hilanat","labels":["sore_throat","fever"]}
+{"id":"ex1557","text":"Stuffy nose and headache","labels":["stuffy_nose","headache"]}
+{"id":"ex1558","text":"Nausea and stomach ache","labels":["nausea","stomach_ache"]}
+{"id":"ex1559","text":"Shortness of breath and cough","labels":["shortness_of_breath","cough"]}
+{"id":"ex1560","text":"Chest pain and fatigue","labels":["chest_pain","fatigue"]}
+{"id":"ex1561","text":"Vomiting and diarrhea","labels":["vomiting","diarrhea"]}
+{"id":"ex1562","text":"Lagnat, ubo, at sipon","labels":["fever","cough","runny_nose"]}
+{"id":"ex1563","text":"Sakit ulo, lipong, ug kasukaon","labels":["headache","dizziness","nausea"]}
+{"id":"ex1564","text":"Body aches, fatigue, and fever","labels":["body_aches","fatigue","fever"]}
+{"id":"ex1565","text":"Sore throat, cough, and runny nose","labels":["sore_throat","cough","runny_nose"]}
+{"id":"ex1566","text":"Sakit tiyan, kalibanga, ug suka","labels":["stomach_ache","diarrhea","vomiting"]}
+{"id":"ex1567","text":"Chest pain, shortness of breath, and dizziness","labels":["chest_pain","shortness_of_breath","dizziness"]}
+{"id":"ex1568","text":"Barado ilong, sakit ulo, at lagnat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1569","text":"Nausea, vomiting, and stomach pain","labels":["nausea","vomiting","stomach_ache"]}
+{"id":"ex1570","text":"Gihangak, kapoy, ug sakit lawas","labels":["shortness_of_breath","fatigue","body_aches"]}
+{"id":"ex1571","text":"Ubo, sakit dughan, ug hilanat","labels":["cough","chest_pain","fever"]}
+{"id":"ex1572","text":"Headache, runny nose, and sore throat","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex1573","text":"Diarrhea, fatigue, and dehydration","labels":["diarrhea","fatigue"]}
+{"id":"ex1574","text":"Body aches, chills, and headache","labels":["body_aches","headache"]}
+{"id":"ex1575","text":"Sakit tutunlan, ubo, ug hilanat","labels":["sore_throat","cough","fever"]}
+{"id":"ex1576","text":"Stuffy nose, sneezing, and watery eyes","labels":["stuffy_nose","runny_nose"]}
+{"id":"ex1577","text":"Dizziness, blurred vision, and nausea","labels":["dizziness","nausea"]}
+{"id":"ex1578","text":"Vomiting, fever, and stomach ache","labels":["vomiting","fever","stomach_ache"]}
+{"id":"ex1579","text":"Fatigue, loss of appetite, and body aches","labels":["fatigue","body_aches"]}
+{"id":"ex1580","text":"Shortness of breath, chest pain, and anxiety","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1581","text":"Lagnat, sakit ulo, at hilo","labels":["fever","headache","dizziness"]}
+{"id":"ex1582","text":"Ubo, sipon, ug sakit tutunlan","labels":["cough","runny_nose","sore_throat"]}
+{"id":"ex1583","text":"Nagtatae, masakit tiyan, at nasusuka","labels":["diarrhea","stomach_ache","nausea"]}
+{"id":"ex1584","text":"Sakit lawas, hilanat, ug labad ulo","labels":["body_aches","fever","headache"]}
+{"id":"ex1585","text":"Chest pain, arm pain, and shortness of breath","labels":["chest_pain","body_aches","shortness_of_breath"]}
+{"id":"ex1586","text":"Runny nose, stuffy nose, and cough","labels":["runny_nose","stuffy_nose","cough"]}
+{"id":"ex1587","text":"Sore throat, fever, and fatigue","labels":["sore_throat","fever","fatigue"]}
+{"id":"ex1588","text":"Dizziness, nausea, and vomiting","labels":["dizziness","nausea","vomiting"]}
+{"id":"ex1589","text":"Stomach ache, bloating, and diarrhea","labels":["stomach_ache","diarrhea"]}
+{"id":"ex1590","text":"Body aches, weakness, and chills","labels":["body_aches","fatigue"]}
+{"id":"ex1591","text":"Shortness of breath, cough, and chest pain","labels":["shortness_of_breath","cough","chest_pain"]}
+{"id":"ex1592","text":"Headache, neck pain, and fever","labels":["headache","body_aches","fever"]}
+{"id":"ex1593","text":"Labad ulo, sakit liog, ug hilanat","labels":["headache","body_aches","fever"]}
+{"id":"ex1594","text":"Sakit tiyan, suka, ug kalibanga","labels":["stomach_ache","vomiting","diarrhea"]}
+{"id":"ex1595","text":"Pagod, hinihingal, at masakit dibdib","labels":["fatigue","shortness_of_breath","chest_pain"]}
+{"id":"ex1596","text":"Ubo, plema, at lagnat","labels":["cough","fever"]}
+{"id":"ex1597","text":"Sipon, barado ilong, at sakit ulo","labels":["runny_nose","stuffy_nose","headache"]}
+{"id":"ex1598","text":"Masakit lalamunan, hirap lumunok, at lagnat","labels":["sore_throat","fever"]}
+{"id":"ex1599","text":"Nahihilo, nasusuka, at pinapawisan","labels":["dizziness","nausea"]}
+{"id":"ex1600","text":"Nagtatae, nanghihina, at uhaw","labels":["diarrhea","fatigue"]}
+{"id":"ex1601","text":"Masakit katawan, lagnat, at ubo","labels":["body_aches","fever","cough"]}
+{"id":"ex1602","text":"Sakit dughan, lisod ginhawa, ug lipong","labels":["chest_pain","shortness_of_breath","dizziness"]}
+{"id":"ex1603","text":"Labad ulo, hanap panan-aw, ug kasukaon","labels":["headache","nausea"]}
+{"id":"ex1604","text":"Sakit tiyan, kabag, ug kalibanga","labels":["stomach_ache","diarrhea"]}
+{"id":"ex1605","text":"Gihilanat, gi-ubo, ug gisip-on","labels":["fever","cough","runny_nose"]}
+{"id":"ex1606","text":"Fatigue, muscle pain, and headache","labels":["fatigue","body_aches","headache"]}
+{"id":"ex1607","text":"Shortness of breath, wheezing, and cough","labels":["shortness_of_breath","cough"]}
+{"id":"ex1608","text":"Chest pain, palpitations, and dizziness","labels":["chest_pain","dizziness"]}
+{"id":"ex1609","text":"Vomiting, abdominal cramps, and diarrhea","labels":["vomiting","stomach_ache","diarrhea"]}
+{"id":"ex1610","text":"Sore throat, swollen glands, and fever","labels":["sore_throat","fever"]}
+{"id":"ex1611","text":"Stuffy nose, sinus pressure, and headache","labels":["stuffy_nose","headache"]}
+{"id":"ex1612","text":"Nausea, dizziness, and headache","labels":["nausea","dizziness","headache"]}
+{"id":"ex1613","text":"Body aches, fever, and sore throat","labels":["body_aches","fever","sore_throat"]}
+{"id":"ex1614","text":"Runny nose, cough, and sneezing","labels":["runny_nose","cough"]}
+{"id":"ex1615","text":"Diarrhea, nausea, and stomach pain","labels":["diarrhea","nausea","stomach_ache"]}
+{"id":"ex1616","text":"Fatigue, shortness of breath, and chest pain","labels":["fatigue","shortness_of_breath","chest_pain"]}
+{"id":"ex1617","text":"Lagnat, giniginaw, at sakit ng katawan","labels":["fever","body_aches"]}
+{"id":"ex1618","text":"Ubo, sipon, at masakit lalamunan","labels":["cough","runny_nose","sore_throat"]}
+{"id":"ex1619","text":"Sakit ulo, hilo, at pagsusuka","labels":["headache","dizziness","vomiting"]}
+{"id":"ex1620","text":"Masakit tiyan, nagtatae, at nilalagnat","labels":["stomach_ache","diarrhea","fever"]}
+{"id":"ex1621","text":"Sakit dughan, gihangak, ug gipaningot","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1622","text":"Labad ulo, sakit mata, ug sip-on","labels":["headache","runny_nose"]}
+{"id":"ex1623","text":"Gikasukaon, nagsuka, ug sakit tiyan","labels":["nausea","vomiting","stomach_ache"]}
+{"id":"ex1624","text":"Kapoy lawas, hilanat, ug ubo","labels":["fatigue","fever","cough"]}
+{"id":"ex1625","text":"Sakit tutunlan, paos, ug ubo","labels":["sore_throat","cough"]}
+{"id":"ex1626","text":"Barado ilong, labad ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1627","text":"Shortness of breath, chest tightness, and cough","labels":["shortness_of_breath","chest_pain","cough"]}
+{"id":"ex1628","text":"Body aches, joint pain, and fever","labels":["body_aches","fever"]}
+{"id":"ex1629","text":"Dizziness, ringing in ears, and nausea","labels":["dizziness","nausea"]}
+{"id":"ex1630","text":"Vomiting, dehydration, and fatigue","labels":["vomiting","fatigue"]}
+{"id":"ex1631","text":"Diarrhea, fever, and stomach cramps","labels":["diarrhea","fever","stomach_ache"]}
+{"id":"ex1632","text":"Headache, sensitivity to light, and nausea","labels":["headache","nausea"]}
+{"id":"ex1633","text":"Sore throat, runny nose, and cough","labels":["sore_throat","runny_nose","cough"]}
+{"id":"ex1634","text":"Stuffy nose, fever, and body aches","labels":["stuffy_nose","fever","body_aches"]}
+{"id":"ex1635","text":"Chest pain, dizziness, and fatigue","labels":["chest_pain","dizziness","fatigue"]}
+{"id":"ex1636","text":"Nausea, vomiting, and diarrhea","labels":["nausea","vomiting","diarrhea"]}
+{"id":"ex1637","text":"Shortness of breath, rapid breathing, and chest pain","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1638","text":"Lagnat, sakit ng ulo, at sipon","labels":["fever","headache","runny_nose"]}
+{"id":"ex1639","text":"Ubo, plema, at hirap huminga","labels":["cough","shortness_of_breath"]}
+{"id":"ex1640","text":"Sakit tiyan, impatso, at nasusuka","labels":["stomach_ache","nausea"]}
+{"id":"ex1641","text":"Masakit katawan, pagod, at inaantok","labels":["body_aches","fatigue"]}
+{"id":"ex1642","text":"Sakit dughan, kulba, ug lipong","labels":["chest_pain","dizziness"]}
+{"id":"ex1643","text":"Labad ulo, kasukaon, ug hanap panan-aw","labels":["headache","nausea"]}
+{"id":"ex1644","text":"Gihilanat, gi-ubo, ug sakit tutunlan","labels":["fever","cough","sore_throat"]}
+{"id":"ex1645","text":"Sip-on, barado ilong, ug labad ulo","labels":["runny_nose","stuffy_nose","headache"]}
+{"id":"ex1646","text":"Kalibanga, sakit tiyan, ug hilanat","labels":["diarrhea","stomach_ache","fever"]}
+{"id":"ex1647","text":"Fatigue, pale skin, and shortness of breath","labels":["fatigue","shortness_of_breath"]}
+{"id":"ex1648","text":"Body aches, fever, and rash","labels":["body_aches","fever"]}
+{"id":"ex1649","text":"Chest pain, cough, and fever","labels":["chest_pain","cough","fever"]}
+{"id":"ex1650","text":"Nausea, dizziness, and sweating","labels":["nausea","dizziness"]}
+{"id":"ex1651","text":"Vomiting, headache, and stiff neck","labels":["vomiting","headache","body_aches"]}
+{"id":"ex1652","text":"Sore throat, difficulty swallowing, and fever","labels":["sore_throat","fever"]}
+{"id":"ex1653","text":"Runny nose, itchy eyes, and sneezing","labels":["runny_nose"]}
+{"id":"ex1654","text":"Stomach ache, constipation, and bloating","labels":["stomach_ache"]}
+{"id":"ex1655","text":"Shortness of breath, chest pressure, and dizziness","labels":["shortness_of_breath","chest_pain","dizziness"]}
+{"id":"ex1656","text":"Lagnat, pantal, at sakit ng kasukasuan","labels":["fever","body_aches"]}
+{"id":"ex1657","text":"Ubo, dugo sa plema, at sakit sa dibdib","labels":["cough","chest_pain"]}
+{"id":"ex1658","text":"Masakit ulo, hilo, at pagsusuka","labels":["headache","dizziness","vomiting"]}
+{"id":"ex1659","text":"Sakit tiyan, bloated, at nagtatae","labels":["stomach_ache","diarrhea"]}
+{"id":"ex1660","text":"Pagod, walang gana kumain, at pumapayat","labels":["fatigue"]}
+{"id":"ex1661","text":"Sakit dughan, lisod ginhawa, ug ubo","labels":["chest_pain","shortness_of_breath","cough"]}
+{"id":"ex1662","text":"Labad ulo, sakit liog, ug hilanat","labels":["headache","body_aches","fever"]}
+{"id":"ex1663","text":"Gisuka, gikalibanga, ug luya","labels":["vomiting","diarrhea","fatigue"]}
+{"id":"ex1664","text":"Sip-on, ubo, ug hilanat","labels":["runny_nose","cough","fever"]}
+{"id":"ex1665","text":"Sakit tutunlan, pagaw, ug ubo","labels":["sore_throat","cough"]}
+{"id":"ex1666","text":"Barado ilong, sakit ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1667","text":"Fatigue, body aches, and headache","labels":["fatigue","body_aches","headache"]}
+{"id":"ex1668","text":"Nausea, stomach pain, and vomiting","labels":["nausea","stomach_ache","vomiting"]}
+{"id":"ex1669","text":"Shortness of breath, chest pain, and fatigue","labels":["shortness_of_breath","chest_pain","fatigue"]}
+{"id":"ex1670","text":"Dizziness, weakness, and fainting","labels":["dizziness","fatigue"]}
+{"id":"ex1671","text":"Cough, fever, and chills","labels":["cough","fever"]}
+{"id":"ex1672","text":"Runny nose, sore throat, and congestion","labels":["runny_nose","sore_throat","stuffy_nose"]}
+{"id":"ex1673","text":"Diarrhea, vomiting, and cramps","labels":["diarrhea","vomiting","stomach_ache"]}
+{"id":"ex1674","text":"Headache, fever, and body aches","labels":["headache","fever","body_aches"]}
+{"id":"ex1675","text":"Chest pain, shortness of breath, and sweating","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1676","text":"Lagnat, ubo, at sakit ng katawan","labels":["fever","cough","body_aches"]}
+{"id":"ex1677","text":"Sakit ulo, sipon, at masakit lalamunan","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex1678","text":"Masakit tiyan, nasusuka, at nahihilo","labels":["stomach_ache","nausea","dizziness"]}
+{"id":"ex1679","text":"Hirap huminga, sakit sa dibdib, at ubo","labels":["shortness_of_breath","chest_pain","cough"]}
+{"id":"ex1680","text":"Pagod, lagnat, at walang gana kumain","labels":["fatigue","fever"]}
+{"id":"ex1681","text":"Sakit dughan, gihangak, ug lipong","labels":["chest_pain","shortness_of_breath","dizziness"]}
+{"id":"ex1682","text":"Labad ulo, kasukaon, ug hanap panan-aw","labels":["headache","nausea"]}
+{"id":"ex1683","text":"Gihilanat, gi-ubo, ug sakit tutunlan","labels":["fever","cough","sore_throat"]}
+{"id":"ex1684","text":"Sip-on, barado ilong, ug labad ulo","labels":["runny_nose","stuffy_nose","headache"]}
+{"id":"ex1685","text":"Kalibanga, sakit tiyan, ug hilanat","labels":["diarrhea","stomach_ache","fever"]}
+{"id":"ex1686","text":"Fatigue, dizziness, and shortness of breath","labels":["fatigue","dizziness","shortness_of_breath"]}
+{"id":"ex1687","text":"Body aches, headache, and fever","labels":["body_aches","headache","fever"]}
+{"id":"ex1688","text":"Nausea, vomiting, and diarrhea","labels":["nausea","vomiting","diarrhea"]}
+{"id":"ex1689","text":"Chest pain, arm pain, and jaw pain","labels":["chest_pain","body_aches"]}
+{"id":"ex1690","text":"Cough, wheezing, and chest tightness","labels":["cough","shortness_of_breath","chest_pain"]}
+{"id":"ex1691","text":"Sore throat, runny nose, and headache","labels":["sore_throat","runny_nose","headache"]}
+{"id":"ex1692","text":"Stuffy nose, fever, and fatigue","labels":["stuffy_nose","fever","fatigue"]}
+{"id":"ex1693","text":"Dizziness, nausea, and vomiting","labels":["dizziness","nausea","vomiting"]}
+{"id":"ex1694","text":"Stomach ache, diarrhea, and fever","labels":["stomach_ache","diarrhea","fever"]}
+{"id":"ex1695","text":"Shortness of breath, fatigue, and swelling","labels":["shortness_of_breath","fatigue"]}
+{"id":"ex1696","text":"Lagnat, pantal, at ubo","labels":["fever","cough"]}
+{"id":"ex1697","text":"Sakit ulo, leeg, at lagnat","labels":["headache","body_aches","fever"]}
+{"id":"ex1698","text":"Masakit tiyan, nagsusuka, at nagtatae","labels":["stomach_ache","vomiting","diarrhea"]}
+{"id":"ex1699","text":"Hirap huminga, hingal, at sakit sa dibdib","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1700","text":"Pagod, nanghihina, at maputla","labels":["fatigue"]}
+{"id":"ex1701","text":"Sakit dughan, kusog pálpitasyon, ug lipong","labels":["chest_pain","dizziness"]}
+{"id":"ex1702","text":"Labad ulo, sakit mata, ug kasukaon","labels":["headache","nausea"]}
+{"id":"ex1703","text":"Gihilanat, gi-ubo, ug gisip-on","labels":["fever","cough","runny_nose"]}
+{"id":"ex1704","text":"Sakit tutunlan, pagaw, ug hilanat","labels":["sore_throat","fever"]}
+{"id":"ex1705","text":"Barado ilong, labad ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1706","text":"Body aches, chills, and fatigue","labels":["body_aches","fatigue"]}
+{"id":"ex1707","text":"Chest pain, shortness of breath, and cough","labels":["chest_pain","shortness_of_breath","cough"]}
+{"id":"ex1708","text":"Nausea, vomiting, and abdominal pain","labels":["nausea","vomiting","stomach_ache"]}
+{"id":"ex1709","text":"Headache, dizziness, and blurred vision","labels":["headache","dizziness"]}
+{"id":"ex1710","text":"Sore throat, swollen lymph nodes, and fever","labels":["sore_throat","fever"]}
+{"id":"ex1711","text":"Runny nose, sneezing, and watery eyes","labels":["runny_nose"]}
+{"id":"ex1712","text":"Diarrhea, stomach cramps, and bloating","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1713","text":"Fatigue, weakness, and dizziness","labels":["fatigue","dizziness"]}
+{"id":"ex1714","text":"Fever, cough, and body aches","labels":["fever","cough","body_aches"]}
+{"id":"ex1715","text":"Stuffy nose, sinus pain, and headache","labels":["stuffy_nose","headache"]}
+{"id":"ex1716","text":"Lagnat, giniginaw, at masakit ulo","labels":["fever","headache"]}
+{"id":"ex1717","text":"Ubo, hirap huminga, at masakit dibdib","labels":["cough","shortness_of_breath","chest_pain"]}
+{"id":"ex1718","text":"Sakit tiyan, nasusuka, at walang gana kumain","labels":["stomach_ache","nausea"]}
+{"id":"ex1719","text":"Masakit katawan, pagod, at lagnat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex1720","text":"Sakit ulo, hilo, at pagsusuka","labels":["headache","dizziness","vomiting"]}
+{"id":"ex1721","text":"Sakit dughan, lisod ginhawa, ug gipaningot","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1722","text":"Labad ulo, hanap panan-aw, ug kasukaon","labels":["headache","nausea"]}
+{"id":"ex1723","text":"Gihilanat, gi-ubo, ug sakit lawas","labels":["fever","cough","body_aches"]}
+{"id":"ex1724","text":"Sip-on, barado ilong, ug ubo","labels":["runny_nose","stuffy_nose","cough"]}
+{"id":"ex1725","text":"Kalibanga, sakit tiyan, ug hilanat","labels":["diarrhea","stomach_ache","fever"]}
+{"id":"ex1726","text":"Fatigue, chest pain, and palpitations","labels":["fatigue","chest_pain"]}
+{"id":"ex1727","text":"Shortness of breath, swelling in legs, and fatigue","labels":["shortness_of_breath","fatigue"]}
+{"id":"ex1728","text":"Headache, stiff neck, and light sensitivity","labels":["headache","body_aches"]}
+{"id":"ex1729","text":"Nausea, stomach ache, and gas","labels":["nausea","stomach_ache"]}
+{"id":"ex1730","text":"Body aches, fever, and cough","labels":["body_aches","fever","cough"]}
+{"id":"ex1731","text":"Sore throat, runny nose, and fever","labels":["sore_throat","runny_nose","fever"]}
+{"id":"ex1732","text":"Dizziness, headache, and fatigue","labels":["dizziness","headache","fatigue"]}
+{"id":"ex1733","text":"Vomiting, diarrhea, and fever","labels":["vomiting","diarrhea","fever"]}
+{"id":"ex1734","text":"Chest pain, coughing blood, and shortness of breath","labels":["chest_pain","cough","shortness_of_breath"]}
+{"id":"ex1735","text":"Stuffy nose, headache, and fatigue","labels":["stuffy_nose","headache","fatigue"]}
+{"id":"ex1736","text":"Lagnat, pantal, at masakit katawan","labels":["fever","body_aches"]}
+{"id":"ex1737","text":"Ubo, sipon, at hirap huminga","labels":["cough","runny_nose","shortness_of_breath"]}
+{"id":"ex1738","text":"Sakit tiyan, nagsusuka, at nagtatae","labels":["stomach_ache","vomiting","diarrhea"]}
+{"id":"ex1739","text":"Masakit ulo, hilo, at malabo paningin","labels":["headache","dizziness"]}
+{"id":"ex1740","text":"Pagod, nanghihina, at lagnat","labels":["fatigue","fever"]}
+{"id":"ex1741","text":"Sakit dughan, lisod ginhawa, ug ubo","labels":["chest_pain","shortness_of_breath","cough"]}
+{"id":"ex1742","text":"Labad ulo, sakit liog, ug hilanat","labels":["headache","body_aches","fever"]}
+{"id":"ex1743","text":"Gisuka, gikalibanga, ug sakit tiyan","labels":["vomiting","diarrhea","stomach_ache"]}
+{"id":"ex1744","text":"Sip-on, ubo, ug hilanat","labels":["runny_nose","cough","fever"]}
+{"id":"ex1745","text":"Sakit tutunlan, pagaw, ug ubo","labels":["sore_throat","cough"]}
+{"id":"ex1746","text":"Barado ilong, labad ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1747","text":"Fatigue, body aches, and headache","labels":["fatigue","body_aches","headache"]}
+{"id":"ex1748","text":"Nausea, vomiting, and dizziness","labels":["nausea","vomiting","dizziness"]}
+{"id":"ex1749","text":"Shortness of breath, chest pain, and fatigue","labels":["shortness_of_breath","chest_pain","fatigue"]}
+{"id":"ex1750","text":"Dizziness, fainting, and weakness","labels":["dizziness","fatigue"]}
+{"id":"ex1751","text":"Cough, fever, and chills","labels":["cough","fever"]}
+{"id":"ex1752","text":"Runny nose, sore throat, and congestion","labels":["runny_nose","sore_throat","stuffy_nose"]}
+{"id":"ex1753","text":"Diarrhea, vomiting, and cramps","labels":["diarrhea","vomiting","stomach_ache"]}
+{"id":"ex1754","text":"Headache, fever, and body aches","labels":["headache","fever","body_aches"]}
+{"id":"ex1755","text":"Chest pain, shortness of breath, and sweating","labels":["chest_pain","shortness_of_breath"]}
+{"id":"ex1756","text":"Lagnat, ubo, at sakit ng katawan","labels":["fever","cough","body_aches"]}
+{"id":"ex1757","text":"Sakit ulo, sipon, at masakit lalamunan","labels":["headache","runny_nose","sore_throat"]}
+{"id":"ex1758","text":"Masakit tiyan, nasusuka, at nahihilo","labels":["stomach_ache","nausea","dizziness"]}
+{"id":"ex1759","text":"Hirap huminga, sakit sa dibdib, at ubo","labels":["shortness_of_breath","chest_pain","cough"]}
+{"id":"ex1760","text":"Pagod, lagnat, at walang gana kumain","labels":["fatigue","fever"]}
+{"id":"ex1761","text":"Sakit dughan, gihangak, ug lipong","labels":["chest_pain","shortness_of_breath","dizziness"]}
+{"id":"ex1762","text":"Labad ulo, kasukaon, ug hanap panan-aw","labels":["headache","nausea"]}
+{"id":"ex1763","text":"Gihilanat, gi-ubo, ug sakit tutunlan","labels":["fever","cough","sore_throat"]}
+{"id":"ex1764","text":"Sip-on, barado ilong, ug labad ulo","labels":["runny_nose","stuffy_nose","headache"]}
+{"id":"ex1765","text":"Kalibanga, sakit tiyan, ug hilanat","labels":["diarrhea","stomach_ache","fever"]}
+{"id":"ex1766","text":"Fatigue, dizziness, and shortness of breath","labels":["fatigue","dizziness","shortness_of_breath"]}
+{"id":"ex1767","text":"Body aches, headache, and fever","labels":["body_aches","headache","fever"]}
+{"id":"ex1768","text":"Nausea, vomiting, and diarrhea","labels":["nausea","vomiting","diarrhea"]}
+{"id":"ex1769","text":"Chest pain, arm pain, and jaw pain","labels":["chest_pain","body_aches"]}
+{"id":"ex1770","text":"Cough, wheezing, and chest tightness","labels":["cough","shortness_of_breath","chest_pain"]}
+{"id":"ex1771","text":"Sore throat, runny nose, and headache","labels":["sore_throat","runny_nose","headache"]}
+{"id":"ex1772","text":"Stuffy nose, fever, and fatigue","labels":["stuffy_nose","fever","fatigue"]}
+{"id":"ex1773","text":"Dizziness, nausea, and vomiting","labels":["dizziness","nausea","vomiting"]}
+{"id":"ex1774","text":"Stomach ache, diarrhea, and fever","labels":["stomach_ache","diarrhea","fever"]}
+{"id":"ex1775","text":"Shortness of breath, fatigue, and swelling","labels":["shortness_of_breath","fatigue"]}
+{"id":"ex1776","text":"Lagnat, pantal, at ubo","labels":["fever","cough"]}
+{"id":"ex1777","text":"Sakit ulo, leeg, at lagnat","labels":["headache","body_aches","fever"]}
+{"id":"ex1778","text":"Masakit tiyan, nagsusuka, at nagtatae","labels":["stomach_ache","vomiting","diarrhea"]}
+{"id":"ex1779","text":"Hirap huminga, hingal, at sakit sa dibdib","labels":["shortness_of_breath","chest_pain"]}
+{"id":"ex1780","text":"Pagod, nanghihina, at maputla","labels":["fatigue"]}
+{"id":"ex1781","text":"Sakit dughan, kusog pálpitasyon, ug lipong","labels":["chest_pain","dizziness"]}
+{"id":"ex1782","text":"Labad ulo, sakit mata, ug kasukaon","labels":["headache","nausea"]}
+{"id":"ex1783","text":"Gihilanat, gi-ubo, ug gisip-on","labels":["fever","cough","runny_nose"]}
+{"id":"ex1784","text":"Sakit tutunlan, pagaw, ug hilanat","labels":["sore_throat","fever"]}
+{"id":"ex1785","text":"Barado ilong, labad ulo, ug hilanat","labels":["stuffy_nose","headache","fever"]}
+{"id":"ex1786","text":"Body aches, chills, and fatigue","labels":["body_aches","fatigue"]}
+{"id":"ex1787","text":"Chest pain, shortness of breath, and cough","labels":["chest_pain","shortness_of_breath","cough"]}
+{"id":"ex1788","text":"Nausea, vomiting, and abdominal pain","labels":["nausea","vomiting","stomach_ache"]}
+{"id":"ex1789","text":"Headache, dizziness, and blurred vision","labels":["headache","dizziness"]}
+{"id":"ex1790","text":"Sore throat, swollen lymph nodes, and fever","labels":["sore_throat","fever"]}
+{"id":"ex1791","text":"Runny nose, sneezing, and watery eyes","labels":["runny_nose"]}
+{"id":"ex1792","text":"Diarrhea, stomach cramps, and bloating","labels":["diarrhea","stomach_ache"]}
+{"id":"ex1793","text":"Fatigue, weakness, and dizziness","labels":["fatigue","dizziness"]}
+{"id":"ex1794","text":"Fever, cough, and body aches","labels":["fever","cough","body_aches"]}
+{"id":"ex1795","text":"Stuffy nose, sinus pain, and headache","labels":["stuffy_nose","headache"]}
+{"id":"ex1796","text":"Lagnat, giniginaw, at masakit ulo","labels":["fever","headache"]}
+{"id":"ex1797","text":"Ubo, hirap huminga, at masakit dibdib","labels":["cough","shortness_of_breath","chest_pain"]}
+{"id":"ex1798","text":"Sakit tiyan, nasusuka, at walang gana kumain","labels":["stomach_ache","nausea"]}
+{"id":"ex1799","text":"Masakit katawan, pagod, at lagnat","labels":["body_aches","fatigue","fever"]}
+{"id":"ex1800","text":"Sakit ulo, hilo, at pagsusuka","labels":["headache","dizziness","vomiting"]}

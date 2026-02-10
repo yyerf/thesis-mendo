@@ -10,7 +10,7 @@ This document describes the **models**, **algorithms**, and **ML / deep learning
 2. **Step 3 Hybrid NLP**
    - Step 1 dictionary/rules first
    - Step 2 embeddings only when needed
-3. **Step 4 recommender** (rule-based scoring over `data/Mendo-Datasets.json`)
+3. **Step 4 recommender** (rule-based scoring over `data/datasets/Mendo-Datasets.json`)
 4. **UI** renders detected symptoms + recommendations; may ask a clarifying question for cough type
 
 Key code entrypoints:
@@ -182,7 +182,7 @@ These overrides apply to both:
 Implemented in: [mendo_core/step4_recommend.py](mendo_core/step4_recommend.py)
 
 ### 4.1 Data source
-- JSON dataset: `data/Mendo-Datasets.json`
+- JSON dataset: `data/datasets/Mendo-Datasets.json`
 - Loaded into `MedRow` records
 
 ### 4.2 Recommendation algorithm

@@ -1,0 +1,100 @@
+{"id": "1", "text": "masakit ang ulo ko", "labels": ["headache"]}
+{"id": "2", "text": "may lagnat ako", "labels": ["fever"]}
+{"id": "3", "text": "umuubo ako", "labels": ["cough"]}
+{"id": "4", "text": "umuubo ako", "labels": ["cough"]}
+{"id": "5", "text": "sipon ako", "labels": ["runny_nose"]}
+{"id": "6", "text": "masakit ang tiyan ko", "labels": ["stomach_ache"]}
+{"id": "7", "text": "pagtatae ako", "labels": ["diarrhea"]}
+{"id": "8", "text": "may pantal ako", "labels": []}
+{"id": "9", "text": "barado ang ilong ko", "labels": ["stuffy_nose"]}
+{"id": "10", "text": "masakit ang katawan ko", "labels": ["body_aches"]}
+{"id": "11", "text": "may lagnat, ubo, at sipon ako", "labels": ["cough", "fever", "runny_nose"]}
+{"id": "12", "text": "masakit ang ulo at lagnat", "labels": ["fever", "headache"]}
+{"id": "13", "text": "ubo at sipon", "labels": ["cough", "runny_nose"]}
+{"id": "14", "text": "barado ang ilong at umuubo", "labels": ["cough", "stuffy_nose"]}
+{"id": "15", "text": "masakit ang ulo at katawan", "labels": ["body_aches", "headache"]}
+{"id": "16", "text": "pagtatae at masakit ang tiyan", "labels": ["diarrhea", "stomach_ache"]}
+{"id": "17", "text": "lagnat, sakit ng ulo, sakit ng katawan", "labels": ["body_aches", "fever", "headache"]}
+{"id": "18", "text": "ubo may plema, barado ang ilong", "labels": ["cough", "stuffy_nose"]}
+{"id": "19", "text": "sipon, bahing, makati ang ilong", "labels": ["runny_nose"]}
+{"id": "20", "text": "masakit ang ulo, sipon, ubo", "labels": ["cough", "headache", "runny_nose"]}
+{"id": "21", "text": "wala akong cough", "labels": []}
+{"id": "22", "text": "wala koy fever", "labels": []}
+{"id": "23", "text": "walang sakit ang ulo ko", "labels": []}
+{"id": "24", "text": "hindi ako umuubo", "labels": []}
+{"id": "25", "text": "wala akong nararamdaman", "labels": []}
+{"id": "26", "text": "walang sipon", "labels": []}
+{"id": "27", "text": "wala akong lagnat pero masakit ang ulo", "labels": ["headache"]}
+{"id": "28", "text": "hindi ako umuubo pero may sipon", "labels": ["runny_nose"]}
+{"id": "29", "text": "walang lagnat pero may ubo", "labels": ["cough"]}
+{"id": "30", "text": "wala akong sakit ng katawan pero may lagnat", "labels": ["fever"]}
+{"id": "31", "text": "lagnat ulo sakit ubo", "labels": ["cough", "fever", "headache"]}
+{"id": "32", "text": "ubo ubo ubo", "labels": ["cough"]}
+{"id": "33", "text": "aaahhh masakit ulo ko uhhh", "labels": ["headache"]}
+{"id": "34", "text": "ano ba ubo ako eh", "labels": ["cough"]}
+{"id": "35", "text": "grabe lagnat ko sobra", "labels": ["fever"]}
+{"id": "36", "text": "parang may lagnat ata ako", "labels": ["fever"]}
+{"id": "37", "text": "baka ubo lang to", "labels": ["cough"]}
+{"id": "38", "text": "medyo masakit lang ulo", "labels": ["headache"]}
+{"id": "39", "text": "super sakit ng ulo ko grabe", "labels": ["headache"]}
+{"id": "40", "text": "ubo ubo lang tapos sipon din", "labels": ["cough", "runny_nose"]}
+{"id": "41", "text": "masaket ang olo ko", "labels": ["headache"]}
+{"id": "42", "text": "lagnt ako", "labels": ["fever"]}
+{"id": "43", "text": "umoubo ako", "labels": ["cough"]}
+{"id": "44", "text": "sepun ako", "labels": ["runny_nose"]}
+{"id": "45", "text": "pagtate ako", "labels": ["diarrhea"]}
+{"id": "46", "text": "masakit tyan", "labels": ["stomach_ache"]}
+{"id": "47", "text": "barado ilong", "labels": ["stuffy_nose"]}
+{"id": "48", "text": "masakit ktawan", "labels": ["body_aches"]}
+{"id": "49", "text": "pantl ako", "labels": []}
+{"id": "50", "text": "lgnat at ubo", "labels": ["cough", "fever"]}
+{"id": "51", "text": "mainit ang katawan ko", "labels": ["fever"]}
+{"id": "52", "text": "may plema ang ubo ko", "labels": ["cough"]}
+{"id": "53", "text": "tumitibok ang ulo ko", "labels": ["headache"]}
+{"id": "54", "text": "sumasakit ang lalamunan ko at umuubo", "labels": ["cough"]}
+{"id": "55", "text": "nag-aalerdyi ako", "labels": []}
+{"id": "56", "text": "matubig ang dumi ko", "labels": ["diarrhea"]}
+{"id": "57", "text": "buhol-buhol ang tiyan ko", "labels": ["stomach_ache"]}
+{"id": "58", "text": "ang init ng katawan ko", "labels": ["fever"]}
+{"id": "59", "text": "namumula ang balat ko at makati", "labels": []}
+{"id": "60", "text": "hirap huminga dahil barado ilong", "labels": ["stuffy_nose"]}
+{"id": "61", "text": "i have fever", "labels": ["fever"]}
+{"id": "62", "text": "headache and cough", "labels": ["cough", "headache"]}
+{"id": "63", "text": "my throat is sore and i'm coughing", "labels": ["cough"]}
+{"id": "64", "text": "runny nose", "labels": ["runny_nose"]}
+{"id": "65", "text": "stomach pain", "labels": ["stomach_ache"]}
+{"id": "66", "text": "lagnat ako and headache", "labels": ["fever", "headache"]}
+{"id": "67", "text": "may cough ako", "labels": ["cough"]}
+{"id": "68", "text": "umuubo and may fever", "labels": ["cough", "fever"]}
+{"id": "69", "text": "masakit ulo tapos body aches din", "labels": ["body_aches", "headache"]}
+{"id": "70", "text": "allergic rhinitis yata ako", "labels": []}
+{"id": "71", "text": "masakit ang tiyan ng anak ko 3 years old", "labels": ["stomach_ache"]}
+{"id": "72", "text": "ang asawa ko may lagnat", "labels": ["fever"]}
+{"id": "73", "text": "yung bata umuubo", "labels": ["cough"]}
+{"id": "74", "text": "kapatid ko may sipon", "labels": ["runny_nose"]}
+{"id": "75", "text": "nanay ko nilalagnat", "labels": ["fever"]}
+{"id": "76", "text": "may lagnat ako ng 2 araw na", "labels": ["fever"]}
+{"id": "77", "text": "kahapon pa ako umuubo", "labels": ["cough"]}
+{"id": "78", "text": "ilang araw na akong may sipon", "labels": ["runny_nose"]}
+{"id": "79", "text": "kagabi pa masakit ulo ko", "labels": ["headache"]}
+{"id": "80", "text": "simula kaninang umaga nilalagnat ako", "labels": ["fever"]}
+{"id": "81", "text": "18 years old ako may ubo at lagnat", "labels": ["cough", "fever"]}
+{"id": "82", "text": "2 years old yung baby may ubo", "labels": ["cough"]}
+{"id": "83", "text": "senior citizen 65 years old masakit katawan", "labels": ["body_aches"]}
+{"id": "84", "text": "7 year old kid may sipon", "labels": ["runny_nose"]}
+{"id": "85", "text": "matanda na 70 years old may lagnat", "labels": ["fever"]}
+{"id": "86", "text": "sobrang sakit ng ulo ko hindi na ako makagalaw", "labels": ["headache"]}
+{"id": "87", "text": "grabe ang lagnat ko 39 degrees", "labels": ["fever"]}
+{"id": "88", "text": "hindi ako makahinga dahil sa barado ilong", "labels": ["stuffy_nose"]}
+{"id": "89", "text": "paulit-ulit ang pagtatae ko", "labels": ["diarrhea"]}
+{"id": "90", "text": "halos di na ako makatulog dahil sa ubo", "labels": ["cough"]}
+{"id": "91", "text": "medyo masakit lang konti ang ulo", "labels": ["headache"]}
+{"id": "92", "text": "bahagyang may sipon", "labels": ["runny_nose"]}
+{"id": "93", "text": "kaunting lagnat lang", "labels": ["fever"]}
+{"id": "94", "text": "minsan lang umuubo", "labels": ["cough"]}
+{"id": "95", "text": "light headache lang", "labels": ["headache"]}
+{"id": "96", "text": "may lagnat ba ako", "labels": ["fever"]}
+{"id": "97", "text": "umuubo ba ako", "labels": ["cough"]}
+{"id": "98", "text": "sipon ba to o allergy", "labels": ["runny_nose"]}
+{"id": "99", "text": "normal lang ba to na masakit ulo", "labels": ["headache"]}
+{"id": "100", "text": "pwede bang gamot for ubo at sipon", "labels": ["cough", "runny_nose"]}

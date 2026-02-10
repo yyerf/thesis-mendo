@@ -1,0 +1,20 @@
+{"id":"user001","text":"Grabe sakit ng katawan ko tapos nilalagnat at sinisipon","labels":["body_aches","fever","runny_nose"]}
+{"id":"user002","text":"gabulabog akong ulo","labels":["headache"]}
+{"id":"user003","text":"Murag naglibog akong ulo samtang naglain ang paminaw sa lawas, murag gikulbaan ug kapoy kaayo, unya kalit ra ko giduka tungod sa hilo sa kahuyang.","labels":["headache","dizziness","fatigue","body_aches"]}
+{"id":"user004","text":"Ang tutunlan murag giipit, naglisod ko ug ginhawa gamay, unya nagsugod ang ubo samtang nag-init akong lawas.","labels":["sore_throat","shortness_of_breath","cough","fever"]}
+{"id":"user005","text":"Sige kog hilo ug kalipong, murag balingasag ang tiyan, unya kalit lang ko gisuka samtang nagluya ang lawas.","labels":["dizziness","nausea","vomiting","fatigue"]}
+{"id":"user006","text":"Nagpadayon ang sip-on ug barado ang ilong, unya misunod ang kasakit sa ulo ug bug-at nga paminaw sa dughan.","labels":["runny_nose","stuffy_nose","headache","chest_pain"]}
+{"id":"user007","text":"Sakit kaayo ang lawas, murag gikulata, unya nagsige kog kalibang samtang naglisod kog bangon tungod sa kakapoy.","labels":["body_aches","diarrhea","fatigue"]}
+{"id":"user008","text":"Ang lala ng headache ko tapos may fever pa, sobrang fatigue na talaga yung katawan ko parang ayaw gumalaw.","labels":["headache","fever","fatigue"]}
+{"id":"user009","text":"May sore throat ako tapos biglang ubo nang ubo, tapos parang nahihirapan huminga ng konti, ang bigat sa dibdib.","labels":["sore_throat","cough","shortness_of_breath","chest_pain"]}
+{"id":"user010","text":"Nahihilo ako kanina tapos nasusuka na, sumasakit pa tiyan ko parang sabay-sabay talaga.","labels":["dizziness","nausea","stomach_ache"]}
+{"id":"user011","text":"May runny nose pero minsan barado din, tapos sumasabay yung body aches saka headache.","labels":["runny_nose","stuffy_nose","body_aches","headache"]}
+{"id":"user012","text":"Grabe yung diarrhea tapos sobrang panghihina, parang nauubos energy ko habang masakit buong katawan.","labels":["diarrhea","fatigue","body_aches"]}
+{"id":"user013","text":"Like super headache talaga plus may fever pa, tapos my body is so fatigue na parang ayoko na gumalaw.","labels":["headache","fever","fatigue"]}
+{"id":"user014","text":"My throat is sore then I keep coughing, tapos parang may shortness of breath na lowkey scary.","labels":["sore_throat","cough","shortness_of_breath"]}
+{"id":"user015","text":"I was dizzy then suddenly nausea na, tapos I literally vomited and my stomach hurts so bad.","labels":["dizziness","nausea","vomiting","stomach_ache"]}
+{"id":"user016","text":"My nose is runny pero minsan stuffy, tapos may kasabay na headache and body aches, super hassle.","labels":["runny_nose","stuffy_nose","headache","body_aches"]}
+{"id":"user017","text":"I had diarrhea tapos super weak, like my chest feels heavy and my body hurts everywhere.","labels":["diarrhea","fatigue","chest_pain","body_aches"]}
+{"id":"user018","text":"Naglibog akong ulo, may headache tapos nahihilo, unya murag masuka na gyud ko.","labels":["headache","dizziness","nausea"]}
+{"id":"user019","text":"Sige kog ubo tapos sore throat, parang ang hirap huminga and masakit dibdib ko.","labels":["cough","sore_throat","shortness_of_breath","chest_pain"]}
+{"id":"user020","text":"Barado ang ilong pero may sip-on pa rin, tapos sumabay yung lagnat at sakit ng katawan.","labels":["stuffy_nose","runny_nose","fever","body_aches"]}

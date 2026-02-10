@@ -162,7 +162,7 @@ def init_db() -> None:
 
     # ── Auto-populate inventory from Mendo dataset ──
     existing = {r["brand"] for r in db.execute("SELECT brand FROM inventory").fetchall()}
-    dataset_path = Path(__file__).resolve().parents[1] / "data" / "Mendo-Datasets.json"
+    dataset_path = Path(__file__).resolve().parents[1] / "data" / "datasets" / "Mendo-Datasets.json"
     if dataset_path.exists():
         try:
             obj = json.loads(dataset_path.read_text(encoding="utf-8"))
