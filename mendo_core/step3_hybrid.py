@@ -151,6 +151,41 @@ def _load_ml_classifier(version: Optional[str] = None):
         pass
 
 
+def _map_ml_label_to_system_label(ml_label: str) -> str:
+    """Map lowercase ML classifier labels to uppercase system labels.
+    
+    The ML classifier (V1/V2/V3) was trained on lowercase labels like 'cough', 'fever', etc.
+    The recommendation system expects uppercase labels like 'COUGH_GENERAL', 'FEVER', etc.
+    
+    Args:
+        ml_label: Lowercase label from ML classifier (e.g., 'cough', 'fever')
+    
+    Returns:
+        Uppercase system label (e.g., 'COUGH_GENERAL', 'FEVER')
+    """
+    # Mapping from ML training labels to system labels
+    label_map = {
+        "cough": "COUGH_GENERAL",
+        "headache": "HEADACHE",
+        "fever": "FEVER",
+        "sore_throat": "SORE_THROAT",
+        "runny_nose": "RUNNY_NOSE",
+        "stuffy_nose": "NASAL_CONGESTION",
+        "dizziness": "DIZZINESS",
+        "nausea": "NAUSEA",
+        "vomiting": "VOMITING",
+        "diarrhea": "DIARRHEA",
+        "fatigue": "FATIGUE",
+        "body_aches": "BODY_ACHES",
+        "shortness_of_breath": "SHORTNESS_OF_BREATH",
+        "chest_pain": "CHEST_PAIN",
+        "stomach_ache": "STOMACH_ACHE_ACID",
+    }
+    
+    # Return mapped label or try uppercase version if not in map
+    return label_map.get(ml_label.lower(), ml_label.upper())
+
+
 def _predict_ml_classifier(user_input: str, confidence_threshold: Optional[float] = None) -> List[str]:
     """Predict symptoms using trained ML classifier.
     
@@ -159,7 +194,7 @@ def _predict_ml_classifier(user_input: str, confidence_threshold: Optional[float
         confidence_threshold: Override threshold (None = use model's threshold)
     
     Returns:
-        List of detected symptom labels (e.g., ['cough', 'fever'])
+        List of detected symptom labels in UPPERCASE format (e.g., ['COUGH_GENERAL', 'FEVER'])
     """
     _load_ml_classifier()
     
@@ -176,12 +211,13 @@ def _predict_ml_classifier(user_input: str, confidence_threshold: Optional[float
         # Get prediction probabilities (OneVsRestClassifier returns binary predictions per class)
         probs = _ML_CLASSIFIER.predict_proba(X)[0]
         
-        # Extract symptoms above threshold
+        # Extract symptoms above threshold and map to system labels
         detected = []
         for idx, prob in enumerate(probs):
             if prob >= threshold:
-                symptom = _ML_LABEL_BINARIZER.classes_[idx]
-                detected.append(symptom)
+                ml_label = _ML_LABEL_BINARIZER.classes_[idx]
+                system_label = _map_ml_label_to_system_label(ml_label)
+                detected.append(system_label)
         
         return detected
     except Exception:
