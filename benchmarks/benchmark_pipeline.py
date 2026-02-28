@@ -10,17 +10,23 @@ Metrics:
 - per-label precision/recall/F1
 
 Usage:
-  python benchmark.py --dataset datasets/symptom_eval.sample.jsonl --model rules
-  python benchmark.py --dataset datasets/symptom_eval.sample.jsonl --all-models
+  python benchmarks/benchmark_pipeline.py --dataset data/datasets/symptom_eval.sample.jsonl --model rules
+  python benchmarks/benchmark_pipeline.py --dataset data/datasets/symptom_eval.sample.jsonl --all-models
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
+
+# Ensure project root is on sys.path regardless of working directory
+_ROOT = Path(__file__).resolve().parents[1]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
 from mendo_core.symptom_models import SYMPTOM_LABELS, available_models, get_model
 

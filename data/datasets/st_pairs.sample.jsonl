@@ -1,7 +1,252 @@
-{"text1":"sinisipon ako","text2":"my nose is running","label":1}
-{"text1":"walay plema","text2":"dry cough no phlegm","label":1}
-{"text1":"masakit ulo ko","text2":"my head hurts","label":1}
-{"text1":"binat yata ako","text2":"i feel feverish again","label":1}
-{"text1":"masakit ulo ko","text2":"sinisipon ako","label":0}
-{"text1":"sakit tiyan","text2":"my stomach hurts","label":1}
-{"text1":"sakit tiyan","text2":"my head hurts","label":0}
+{"text1": "I have such a bad migraine, feeling ko my head will explode.", "text2": "Sakit kaayo akong ulo, mura'g dugdugon.", "label": 1}
+{"text1": "My nose is so barado, I can't even breathe.", "text2": "Lisod iginhawa kay huot kaayo akong ilong.", "label": 1}
+{"text1": "Gikabuhi ko, I need to lie down for a bit.", "text2": "I’m feeling nauseous and my stomach is turning.", "label": 1}
+{"text1": "Makatol kaayo akong tutunlan, sige lang ko'g ubo.", "text2": "My throat is so itchy, I can't stop coughing.", "label": 1}
+{"text1": "I think I have a fever, mainit ang pakiramdam ko.", "text2": "Gihilantan man tingali ko kay init kaayo akong lawas.", "label": 1}
+{"text1": "Sakit akong luyo, dapit sa kidney area.", "text2": "My lower back really hurts, right at the base.", "label": 1}
+{"text1": "Nalulula ako, the whole room is like umiikot.", "text2": "Gidagat ko, mura'g nagtuyok ang kalibutan.", "label": 1}
+{"text1": "I lost my sense of taste, maski salt wala koy mapit-os.", "text2": "Wala koy panlasa, everything tastes like nothing.", "label": 1}
+{"text1": "My joints are so painful, especially my knees.", "text2": "Sakit kaayo akong mga lutahan, labi na sa tuhod.", "label": 1}
+{"text1": "Gahuot akong dughan, it feels so heavy.", "text2": "My chest is tight and I’m having trouble breathing.", "label": 1}
+{"text1": "Namamanhid ang left arm ko, parang no feeling.", "text2": "Naminhod akong wala nga bukton, mura'g patay.", "label": 1}
+{"text1": "I've been to the CR five times today, grabe ang diarrhea.", "text2": "Nagkalibanga ko, sige lang ko'g balik-balik sa banyo.", "label": 1}
+{"text1": "My ear is ringing, parang may 'beeeep' sound.", "text2": "Sige'g tingog akong dunggan, saba kaayo sa sulod.", "label": 1}
+{"text1": "Sakit akong bag-ang, I can't even chew my food.", "text2": "My tooth is aching so bad, it's unbearable.", "label": 1}
+{"text1": "I have chills, gatugnaw ko even if it's hot.", "text2": "Gapanakig ko sa kabugnaw, kailangan nako'g blanket.", "label": 1}
+{"text1": "Sakit akong tutunlan kon molonod ko'g laway.", "text2": "It’s painful to swallow, my throat is so sore.", "label": 1}
+{"text1": "I feel so bloated, mura'g punog hangin akong tiyan.", "text2": "Gidubok akong tiyan, sige lang ko'g utot.", "label": 1}
+{"text1": "Nag-rash ang skin ko after eating seafood.", "text2": "Gipang-uwas ko, daghan kaayo'g katol sa lawas.", "label": 1}
+{"text1": "Lumalabo ang paningin ko, I can't see properly.", "text2": "Nalubog akong panan-aw, mura'g naay gabon.", "label": 1}
+{"text1": "Sakit akong liog, I think I have a stiff neck.", "text2": "I can't turn my head, my neck is so frozen.", "label": 1}
+{"text1": "Nanghupong akong tiil, they look so swollen.", "text2": "My feet are puffy and I can't wear shoes.", "label": 1}
+{"text1": "Hapo kaayo ko, out of breath na talaga.", "text2": "I’m so exhausted and gasping for air.", "label": 1}
+{"text1": "I have occasional chest pains, usahay ra hinuon.", "text2": "Usahay gapanakit akong dughan, panagsa ra.", "label": 1}
+{"text1": "Sige lang ko'g hatsing, my allergies are acting up.", "text2": "I can't stop sneezing, my nose is so itchy.", "label": 1}
+{"text1": "Sakit akong agtang, it feels like sinus pressure.", "text2": "My forehead is throbbing, right above my eyes.", "label": 1}
+{"text1": "Gadugo akong lagos whenever I brush my teeth.", "text2": "My gums are bleeding and they are so tender.", "label": 1}
+{"text1": "Daghan kaayo ko'g plema sa akong talamanon.", "text2": "I have a lot of phlegm and mucus in my throat.", "label": 1}
+{"text1": "Mahapdos kon mangihi ko, it really burns.", "text2": "I feel a stinging sensation every time I urinate.", "label": 1}
+{"text1": "Paos kaayo ko, I literally lost my voice.", "text2": "Nawala akong tingog, di ko katingog og tarong.", "label": 1}
+{"text1": "Gakurog ko sa hilanat, I'm shaking so much.", "text2": "I am shivering because my temperature is high.", "label": 1}
+{"text1": "My muscles are so sore after the workout.", "text2": "Pamaol kaayo akong tibuok lawas, sakit ilihok.", "label": 1}
+{"text1": "I have a bump on my head, nabukol ko.", "text2": "Naa koy bukol diri sa akong agtang.", "label": 1}
+{"text1": "Gasunggo ko, please get me some tissue.", "text2": "My nose is bleeding, I need to stop the flow.", "label": 1}
+{"text1": "Gapaningot og maayo akong palad, it's so wet.", "text2": "My palms are sweating excessively, it's annoying.", "label": 1}
+{"text1": "Mura'g nalisang akong abaga, it feels disjointed.", "text2": "My shoulder feels out of place and very painful.", "label": 1}
+{"text1": "I have a sharp pain in my side, mura'g gitusok.", "text2": "Sakit kaayo akong kilid, left side dapit.", "label": 1}
+{"text1": "Uga kaayo akong baba, I’m so dehydrated.", "text2": "My mouth is so dry, I need to drink water.", "label": 1}
+{"text1": "Sakit akong bagtak, I have leg cramps.", "text2": "My calves are aching and tightening up.", "label": 1}
+{"text1": "I have a sore in my mouth, it's so stingy.", "text2": "Naa koy nuknuk sa sulod sa akong ngabil.", "label": 1}
+{"text1": "My heart is racing, kusog kaayo ang pinitik.", "text2": "I feel like my heart is beating too fast.", "label": 1}
+{"text1": "Sakit akong lapa-lapa inig lakaw nako.", "text2": "The soles of my feet hurt when I step down.", "label": 1}
+{"text1": "My eyes are burning and they are so watery.", "text2": "Naghalang akong mata unya sige'g luha.", "label": 1}
+{"text1": "Sakit akong bat-ang, I can't sit properly.", "text2": "My hip is aching and it feels very stiff.", "label": 1}
+{"text1": "I have a persistent cough that won't stop.", "text2": "Ubo nga walay hunong, dugay na ni.", "label": 1}
+{"text1": "Sakit akong gusok kon moginhawa ko.", "text2": "My ribs hurt every time I take a breath.", "label": 1}
+{"text1": "I'm feeling very faint, everything is turning white.", "text2": "Mura'g malipong ko, mawala akong panan-aw.", "label": 1}
+{"text1": "Sakit akong dalunggan, mura'g naay pressure.", "text2": "My ear is painful and feels very blocked.", "label": 1}
+{"text1": "I have a rash that is spreading so fast.", "text2": "Nakatap na ang mga katol-katol sa akong lawas.", "label": 1}
+{"text1": "My scalp is so itchy, I have dandruff.", "text2": "Makatol akong ulo, daghan kaayo'g pamasaw.", "label": 1}
+{"text1": "I feel very weak, wala gyud koy kusog.", "text2": "Luya kaayo akong pama-ti, no energy at all.", "label": 1}
+{"text1": "I have a headache.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "Sinisipon ako.", "text2": "I have a broken leg.", "label": 0}
+{"text1": "Gihilantan ko.", "text2": "Sakit akong dalunggan.", "label": 0}
+{"text1": "My throat is itchy.", "text2": "Naminhod akong tiil.", "label": 0}
+{"text1": "Sakit akong hawak.", "text2": "I have a sore eye.", "label": 0}
+{"text1": "I have a dry cough.", "text2": "Nagkalibanga ko.", "label": 0}
+{"text1": "Nalulula ako.", "text2": "Sakit akong kumagko.", "label": 0}
+{"text1": "My ear hurts.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "I can't breathe.", "text2": "Sakit akong lapa-lapa.", "label": 0}
+{"text1": "Gikabuhi ko.", "text2": "I have a high fever.", "label": 0}
+{"text1": "Sakit akong liog.", "text2": "My vision is blurry.", "label": 0}
+{"text1": "I have a runny nose.", "text2": "Nawala akong tingog.", "label": 0}
+{"text1": "Makatol akong lawas.", "text2": "Sakit akong agtang.", "label": 0}
+{"text1": "Sakit akong luyo.", "text2": "I have a toothache.", "label": 0}
+{"text1": "I'm feeling weak.", "text2": "Nagdugo akong ilong.", "label": 0}
+{"text1": "Nagsuka-suka ko.", "text2": "I have a headache.", "label": 0}
+{"text1": "My vision is blurry.", "text2": "Sakit akong pus-on.", "label": 0}
+{"text1": "Sakit akong tuhod.", "text2": "My chest is heavy.", "label": 0}
+{"text1": "I'm constipated.", "text2": "I have diarrhea.", "label": 0}
+{"text1": "Nanghupong akong kamot.", "text2": "I have a sore throat.", "label": 0}
+{"text1": "I have a bump on my head.", "text2": "Sakit akong bat-ang.", "label": 0}
+{"text1": "Sakit akong pulso.", "text2": "My ear is ringing.", "label": 0}
+{"text1": "I'm shivering.", "text2": "Gapaningot ko.", "label": 0}
+{"text1": "Mura'g kakuwangon sa hangin.", "text2": "Sakit akong siko.", "label": 0}
+{"text1": "I can't taste anything.", "text2": "Nawala akong tingog.", "label": 0}
+{"text1": "Sakit akong hawak.", "text2": "My eyes are red.", "label": 0}
+{"text1": "I have a discharge from my eye.", "text2": "I have a runny nose.", "label": 0}
+{"text1": "Gahubag akong lagos.", "text2": "I have a cold.", "label": 0}
+{"text1": "I feel bloated.", "text2": "Sakit akong kuko.", "label": 0}
+{"text1": "Sakit akong tudlo.", "text2": "My ankle is swollen.", "label": 0}
+{"text1": "I have a sharp pain in my chest.", "text2": "Sakit akong bag-ang.", "label": 0}
+{"text1": "Sinisipon ako.", "text2": "Nag-ubo ko.", "label": 0}
+{"text1": "My skin is so dry.", "text2": "Nagsuka ko.", "label": 0}
+{"text1": "Gisip-on ko.", "text2": "Sakit akong likod.", "label": 0}
+{"text1": "I have a migraine.", "text2": "Makatol akong lawas.", "label": 0}
+{"text1": "Sakit akong tuhod.", "text2": "My throat is sore.", "label": 0}
+{"text1": "I have a rash.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "Gidagat ko.", "text2": "I have a toothache.", "label": 0}
+{"text1": "My arm is numb.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "Nawala akong tingog.", "text2": "I have a back pain.", "label": 0}
+{"text1": "Sakit akong talinga.", "text2": "My vision is blurry.", "label": 0}
+{"text1": "I have a fever.", "text2": "Nagkalibanga ko.", "label": 0}
+{"text1": "Gahubag akong tiil.", "text2": "I have a headache.", "label": 0}
+{"text1": "My gums are bleeding.", "text2": "Sakit akong pus-on.", "label": 0}
+{"text1": "I have a dry cough.", "text2": "Daghan kog plema.", "label": 0}
+{"text1": "Sakit akong dapi-dapi.", "text2": "My nose is bleeding.", "label": 0}
+{"text1": "I am shivering.", "text2": "Gapaningot ko.", "label": 0}
+{"text1": "Mura'g kakuwangon sa hangin.", "text2": "Sakit akong agtang.", "label": 0}
+{"text1": "I can't taste anything.", "text2": "Sakit akong hawak.", "label": 0}
+{"text1": "Sakit akong kuko.", "text2": "My ears are ringing.", "label": 0}
+{"text1": "I feel bloated.", "text2": "I have a rash.", "label": 0}
+{"text1": "Sakit akong agtang.", "text2": "My feet are swollen.", "label": 0}
+{"text1": "I have a sore throat.", "text2": "Sakit akong siko.", "label": 0}
+{"text1": "Nag-ubo ko.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "My eyes are watery.", "text2": "Sakit akong liog.", "label": 0}
+{"text1": "I have a toothache.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "Sakit akong likod.", "text2": "I am dizzy.", "label": 0}
+{"text1": "I have diarrhea.", "text2": "Sakit akong talinga.", "label": 0}
+{"text1": "Nalubog akong panan-aw.", "text2": "I have a cold.", "label": 0}
+{"text1": "Sakit akong bag-ang.", "text2": "I have a rash.", "label": 0}
+{"text1": "Sakit kaayo akong ulo, mura'g nag-clapping.", "text2": "My migraine is so bad, it feels like it's throbbing.", "label": 1}
+{"text1": "I have a runny nose and I'm sneezing.", "text2": "Sinisipon ako at bahing nang bahing.", "label": 1}
+{"text1": "I feel like I'm gonna throw up, swear.", "text2": "Mura'g kasukaon ko, promise.", "label": 1}
+{"text1": "Lagnat yata 'to kasi mainit pakiramdam ko.", "text2": "I think I have a fever because I feel warm.", "label": 1}
+{"text1": "I'm so hilo, the room is spinning.", "text2": "Nalulula ako, umiikot ang paligid.", "label": 1}
+{"text1": "I can't breathe properly, parang gipit.", "text2": "Naglisod ko'g ginhawa, mura'g kakuwangon sa hangin.", "label": 1}
+{"text1": "My eyes are so itchy and red.", "text2": "Makatol kaayo akong mata unya puwa pa gyud.", "label": 1}
+{"text1": "I'm so ginaw, I need a blanket.", "text2": "Gatugnaw ko, kailangan nako'g habol.", "label": 1}
+{"text1": "My vision is blurry, di nako katarong og kita.", "text2": "Lumalabo ang paningin ko, hindi ko makita nang maayos.", "label": 1}
+{"text1": "I'm so pagod and out of breath.", "text2": "Hapo kaayo ko, gikutasan nako.", "label": 1}
+{"text1": "I can't sleep because of my cough.", "text2": "Di ko katarong og katug tungod sa akong ubo.", "label": 1}
+{"text1": "My nose is so clogged, I can't smell.", "text2": "Barado kaayo akong ilong, di ko kapanimaho.", "label": 1}
+{"text1": "I'm feeling so dizzy and nauseous.", "text2": "Nalibog akong ulo unya mura'g kasukaon.", "label": 1}
+{"text1": "I have a dry mouth and dry eyes.", "text2": "Uga kaayo akong baba ug mata.", "label": 1}
+{"text1": "Sakit akong abaga, mura'g bug-at kaayo.", "text2": "My shoulders feel heavy and painful.", "label": 1}
+{"text1": "I have a sore throat, like it's burning.", "text2": "Sakit akong tutunlan, mura'g gihagukan.", "label": 1}
+{"text1": "Nagsige ko'g suka, wala nay nahabilin sa akong tiyan.", "text2": "I keep throwing up, my stomach is empty.", "label": 1}
+{"text1": "I feel so lightheaded, parang mahihimatay.", "text2": "Nalulula ako, feeling ko mawawalan ako ng malay.", "label": 1}
+{"text1": "Gisip-on ko, sige lang og tulo.", "text2": "My nose is dripping constantly.", "label": 1}
+{"text1": "Sakit akong dughan kon moginhawa ko'g lawom.", "text2": "Chest hurts when I take a deep breath.", "label": 1}
+{"text1": "I have no appetite, di ko ganahan mokaon.", "text2": "Walang gana kumain, parang busog palagi.", "label": 1}
+{"text1": "I'm experiencing severe abdominal cramps.", "text2": "Sakit kaayo akong pus-on/tiyan, gakurog ko.", "label": 1}
+{"text1": "My pulse is so fast, kinakabahan ako.", "text2": "Kusog kaayo ang pinitik sa akong kasing-kasing.", "label": 1}
+{"text1": "Sakit akong tuhod kon mosaka og hagdan.", "text2": "Knee hurts when climbing stairs.", "label": 1}
+{"text1": "I can't move my fingers properly.", "text2": "Gahi i-lihok akong mga tudlo.", "label": 1}
+{"text1": "I'm shivering, need a jacket now.", "text2": "Nagkurog ko sa katugnaw, kailangan kog jacket.", "label": 1}
+{"text1": "I feel so lethargic, no energy at all.", "text2": "Luya kaayo akong lawas, walay kusog.", "label": 1}
+{"text1": "Naglisod ko'g tulon, sakit akong tutunlan.", "text2": "Difficulty swallowing, sore throat.", "label": 1}
+{"text1": "I have a sharp pain in my heel.", "text2": "Sakit akong lapa-lapa/tikod, mura'g gitunok.", "label": 1}
+{"text1": "I have a constant bitter taste in my mouth.", "text2": "Pait kaayo akong panlasa, sige lang.", "label": 1}
+{"text1": "I feel a strange tingling in my feet.", "text2": "Naay kuryente/tingling sa akong tiil.", "label": 1}
+{"text1": "I have a burning sensation in my stomach.", "text2": "Naglagot/nag-hapdos akong tiyan.", "label": 1}
+{"text1": "Sakit akong agtang unya bug-at ang mata.", "text2": "My forehead hurts and my eyes feel heavy.", "label": 1}
+{"text1": "I'm feeling very dehydrated, dry lips and all.", "text2": "Uga kaayo akong ngabil, kakuwangon sa tubig.", "label": 1}
+{"text1": "I have a metallic taste in my mouth.", "text2": "Mura'g puthaw ang lami sa akong baba.", "label": 1}
+{"text1": "I have a pounding headache, like a drum.", "text2": "Nag-dugdug akong ulo sa kasakit.", "label": 1}
+{"text1": "I'm experiencing shortness of breath.", "text2": "Gikutasan ko, dali ra ko mapuol.", "label": 1}
+{"text1": "My eyes are very sensitive to light.", "text2": "Sakit akong mata kon makakita og suga.", "label": 1}
+{"text1": "I'm feeling very dizzy, the world is tilted.", "text2": "Nalipong ko, mura'g hanigid ang kalibutan.", "label": 1}
+{"text1": "I have a cold sweat right now.", "text2": "Gapanuhot ko karon, bugnaw nga singot.", "label": 1}
+{"text1": "Nag-huot akong ilong, di ko ka-inhale.", "text2": "My nose is stuffed, I can't inhale properly.", "label": 1}
+{"text1": "I have a constant itch in my ear canal.", "text2": "Makatol kaayo ang sulod sa akong dunggan.", "label": 1}
+{"text1": "I'm having trouble staying awake, so sleepy.", "text2": "Duka kaayo ko, di ko kapugong sa akong mata.", "label": 1}
+{"text1": "I have a discharge coming from my eyes.", "text2": "Naay mogawas nga muta/likido sa akong mata.", "label": 1}
+{"text1": "Sakit akong bat-ang kon molingkod ko.", "text2": "My hip hurts when I sit down.", "label": 1}
+{"text1": "I have a migraine that won't go away.", "text2": "Sakit kaayo akong ulo, mura'g mobuto.", "label": 1}
+{"text1": "I feel like I'm gasping for air.", "text2": "Gahingak ko, mura'g kakuwangon og hangin.", "label": 1}
+{"text1": "Ubo ko nga naay plema, green na ang color.", "text2": "I'm coughing up green-colored phlegm.", "label": 1}
+{"text1": "Sakit akong siko kon akoang i-bend.", "text2": "My elbow hurts when I bend it.", "label": 1}
+{"text1": "I'm feeling very cold, my nails are blue.", "text2": "Gatugnaw ko, nag-blue na akong kuko.", "label": 1}
+{"text1": "I have a headache.", "text2": "Sakit akong agtang.", "label": 0}
+{"text1": "Sinisipon ako.", "text2": "I have a sore throat.", "label": 0}
+{"text1": "Gihilantan ko.", "text2": "I have a stomach ache.", "label": 0}
+{"text1": "My throat is itchy.", "text2": "Sakit akong dalunggan.", "label": 0}
+{"text1": "Sakit akong tiyan.", "text2": "My feet are sore.", "label": 0}
+{"text1": "I have a dry cough.", "text2": "Daghan kog plema.", "label": 0}
+{"text1": "Nalulula ako.", "text2": "Sakit akong hawak.", "label": 0}
+{"text1": "My ear hurts.", "text2": "I have a runny nose.", "label": 0}
+{"text1": "I can't breathe.", "text2": "Sakit akong ngipon.", "label": 0}
+{"text1": "Gikabuhi ko.", "text2": "I have a fever.", "label": 0}
+{"text1": "Sakit akong liog.", "text2": "My vision is blurry.", "label": 0}
+{"text1": "I have a runny nose.", "text2": "Sakit akong siko.", "label": 0}
+{"text1": "Makatol akong lawas.", "text2": "I have a headache.", "label": 0}
+{"text1": "Sakit akong luyo.", "text2": "My chest is heavy.", "label": 0}
+{"text1": "I'm feeling weak.", "text2": "Sakit akong tiil.", "label": 0}
+{"text1": "Nagsuka-suka ko.", "text2": "I have a rash.", "label": 0}
+{"text1": "My vision is blurry.", "text2": "Sakit akong agtang.", "label": 0}
+{"text1": "Sakit akong tuhod.", "text2": "My ears are ringing.", "label": 0}
+{"text1": "I'm constipated.", "text2": "I have diarrhea.", "label": 0}
+{"text1": "Nanghupong akong tiil.", "text2": "I have a fever.", "label": 0}
+{"text1": "I have a bump on my head.", "text2": "Sakit akong gusok.", "label": 0}
+{"text1": "Sakit akong pulso.", "text2": "My throat is sore.", "label": 0}
+{"text1": "I'm shivering.", "text2": "Gapanuhot ko.", "label": 0}
+{"text1": "Mura'g kakuwangon sa hangin.", "text2": "Sakit akong pus-on.", "label": 0}
+{"text1": "I can't taste anything.", "text2": "I can't smell anything.", "label": 0}
+{"text1": "Sakit akong hawak.", "text2": "My neck is stiff.", "label": 0}
+{"text1": "I have a discharge from my eye.", "text2": "Sakit akong bag-ang.", "label": 0}
+{"text1": "Gahubag akong lagos.", "text2": "I have a cold.", "label": 0}
+{"text1": "I feel bloated.", "text2": "Sakit akong kuko.", "label": 0}
+{"text1": "Sakit akong tudlo.", "text2": "My ankle is swollen.", "label": 0}
+{"text1": "I have a sharp pain in my chest.", "text2": "Sakit akong bag-ang.", "label": 0}
+{"text1": "Sinisipon ako.", "text2": "Nag-ubo ko.", "label": 0}
+{"text1": "My skin is so dry.", "text2": "Nagsuka ko.", "label": 0}
+{"text1": "Gisip-on ko.", "text2": "Sakit akong likod.", "label": 0}
+{"text1": "I have a migraine.", "text2": "Makatol akong lawas.", "label": 0}
+{"text1": "Sakit akong tuhod.", "text2": "My throat is sore.", "label": 0}
+{"text1": "I have a rash.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "Gidagat ko.", "text2": "I have a toothache.", "label": 0}
+{"text1": "My arm is numb.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "Nawala akong tingog.", "text2": "I have a back pain.", "label": 0}
+{"text1": "Sakit akong talinga.", "text2": "My vision is blurry.", "label": 0}
+{"text1": "I have a fever.", "text2": "Nagkalibanga ko.", "label": 0}
+{"text1": "Gahubag akong tiil.", "text2": "I have a headache.", "label": 0}
+{"text1": "My gums are bleeding.", "text2": "Sakit akong pus-on.", "label": 0}
+{"text1": "I have a dry cough.", "text2": "Daghan kog plema.", "label": 0}
+{"text1": "Sakit akong dapi-dapi.", "text2": "My nose is bleeding.", "label": 0}
+{"text1": "I am shivering.", "text2": "Gapaningot ko.", "label": 0}
+{"text1": "Mura'g kakuwangon sa hangin.", "text2": "Sakit akong agtang.", "label": 0}
+{"text1": "I can't taste anything.", "text2": "Sakit akong hawak.", "label": 0}
+{"text1": "Sakit akong kuko.", "text2": "My ears are ringing.", "label": 0}
+{"text1": "I feel bloated.", "text2": "I have a rash.", "label": 0}
+{"text1": "Sakit akong agtang.", "text2": "My feet are swollen.", "label": 0}
+{"text1": "I have a sore throat.", "text2": "Sakit akong siko.", "label": 0}
+{"text1": "Nag-ubo ko.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "My eyes are watery.", "text2": "Sakit akong liog.", "label": 0}
+{"text1": "I have a toothache.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "Sakit akong likod.", "text2": "I am dizzy.", "label": 0}
+{"text1": "I have diarrhea.", "text2": "Sakit akong talinga.", "label": 0}
+{"text1": "Nalubog akong panan-aw.", "text2": "I have a cold.", "label": 0}
+{"text1": "Sakit akong bag-ang.", "text2": "I have a rash.", "label": 0}
+{"text1": "Sakit akong gusok.", "text2": "I have a fever.", "label": 0}
+{"text1": "My hands are shaking.", "text2": "Barado akong ilong.", "label": 0}
+{"text1": "I have a stiff neck.", "text2": "Sakit akong kuko.", "label": 0}
+{"text1": "Nagdugo akong lagos.", "text2": "I have a headache.", "label": 0}
+{"text1": "My pulse is fast.", "text2": "Sakit akong bagtak.", "label": 0}
+{"text1": "I have no appetite.", "text2": "I have a sore eye.", "label": 0}
+{"text1": "Sakit akong tutunlan.", "text2": "My knees are swollen.", "label": 0}
+{"text1": "I'm feeling very cold.", "text2": "Nawala akong tingog.", "label": 0}
+{"text1": "Makatol akong lawas.", "text2": "I have a stomach ache.", "label": 0}
+{"text1": "I have a migraine.", "text2": "Sakit akong hawak.", "label": 0}
+{"text1": "I'm sneezing a lot.", "text2": "I have a bruise.", "label": 0}
+{"text1": "My vision is blurry.", "text2": "Sakit akong abaga.", "label": 0}
+{"text1": "I have a dry cough.", "text2": "Nagkalibanga ko.", "label": 0}
+{"text1": "Sakit akong dapi-dapi.", "text2": "My throat is sore.", "label": 0}
+{"text1": "I am shivering.", "text2": "I have a toothache.", "label": 0}
+{"text1": "My nose is bleeding.", "text2": "Sakit akong tiyan.", "label": 0}
+{"text1": "I have a discharge.", "text2": "I have a cold.", "label": 0}
+{"text1": "Sakit akong bag-ang.", "text2": "My ear is ringing.", "label": 0}
+{"text1": "I feel weak.", "text2": "I have a rash.", "label": 0}
+{"text1": "Sakit akong agtang.", "text2": "My neck is stiff.", "label": 0}
+{"text1": "I have a sore throat.", "text2": "Sakit akong tuhod.", "label": 0}
+{"text1": "Nag-ubo ko.", "text2": "My vision is blurry.", "label": 0}
+{"text1": "My eyes are burning.", "text2": "Sakit akong luyo.", "label": 0}
+{"text1": "I have a toothache.", "text2": "I'm feeling dizzy.", "label": 0}
+{"text1": "Sakit akong likod.", "text2": "I have a cold sweat.", "label": 0}
+{"text1": "I have diarrhea.", "text2": "Sakit akong kuko.", "label": 0}
+{"text1": "Nalubog akong panan-aw.", "text2": "I have a fever.", "label": 0}
+{"text1": "Sakit akong bag-ang.", "text2": "I have a runny nose.", "label": 0}
+{"text1": "Sakit akong lapa-lapa.", "text2": "My chest is heavy.", "label": 0}
+{"text1": "I have a bump.", "text2": "I'm coughing up phlegm.", "label": 0}
+{"text1": "Sakit akong siko.", "text2": "I have a headache.", "label": 0}
+{"text1": "I have a cold.", "text2": "Sakit akong pus-on.", "label": 0}

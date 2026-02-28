@@ -199,7 +199,8 @@ class EmbeddingSymptomExtractor:
         model_name: str = "paraphrase-multilingual-MiniLM-L12-v2",
     ) -> None:
         # Allow swapping in a fine-tuned/local model without code changes.
-        # Example:
+        # Example (to test LaBSE or fine-tuned model):
+        #   export MENDO_SENTENCE_TRANSFORMER_MODEL=sentence-transformers/LaBSE
         #   export MENDO_SENTENCE_TRANSFORMER_MODEL=models/mendo-miniLM-finetuned
         model_name = os.environ.get("MENDO_SENTENCE_TRANSFORMER_MODEL", model_name)
 

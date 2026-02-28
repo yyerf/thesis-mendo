@@ -1,0 +1,1146 @@
+# 20260221 — Full Annotator Entry List
+
+All 1,039 entries from `data/datasets/annotation/userInquiry.txt` categorized by annotation priority.
+
+**Annotation target: Tier A + B + C = 527 entries**  
+**Skip (Tier D): 512 entries** — semantic duplicates, auto-label via pipeline
+
+---
+
+## Summary
+
+| Tier | Subcategory | Count | Action |
+|------|-------------|-------|--------|
+| **A** | Safety-critical ⚠️ | 7 | Annotate FIRST |
+| **A** | Multi-symptom | 176 | Annotate |
+| **A** | Negation (`dili`, `wala`, `hindi`) | 108 | Annotate |
+| **A** | Uncertain/hedged (`siguro`, `murag`) | 49 | Annotate |
+| **A** | **Subtotal** | **340** | |
+| **B** | LBM / Diarrhea | 28 | Annotate |
+| **B** | Sore Throat | 37 | Annotate |
+| **B** | English-primary | 7 | Annotate |
+| **B** | Tagalog-primary | 15 | Annotate |
+| **B** | Typo / heavy abbreviation | 45 | Annotate |
+| **B** | **Subtotal** | **132** | |
+| **C** | Baseline samples (5 per label) | 55 | Annotate |
+| **D** | Semantic duplicates | 512 | SKIP — pipeline auto-label |
+| | **TOTAL** | **1039** | |
+
+---
+
+## TIER A — Must Annotate First
+
+### A1 — Safety-Critical ⚠️
+> These may require `refer_to_doctor: true`. Annotate before all others.
+
+Sipon berde kolor
+Sakit tiyan sa wala
+Ubo may dugo
+Sipon nahimong yellow na
+Parang kulang hangin
+Food poisoning yata mosuka ko
+Tingali dengue ni hilanat unya sakit lawas
+
+### A2 — Multi-Symptom Combinations
+> Drug selection changes when symptoms combine. Hardest for `step4_recommend.py`.
+
+Gatuyok akong ulo grabe
+Sakit akong ulo sukad ganina pa
+Dili ko makatulog tungod sa ubo
+Kung moubo ko sakit akong dughan
+Sakit akong tutunlan mao moubo ko
+Labad kaayo akong tutunlan
+Sakit sa tutunlan pag motulon
+Hubag akong tutunlan lisod motulon
+Bungol akong ilong dili ko makaginhawa
+Dili ko makaginhawa sa ilong parang bungol
+Parang hubog ko pag molihok
+Naliyong ko ug nasuka pa
+Dili maayo akong gibati sa tiyan parang mosuka
+Himuros ko sukad buntag
+Kumirot akong dughan pag moginhawa
+Kumirot akong tiyan
+Parang may mokaon sa sulod sa tiyan
+Grabe sakit akong ulo unya hilanat pa
+Ubo ug sipon combo
+Hilanat ug sakit lawas
+Sakit ulo unya mosuka pa
+May ubo ko unya bungol pa ilong
+Sipon ubo hilanat tanan na
+Sakit ulo lawas hilanat tanan
+Sakit tiyan unya himuros pa
+Naliyong ko ug mosuka
+Ubo ko may plema unya sipon sad
+Wala man ko hilanat pero sakit ulo
+Dili man ko moubo pero sipon lang
+Walay sakit sa ulo pero init lawas
+Dili man ko hilanat ubo lang
+Sipon ubo lang walay hilanat
+Gutom kaayo pero dili makatulon
+Sakit jud akong ulo pag init
+Parang may mangati sa tutunlan mao moubo
+Sakit dughan pag moginhawa og lawom
+Para ko gipainit sa sulod
+Parang may sagka sa ilong mao dili makaginhawa
+Init ulo literal
+Ubo dry unya mangati tutunlan
+Parang hubog bisag dili naman
+Sakit tiyan unya mosuka
+May kurot sa dughan pag moginhawa
+Parang mokaon sulod sa tiyan
+Parang mosamot asim sa sulod
+Sobrang sakit ulo parang hubog
+Hilanat ubo sipon tanan na naa
+Sakit ulo hilanat unya sakit pa lawas
+Ubo may plema unya hilanat pa
+Sipon ubo unya bungol pa ilong
+Sakit tutunlan unya ubo pa
+Naliyong unya mosuka
+Sakit tiyan unya himuros
+Lisod moginhawa unya sakit dughan
+Sakit ulo unya ubo pa ko
+Init ko unya sipon sad
+Sakit tiyan unya naliyong
+Bungol ilong unya sakit ulo
+Luya ko unya hilanat pa
+Ubo unya sakit dughan pag moubo
+Wala koy hilanat pero moubo lang
+Dili man sakit ulo pero init
+Dili moubo pero sipon lang
+Walay sakit tiyan pero himuros
+Dili sakit tutunlan pero moubo
+Dili init pero naliyong
+Dili man ubo pero bungol ilong
+Walay hilanat pero sakit lawas
+Dili sakit dughan pero lisod moginhawa
+Flu siguro kay init ug ubo
+Trangkaso yata sakit lawas hilanat
+Common cold lang abi sipon ubo
+COVID ba ni ubo hilanat
+Dehydrated siguro naliyong ug naluya
+Moubo sukad kagahapon
+Nakakapoy init pirmi
+Ulol sipon ayaw mohunong
+Parang may molihok sa tutunlan mao moubo
+Dili nako makatulog tungod ubo
+Sakit dughan pag ginhawa
+Ubo ug sipon
+Ulo ug lawas sakit
+Init tapos hilak ulo
+Lisud tulog tungod sa ubo
+Barado ilong dili makaginhawa
+Sakit liog pag tulon
+Sipon tuloy tuloy
+Nagkatulo ilong
+Sakit ulo pag init
+Sakit dughan pag ubo
+Ubo ug sakit dughan
+Ulo ug init
+Init ug sakit lawas
+Dili na makatulog sa ubo
+Nagatulo ilong pirmi
+Sakit ulo tungod sa init
+Sakit dughan kung muubo
+Ubo ug barado ilong
+Ulo lawas ug init
+Init lawas sakit ulo
+Dili makatulog ubo kaayo
+Liog masakit pag tulon
+Sipon tuloy tuloy dili
+Nagatulo sipon nako
+Init lawas ug masakit ulo
+Sakit dughan pag taas ginhawa
+Naduwal ug kapoy
+Ubo barado ilong
+Ulo lawas init tanan
+Init sakit lawas
+Dili makatulog tungod ubo
+Liog masakit mutulon
+Nagatulo ilong gikan buntag
+Kapoy kaayo wala tulog
+Ubo sipon
+Dili makatulog kay ubo
+Sakit liog hirap tulon
+Nagatulo sipon pirmi
+Ubo init
+Ulo sakit lawas sakit
+Dili makatulog sa ubo ko
+Ubo ko tuloy tuloy
+Nagatulo ilong kanina pa
+Ubo dughan sakit
+Ulo tiyan
+Init ulo
+Dili matulog ubo
+Nagatulo sipon ko
+Kapoy wala tulog
+Sakit dughan pag ubo ug ginhawa
+Ubo sipon combo
+Ulo lawas init combo
+Dili matulog tungod ubo
+Labad ulo pag init
+Nagatulo sipon walay hunong
+Ubo init ko
+Ulo sakit tiyan sakit
+Init lawas sakit
+Dili matulog sa ka ubo
+Nagatulo ilong pirmi nako
+Ubo barado
+Init sakit ulo
+Dili matulog kay sa ubo
+Nagatulo sipon walay stop
+Init lawas ulo sakit
+Sakit dughan pag taas ginhawa ko
+Naduwal kapoy pa ko
+Ubo barado ilong ko
+Ulo lawas init
+Init sakit lawas ko
+Dili makatulog tungod sa ubo
+Liog masakit pag tulon ko
+Nagatulo ilong gikan buntag ko
+Kapoy kaayo wala tulog ko
+Ubo sipon ko
+Dili makatulog kay ubo ko
+Sakit liog hirap tulon nako
+Nagatulo sipon pirmi nako
+Himuros ko sukad ganina pa
+Gikalibanga ko sukad buntag
+Hugaw tubig gitai nako sukad kagabii
+Pagkalibang nako tuloy-tuloy dili ko mapugngan
+Diarrhea and stomach cramps
+Masakit tulon kay sakit tutunlan ko
+Hubag akong tutunlan lisod motulon
+Nangati akong tutunlan mao moubo ko
+Lisod motulon tungod sakit tutunlan ko
+Dili nako makatulon sa kasakit ng tutunlan
+Kirot sa tutunlan pag motulon ko
+Sakit throat ko grabe dili ko makatulon
+Sore throat nako karon lisod tulon grabe
+Throat pain nako grabe pag motulon
+Dili makatulon kay sakit tutunlan grabe kaayo
+Parang may sagka sa tutunlan mao moubo ko
+Dry ug masakit tutunlan lisod motulon
+Scratchy throat ko grabe moubo tuloy
+
+### A3 — Negation Entries
+> System MUST NOT recommend based on negated symptoms (`dili moubo`, `wala hilanat`, etc.).
+
+Sakit akong ulo dili mawala
+Dili nako makaya sakit sa akong ulo
+Ubo-ubo lang ko wala laing sakit
+Padayon akong ubo dili mahunong
+Ubo ko walay plema
+Tuluon akong ilong walay hunong
+Mosuka ko pero wala mogawas
+Dili nako mapugngan akong pagsuka
+Walay kusog molihok
+Gipangos ko bisag wala molihok
+Dili ko makaginhawa og tarung
+Wala koy laing sakit gawas sa ulo
+Ulo lang sakit wala nay lain
+Ubo lang walay plema
+Dili ko feel good sakit tiyan ko bes
+Super sakit ulo ko dili nako kaya
+Padayon ubo ko dili mohunong
+Sobrang dili maayo gibati
+Parang sipon ni pero dili ko sure
+Sakit tiyan bisag wala mokaon
+Dili nako makakaon tungod sakit tutunlan
+Walay lami gikaon unya bungol ilong
+Dili maayo pandungog tungod sa sipon
+Parang gutom pero dili gusto mokaon tungod sakit tiyan
+Walay plema ubo puro uga
+Dili stable tindog
+Mosamot dili maayo gibati gusto mosuka
+Mogawas suka walay hunong
+Walay gana molihok
+Sobrang katulgon pero dili makatulog
+Parang wala koy kusog buhaton bisan unsa
+Sakit likod dili makatindog og dugay
+Dili makaginhawa og lawom
+Wala man sakit pero gikapoy lang
+Yawa ubo ko dili mohunong
+Asa gikan sipon ko ni walay katapusan
+Ngano dili mawala sakit tiyan
+Dili pa rin mawala sipon
+Pano ba mawala sakit ulo
+Padayon jud ubo walay hunong
+Dili nako kaya sakit tiyan
+Unsaon ba mawala ulo
+Kanus-a kaha mawala hilanat
+Sana mawala na ubo
+Ubo ngano dili mohunong
+Gago ubo dili mawala
+Gibati gihilantan pero dili sure
+Gibati sipon ni pero dili pa sure
+Dili nako makakaon tungod sakit tutunlan
+Dili nako makagalaw tungod gikapoy
+Dili nako makaginhawa og maayo
+Dili nako makagalaw tungod sakit lawas
+Sobrang ubo na walay hunong jud
+Grabe na jud sakit ulo dili nako kaya
+Ubo dili na jud mohunong bisag unsa buhaton
+Tiyan sobrang sakit na jud dili nako kabalo buhaton
+Dili na mahunong ubo
+Kapoy nga wala nabuhat
+Sipon lang dili grabe
+Naduwal pero wala musuka
+Sakit liog dili makainom
+Kapoy bisan wala mubuhat
+Sakit ulo dili mawala
+Gusto mosuka dili makaprevent
+Sakit liog dili makakaon
+Gusto mosuka dili gawas
+Kapoy wala gani mubuhat
+Sakit ulo dili ko concentrate
+Sakit liog dili kaayo makakaon
+Ubo may plema dili malabas
+Kapoy bisan wala magwork
+Ubo walay tigil
+Gusto mosuka dili malaban
+Sakit liog dili makainom tubig
+Kapoy wala nag work
+Sakit ulo walay tigil
+Ubo walay tigil ko
+Ubo plema dili gawas
+Kapoy wala nag work ko
+Sakit ulo dili mawala kay
+Gusto mosuka dili ma prevent
+Sakit liog dili makakaon ko
+Gusto mosuka dili gawas ko
+Kapoy wala gani mubuhat ko
+Basa akong tai padayon walay hunong
+LBM nako grabe dili mohunong
+Sige kog kalibang walay hunong grabe
+Basa basa akong tai dili normal
+Balik-balik ko sa CR dili mawala
+Walay form akong tai basa kaayo
+Dili ko makagawas sa banyo LBM grabe
+Basa ang tae ko hindi tumitigil
+Diarrhea na siguro ito hindi na ako makatayo
+Grabe ang LBM ko ngayon hindi ako mapakali
+Hindi tumitigil ang pagtatae ko
+Himuros ko na naman today dili mohunong
+Sige kog kalibang since morning walay tigil
+Walay hunong pagtai nako grabe kaayo
+LBM grabe ko dili nako kaya
+Sakit akong tutunlan dili mawala
+Grabe sakit tutunlan dili ko mawala
+Dili makainom tubig sakit kaayo tutunlan ko
+Sore throat na naman ako dili mawala
+Hindi ako makainom ng malamig kasi masakit lalamunan
+Hindi ako makakain dahil sa masakit na lalamunan
+Sore throat na ko karon dili pa mohunong
+Sakit tutunlan dili nako kaya makaon na
+Giuhaw pero dili makainom sakit tutunlan
+
+### A4 — Uncertain / Hedged Entries
+> Patient is guessing (`siguro`, `murag`, `tingali`, `parang`). What should the system return?
+
+Sinat siguro ni
+Diarrhea abi nako ni
+Kabag abi nako ni puno og hangin tiyan
+Tingali ubo lang ni
+Siguro sipon lang
+Murag hilanat napud ko
+Feeling moubo napud ko ugma
+Abi nako sakit tiyan ugma
+Tingali tungod sa katugnaw mao hilanat
+Ubo ko tungod sa sigarilyo siguro
+Mosuka na abi ko
+Hyperacidity abi ni
+Ulcer siguro ni sa tiyan
+Migraine abi ni grabe sakit
+Tension headache siguro tungod stress
+Gastric problem abi sakit tiyan
+Vertigo siguro ni naliyong jud
+Allergies lang siguro sipon ug bahing
+Gutom siguro mao sakit tiyan
+Aircon mao siguro sipon
+Sigarilyo siguro hinungdan sa ubo
+Kape siguro mao acidic tiyan
+Murag sakit ulo napud
+Murag hilanat napud ni
+Murag ubo napud ko
+Murag sipon lang ni
+Murag sakit tiyan
+Siguro sakit ulo tungod stress
+Siguro hilanat tungod katugnaw
+Siguro ubo tungod aso
+Siguro sipon tungod aircon
+Siguro sakit tiyan tungod kaon
+Tingali sakit ulo karon
+Tingali init ko eh
+Tingali moubo ko
+Tingali may sipon ko
+Tingali sakit tiyan
+Basin sakit ulo lang ni
+Basin hilanat lang ni
+Basin ubo lang naman ni
+Basin sipon lang yan
+Basin sakit tiyan lang
+Sakit tiyan gutom siguro
+Sakit ulo stress siguro
+Sakit lawas nabugbog siguro
+Sakit tiyan gutom siguro ko
+Diarrhea abi nako ni grabe kaayo
+Basa tai nako diarrhea yata
+Tonsil abi ni sakit kaayo tutunlan
+
+---
+
+## TIER B — Should Annotate
+
+### B1 — LBM / Diarrhea Entries
+> Newest label class. Needs ground-truth drug recommendation (ORS, Diatabs).
+
+Daghang beses nako sa CR tungod sa LBM
+Basa akong tai padayon
+himuros ko padayon
+Watery tai
+Balik balik ko sa CR tungod pagtai
+Sunod sunod CR tungod LBM
+himurOs ko
+LBM napud grabe
+Daghang beses nako sa CR tungod sa pagtai
+Nagkalibang ko pag kaon dayon
+Watery tai nako karon
+Sunod-sunod ko sa banyo tungod LBM
+Lugay na ko magtai og basa
+Sige lang ko og kalibang
+Tatlong beses na ko nagtai og basa karon
+Pila na ka beses nako sa CR tungod pagtai
+Nagtatae ako ng maraming beses ngayong umaga
+LBM na naman ako grabe
+Maraming beses na akong nagtatae ngayon
+I have diarrhea since morning
+Loose bowel movement all day
+LBM since I woke up grabe
+Loose stool multiple times today
+Non-stop diarrhea since last night
+LBM na ko grabe since kagabii
+Nagtatae na ko ng madaming beses karon
+Diarrhea nako karon grabe kaayo
+Daghang beses sa CR LBM abi
+
+### B2 — Sore Throat Entries
+> Newest label class. Needs ground-truth drug recommendation (Strepsils, Betadine gargle).
+
+Uga kaayo akong tutunlan
+Parang may sagka sa tutunlan
+Moinom daghan tubig pero uga gihapon tutunlan
+Liog sakit pag lunok
+Liog sakit lunok
+Liog masakit pag lunok ug
+Liog masakit hirap lunok
+Liog sakit lunok sakit
+Sakit liog di makalunok
+Liog sakit lunok
+Liog sakit lunok ko
+Uga kaayo akong tutunlan grabe
+Sakit sa lalamunan ko grabe kaayo
+Parang may nagsusunog sa tutunlan ko
+Hubag diri sa tutunlan nako
+Pula na akong tutunlan sakit grabe
+Parang may tinik naka sa tutunlan ko
+Masakit ang lalamunan ko grabe ngayon
+Mahirap lumunok kasi masakit lalamunan
+Masakit tuwing nilulunok ko laway
+Namamaga ang lalamunan ko
+Sobrang sakit ng lalamunan ko ngayon
+Pula na ang lalamunan ko siguradong may impeksyon
+Masakit lalamunan ko simula kagabi pa
+My throat is so sore right now
+Sore throat getting worse since yesterday
+My throat feels scratchy and painful
+Can't swallow food because my throat hurts
+Throat pain when I try to talk or eat
+My throat is swollen and very painful
+Painful throat especially when swallowing water
+Throat is raw and feels like it's burning
+Sore throat and hard to speak
+Masakit lalamunan ko since kagabii
+Sakit tutunlan ko may tonsil abi
+Grabe sakit ng tutunlan ko today
+Masakit ang tutunlan ko pag moinom tubig
+
+### B3 — English-Primary Entries
+> Tests multilingual coverage. Step1 phrase coverage is likely lowest for English.
+
+Tummy ache problems
+Watery stool won't stop
+Running to the bathroom every hour
+Keep having watery stools can't stop
+Toilet every 30 minutes watery stool
+Watery stool ko since buntag pa
+It hurts to swallow anything
+
+### B4 — Tagalog-Primary Entries
+> Filipino language entries distinct from Bisaya base vocabulary.
+
+sipon lang naman
+Ang sakit naman ulo ko karon
+Grabe naman sipon ko today
+Parang sipon lang naman
+Giuhaw pero masakit liog
+Masakit tiyan human kaon
+Nahilo ug masakit ulo
+Sipon ulit na sad
+Gusto mosuka talaga
+Ubo dry lang naman
+Ulo masakit
+Sipon ulit na sad ko
+Gusto mosuka talaga ko
+Paulit-ulit na ako sa banyo
+Natatae na naman ako nang madalas
+
+### B5 — Typo / Heavy Abbreviation Entries
+> Tests robustness of step1 fuzzy matching against misspellings and abbreviated forms.
+
+skit ulo
+hlnat ko karon
+mouUbo
+sipOn
+saKiT tyan
+skit ulo ko eh
+may hlnat abi
+padayon sipun
+sakIt ng olo ko
+init init lAwas
+sipun ko grbe
+Ulo saket grabe
+Hlanat kaayu
+Ubu ko pirme
+Sepun lang
+Sakeet tyan ko
+Saket tibuok
+Nag ubu napud
+Nhilo ug nsuka
+Ulu saket
+Hlnat krun
+Ubu prmi
+Spun ko
+Skeet tyn
+Gtyk ako
+Kpoy lws
+Sket tbuk
+Ulu msakit
+Hlnat jd
+Spun lng
+Gtyk k
+Hlnt kyo ko
+Gtyk kyo
+Skt lwas
+Nhlo nska
+Ulo mskt
+Hlnt run
+Gtk kayo
+Kpy kayo
+Nhlo nska ko
+Ulo mskt kaayo
+Hlnt run ko
+Gtk ko karon
+Kpy ko kaayo
+Nhilo nsuka ako
+
+---
+
+## TIER C — Baseline Samples (5 per label)
+> Clean, unambiguous single-symptom entries. Sanity check — confirm happy path works.
+
+### C — BODY_PAIN
+Sakit akong lawas parang gibunalan
+Ngilu-ngilu akong lawas
+Parang gibunalan akong lawas sa sakit
+sakit lawas
+Tibuok lawas sakit
+
+### C — CHEST_PAIN
+Sakit akong dughan parang gipitpit
+May sakit sa akong dughan
+Parang may nagbutang ibabaw sa dughan
+Chest pain nako moabot sa likod
+Bug-at akong dughan parang may naglingkod
+
+### C — COUGH
+Moubo ko kanunay
+Grabe akong ubo karon
+May plema akong ubo lisod pagawas
+Dry cough lang ni
+Ubo ko may kasamang plema
+
+### C — DIZZINESS
+Gatuyok akong pananaw
+Naliyong ko karon
+Naliyong ug nanig-a lawas
+Parang lango sa gibati
+Gatuyok kalibutan
+
+### C — DYSPNEA
+Lisod ko moginhawa
+Lisod ko moginhawa labi na pag nahigda
+Lisod kaayo moginhawa parang may sagka
+Lisod moginhawa pag mokaon
+Lisod moginhawa pag mosaka hagdanan
+
+### C — FATIGUE
+Naluya ko pag motindog
+Gikapoy kaayo ko parang ayaw molihok sa lawas
+Luya kaayo ko karon
+Katulgon kaayo ko ug gikapoy
+Lisod kaayo buhaton bisan unsa tungod sa kapoyon
+
+### C — FEVER
+Init kaayo akong lawas parang hilanat
+Gihilantan ko karon
+Hilanat ko oy
+Mainit akong lawas pero gitugnaw ko
+Nagkurog ko sa katugnaw pero init man ko
+
+### C — HEADACHE
+Sakit kaayo akong ulo karon
+Labad kaayo akong ulo
+Nakasakit kaayo akong ulo karon
+Parang mobuto akong ulo sa kasakit
+Kasakit sa akong ulo oy
+
+### C — NAUSEA
+Gusto ko mosuka
+Nasukaon ko
+Nagsuka ko sukad ganina
+Padayon ko mosuka
+Nagsuka ko human mokaon
+
+### C — RHINITIS
+Padayon tuluon akong ilong
+Sipon-sipon lang ko
+May sipon ko gamay lang
+Sagmaw akong ilong duha ka kilid
+Stuffy nose ko karon
+
+### C — STOMACH
+Sakit akong tiyan grabe
+Ngilo akong tiyan acidic abi
+Sakit akong tiyan human mokaon
+Sakit lang tiyan ok raman ko
+Ginoo ko sakit tiyan ko
+
+---
+
+## TIER D — Skip (Semantic Duplicates)
+> Do NOT send to annotator. Run pipeline on these and auto-label. Spot-check low-confidence outputs.
+
+Kanunay nalang sakit akong ulo karon
+Hilanat napud ko
+Init init akong lawas karon
+Parang init kaayo ko ron
+Gihilantan napud ko balik
+Sip-on lang man ko ok raman
+Parang may sagka sa akong ilong
+Gigawas nako tanan akong gikaon
+Hurot-hurot ko karon
+Sakit sa tibuok lawas
+Sakit akong likod ug kamot
+Parang kulang akong hangin
+sakit ulo ko
+hilanat ko karon
+ubo ko pirme
+sakit tyan
+bungol ilong ko
+naluya ko grabe
+kapoy kaayo ko
+Gamay lang hilanat
+ahhh sakit kaayo akong ulo
+grabe grabe hilanat ko sobra
+ubo ubo ubo lang man
+ay nako sipon ko grabe
+Parang may hilanat abi
+Tan-awa sakit sa tiyan lang
+Medyo sakit lang ulo gamay
+Grabi ubo ko sis
+Yawa sakit ulo ko mars
+Hilanat yarn mga bes
+Sipon ko besh
+Sakit akong ulo pag motan-aw sa phone
+Ubo ko mograbe pag gabii
+Init ko pag udto
+Sipon ko mas grabe sa buntag
+Sakit tiyan ko pag mokaon
+Sobrang init ko parang nagpawis
+Sakit ulo ko pag stressed
+Imnon nako tambal para sa ubo
+Kinahanglan nako tambal sa hilanat
+Unsa maayo nga tambal sa sipon
+May tambal ba para sa sakit sa ulo
+Unsa kaha pwede sa sakit sa tiyan
+Sobrang init ko parang hilanat
+Bagsak kaayo ko karon
+Sipon ko tungod sa aircon
+Gutom mao sakit tiyan
+Kulang tulog mao sakit ulo
+Kanunay nalang ubo
+Balik balik hilanat
+Madalas sipon lately
+Dugay na sakit ulo
+Pirme sakit tiyan
+Kagahapon pa ubo
+Kagabii pa hilanat
+Ganina pa sipon
+Usa ka semana na sakit ulo
+Pila ka adlaw na sakit tiyan
+Hapon pa moubo nako
+Buntag pa init lawas
+Morning pa sipon
+Ganina lang sakit ulo
+Karon lang kalit sakit tiyan
+Sobrang init pero nagkurog
+Sipon ko pero uga ilong
+Sakit ulo bisag nahigda
+Gikapoy dayon pag molihok
+Modako ulo sa sakit
+Padayon agos sa sipon
+Sakit tiyan unya mosaka pa
+Ubo pati baga sakit
+Hilanat unya gitugnaw pa
+Parang may mobukal sa tiyan
+Sakit ulo pati liog
+Hilanat pero bugnaw kamot
+Parang may motusok sa ulo diri sa kilid
+Init lawas pero normal temp
+Sakit na dughan sa tuo
+Sakit dulunggan tungod sa sipon
+Moabot sa ngipon sakit sa ulo
+Init likod unya nagkurog
+Para ko gibutangan kalayo sa sulod
+Dry ubo sobra
+Basa ubo may plema
+Lisod pagawas plema sa dughan
+Pag moubo mogawas plema
+Namula mata tungod sa sipon
+Sakit ngipon moabot sa ulo
+Mangati panit unya init
+Sobrang tugnaw pero init man ko
+Ayaw mohunong pagtuyok sa palibot
+Gilabay na nako tanan gikaon
+Hugaw tubig eh
+Sobrang dami hugaw
+Luya luya ko karon
+Ayaw mobangon sa lawas
+Sore tibuok lawas
+Ngilu-ngilu lawas
+Sakit kasukasuan
+Nanig-a lawas sa sakit
+Parang gihampas baseball bat lawas
+Gibati gibunalan
+Sakit abaga moabot sa liog
+Sakit braso ug tiil
+Gipangos bisag naglingkod lang
+Kinakapos sa ginhawa
+Sakit dughan sa tunga
+Parang may nagdugmok sa dughan
+Higpit dughan
+Sakit kasingkasing gibati
+Kumirot dughan
+Sakit tiyan taas
+Lower tiyan sakit
+Acidic gibati sa tiyan
+Ngilo sa tiyan
+Modako tiyan sa kabag
+Moasim tiyan
+Gastritis napud abi
+Gikapoy unya sakit pa lawas
+naluya ako
+sakit ulu ko grabe
+gipainit ko karon
+moubu ko madalas
+sakit tiyan ko na
+sakit tian
+Paket sakit ulo ko unsa ba
+Init init init sobra
+Shet sipon napud
+Pota sakit tiyan ko jud
+Sobrang init ko unsa nahitabo
+Ubo pa more ako karon
+Sipon mode activated
+Tiyan ko sakit na napud
+Ulo ko parang pwede na molupad sa sakit
+Init na init lawas seriously
+Pucha ubo ko padayon jud
+Ginoo ngano sakit tiyan ko
+Pwede ba mohunong sakit ulo
+Ngano ka init lawas ko
+Kanus-a ba mohunong ubo ko ni
+Sakit napud ulo ugma exam pa
+Hilanat napud pirmi nalang
+Ubo mibalik napud
+Tiyan sakit gihapon hangtud karon
+Ulo sobrang sakit parang mobuto
+Lawas init pero normal temp sa thermo
+Ubo pag gabii lang mograbe
+Sipon pag buntag lang madalas
+Tiyan pag mokaon sakit
+Sakit ulo pag stressed lang
+Hilanat pag hapon moabot
+Ubo pag nahigda mograbe
+Sipon pag bugnaw panahon
+Tiyan pag busog sakit
+Parang may sore eyes unya sipon
+Kulang tulog mao sakit ulo
+Init panahon mao init ko
+Inom biogesic para sa ulo
+Need tempra para sa hilanat
+Kinahanglan solmux para sa ubo
+Palit neozep para sa sipon
+Pangita kremil para sa tiyan
+Asa may nagbaligya tambal sa ubo
+Unsa ba maayo tambal sa hilanat
+May tambal ba diri sa sipon
+Pwede ba moinom tambal sa tiyan
+Misakit ulo kalit ganina
+Gihilantan karon gabii
+Sipon tibuok adlaw
+Sakit tiyan pag mikaon
+Grabe jud sakit ulo karon
+Super init ko parang sinaing
+Sobrang dami sipon grabe
+Aray sakit ulo jud
+Aba init jud ko eh
+Ay nako ubo napud
+Naku sipon ko grabe
+Ginoo ko sakit tiyan
+Kanus-a ba mohunong sipon
+Ayoko na sakit tiyan
+Ulo jud sakit grabe no
+Init lawas unsa kaha ni
+Sipon asa ba gikan ni
+Tiyan ngano sakit
+Headache napud today
+Fever mode karon
+Cough pa more
+Sipon season napud
+Bwisit sakit ulo
+Yawa init ko
+Putang ubo ni
+Leche sipon napud
+Peste sakit tiyan
+Nakapalagot sakit ulo
+Nakabwisit ubo
+Nakalagot sipon
+Nakaluoy sakit tiyan
+Yawa jud sakit ulo
+Punyeta init lawas
+Bwakananginang tiyan ni
+Parang may motusok sa ulo
+Parang may mosunog sa sulod
+Parang tubig gripo sipon
+Parang may mukagat sa tiyan
+Gibati mobuto ulo sa sakit
+Gibati moubo napud ugma
+Gibati sakit tiyan ugma
+Abi sakit ulo ugma
+Abi hilanat napud ko
+Abi moubo napud
+Abi sipon napud ni
+Abi sakit tiyan
+Parang ulo lang sakit
+Parang init lang ko
+Parang ubo lang ni
+Parang tiyan lang sakit
+Sakit na diay ulo pala
+Init na diay ko pala
+Moubo na diay pala
+May sipon na diay pala
+Sakit na diay tiyan pala
+Ang sakit na ulo na
+Ang init na ko na
+Ang ubo ko na grabe
+Ang sipon ko na sobra
+Ang sakit na tiyan na
+Sobrang sakit na ulo jud
+Sobrang init ko na karon jud
+Sobrang sipon na grabe jud
+Sobrang sakit na tiyan jud
+Init ko sobra na jud parang nagpawis na
+Sipon ayaw na jud mohunong bisag unsa tambal
+Nahilo kaayo ko karon
+Sakit akong ulo grabe
+Hilanat napud ko
+Ubo ubo ko pirmi
+Sip-on lang ko gamay
+Sakit akong tiyan baya
+Gatuyok akong mga mata
+Kamingaw akong lawas
+Sakit tibuok lawas
+Nagka ubo ubo napud
+Nahilo ko pag bangon
+Sukit ulo ko diri
+Init kaayo lawas
+Sipon ra gyud ko
+Lisod ginhawa
+Nausea kaayo ko
+Gusto ko mosuka
+Nagsuka ko kanina
+Pagkahilantan jud
+Nahilo ug nasuka
+Hilabihan kasakit ulo
+Grabe init lawas ko
+Gatuyok pa gihapon
+Labad labad ulo ko
+Gihilanat ko gabii
+Nag ubo ko plema
+Kapoy kapoy lawas
+Sakit tibuok2 lawas
+Nahlo ko ug nasuka
+Gtuyok ko grabe
+Kapooy lawas nko
+Nahilo ko pag barug
+Init init ako
+Sipon ko dli mohunong
+Lisud ginhawa pag higda
+Naduduwal jud ko
+Gusto mosuka pero dili
+Nagsuka human kaon
+Gihilanat ko hangtod karon
+Barado kaayo ilong
+Kasakit sa ulo
+Init lawas ug kulasingin
+Ubo ubo kanina pa
+Sipon gikan buntag
+Sakit liog ug ulo
+Gatuyok kalibutan ko
+Labad ulo hangtod karon
+Gihilanat gikan gabii
+Ubo nga may plema
+Sakit tiyan after mag kaon
+Sakit sa tibuok lawas
+Nahilo ko karun baya
+Init kaayo diri sa lawas
+Lisod ug ginhawa grabe
+Gusto gyud mosuka
+Nagsuka ko pag buntag
+Gihilanat ko tibuok adlaw
+Nahilo ug kapoy
+Barado duha ka buho
+Hilabihan sakit ulo ko
+Init sa lawas nanginginig
+Gatuyok palibot
+Labad ulo ko karon
+Gihilanat pag udto
+Ubo may plema kaayo
+Sakit tiyan human mag kaon ug
+Sakit tibuok lawas parehas nabugbog
+Gtuyk
+Nahilo ko tungod sa init
+Sipon gamay lang kaayo
+Lisod ginhawa kung naghigda
+Nagsuka gabii pa
+Gihilanat gikan kagabii
+Nahilo sakit ulo
+Barado tibuok ilong
+Grabe kasakit ulo
+Init nanginginig pa
+Ubo walang plema
+Sipon kanina buntag pa
+Gatuyok akong mga mata diri
+Labad ulo pag stress
+Gihilanat pa gihapon
+Ubo dry lang
+Sakit lawas parehas bugbog
+Nahilo grabe ko karon
+Sakit ulo ko dugay na
+Init kaayo pag gabii
+Lisod ginhawa permi
+Sakit dughan diri sa tunga
+Naduwal kaayo gusto mosuka
+Nagsuka tibuok buntag
+Gihilanat karong gabiona
+Nahilo kapoy pa
+Ulo lawas
+Init lawas
+Barado ilong tanan
+Kasakit ulo ko run
+Init nanginginig ko
+Ubo dry kaayo
+Sipon gikan gabii pa
+Gatuyok mundo ko
+Labad kaayo ulo
+Gihilanat na sad
+Ubo plema grabe
+Sakit tiyan kanina human kaon
+Sakit lawas nabugbog ba
+Nahilo baya ko pag bangon
+Sakit ulo kanina buntag
+Init init ko diri
+Sipon ko balik na
+Lisod ginhawa karon
+Sakit dughan pag deep breath
+Naduwal ko grabe
+Nagsuka ko kanina lang
+Gihilanat ko tibuok gabii
+Nahilo ug init
+Init grabe lawas
+Barado tanan buho
+Init lawas kulasingin
+Sipon kanina adlaw pa
+Gatuyok kalibutan nako
+Labad ulo dugay na kaayo
+Gihilanat ko pag buntag
+Sakit tiyan lisod pa kahigda
+Sakit lawas parehas gipang bugbog
+Nahilo ko human mokaon
+Sakit ulo pag sikit
+Init ko pag gabii
+Sipon lang kaayo gamay
+Lisod ug ginhawa karon ko
+Sakit dughan pag lihok
+Naduwal ko kanina buntag
+Gusto gyud mosuka karon
+Nagsuka human mag inum
+Gihilanat na usab ko
+Nahilo init pa
+Barado buho sa ilong
+Liog sakit kaon
+Grabe sakit ulo
+Init nanginginig
+Sipon gikan gabii
+Sakit liog hirap
+Gatuyok ko dugay na
+Labad ulo stress
+Gihilanat tibuok
+Ubo plema dili
+Sakit tiyan human
+Sakit lawas bugbog
+Nahilo ko karon gid
+Sakit ulo buntag buntag
+Init ko permi karon
+Sipon balik balik
+Lisod ginhawa baya
+Naduwal grabe kaayo
+Nagsuka human mag breakfast
+Gihilanat gikan adlaw
+Nahilo sakit tiyan
+Init lawas grabe kaayo
+Barado ilong dugay na
+Init nanginginig ko grabe
+Sipon gikan buntag hangtod karon
+Gatuyok palibot ko
+Gihilanat pa gani
+Ubo may plema lisod ilabas
+Sakit tiyan human mag lunch
+Nahilo ko pag taas
+Sakit ulo ko nanay
+Init init lawas ko
+Sipon ko na usab
+Lisod ginhawa ko run
+Sakit dughan pag taas hininga
+Naduwal kaayo gusto
+Gusto mosuka pero wala
+Nagsuka ko pag buntag
+Gihilanat run ko
+Nahilo ulo sakit
+Barado tanan side
+Init nanginginig ako
+Ubo permi ko
+Sipon dugay na kaayo ko
+Gatuyok mata ko
+Labad ulo kaayo karun
+Gihilanat ko gabii pa
+Ubo plema grabe kaayo
+Sakit tiyan human mag kaon ko
+Kapoy bisan wa mu trabaho
+Sakit lawas parehas nabugbog ko
+Tyn sk kaayo
+Nahilo ko pag bangon nako
+Sakit ulo tungod sa stress
+Init ko pag gabii kaayo
+Sipon lang gamay ra
+Lisod ginhawa ko run baya
+Sakit dughan pag lihok ko
+Naduwal ko kanina pa
+Gusto mosuka grabe kaayo
+Nagsuka human mag dinner
+Gihilanat ko tibuok adlaw
+Nahilo nasuka pa
+Ulo lawas tanan
+Barado buho ilong
+Grabe sakit ulo ko
+Init nanginginig grabe
+Sipon gikan gabii pa ko
+Sakit liog hirap kaayo
+Gatuyok mundo
+Labad ulo stress na
+Gihilanat tibuok gabii
+Sakit tiyan human kaon ug
+Sakit lawas bugbog kaayo
+Ulo sakit ko
+Hilanat karon
+Ubo pirmi
+Sipon gamay
+Tiyan sakit
+Gatuyok ko
+Kapoy ako
+Sakit lawas
+Ubo lang
+Nahilo ko tungod init
+Sipon gamay lang gid
+Lisod ginhawa pag higda ko
+Nagsuka gabii pa ko
+Gihilanat gikan kagabii pa
+Nahilo sakit ulo ko
+Barado tibuok ilong ko
+Grabe kasakit ulo ko
+Init nanginginig pa ko
+Ubo walang plema ko
+Sipon kanina buntag pa ko
+Gatuyok mata diri ko
+Labad ulo pag stress ko
+Gihilanat pa gihapon ko
+Ubo dry lang ko
+Sakit lawas parehas bugbog ko
+Nahilo nasuka
+Hilanat ako
+Sipon ko
+Tiyan ko
+Gatuyok
+Kapoy
+Lawas sakit
+Nahilo grabe ko karon baya
+Sakit ulo ko dugay na kaayo
+Init kaayo pag gabii ko
+Lisod ginhawa permi ko
+Sakit dughan diri sa tunga ko
+Naduwal kaayo gusto mosuka ko
+Nagsuka tibuok buntag ko
+Gihilanat karong gabiona ko
+Nahilo kapoy pa ko
+Ulo lawas ko
+Init lawas ko
+Barado ilong tanan ko
+Kasakit ulo ko run baya
+Init nanginginig ko baya
+Ubo dry kaayo ko
+Sipon gikan gabii pa nako
+Gatuyok mundo ko baya
+Labad kaayo ulo nako
+Gihilanat na sad nako
+Ubo plema grabe nako
+Sakit tiyan kanina human kaon nako
+Sakit lawas nabugbog ba nako
+Hilo suka
+Init ko
+Sipon
+Tiyan
+Kapoy kaayo
+Lawas
+Nahilo baya ko pag bangon ko
+Sakit ulo kanina buntag pa
+Init init ko diri sa lawas
+Sipon ko balik na usab
+Lisod ginhawa karon ko
+Sakit dughan pag deep breath ko
+Naduwal ko grabe kaayo
+Nagsuka ko kanina lang baya
+Gihilanat ko tibuok gabii ug adlaw
+Tuloy-tuloy ang pagtatae ko
+
+---
+*Generated: 2026-02-21 | Source: data/datasets/annotation/userInquiry.txt (1039 entries)*

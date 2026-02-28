@@ -1,0 +1,102 @@
+{
+  "_schema_version": "1.0",
+  "_description": "MendoVendo Domain Expert Annotation Dataset. Each entry represents one user inquiry annotated by a domain expert (pharmacist/nurse). This dataset is used to validate and improve the knowledge-based recommendation engine.",
+  "_instructions": {
+    "symptom_labels": "Use ONLY labels from the VALID_SYMPTOM_LABELS list below. Leave empty [] if none apply.",
+    "symptom_labels_other": "Use ONLY if the correct symptom is NOT in the VALID_SYMPTOM_LABELS list. Otherwise leave null.",
+    "suggested_otc.selected": "Generic name(s) of the OTC drug(s) you would recommend. Use generic names (e.g., 'Paracetamol', not 'Biogesic').",
+    "suggested_otc.brand_examples": "Optional: list brand names available in the vending machine (e.g., 'Biogesic', 'Tempra').",
+    "min_age": "Minimum patient age in years for the recommended OTC. Use 0 if no restriction.",
+    "user_age": "The age of the patient in this scenario. Use null if not specified in the inquiry.",
+    "language": "Primary language of the user_inquiry. One of: 'english', 'tagalog', 'bisaya', 'taglish', 'code-switched'.",
+    "confidence": "Your confidence in this annotation. One of: 'high', 'medium', 'low'.",
+    "requires_medical_referral": "True if the symptom combination warrants seeing a doctor instead of OTC treatment.",
+    "gender_specific_limitations": "null if no gender restriction. Otherwise: 'male_only', 'female_only', 'not_for_pregnant'."
+  },
+  "_valid_symptom_labels": [
+    "HEADACHE",
+    "COUGH_DRY",
+    "COUGH_PRODUCTIVE",
+    "COUGH_GENERAL",
+    "FEVER",
+    "BODY_ACHES",
+    "NASAL_CONGESTION",
+    "RUNNY_NOSE",
+    "ALLERGIC_RHINITIS",
+    "RASHES",
+    "STOMACH_ACHE_ACID",
+    "DIARRHEA",
+    "NAUSEA",
+    "DIZZINESS",
+    "SORE_THROAT"
+  ],
+  "generated_at": "2026-02-21T00:00:00+08:00",
+  "annotated_by": "EXPERT_NAME_HERE",
+  "total_entries": 2,
+  "entries": [
+    {
+      "entry_id": "de_001",
+      "user_inquiry": "Labad kaayo akong ulo",
+      "user_age": null,
+      "language": "bisaya",
+      "symptom_labels": [
+        "HEADACHE"
+      ],
+      "symptom_labels_other": null,
+      "suggested_otc": {
+        "selected": [
+          "Paracetamol"
+        ],
+        "brand_examples": [
+          "Biogesic",
+          "Tempra"
+        ],
+        "other": null
+      },
+      "min_age": 12,
+      "has_age_restrictions": true,
+      "has_known_contraindications": false,
+      "known_contraindications_details": null,
+      "has_pregnancy_considerations": false,
+      "pregnancy_considerations_details": null,
+      "gender_specific_limitations": null,
+      "requires_medical_referral": false,
+      "confidence": "high",
+      "medical_notes": {
+        "otc_dosage_guide": {
+          "Paracetamol": {
+            "dosage_mg": 500,
+            "times_per_day": 3,
+            "max_doses_per_day": 4,
+            "notes": "Take after meals. Do not exceed 4g/day."
+          }
+        }
+      },
+      "annotated_at": null
+    },
+    {
+      "entry_id": "de_002",
+      "user_inquiry": "Labad akong ulo",
+      "user_age": null,
+      "language": "bisaya",
+      "symptom_labels": [],
+      "symptom_labels_other": "HEADACHE",
+      "suggested_otc": {
+        "selected": [],
+        "brand_examples": [],
+        "other": null
+      },
+      "min_age": 12,
+      "has_age_restrictions": true,
+      "has_known_contraindications": true,
+      "known_contraindications_details": "Known liver disease — Paracetamol contraindicated",
+      "has_pregnancy_considerations": true,
+      "pregnancy_considerations_details": "Paracetamol is generally safe in pregnancy at recommended doses — consult OB",
+      "gender_specific_limitations": null,
+      "requires_medical_referral": true,
+      "confidence": "high",
+      "medical_notes": null,
+      "annotated_at": null
+    }
+  ]
+}

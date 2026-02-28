@@ -1,0 +1,69 @@
+{
+  "master_labels": [
+    "HEADACHE",
+    "COUGH_DRY",
+    "COUGH_PRODUCTIVE",
+    "COUGH_GENERAL",
+    "FEVER",
+    "BODY_ACHES",
+    "NASAL_CONGESTION",
+    "RUNNY_NOSE",
+    "ALLERGIC_RHINITIS",
+    "RASHES",
+    "DIARRHEA",
+    "STOMACH_ACHE",
+    "SORE_THROAT",
+    "DIZZINESS",
+    "NAUSEA",
+    "VOMITING",
+    "FATIGUE",
+    "SHORTNESS_OF_BREATH",
+    "CHEST_PAIN"
+  ],
+  "aliases": {
+    "COUGH_DRY": ["cough_dry", "dry_cough"],
+    "COUGH_PRODUCTIVE": ["cough_productive", "productive_cough", "wet_cough"],
+    "COUGH_GENERAL": ["cough", "cough_general"],
+    "NASAL_CONGESTION": ["stuffy_nose", "nasal_congestion"],
+    "RUNNY_NOSE": ["runny_nose"],
+    "HEADACHE": ["headache"],
+    "FEVER": ["fever"],
+    "BODY_ACHES": ["body_aches"],
+    "ALLERGIC_RHINITIS": ["allergic_rhinitis"],
+    "RASHES": ["rash", "rashes"],
+    "DIARRHEA": ["diarrhea"],
+    "STOMACH_ACHE": ["stomach_ache"],
+    "SORE_THROAT": ["sore_throat"],
+    "DIZZINESS": ["dizziness"],
+    "NAUSEA": ["nausea"],
+    "VOMITING": ["vomiting"],
+    "FATIGUE": ["fatigue"],
+    "SHORTNESS_OF_BREATH": ["shortness_of_breath"],
+    "CHEST_PAIN": ["chest_pain"]
+  },
+  "notes": {
+    "core_step2_focus": [
+      "HEADACHE",
+      "COUGH_DRY",
+      "COUGH_PRODUCTIVE",
+      "COUGH_GENERAL",
+      "FEVER",
+      "BODY_ACHES",
+      "NASAL_CONGESTION",
+      "RUNNY_NOSE",
+      "ALLERGIC_RHINITIS",
+      "RASHES",
+      "DIARRHEA",
+      "STOMACH_ACHE"
+    ],
+    "extra_rules_benchmark_labels": [
+      "SORE_THROAT",
+      "DIZZINESS",
+      "NAUSEA",
+      "VOMITING",
+      "FATIGUE",
+      "SHORTNESS_OF_BREATH",
+      "CHEST_PAIN"
+    ]
+  }
+}

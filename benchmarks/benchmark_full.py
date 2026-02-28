@@ -686,7 +686,7 @@ def run_benchmark() -> Tuple[List[TestResult], Dict[str, Any]]:
 
 def save_results(results: List[TestResult], summary: Dict[str, Any]):
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = Path(__file__).parent / "benchmark" / "results"
+    out_dir = Path(__file__).parent / "results"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     csv_path = out_dir / f"benchmark_{ts}.csv"

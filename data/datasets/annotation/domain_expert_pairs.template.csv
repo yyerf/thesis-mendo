@@ -1,0 +1,6 @@
+pair_id,text1,text2,label,symptom_master,symptom_primary,symptom_secondary,pair_type,language_text1,language_text2,confidence,review_status,expert_id,notes
+ex0001,May lagnat ako,Nilalagnat ako,1,FEVER,FEVER,,translation,tl,tl,5,approved,EXP01,
+ex0002,Wala akong lagnat,May lagnat ako,0,FEVER,FEVER,FEVER,negation,tl,tl,5,approved,EXP01,negation mismatch
+ex0003,Sakit ulo ko,Masakit tiyan ko,0,HEADACHE,HEADACHE,STOMACH_ACHE,hard_negative,mixed,mixed,5,approved,EXP01,
+ex0004,Naa koy sip-on,Tumutulo ilong ko,1,RUNNY_NOSE,RUNNY_NOSE,,paraphrase,ceb,tl,4,approved,EXP01,
+ex0005,Ubo pero walang plema,Tuyong ubo ko,1,COUGH_DRY,COUGH_DRY,,paraphrase,mixed,tl,5,approved,EXP01,
