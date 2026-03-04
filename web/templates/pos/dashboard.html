@@ -1,0 +1,113 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'dashboard' %}
+{% block title %}Dashboard — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Dashboard</h2>
+    <p>Overview of your store performance</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- ═══ Stats ═══ -->
+<div class="stats-grid">
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__label">Today's Revenue</div>
+    <div class="stat-card__value">₱{{ "%.2f" | format(stats.today_revenue) }}</div>
+    <div class="stat-card__sub">{{ stats.today_transactions }} transaction{{ 's' if stats.today_transactions != 1 }}</div>
+  </div>
+  <div class="stat-card stat-card--success">
+    <div class="stat-card__label">All-Time Revenue</div>
+    <div class="stat-card__value">₱{{ "%.2f" | format(stats.all_time_revenue) }}</div>
+    <div class="stat-card__sub">{{ stats.all_time_transactions }} total transactions</div>
+  </div>
+  <div class="stat-card stat-card--warning">
+    <div class="stat-card__label">Active Products</div>
+    <div class="stat-card__value">{{ stats.total_products }}</div>
+    <div class="stat-card__sub">{{ stats.total_units }} total units in stock</div>
+  </div>
+  <div class="stat-card stat-card--danger">
+    <div class="stat-card__label">Stock Alerts</div>
+    <div class="stat-card__value">{{ stats.out_of_stock + stats.low_stock }}</div>
+    <div class="stat-card__sub">{{ stats.out_of_stock }} out · {{ stats.low_stock }} low</div>
+  </div>
+</div>
+
+<!-- ═══ Two-Column ═══ -->
+<div class="grid-2">
+  <!-- Recent Transactions -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Recent Transactions</h3>
+      <a href="{{ url_for('admin.transactions') }}" class="btn btn--ghost btn--sm">View All →</a>
+    </div>
+    <div class="card-body--flush table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for txn in stats.recent_transactions %}
+          <tr>
+            <td class="mono">{{ txn.transaction_ref }}</td>
+            <td class="font-bold">₱{{ "%.2f" | format(txn.total_amount) }}</td>
+            <td>
+              {% if txn.status == 'completed' %}
+                <span class="badge badge--success">Completed</span>
+              {% elif txn.status == 'voided' %}
+                <span class="badge badge--danger">Voided</span>
+              {% else %}
+                <span class="badge badge--neutral">{{ txn.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-secondary text-sm">{{ txn.created_at }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="table-empty">No transactions yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top Sellers -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Top Sellers</h3>
+      <span class="text-sm text-muted">All time</span>
+    </div>
+    <div class="card-body--flush table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Medicine</th>
+            <th>Sold</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in stats.top_sellers %}
+          <tr>
+            <td class="text-secondary">{{ loop.index }}</td>
+            <td class="font-bold">{{ item.brand }}</td>
+            <td>{{ item.total_sold }} units</td>
+            <td class="font-bold">₱{{ "%.2f" | format(item.total_revenue) }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="table-empty">No sales data yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

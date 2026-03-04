@@ -21,7 +21,7 @@
       "Notes": "Best used when nasal symptoms (runny nose, sneezing, congestion) are present"
     },
     {
-      "Brand": "Neozep ",
+      "Brand": "Neozep Syrup",
       "Generic/Main Use": "Paracetamol + Phenylephrine + Chlorphenamine (± Zinc)",
       "Drug Category": "Cold",
       "Primary Symptom": "nasal congestion",
@@ -145,7 +145,7 @@
       "Generic/Main Use": "Paracetamol",
       "Drug Category": "Pain & Fever",
       "Primary Symptom": "headache",
-      "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches",
+      "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches, sore throat pain",
       "Dosage Form": "Tablet",
       "Minimum Age": 2,
       "Notes": "Best used when mild to moderate pain or fever is present"
@@ -155,7 +155,7 @@
       "Generic/Main Use": "Ibuprofen",
       "Drug Category": "Pain & Inflammation",
       "Primary Symptom": "pain",
-      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation",
+      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation, sore throat",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
       "Notes": "Best used when pain or fever is present with inflammation"
@@ -165,7 +165,7 @@
       "Generic/Main Use": "Ibuprofen",
       "Drug Category": "Pain & Inflammation",
       "Primary Symptom": "pain",
-      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation",
+      "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation, sore throat",
       "Dosage Form": "Tablet",
       "Minimum Age": 12,
       "Notes": "Best used when pain or inflammation is present"

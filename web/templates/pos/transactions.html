@@ -1,0 +1,102 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'transactions' %}
+{% block title %}Transactions — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Transactions</h2>
+    <p>Sales history and records</p>
+  </div>
+  <div class="page-header-actions">
+    <select class="form-select" onchange="location.href='?status='+this.value">
+      <option value="" {{ 'selected' if not status_filter }}>All Status</option>
+      <option value="completed" {{ 'selected' if status_filter == 'completed' }}>Completed</option>
+      <option value="voided" {{ 'selected' if status_filter == 'voided' }}>Voided</option>
+    </select>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body--flush table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Date &amp; Time</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Change</th>
+          <th>Status</th>
+          <th>Cashier</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+        <tr>
+          <td class="mono font-bold">{{ txn.transaction_ref }}</td>
+          <td class="text-sm text-secondary">{{ txn.created_at }}</td>
+          <td>{{ txn.item_count or '—' }}</td>
+          <td class="font-bold">₱{{ "%.2f" | format(txn.total_amount) }}</td>
+          <td>₱{{ "%.2f" | format(txn.amount_tendered) }}</td>
+          <td>₱{{ "%.2f" | format(txn.change_amount) }}</td>
+          <td>
+            {% if txn.status == 'completed' %}
+              <span class="badge badge--success">Completed</span>
+            {% elif txn.status == 'voided' %}
+              <span class="badge badge--danger">Voided</span>
+            {% else %}
+              <span class="badge badge--neutral">{{ txn.status }}</span>
+            {% endif %}
+          </td>
+          <td class="text-sm">{{ txn.cashier_name or 'System' }}</td>
+          <td>
+            <div class="inline-actions">
+              <button class="btn btn--sm btn--ghost" onclick="POS.transactions.viewDetail({{ txn.id }})">View</button>
+              {% if txn.status == 'completed' and user.role == 'admin' %}
+              <button class="btn btn--sm btn--danger" onclick="POS.transactions.voidTxn({{ txn.id }}, '{{ txn.transaction_ref }}')">Void</button>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="table-empty">No transactions found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="?page={{ page-1 }}{{ '&status=' + status_filter if status_filter }}" class="btn btn--sm">← Prev</a>
+  {% endif %}
+  <span class="text-sm text-secondary">Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}
+  <a href="?page={{ page+1 }}{{ '&status=' + status_filter if status_filter }}" class="btn btn--sm">Next →</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- ═══ Detail Modal ═══ -->
+<div class="modal-overlay" id="txnDetailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Transaction Detail</h3>
+      <button class="modal-close" onclick="POS.closeModal('txnDetailModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="txnDetailContent">
+      <p class="text-center text-muted">Loading…</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="POS.closeModal('txnDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

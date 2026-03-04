@@ -1,0 +1,127 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'inventory' %}
+{% block title %}Inventory — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Inventory</h2>
+    <p>{{ items | length }} products registered</p>
+  </div>
+  <div class="page-header-actions">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="invSearch" placeholder="Search inventory…" oninput="POS.inventory.filter(this.value)">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body--flush table-wrap">
+    <table id="invTable">
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Generic Name</th>
+          <th>Category</th>
+          <th>Form</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th style="width: 180px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr data-id="{{ item.id }}" data-brand="{{ item.brand }}" data-search="{{ item.brand|lower }} {{ (item.generic_name or '')|lower }} {{ (item.category or '')|lower }}">
+          <td class="font-bold">{{ item.brand }}</td>
+          <td class="text-secondary text-sm truncate" style="max-width: 160px;">{{ item.generic_name or '—' }}</td>
+          <td><span class="badge badge--neutral">{{ item.category or '—' }}</span></td>
+          <td class="text-sm">{{ item.dosage_form or '—' }}</td>
+          <td class="font-bold">₱{{ "%.2f" | format(item.unit_price) }}</td>
+          <td>
+            {% if item.stock_quantity == 0 %}
+              <span class="badge badge--danger">0</span>
+            {% elif item.stock_quantity <= item.min_stock_level %}
+              <span class="badge badge--warning">{{ item.stock_quantity }}</span>
+            {% else %}
+              <span class="badge badge--success">{{ item.stock_quantity }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if item.is_active %}
+              <span class="badge badge--success">Active</span>
+            {% else %}
+              <span class="badge badge--neutral">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="inline-actions">
+              <button class="btn btn--sm btn--primary" onclick="POS.inventory.openRestock({{ item.id }}, '{{ item.brand }}', {{ item.stock_quantity }})">Restock</button>
+              <button class="btn btn--sm" onclick="POS.inventory.openAdjust({{ item.id }}, '{{ item.brand }}', {{ item.stock_quantity }})">Adjust</button>
+              <button class="btn btn--sm btn--ghost" onclick="POS.inventory.toggleActive({{ item.id }}, {{ 'true' if item.is_active else 'false' }})">
+                {{ '⏸' if item.is_active else '▶' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="table-empty">No products in inventory</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ Restock Modal ═══ -->
+<div class="modal-overlay" id="restockModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Restock — <span id="restockBrand"></span></h3>
+      <button class="modal-close" onclick="POS.closeModal('restockModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-secondary mb-3">Current stock: <strong id="restockCurrent">0</strong></p>
+      <div class="form-group">
+        <label class="form-label">Quantity to Add</label>
+        <input class="form-input" type="number" id="restockQty" min="1" value="10" placeholder="Enter quantity">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="POS.closeModal('restockModal')">Cancel</button>
+      <button class="btn btn--primary" id="restockSubmit">Restock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Adjust Modal ═══ -->
+<div class="modal-overlay" id="adjustModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Adjust Stock — <span id="adjustBrand"></span></h3>
+      <button class="modal-close" onclick="POS.closeModal('adjustModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-secondary mb-3">Current stock: <strong id="adjustCurrent">0</strong></p>
+      <div class="form-group">
+        <label class="form-label">New Quantity</label>
+        <input class="form-input" type="number" id="adjustQty" min="0" placeholder="Set new quantity">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason</label>
+        <input class="form-input" type="text" id="adjustReason" placeholder="e.g. Physical count correction">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="POS.closeModal('adjustModal')">Cancel</button>
+      <button class="btn btn--primary" id="adjustSubmit">Adjust Stock</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>document.addEventListener('DOMContentLoaded', () => POS.inventory.init());</script>
+{% endblock %}

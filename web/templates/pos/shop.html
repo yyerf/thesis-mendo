@@ -1,0 +1,84 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'shop' %}
+{% block title %}Cashier — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Cashier</h2>
+    <p>Process sales and manage current transaction</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="shop-layout">
+  <!-- ═══ Products Panel ═══ -->
+  <div class="shop-products">
+    <div class="shop-search search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="shopSearch" placeholder="Search medicines…">
+    </div>
+    <div class="product-grid" id="productGrid">
+      <div class="text-center text-muted" style="grid-column: 1/-1; padding: 60px 0;">
+        Loading products…
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Cart Panel ═══ -->
+  <div class="shop-cart">
+    <div class="cart-header">
+      <h3>Current Sale</h3>
+      <button class="btn btn--ghost btn--sm" id="cartClearBtn">Clear</button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty" id="cartEmpty">
+        <div>
+          <div style="font-size: 32px; margin-bottom: 8px;">🛒</div>
+          Cart is empty<br>
+          <span class="text-sm">Click a product to add</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span class="cart-total__label">Total</span>
+        <span class="cart-total__amount" id="cartTotal">₱0.00</span>
+      </div>
+      <div class="cart-payment">
+        <input type="number" id="amountTendered" placeholder="Amount tendered (₱)" min="0" step="0.01">
+        <div class="cart-change">
+          Change: <span id="changeAmount">₱0.00</span>
+        </div>
+      </div>
+      <button class="btn btn--success btn--lg btn--block" id="checkoutBtn" disabled>
+        Complete Sale
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Receipt Modal ═══ -->
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Transaction Complete</h3>
+      <button class="modal-close" onclick="POS.closeModal('receiptModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="receipt" id="receiptContent"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="window.print()">🖨 Print</button>
+      <button class="btn btn--primary" onclick="POS.closeModal('receiptModal'); POS.shop.loadCart();">New Sale</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>document.addEventListener('DOMContentLoaded', () => POS.shop.init());</script>
+{% endblock %}

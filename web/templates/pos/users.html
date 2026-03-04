@@ -1,0 +1,126 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'users' %}
+{% block title %}Users — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>User Management</h2>
+    <p>{{ users | length }} registered account{{ 's' if users|length != 1 }}</p>
+  </div>
+  <div class="page-header-actions">
+    <button class="btn btn--primary" onclick="POS.openModal('createUserModal')">+ Add User</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body--flush table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr data-id="{{ u.id }}">
+          <td class="font-bold">{{ u.full_name }}</td>
+          <td class="mono text-secondary">{{ u.username }}</td>
+          <td>
+            {% if u.role == 'admin' %}
+              <span class="badge badge--primary">Admin</span>
+            {% else %}
+              <span class="badge badge--neutral">Cashier</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if u.is_active %}
+              <span class="badge badge--success">Active</span>
+            {% else %}
+              <span class="badge badge--danger">Inactive</span>
+            {% endif %}
+          </td>
+          <td class="text-sm text-secondary">{{ u.created_at[:10] if u.created_at else '—' }}</td>
+          <td>
+            <div class="inline-actions">
+              <button class="btn btn--sm btn--ghost" onclick="POS.users.openChangePassword({{ u.id }}, '{{ u.full_name }}')">Password</button>
+              <button class="btn btn--sm {{ 'btn--danger' if u.is_active else 'btn--success' }}" onclick="POS.users.toggleActive({{ u.id }}, '{{ u.full_name }}', {{ 'true' if u.is_active else 'false' }})">
+                {{ 'Deactivate' if u.is_active else 'Activate' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="table-empty">No users found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ Create User Modal ═══ -->
+<div class="modal-overlay" id="createUserModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add New User</h3>
+      <button class="modal-close" onclick="POS.closeModal('createUserModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" id="newFullName" placeholder="Juan Dela Cruz">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" id="newUsername" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="newPassword" placeholder="Minimum 6 characters">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select class="form-select" id="newRole">
+          <option value="cashier">Cashier</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="POS.closeModal('createUserModal')">Cancel</button>
+      <button class="btn btn--primary" id="createUserSubmit">Create User</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Change Password Modal ═══ -->
+<div class="modal-overlay" id="changePassModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Change Password — <span id="changePassName"></span></h3>
+      <button class="modal-close" onclick="POS.closeModal('changePassModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">New Password</label>
+        <input class="form-input" type="password" id="changePassInput" placeholder="Minimum 6 characters">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="POS.closeModal('changePassModal')">Cancel</button>
+      <button class="btn btn--primary" id="changePassSubmit">Update Password</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>document.addEventListener('DOMContentLoaded', () => POS.users.init());</script>
+{% endblock %}

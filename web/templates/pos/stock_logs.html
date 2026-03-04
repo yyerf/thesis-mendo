@@ -1,0 +1,73 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'stock_logs' %}
+{% block title %}Stock Logs — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Stock Logs</h2>
+    <p>Audit trail of all inventory movements</p>
+  </div>
+  <div class="page-header-actions">
+    <select class="form-select" onchange="location.href='?inventory_id='+this.value">
+      <option value="">All Products</option>
+      {% for item in all_items %}
+      <option value="{{ item.id }}" {{ 'selected' if inv_filter == item.id }}>{{ item.brand }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body--flush table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date &amp; Time</th>
+          <th>Product</th>
+          <th>Type</th>
+          <th>Change</th>
+          <th>Before → After</th>
+          <th>Reference</th>
+          <th>User</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="text-sm text-secondary">{{ log.created_at }}</td>
+          <td class="font-bold">{{ log.brand or ('Item #' ~ log.inventory_id) }}</td>
+          <td>
+            {% if log.change_type == 'restock' %}
+              <span class="badge badge--success">Restock</span>
+            {% elif log.change_type == 'sale' %}
+              <span class="badge badge--primary">Sale</span>
+            {% elif log.change_type == 'adjustment' %}
+              <span class="badge badge--warning">Adjustment</span>
+            {% elif log.change_type == 'void_return' %}
+              <span class="badge badge--danger">Void Return</span>
+            {% else %}
+              <span class="badge badge--neutral">{{ log.change_type }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if log.quantity_change > 0 %}
+              <span class="text-success">+{{ log.quantity_change }}</span>
+            {% else %}
+              <span class="text-danger">{{ log.quantity_change }}</span>
+            {% endif %}
+          </td>
+          <td class="mono text-sm">{{ log.quantity_before }} → {{ log.quantity_after }}</td>
+          <td class="mono text-sm text-secondary">{{ log.reference or '—' }}</td>
+          <td class="text-sm">{{ log.performed_by_name or 'System' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="table-empty">No stock logs found</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

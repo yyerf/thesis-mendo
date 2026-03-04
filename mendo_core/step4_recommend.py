@@ -171,9 +171,18 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
         if "DIARRHEA" in symptoms_set and ("diarrhea" in row.primary_symptom or "diarrhea" in row.typical_symptoms):
             add_candidate(row, "diarrhea_match", 3)
 
-        # Stomach ache is not in your dataset yet (as provided). Leave hook.
-        if "STOMACH_ACHE" in symptoms_set and ("stomach" in row.typical_symptoms or "tiyan" in row.typical_symptoms):
-            add_candidate(row, "stomach_ache_match", 1)
+        # Sore throat -> throat/pain products or analgesics
+        if "SORE_THROAT" in symptoms_set:
+            combined_st = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category}"
+            if ("sore throat" in combined_st or "throat" in combined_st
+                    or "pain" in row.primary_symptom
+                    or ("pain" in row.drug_category and "fever" not in row.drug_category)):
+                add_candidate(row, "sore_throat_match", 2)
+
+        # Stomach ache
+        if "STOMACH_ACHE" in symptoms_set and ("stomach" in row.typical_symptoms or "tiyan" in row.typical_symptoms
+                or "abdominal" in row.typical_symptoms or "stomach" in row.primary_symptom):
+            add_candidate(row, "stomach_ache_match", 2)
 
     # Merge by brand (keep highest score, merge reasons)
     by_brand: Dict[str, Tuple[int, MedRow, List[str]]] = {}

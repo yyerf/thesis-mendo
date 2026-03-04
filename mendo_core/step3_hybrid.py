@@ -80,6 +80,14 @@ def _explicitly_negates_headache(user_input: str) -> bool:
     )
 
 
+def _explicitly_negates_cough(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    return (
+        re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing)\b", nt)
+        is not None
+    )
+
+
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
     for kw in keywords:
         nkw = _normalize(kw)
@@ -362,6 +370,11 @@ def extract_symptoms_hybrid(
     """
 
     detected = extract_symptoms_dictionary(user_input)
+
+    # Global negation override for cough at dictionary stage too.
+    if _explicitly_negates_cough(user_input):
+        detected = [s for s in detected if s not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}]
+
     if detected or not enable_semantic_fallback:
         return detected
 
@@ -394,6 +407,10 @@ def extract_symptoms_hybrid(
     if _explicitly_negates_headache(user_input):
         semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
 
+    # Global negation override: don't re-add COUGH if explicitly negated.
+    if _explicitly_negates_cough(user_input):
+        semantic_detected = [s for s in semantic_detected if s not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}]
+
     scored = sorted(
         ((m.symptom, float(m.score)) for m in diag if m.symptom in semantic_detected),
         key=lambda x: x[1],
@@ -423,6 +440,12 @@ def extract_symptoms_hybrid_report(
     }
 
     dict_symptoms = extract_symptoms_dictionary(user_input)
+
+    # Global negation override for cough at dictionary stage.
+    if _explicitly_negates_cough(user_input):
+        cough_labels = {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
+        dict_symptoms = [s for s in dict_symptoms if s not in cough_labels]
+
     dict_details = _dictionary_matches(user_input)
     report["stages"].append(
         {
@@ -466,6 +489,13 @@ def extract_symptoms_hybrid_report(
         if _explicitly_negates_headache(user_input):
             semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
             diag_sorted = [row for row in diag_sorted if row.get("symptom") != "HEADACHE"]
+
+        # Global negation override: don't let semantic fallback re-add cough
+        # when user explicitly denies it.
+        if _explicitly_negates_cough(user_input):
+            cough_labels = {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
+            semantic_detected = [s for s in semantic_detected if s not in cough_labels]
+            diag_sorted = [row for row in diag_sorted if row.get("symptom") not in cough_labels]
     except Exception as e:
         report["stages"].append(
             {

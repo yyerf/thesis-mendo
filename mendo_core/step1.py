@@ -49,6 +49,11 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "binibiyak",
         "binibiyak ang ulo",
         "binibiyak ang ulo ko",
+        "sasabog ang ulo",
+        "sasabog ulo",
+        "parang sasabog ulo",
+        "parang sasabog ang ulo",
+        "pumapasabog ulo",
         # Bisaya
         "labad akong ulo",
         "sakit akong ulo",
@@ -153,6 +158,8 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "init kaayo akong lawas",
         "init kaayo akong lawas ron",
         "init akong lawas ron",
+        "init ang lawas",
+        "init ang katawan",
         # Bisaya: feeling hot
         "init akong pamati",
         "init kaayo akong pamati",
@@ -285,6 +292,30 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "red akong panit",
         "nagpula akong balat",
     ],
+    "STOMACH_ACHE": [
+        # English
+        "stomach ache",
+        "stomach pain",
+        "stomachache",
+        "tummy ache",
+        "abdominal pain",
+        # Tagalog
+        "sakit tiyan",
+        "sakit ng tiyan",
+        "sakit sa tiyan",
+        "masakit tiyan",
+        "masakit ang tiyan",
+        "masakit ang tiyan ko",
+        "kabag",
+        "hilab",
+        "hilab ng tiyan",
+        "sakit sa sikmura",
+        "masakit sikmura",
+        # Bisaya
+        "sakit akong tiyan",
+        "sakit sa tiyan",
+        "sakit tiyan nako",
+    ],
     "DIARRHEA": [
         # English
         "diarrhea",
@@ -362,6 +393,14 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
             )
         )
     if not cough_present:
+        return []
+
+    # Check for explicit cough negation BEFORE deciding cough type.
+    # Examples: "walang ubo", "wala akong ubo", "no cough", "without cough"
+    if re.search(
+        r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing)\b",
+        normalized_text,
+    ):
         return []
 
     dry_qualifiers = [
@@ -629,7 +668,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches)\b",
+            r"\b(sakit|masakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog)\b",
             normalized_text,
         ) is not None
         if not pain_present:
