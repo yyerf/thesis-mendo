@@ -38,6 +38,14 @@ class MedRow:
     min_age: str
     dosage_form: str
     notes: str
+    # ASG (Authoritative-Source-Grounded) fields
+    approved_indications: tuple  # tuple of strings
+    indication_source: str
+    contraindications: tuple
+    warnings: tuple
+    drug_interactions: tuple
+    max_duration_days: int
+    contraindication_source: str
 
 
 def _norm(s: Any) -> str:
@@ -68,23 +76,88 @@ def load_mendo_dataset(path: str) -> List[MedRow]:
                 min_age=str(r.get("Minimum Age") or ""),
                 dosage_form=str(r.get("Dosage Form") or ""),
                 notes=str(r.get("Notes") or ""),
+                approved_indications=tuple(r.get("Approved_Indications") or []),
+                indication_source=str(r.get("Indication_Source") or ""),
+                contraindications=tuple(r.get("Contraindications") or []),
+                warnings=tuple(r.get("Warnings") or []),
+                drug_interactions=tuple(r.get("Drug_Interactions") or []),
+                max_duration_days=int(r.get("Max_Duration_Days") or 0),
+                contraindication_source=str(r.get("Contraindication_Source") or ""),
             )
         )
     return out
 
 
-def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> Dict[str, Any]:
-    """Rule-based mapping aligned to your dataset."""
+def _check_paracetamol_overlap(recs: List[Dict[str, Any]]) -> List[str]:
+    """Warn if multiple paracetamol-containing products are recommended."""
+    pcm_brands = [
+        r["brand"] for r in recs
+        if "paracetamol" in (r.get("active_ingredients") or "").lower()
+    ]
+    if len(pcm_brands) > 1:
+        return [
+            f"⚠ Multiple paracetamol-containing products selected ({', '.join(pcm_brands)}). "
+            "Do NOT take together — risk of overdose. Choose only ONE."
+        ]
+    return []
+
+
+def _check_opposing_mechanisms(recs: List[Dict[str, Any]]) -> List[str]:
+    """Warn if a cough suppressant is combined with an expectorant."""
+    cats = {r.get("drug_category", "") for r in recs}
+    if "expectorant" in cats and "cough suppressant" in cats:
+        return [
+            "⚠ Expectorant + Cough Suppressant detected — opposing mechanisms. "
+            "Use only one type at a time."
+        ]
+    return []
+
+
+def recommend_from_dataset(
+    symptoms: Sequence[str],
+    rows: Sequence[MedRow],
+    *,
+    red_flags: Optional[List[Dict[str, str]]] = None,
+) -> Dict[str, Any]:
+    """Rule-based mapping aligned to your dataset.
+
+    If *red_flags* is non-empty the system returns a ``triage`` action
+    instead of OTC recommendations, instructing the user to consult a
+    doctor or pharmacist immediately.
+    """
+
+    # ── TRIAGE GATE — redirect to medical professional ──
+    if red_flags:
+        flag_msgs = [f["message"] for f in red_flags]
+        return {
+            "action": "triage",
+            "triage_flags": red_flags,
+            "message": (
+                "⚠️ CONSULT A DOCTOR / PHARMACIST IMMEDIATELY.\n"
+                "The following serious symptom(s) were detected:\n"
+                + "\n".join(f"  • {m}" for m in flag_msgs)
+                + "\n\nThese symptoms may indicate a condition that requires "
+                "professional medical evaluation. Self-medication with OTC "
+                "products is NOT recommended."
+            ),
+            "recommendations": [],
+            "safety_warnings": [],
+        }
 
     symptoms_set = set(symptoms)
+    matching_symptoms = set(symptoms)  # copy for tracking actual matches
 
-    # Clarifying question for ambiguous cough
+    # COUGH_GENERAL: only ask clarification if cough is the ONLY symptom
     if "COUGH_GENERAL" in symptoms_set and not ("COUGH_DRY" in symptoms_set or "COUGH_PRODUCTIVE" in symptoms_set):
-        return {
-            "action": "ask_clarify",
-            "question": "Please specify: Is your cough dry (walay/walang plema) or with phlegm (naay/may plema)?",
-            "candidates": [],
-        }
+        other_symptoms = symptoms_set - {"COUGH_GENERAL"}
+        if not other_symptoms:
+            return {
+                "action": "ask_clarify",
+                "question": "Please specify: Is your cough dry (walay/walang plema) or with phlegm (naay/may plema)?",
+                "candidates": [],
+            }
+        # Multi-symptom with COUGH_GENERAL: defer cough, recommend for other symptoms
+        matching_symptoms.discard("COUGH_GENERAL")
 
     candidates: List[Tuple[int, MedRow, List[str]]] = []
 
@@ -93,7 +166,7 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
 
     for row in rows:
         # Productive cough -> Solmux / Ascof / Robitussin patterns
-        if "COUGH_PRODUCTIVE" in symptoms_set:
+        if "COUGH_PRODUCTIVE" in matching_symptoms:
             productive_indicators = [
                 "productive cough",
                 "wet cough",
@@ -104,8 +177,6 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
                 "cough with thick phlegm",
                 "chest congestion",
             ]
-            # Important: don't treat the word "mucus" alone as productive because
-            # some dry-cough meds include phrases like "cough without mucus".
             combined = f"{row.primary_symptom} {row.typical_symptoms}"
             non_productive_markers = [
                 "non-productive",
@@ -126,7 +197,7 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
                 add_candidate(row, "productive_cough_match", 3)
 
         # Dry cough -> Tuseran / Sinecod patterns
-        if "COUGH_DRY" in symptoms_set:
+        if "COUGH_DRY" in matching_symptoms:
             if (
                 "dry cough" in row.primary_symptom
                 or "cough suppressant" in row.drug_category
@@ -138,29 +209,29 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
                 add_candidate(row, "dry_cough_match", 3)
 
         # General cough (if it reaches here, it means cough was specified but not typed)
-        if "COUGH_GENERAL" in symptoms_set and ("cough" in row.typical_symptoms or "cough" in row.primary_symptom):
+        if "COUGH_GENERAL" in matching_symptoms and ("cough" in row.typical_symptoms or "cough" in row.primary_symptom):
             add_candidate(row, "general_cough_match", 1)
 
         # Fever/headache/body aches -> typical paracetamol combo products
-        if "FEVER" in symptoms_set and "fever" in row.typical_symptoms:
+        if "FEVER" in matching_symptoms and "fever" in row.typical_symptoms:
             add_candidate(row, "fever_match", 2)
-        if "HEADACHE" in symptoms_set and "headache" in row.typical_symptoms:
+        if "HEADACHE" in matching_symptoms and "headache" in row.typical_symptoms:
             add_candidate(row, "headache_match", 2)
-        if "BODY_ACHES" in symptoms_set and ("body" in row.typical_symptoms and "pain" in row.typical_symptoms):
+        if "BODY_ACHES" in matching_symptoms and ("body" in row.typical_symptoms and "pain" in row.typical_symptoms):
             add_candidate(row, "body_aches_match", 1)
 
         # Nasal congestion/runny nose
-        if "NASAL_CONGESTION" in symptoms_set and ("nasal congestion" in row.typical_symptoms or "stuffy" in row.typical_symptoms):
+        if "NASAL_CONGESTION" in matching_symptoms and ("nasal congestion" in row.typical_symptoms or "stuffy" in row.typical_symptoms):
             add_candidate(row, "nasal_congestion_match", 2)
-        if "RUNNY_NOSE" in symptoms_set and ("runny nose" in row.typical_symptoms or "sipon" in row.typical_symptoms):
+        if "RUNNY_NOSE" in matching_symptoms and ("runny nose" in row.typical_symptoms or "sipon" in row.typical_symptoms):
             add_candidate(row, "runny_nose_match", 2)
 
         # Allergy
-        if "ALLERGIC_RHINITIS" in symptoms_set and ("allergy" in row.drug_category or "allergy" in row.typical_symptoms):
+        if "ALLERGIC_RHINITIS" in matching_symptoms and ("allergy" in row.drug_category or "allergy" in row.typical_symptoms):
             add_candidate(row, "allergy_match", 3)
 
         # Rashes / allergic skin reaction -> treat as allergy/antihistamine bucket
-        if "RASHES" in symptoms_set:
+        if "RASHES" in matching_symptoms:
             combined = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category} {_norm(row.brand)}"
             rash_specific = any(k in combined for k in ["rash", "rashes", "hives", "urticaria", "pantal", "butlig", "skin rash"])
             allergy_bucket = ("allergy" in row.drug_category) or ("antihistamine" in row.drug_category) or ("cetirizine" in _norm(row.brand))
@@ -168,11 +239,11 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
                 add_candidate(row, "rash_match", 3)
 
         # Diarrhea
-        if "DIARRHEA" in symptoms_set and ("diarrhea" in row.primary_symptom or "diarrhea" in row.typical_symptoms):
+        if "DIARRHEA" in matching_symptoms and ("diarrhea" in row.primary_symptom or "diarrhea" in row.typical_symptoms):
             add_candidate(row, "diarrhea_match", 3)
 
         # Sore throat -> throat/pain products or analgesics
-        if "SORE_THROAT" in symptoms_set:
+        if "SORE_THROAT" in matching_symptoms:
             combined_st = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category}"
             if ("sore throat" in combined_st or "throat" in combined_st
                     or "pain" in row.primary_symptom
@@ -180,8 +251,10 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
                 add_candidate(row, "sore_throat_match", 2)
 
         # Stomach ache
-        if "STOMACH_ACHE" in symptoms_set and ("stomach" in row.typical_symptoms or "tiyan" in row.typical_symptoms
-                or "abdominal" in row.typical_symptoms or "stomach" in row.primary_symptom):
+        if "STOMACH_ACHE" in matching_symptoms and ("stomach" in row.typical_symptoms or "tiyan" in row.typical_symptoms
+                or "abdominal" in row.typical_symptoms or "stomach" in row.primary_symptom
+                or "hyperacidity" in row.typical_symptoms or "heartburn" in row.typical_symptoms
+                or "antacid" in row.drug_category or "antispasmodic" in row.drug_category):
             add_candidate(row, "stomach_ache_match", 2)
 
     # Merge by brand (keep highest score, merge reasons)
@@ -199,20 +272,38 @@ def recommend_from_dataset(symptoms: Sequence[str], rows: Sequence[MedRow]) -> D
 
     ranked = sorted(by_brand.values(), key=lambda t: t[0], reverse=True)
 
+    recommendations = [
+        {
+            "brand": row.brand,
+            "active_ingredients": row.generic_main_use,
+            "drug_category": row.drug_category,
+            "dosage_form": row.dosage_form,
+            "min_age": row.min_age,
+            "primary_symptom": row.primary_symptom,
+            "reasons": reasons,
+            "source": row.indication_source,
+            "warnings": list(row.warnings) if row.warnings else [],
+            "max_duration_days": row.max_duration_days,
+        }
+        for score, row, reasons in ranked[:8]
+    ]
+
+    # Safety warnings
+    safety_warnings: List[str] = []
+    safety_warnings.extend(_check_paracetamol_overlap(recommendations))
+    safety_warnings.extend(_check_opposing_mechanisms(recommendations))
+
+    # Cough follow-up warning when cough was deferred
+    if "COUGH_GENERAL" in symptoms_set and "COUGH_GENERAL" not in matching_symptoms:
+        safety_warnings.append(
+            "ℹ You also mentioned a cough. Please clarify: Is it dry (walang plema) or "
+            "with phlegm (may plema)? We can recommend cough medicine after."
+        )
+
     return {
         "action": "recommend",
-        "recommendations": [
-            {
-                "brand": row.brand,
-                "active_ingredients": row.generic_main_use,
-                "drug_category": row.drug_category,
-                "dosage_form": row.dosage_form,
-                "min_age": row.min_age,
-                "primary_symptom": row.primary_symptom,
-                "reasons": reasons,
-            }
-            for score, row, reasons in ranked[:8]
-        ],
+        "recommendations": recommendations,
+        "safety_warnings": safety_warnings,
     }
 
 

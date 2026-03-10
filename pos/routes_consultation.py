@@ -126,12 +126,15 @@ def api_analyze():
         )
         symptoms = report.get("final", {}).get("symptoms", [])
         source = report.get("final", {}).get("source", "unknown")
+        red_flags = report.get("red_flags", [])
 
         # ── Step 4: Recommendation ──
         from mendo_core.step4_recommend import recommend_from_dataset
 
         med_rows = _get_med_rows()
-        recommendation = recommend_from_dataset(symptoms, med_rows)
+        recommendation = recommend_from_dataset(
+            symptoms, med_rows, red_flags=red_flags,
+        )
 
         # ── Filter by age + cross-reference POS inventory ──
         if user_age is not None:

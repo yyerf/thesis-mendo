@@ -60,6 +60,16 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sakit ako'g ulo",
         "gibukbok",
         "gibukbok akong ulo",
+        # Alternative phrasings
+        "tumitibok",
+        "tumitibok ang ulo",
+        "kumikislot",
+        "kumikislot ang ulo",
+        "migraine",
+        "humahapdi ang ulo",
+        "sumasakit ang ulo",
+        "sumasakit ang ulo ko",
+        "sumasakit ulo",
     ],
     # NOTE (thesis/panel-friendly): COUGH is split into 3 intents.
     # - COUGH_PRODUCTIVE: cough with phlegm/mucus (wet cough)
@@ -140,8 +150,17 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "may lagnat",
         "nilalagnat",
         "nilalagnat ako",
+        "nililagnat",
+        "nililagnat ako",
         "mainit ang katawan",
         "mainit katawan",
+        "nag iinit ang katawan",
+        "nag-iinit ang katawan",
+        "nag iinit ung katawan",
+        "uminit ang katawan",
+        "uminit ung katawan",
+        "init ang katawan",
+        "init ung katawan",
         "nanginginig",
         "panginginig",
         "binat",
@@ -151,6 +170,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Bisaya
         "hilanat",
         "gihilanat",
+        "gi hilanat",
+        "gihinlantan",
+        "gi hilantan",
         "ginahilanat",
         "naay hilanat",
         # Bisaya phrasing for "my body feels hot" (common fever description)
@@ -163,12 +185,17 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Bisaya: feeling hot
         "init akong pamati",
         "init kaayo akong pamati",
+        # Alternative phrasings
+        "ang init ng katawan",
+        "ang init ng katawan ko",
     ],
     "BODY_ACHES": [
         # English
         "body aches",
         "body ache",
         "body pain",
+        "body hurts",
+        "my body hurts",
         "muscle pain",
         "muscle aches",
         "joint pain",
@@ -180,6 +207,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "masakit katawan",
         "sakit katawan",
         "katawan ko masakit",
+        "sumasakit ang katawan",
+        "sumasakit katawan",
+        "sumasakit ang katawan ko",
         "ngalay",
         "nanlalambot",
         "binugbog",
@@ -190,6 +220,12 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sakit lawas",
         "luya",
         "kapoy kaayo",
+        # Alternative phrasings
+        "parang pinukpok",
+        "masakit ang katawan",
+        "sakit ng katawan",
+        "nanlalamig",
+        "giniginaw",
     ],
     "NASAL_CONGESTION": [
         # English
@@ -211,16 +247,31 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
     "SORE_THROAT": [
         "sore throat",
         "throat pain",
+        "masakit ang lalamunan ko",
+        "masakit ang lalamunan",
+        "masakit na ang lalamunan",
         "masakit lalamunan",
-        "sakit lalamunan",
+        "sumasakit ang lalamunan ko",
+        "sumasakit ang lalamunan",
+        "sumasakit lalamunan",
+        "masakit ang tutunlan",
         "masakit tutunlan",  # common Bisaya word for throat
-        "sakit tutunlan",
+        "sakit ng lalamunan",
+        "sakit sa lalamunan",
+        "sakit ng tutunlan",
+        "sakit sa tutunlan",
         # Bisaya/Tagalog: can't swallow
         "di katulon",
         "di ako katulon",
         "di ko katulon",
         "dili katulon",
         "dili ko katulon",
+        # Alternative phrasings
+        "paos",
+        "mahapdi ang lalamunan",
+        "mahapdi lalamunan",
+        "my throat hurts",
+        "throat hurts",
     ],
     "RUNNY_NOSE": [
         "runny nose",
@@ -254,6 +305,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "bahing",
         "katol ilong",
         "katol mata",
+        # Alternative phrasings
+        "nag aalerdyi",
+        "alerdyi",
         # (Keep rhinitis focused on nose/eyes + sneezing)
     ],
     "RASHES": [
@@ -291,6 +345,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "pula akong panit",
         "red akong panit",
         "nagpula akong balat",
+        # Alternative phrasings
+        "namumula ang balat",
+        "makati ang balat",
     ],
     "STOMACH_ACHE": [
         # English
@@ -299,6 +356,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "stomachache",
         "tummy ache",
         "abdominal pain",
+        "stomach hurts",
+        "my stomach hurts",
+        "stomach cramps",
         # Tagalog
         "sakit tiyan",
         "sakit ng tiyan",
@@ -306,6 +366,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "masakit tiyan",
         "masakit ang tiyan",
         "masakit ang tiyan ko",
+        "sakit stomach",
+        "sakit sa stomach",
+        "masakit stomach",
         "kabag",
         "hilab",
         "hilab ng tiyan",
@@ -315,6 +378,12 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sakit akong tiyan",
         "sakit sa tiyan",
         "sakit tiyan nako",
+        # Alternative phrasings
+        "buhol buhol",
+        "buhol buhol ang tiyan",
+        "kumukulo",
+        "kumukulo ang tiyan",
+        "hyperacidity",
     ],
     "DIARRHEA": [
         # English
@@ -331,7 +400,23 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "kalibang",
         "nagkalibang",
         "laway ang tae",
+        # Alternative phrasings
+        "matubig ang dumi",
+        "sige cr",
+        "loose bowel",
     ],
+}
+
+# Symptom keywords used to detect "consumed negation":
+# If one of these sits between a neg word and a target symptom,
+# the negation is consumed by the closer symptom keyword and
+# does NOT propagate to the target.
+_INTERVENING_SYMPTOM_WORDS = {
+    "ubo", "cough", "lagnat", "fever", "sipon", "ulo", "headache",
+    "tiyan", "stomach", "katawan", "diarrhea", "pagtatae", "nagtatae",
+    "rashes", "pantal", "lalamunan", "throat", "balat", "ilong",
+    "hilanat", "umuubo", "inuubo", "nilalagnat", "nililagnat",
+    "tutunlan", "butlig", "ngalay", "lawas",
 }
 
 
@@ -341,19 +426,38 @@ def _is_negated(normalized_text: str, normalized_phrase: str) -> bool:
     Deterministic rule (easy to explain): if a negation word appears within
     0-2 words BEFORE the symptom phrase, treat it as negated.
 
+    Safety: if another known symptom keyword sits between the negation word
+    and the target phrase, the negation is "consumed" by that closer keyword
+    and does not propagate.  E.g. "hindi pala ubo sipon" — "hindi" negates
+    "ubo", not "sipon".
+
+    Each negation word is checked independently (not finditer which skips
+    overlapping matches). If ANY negation word reaches the target with no
+    consumed intervening symptom, the phrase IS negated.
+
     This is intentionally simple and not perfect NLP.
     """
 
     if not normalized_phrase:
         return False
 
-    neg_words = ["no", "not", "without", "walang", "walay", "waley", "dili", "di"]
+    neg_words = ["no", "not", "without", "wala", "walang", "walay", "waley", "dili", "di", "hindi", "hnd"]
 
-    # Build a small regex window: (neg) (optional word) (optional word) phrase
-    # Example: "walang" + "masyadong" + "lagnat" -> still counts as negated
-    neg = r"(?:" + "|".join(re.escape(w) for w in neg_words) + r")"
-    window = rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+{re.escape(normalized_phrase)}\b"
-    return re.search(window, normalized_text) is not None
+    # Find every negation word position independently
+    neg = r"\b(?:" + "|".join(re.escape(w) for w in neg_words) + r")\b"
+    phrase_pat = rf"((?:\s+\w+){{0,2}})\s+{re.escape(normalized_phrase)}\b"
+    for neg_m in re.finditer(neg, normalized_text):
+        after = normalized_text[neg_m.end():]
+        follow = re.match(phrase_pat, after)
+        if not follow:
+            continue
+        filler_tokens = follow.group(1).split()
+        consumed = any(ft in _INTERVENING_SYMPTOM_WORDS and ft != normalized_phrase
+                       for ft in filler_tokens)
+        if not consumed:
+            return True  # Genuine negation found
+
+    return False  # All matches had consumed negation
 
 
 def _extract_cough_type(normalized_text: str) -> List[str]:
@@ -388,6 +492,7 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
             for p in (
                 "coughing",
                 "inuubo",
+                "umuubo",
                 "gi ubo",
                 "gi-ubo",
             )
@@ -398,7 +503,7 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
     # Check for explicit cough negation BEFORE deciding cough type.
     # Examples: "walang ubo", "wala akong ubo", "no cough", "without cough"
     if re.search(
-        r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing)\b",
+        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
         normalized_text,
     ):
         return []
@@ -431,7 +536,10 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
         "wet cough",
         "productive cough",
         "cough with phlegm",
+        "coughing with phlegm",
         "cough with mucus",
+        "coughing with mucus",
+        "with phlegm",
         "chest congestion",
         # Tagalog / Taglish
         "may plema",
@@ -567,7 +675,7 @@ def _levenshtein_within(a: str, b: str, max_dist: int) -> bool:
     return prev[lb] <= max_dist
 
 
-def _infer_nasal_label(normalized_text: str, detected: List[str]) -> None:
+def _infer_nasal_label(normalized_text: str, detected: List[str], negated_labels: set = None) -> None:
     """Infer nasal label when the user mentions nose/ilong.
 
     Based on your definitions:
@@ -576,14 +684,66 @@ def _infer_nasal_label(normalized_text: str, detected: List[str]) -> None:
 
     If the user just says something vague about the nose (e.g., "weird akong ilong"),
     we default to NASAL_CONGESTION (stuffy/blocked feeling) rather than RUNNY_NOSE.
+    
+    IMPORTANT: RUNNY_NOSE and NASAL_CONGESTION can co-exist (e.g., "sipon tapos barado ilong").
+    Only ALLERGIC_RHINITIS is exclusive with other nasal labels.
     """
+    if negated_labels is None:
+        negated_labels = set()
 
-    nasal_labels = {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}
-    if any(l in nasal_labels for l in detected):
+    # If ALLERGIC_RHINITIS is already detected, skip
+    if "ALLERGIC_RHINITIS" in detected:
         return
 
     if not re.search(r"\b(ilong|nose)\b", normalized_text):
         return
+
+    # Per-cue-group negation detection (avoids blanket early-return which missed
+    # cases like "walang allergy pero barado ang ilong" → should detect NASAL_CONGESTION)
+    _neg_rx = r"\b(?:wala|walang|walay|waley|no|not|without|dili|di|hindi|hnd)\b"
+
+    def _cue_negated(keyword: str) -> bool:
+        """Check if keyword is negated, respecting consumed negation.
+
+        If another symptom keyword sits between the neg word and the target,
+        the negation is consumed by that closer symptom (e.g. "hindi ubo sipon"
+        — "hindi" negates "ubo", not "sipon").
+        Each neg word is checked independently to avoid overlapping-match issues.
+        """
+        # Check each negation word position independently
+        phrase_pat = rf"((?:\s+(?!pero\b|but\b|kaso\b|however\b|though\b)\w+){{0,2}})\s+{re.escape(keyword)}\b"
+        for neg_m in re.finditer(_neg_rx, normalized_text):
+            after = normalized_text[neg_m.end():]
+            follow = re.match(phrase_pat, after)
+            if not follow:
+                continue
+            filler_tokens = follow.group(1).split()
+            consumed = any(ft in _INTERVENING_SYMPTOM_WORDS for ft in filler_tokens
+                           if ft != keyword)
+            if not consumed:
+                return True  # Genuine negation
+        return False
+
+    allergy_cue_negated = any(_cue_negated(w) for w in ["allergy", "allergic", "bahing", "makati", "katol"])
+    runny_cue_negated   = any(_cue_negated(w) for w in ["sipon", "runny", "tumutulo"])
+    congestion_cue_negated = any(_cue_negated(w) for w in ["barado", "stuffy", "blocked", "clogged"])
+
+    # If ALL nasal cue groups present are negated, bail out entirely
+    all_negated = True
+    for group_neg, group_words in [
+        (allergy_cue_negated,   ["allergy", "allergic", "bahing", "makati", "katol"]),
+        (runny_cue_negated,     ["sipon", "runny", "tumutulo"]),
+        (congestion_cue_negated, ["barado", "stuffy", "blocked", "clogged"]),
+    ]:
+        group_present = any(_phrase_in_text(normalized_text, w) for w in group_words)
+        if group_present and not group_neg:
+            all_negated = False
+            break
+    if all_negated and re.search(_neg_rx, normalized_text):
+        # Only return early if every mentioned nasal cue is negated
+        if any(_phrase_in_text(normalized_text, w) for w in
+               ["allergy","allergic","bahing","makati","katol","sipon","runny","tumutulo","barado","stuffy","blocked","clogged"]):
+            return
 
     runny_cues = [
         "sipon",
@@ -618,17 +778,21 @@ def _infer_nasal_label(normalized_text: str, detected: List[str]) -> None:
     def _has_any(cues: List[str]) -> bool:
         return any(_phrase_in_text(normalized_text, _normalize(c)) for c in cues)
 
-    if _has_any(allergy_cues):
-        detected.append("ALLERGIC_RHINITIS")
-        return
-    if _has_any(runny_cues):
+    if _has_any(allergy_cues) and not allergy_cue_negated:
+        if "ALLERGIC_RHINITIS" not in detected and "ALLERGIC_RHINITIS" not in negated_labels:
+            detected.append("ALLERGIC_RHINITIS")
+        return  # User is discussing allergy context — don't default to congestion
+    
+    # Allow RUNNY_NOSE and NASAL_CONGESTION to co-exist
+    if _has_any(runny_cues) and not runny_cue_negated and "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
         detected.append("RUNNY_NOSE")
-        return
-    if _has_any(congestion_cues):
+    if _has_any(congestion_cues) and not congestion_cue_negated and "NASAL_CONGESTION" not in detected and "NASAL_CONGESTION" not in negated_labels:
         detected.append("NASAL_CONGESTION")
-        return
-
-    detected.append("NASAL_CONGESTION")
+    
+    # If neither was detected and nose/ilong was mentioned, default to congestion
+    nasal_labels = {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}
+    if not any(l in nasal_labels for l in detected):
+        detected.append("NASAL_CONGESTION")
 
 
 def extract_symptoms(user_input: str) -> List[str]:
@@ -668,71 +832,331 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog)\b",
+            r"\b(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
             normalized_text,
         ) is not None
         if not pain_present:
-            # Typo/jejemon rescue: skit->sakit, lbd->labad
+            # Typo/jejemon rescue: skit->sakit, lbd->labad, masaket->masakit
             pain_present = any(
-                (len(t) >= 3 and (_levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "labad", 2)))
+                (len(t) >= 3 and (_levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "labad", 2) or _levenshtein_within(t, "masakit", 1)))
                 for t in tokens
             )
 
         headache_explicitly_negated = (
-            re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,3}\s+\b(headache|ulo|head)\b", normalized_text)
+            re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,3}\s+\b(headache|ulo|head)\b", normalized_text)
             is not None
         )
         if head_present and pain_present and not headache_explicitly_negated:
-            detected.append("HEADACHE")
+            # Proximity check: head_word and pain_word must be within 5 tokens of each other
+            # This prevents "sakit ng ulo... katawan ko" from triggering HEADACHE when pain refers to body
+            head_positions = [i for i, t in enumerate(tokens) if re.match(r"^(head|ulo)$", t)]
+            pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
+            # Also check for fuzzy-matched head/pain tokens
+            for i, t in enumerate(tokens):
+                if len(t) >= 3:
+                    if i not in [p for p in head_positions]:
+                        if _levenshtein_within(t, "head", 1) or _levenshtein_within(t, "ulo", 1):
+                            if t not in {"ubo", "ubi", "uno", "uso"}:  # exclude cough and other common words
+                                head_positions.append(i)
+                    if i not in [p for p in pain_positions]:
+                        if _levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "masakit", 1):
+                            pain_positions.append(i)
+            
+            if head_positions and pain_positions:
+                min_distance = min(abs(h - p) for h in head_positions for p in pain_positions)
+                if min_distance <= 5:
+                    detected.append("HEADACHE")
 
     # Remaining symptoms via dictionary scan (skip cough labels because we already decided them)
     cough_labels = {"COUGH_PRODUCTIVE", "COUGH_DRY", "COUGH_GENERAL"}
+    negated_labels: set = set()  # Track negated symptoms to prevent fuzzy rescue re-adding
     for symptom_label, phrases in SYMPTOM_DICTIONARY.items():
         if symptom_label in cough_labels:
             continue
+        negated_this = False
+        matched = False
         for phrase in phrases:
             normalized_phrase = _normalize(phrase)
             if _phrase_in_text(normalized_text, normalized_phrase):
-                # Negation handling for a few key symptoms where users say "no X"
-                if symptom_label in {"FEVER", "HEADACHE", "DIARRHEA"} and _is_negated(normalized_text, normalized_phrase):
+                # Negation handling for ALL symptoms where users say "no X"
+                if _is_negated(normalized_text, normalized_phrase):
+                    negated_this = True
                     continue
                 detected.append(symptom_label)
+                matched = True
                 break  # stop checking more phrases for this symptom
+        if negated_this and not matched:
+            negated_labels.add(symptom_label)
 
-    _infer_nasal_label(normalized_text, detected)
+    _infer_nasal_label(normalized_text, detected, negated_labels)
+
+    # Proximity-based SORE_THROAT rescue: throat_word near pain_word (reversed word order)
+    # Handles "lalamunan ko ang masakit", "tutunlan ko sakit"
+    if "SORE_THROAT" not in detected and "SORE_THROAT" not in negated_labels:
+        throat_words = re.search(r"\b(lalamunan|tutunlan|throat)\b", normalized_text)
+        throat_pain = re.search(r"\b(masakit|masaket|sakit|sumasakit|pain|hurts|sore|hapdi|mahapdi)\b", normalized_text)
+        if throat_words and throat_pain:
+            # Proximity check: within 5 tokens
+            tokens = normalized_text.split()
+            tw_pos = [i for i, t in enumerate(tokens) if re.match(r"^(lalamunan|tutunlan|throat)$", t)]
+            tp_pos = [i for i, t in enumerate(tokens) if re.match(r"^(masakit|masaket|sakit|sumasakit|pain|hurts|sore|hapdi|mahapdi)$", t)]
+            if tw_pos and tp_pos:
+                min_dist = min(abs(a - b) for a in tw_pos for b in tp_pos)
+                if min_dist <= 5:
+                    # Check negation on both throat word AND pain word
+                    neg = r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b"
+                    negated_throat = re.search(
+                        rf"{neg}(?:\s+\w+){{0,3}}\s+\b(lalamunan|tutunlan|throat|sore\s+throat)\b",
+                        normalized_text
+                    )
+                    negated_pain = re.search(
+                        rf"{neg}(?:\s+\w+){{0,2}}\s+\b(masakit|masaket|sakit|sumasakit|pain|hurts|sore|hapdi)\b",
+                        normalized_text
+                    )
+                    if not negated_throat and not negated_pain:
+                        detected.append("SORE_THROAT")
+
+    # Proximity-based NASAL_CONGESTION rescue: "barado" near "ilong/nose" with filler words
+    # Handles cases like "barado na rin ilong", "barado pa yung ilong", "barado na ilong"
+    if "NASAL_CONGESTION" not in detected and "NASAL_CONGESTION" not in negated_labels:
+        congestion_match = (
+            re.search(r"\b(barado|bara|stuffy|blocked|clogged)\b(?:\s+\w+){0,3}\s+\b(ilong|nose)\b", normalized_text)
+            or re.search(r"\b(ilong|nose)\b(?:\s+\w+){0,3}\s+\b(barado|bara|stuffy|blocked|clogged)\b", normalized_text)
+        )
+        if congestion_match:
+            # Check negation: "walang barado", "wala akong barado"
+            neg_check = re.search(
+                r"\b(wala|walang|walay|waley|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(barado|bara|stuffy|blocked|clogged)\b",
+                normalized_text
+            )
+            if not neg_check:
+                detected.append("NASAL_CONGESTION")
+
+    # Proximity-based RASHES rescue: skin_word + rash_indicator within proximity
+    # Handles cases like "pula at makati ng balat ko", "makati ng balat", etc.
+    if "RASHES" not in detected and "RASHES" not in negated_labels:
+        skin_words = re.findall(r"\b(balat|panit|skin)\b", normalized_text)
+        rash_indicators = re.findall(r"\b(pula|makati|katol|itchy|red|namumula|nagpula|namula|pantal|butlig|hives|rash|rashes)\b", normalized_text)
+        if skin_words and rash_indicators:
+            detected.append("RASHES")
 
     # Fuzzy rescue for fever typos: e.g., "my lgnat" -> FEVER
-    if "FEVER" not in detected:
+    # Also handles vowel-dropped abbreviations like "lgnt" -> lagnat
+    if "FEVER" not in detected and "FEVER" not in negated_labels:
         tokens = normalized_text.split()
         if any(
             (len(t) >= 4 and (_levenshtein_within(t, "lagnat", 1) or _levenshtein_within(t, "fever", 1) or _levenshtein_within(t, "hilanat", 1)))
             for t in tokens
         ):
             detected.append("FEVER")
+    # Abbreviation rescue for fever: "lgnt" is a common Filipino texting abbreviation
+    if "FEVER" not in detected and "FEVER" not in negated_labels:
+        tokens = normalized_text.split()
+        if any(t in {"lgnt", "lgnat", "lagnt"} for t in tokens):
+            detected.append("FEVER")
+    # Proximity-based FEVER rescue: "mainit" near "katawan/lawas/body"
+    if "FEVER" not in detected and "FEVER" not in negated_labels:
+        if re.search(r"\b(mainit|init)\b(?:\s+\w+){0,3}\s+\b(katawan|lawas|body)\b", normalized_text):
+            detected.append("FEVER")
+        elif re.search(r"\b(katawan|lawas|body)\b(?:\s+\w+){0,3}\s+\b(mainit|init)\b", normalized_text):
+            detected.append("FEVER")
 
     # Fuzzy rescue for common Tagalog runny-nose variants/misspellings.
-    # Example: "ssinisipown" -> RUNNY_NOSE
-    if "RUNNY_NOSE" not in detected:
+    # Example: "ssinisipown" -> RUNNY_NOSE, "sepun" -> RUNNY_NOSE
+    if "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
         tokens = normalized_text.split()
-        sipon_targets = ["sinisipon", "sinasipon", "sisipon"]
+        sipon_targets = ["sinisipon", "sinasipon", "sisipon", "sipon"]
         for tok in tokens:
-            if len(tok) < 5:
+            if len(tok) < 4:
                 continue
             if any(_levenshtein_within(tok, target, max_dist=2) for target in sipon_targets):
                 detected.append("RUNNY_NOSE")
                 break
 
+    # Fuzzy rescue for cough typos: e.g., "umoubo" -> COUGH
+    # Exclusion: "ulo" is Levenshtein-1 from "ubo", so skip it.
+    cough_labels_present = {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
+    if not (cough_labels_present & set(detected)):
+        tokens = normalized_text.split()
+        ulo_exclusion = {"ulo", "ulu", "ole", "olo", "tubo", "ubos", "ubi", "ube", "tuba", "ubod"}
+        for tok in tokens:
+            if tok in ulo_exclusion:
+                continue
+            if len(tok) >= 3 and _levenshtein_within(tok, "ubo", 1):
+                detected.extend(_extract_cough_type(normalized_text))
+                if not (cough_labels_present & set(detected)):
+                    detected.append("COUGH_GENERAL")
+                break
+
+    # Fuzzy rescue for diarrhea typos: e.g., "pagtate" -> DIARRHEA
+    # Exclusion: "kaninang" contains "kanina" which is close to "kalibang".
+    if "DIARRHEA" not in detected and "DIARRHEA" not in negated_labels:
+        tokens = normalized_text.split()
+        diarrhea_exclusion = {"kaninang", "kanina", "kaninag"}
+        diarrhea_targets = ["pagtatae", "nagtatae", "kalibang"]
+        for tok in tokens:
+            if tok in diarrhea_exclusion:
+                continue
+            if len(tok) < 5:
+                continue
+            if any(_levenshtein_within(tok, target, max_dist=2) for target in diarrhea_targets):
+                detected.append("DIARRHEA")
+                break
+
+    # Fuzzy rescue for rashes typos: e.g., "pantl" -> RASHES
+    if "RASHES" not in detected and "RASHES" not in negated_labels:
+        tokens = normalized_text.split()
+        rash_targets = ["pantal", "butlig"]
+        rash_exclusion = {"ipantal", "pantalon", "pantalan"}  # verbs/unrelated words
+        for tok in tokens:
+            if tok in rash_exclusion:
+                continue
+            if len(tok) < 4:
+                continue
+            if any(_levenshtein_within(tok, target, max_dist=1) for target in rash_targets):
+                detected.append("RASHES")
+                break
+
+    # Fuzzy rescue for stomach ache typos: e.g., "tyan" -> STOMACH_ACHE
+    # Also handles proximity matching: "stomach" near "sakit/masakit/pain/hurts"
+    if "STOMACH_ACHE" not in detected and "STOMACH_ACHE" not in negated_labels:
+        tokens = normalized_text.split()
+        stomach_targets = ["tiyan", "sikmura"]
+        for i, tok in enumerate(tokens):
+            if len(tok) < 4:
+                continue
+            if any(_levenshtein_within(tok, target, max_dist=1) for target in stomach_targets):
+                # Check if there is a pain word nearby (including common misspelling "masaket")
+                if re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|hilab|kabag)\b", normalized_text):
+                    detected.append("STOMACH_ACHE")
+                    break
+    # Proximity-based STOMACH_ACHE rescue: "stomach" near pain words with filler
+    # Handles code-switching like "stomach ko ang sakit", "my stomach hurts"
+    if "STOMACH_ACHE" not in detected and "STOMACH_ACHE" not in negated_labels:
+        if re.search(r"\b(stomach|tummy|abdomen)\b(?:\s+\w+){0,3}\s+\b(sakit|masakit|masaket|sumasakit|pain|ache|hurt|hurts)\b", normalized_text):
+            detected.append("STOMACH_ACHE")
+        elif re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|hurt|hurts)\b(?:\s+\w+){0,3}\s+\b(stomach|tummy|abdomen)\b", normalized_text):
+            detected.append("STOMACH_ACHE")
+
+    # Fuzzy rescue for body aches typos: e.g., "ktawan" -> BODY_ACHES
+    # Requires a pain word NEAR the body word (within 6 tokens) to avoid
+    # false positives like "sakit ng ulo... katawan ko" where pain refers to head
+    if "BODY_ACHES" not in detected and "BODY_ACHES" not in negated_labels:
+        tokens = normalized_text.split()
+        body_targets = ["katawan", "lawas"]
+        for i, tok in enumerate(tokens):
+            if len(tok) < 5:
+                continue
+            if any(_levenshtein_within(tok, target, max_dist=1) for target in body_targets):
+                # Check for pain word within 6 tokens of the body word
+                nearby_tokens = tokens[max(0, i-6):i+7]
+                nearby_text = " ".join(nearby_tokens)
+                if re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|ngalay)\b", nearby_text):
+                    detected.append("BODY_ACHES")
+                    break
+
     # Strong negation override: if user explicitly says they have NO fever,
     # remove FEVER even if earlier words mention lagnat/feverish.
+    # CONTRASTIVE BOUNDARY: "pero"/"but" resets negation scope.
+    #
+    # Helper: check if ANY negation word directly reaches the target keywords
+    # (each neg word checked independently to avoid overlapping-match issues).
+    _neg_rx_override = r"\b(?:wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b"
+
+    def _strong_neg_check(part: str, target_words: set, max_filler: int = 2) -> bool:
+        """Return True if any target word is genuinely negated in this text part."""
+        target_alt = "|".join(re.escape(w) for w in target_words)
+        phrase_pat = rf"((?:\s+\w+){{{0},{max_filler}}})\s+\b(?:{target_alt})\b"
+        for neg_m in re.finditer(_neg_rx_override, part):
+            after = part[neg_m.end():]
+            follow = re.match(phrase_pat, after)
+            if not follow:
+                continue
+            filler_tokens = follow.group(1).split()
+            consumed = any(ft in _INTERVENING_SYMPTOM_WORDS for ft in filler_tokens
+                           if ft not in target_words)
+            if not consumed:
+                return True
+        return False
+
     if "FEVER" in detected:
-        fever_negated = (
-            _is_negated(normalized_text, _normalize("fever"))
-            or _is_negated(normalized_text, _normalize("lagnat"))
-            or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\bfever\b", normalized_text)
-            or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\blagnat\b", normalized_text)
-        )
+        parts = re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text)
+        fever_negated = False
+        _fever_targets = {"fever", "lagnat", "hilanat"}
+        for i, part in enumerate(parts):
+            has_fever_word = bool(re.search(r"\b(fever|lagnat|hilanat|nilalagnat|nililagnat|hilantan)\b", part))
+            has_neg = _strong_neg_check(part, _fever_targets)
+            if has_neg and has_fever_word:
+                fever_negated = True
+            elif has_fever_word and not has_neg:
+                fever_negated = False
         if fever_negated:
             detected = [d for d in detected if d != "FEVER"]
+
+    # Strong negation override for COUGH with contrastive boundary
+    if any(s in detected for s in cough_labels_present):
+        parts = re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text)
+        cough_negated = False
+        _cough_targets = {"ubo", "cough", "coughing", "umuubo", "inuubo"}
+        for i, part in enumerate(parts):
+            has_cough_word = bool(re.search(r"\b(ubo|cough|coughing|umuubo|inuubo)\b", part))
+            has_neg = _strong_neg_check(part, _cough_targets)
+            if has_neg and has_cough_word:
+                cough_negated = True
+            elif has_cough_word and not has_neg:
+                cough_negated = False
+        if cough_negated:
+            detected = [d for d in detected if d not in cough_labels_present]
+
+    # Strong negation override for HEADACHE with contrastive boundary
+    if "HEADACHE" in detected:
+        parts = re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text)
+        head_negated = False
+        _head_targets = {"headache", "ulo", "head"}
+        for i, part in enumerate(parts):
+            has_head_word = bool(re.search(r"\b(headache|ulo|head|sakit\s+ulo|labad)\b", part))
+            has_neg = _strong_neg_check(part, _head_targets, max_filler=3)
+            if has_neg and has_head_word:
+                head_negated = True
+            elif has_head_word and not has_neg:
+                head_negated = False
+        if head_negated:
+            detected = [d for d in detected if d != "HEADACHE"]
+
+    # Strong negation override for RUNNY_NOSE with contrastive boundary
+    if "RUNNY_NOSE" in detected:
+        parts = re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text)
+        nose_negated = False
+        _nose_targets = {"sipon", "runny", "nose"}
+        for i, part in enumerate(parts):
+            has_nose_word = bool(re.search(r"\b(sipon|runny|nose)\b", part))
+            has_neg = _strong_neg_check(part, _nose_targets)
+            if has_neg and has_nose_word:
+                nose_negated = True
+            elif has_nose_word and not has_neg:
+                nose_negated = False
+        if nose_negated:
+            detected = [d for d in detected if d != "RUNNY_NOSE"]
+
+    # Strong negation override for BODY_ACHES with contrastive boundary
+    if "BODY_ACHES" in detected:
+        parts = re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text)
+        body_negated = False
+        for i, part in enumerate(parts):
+            has_body_word = bool(re.search(r"\b(katawan|body|lawas|muscle)\b", part))
+            has_neg = bool(
+                re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(sakit|masakit|pain|ache)\b(?:\s+\w+){0,2}\s+\b(katawan|body|lawas)\b", part)
+            )
+            if not has_neg:
+                has_neg = bool(
+                    re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,3}\s+\b(body\s*ache|katawan|lawas)\b", part)
+                )
+            if has_neg and has_body_word:
+                body_negated = True
+            elif has_body_word and not has_neg:
+                body_negated = False
+        if body_negated:
+            detected = [d for d in detected if d != "BODY_ACHES"]
 
     # Distinct list (preserve dictionary order). Since Python 3.7+, dict preserves insertion order.
     return list(dict.fromkeys(detected))

@@ -8,7 +8,14 @@
       "Typical Symptoms Treated": "fever, high fever, body aches, muscle pain, chills, flu-like symptoms, cough with colds, nasal congestion",
       "Dosage Form": "Tablet",
       "Minimum Age": 7,
-      "Notes": "Best used when at least 3 of these occur together: fever, body aches, cough, nasal congestion"
+      "Notes": "Best used when at least 3 of these occur together: fever, body aches, cough, nasal congestion",
+      "Approved_Indications": ["fever", "nasal congestion", "body aches", "headache", "runny nose"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Concurrent MAOI therapy", "Hypersensitivity to paracetamol or phenylephrine"],
+      "Warnings": ["Do not exceed recommended dose", "Avoid alcohol", "Not for children under 7", "Contains paracetamol — do not combine with other paracetamol products"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products", "Beta-blockers", "Tricyclic antidepressants"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Neozep / Neozep Z+",
@@ -18,7 +25,14 @@
       "Typical Symptoms Treated": "nasal congestion, stuffy nose, blocked nose, runny nose, sneezing, sinus pressure",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when nasal symptoms (runny nose, sneezing, congestion) are present"
+      "Notes": "Best used when nasal symptoms (runny nose, sneezing, congestion) are present",
+      "Approved_Indications": ["nasal congestion", "runny nose", "sneezing", "headache", "fever"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Concurrent MAOI therapy", "Severe hypertension"],
+      "Warnings": ["Do not exceed recommended dose", "May cause drowsiness", "Contains paracetamol — do not combine with other paracetamol products"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products", "Antihypertensives"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Neozep Syrup",
@@ -28,7 +42,14 @@
       "Typical Symptoms Treated": "stuffy nose, runny nose, blocked nose",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when nasal symptoms are present in children"
+      "Notes": "Best used when nasal symptoms are present in children",
+      "Approved_Indications": ["nasal congestion", "runny nose", "fever"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to components", "Neonates"],
+      "Warnings": ["Use weight-based dosing for children", "Contains paracetamol — do not combine with other paracetamol products"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Decolgen",
@@ -38,7 +59,14 @@
       "Typical Symptoms Treated": "runny nose, sneezing, stuffy nose, mild headache",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when at least 2 nasal cold symptoms occur together"
+      "Notes": "Best used when at least 2 nasal cold symptoms occur together",
+      "Approved_Indications": ["runny nose", "sneezing", "nasal congestion", "headache"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Concurrent MAOI therapy", "Severe coronary artery disease"],
+      "Warnings": ["May cause drowsiness", "Contains paracetamol — do not combine with other paracetamol products", "Avoid driving"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products", "Sedatives"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Decolgen Forte",
@@ -48,7 +76,14 @@
       "Typical Symptoms Treated": "stuffy nose, runny nose, sneezing, headache, mild fever",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when nasal symptoms occur with mild fever"
+      "Notes": "Best used when nasal symptoms occur with mild fever",
+      "Approved_Indications": ["nasal congestion", "runny nose", "headache", "fever"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Concurrent MAOI therapy", "Severe hypertension"],
+      "Warnings": ["Do not exceed recommended dose", "Contains paracetamol — do not combine with other paracetamol products", "May cause drowsiness"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products", "Antihypertensives"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Symdex-D",
@@ -58,7 +93,14 @@
       "Typical Symptoms Treated": "cough, cough with colds, throat irritation, cough with runny nose",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when cough occurs with colds in children"
+      "Notes": "Best used when cough occurs with colds in children",
+      "Approved_Indications": ["cough", "nasal congestion", "runny nose"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to components", "Neonates"],
+      "Warnings": ["Use weight-based dosing for children"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Symdex-D",
@@ -68,7 +110,14 @@
       "Typical Symptoms Treated": "cough, cough with colds, throat irritation, cough with runny nose",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when cough and nasal congestion occur together"
+      "Notes": "Best used when cough and nasal congestion occur together",
+      "Approved_Indications": ["cough", "nasal congestion", "runny nose"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to components"],
+      "Warnings": ["May cause drowsiness"],
+      "Drug_Interactions": ["MAOIs", "Other paracetamol-containing products"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Tuseran Forte",
@@ -78,7 +127,14 @@
       "Typical Symptoms Treated": "dry cough, tickly cough, throat itchiness, cough without mucus, night cough",
       "Dosage Form": "Tablet",
       "Minimum Age": 12,
-      "Notes": "Best used when dry cough occurs with cold symptoms"
+      "Notes": "Best used when dry cough occurs with cold symptoms",
+      "Approved_Indications": ["dry cough", "nasal congestion", "runny nose", "fever"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Concurrent MAOI therapy", "Severe hepatic impairment", "Children under 12"],
+      "Warnings": ["Do not use with expectorants", "Contains paracetamol — do not combine with other paracetamol products", "May cause drowsiness"],
+      "Drug_Interactions": ["MAOIs", "Expectorants (Solmux, Robitussin)", "Other paracetamol-containing products", "Sedatives"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Ascof Forte",
@@ -88,7 +144,14 @@
       "Typical Symptoms Treated": "cough with phlegm, wet cough, mucus cough, chest congestion",
       "Dosage Form": "Capsule",
       "Minimum Age": 2,
-      "Notes": "Best used when cough with phlegm is present"
+      "Notes": "Best used when cough with phlegm is present",
+      "Approved_Indications": ["productive cough", "cough with phlegm", "bronchitis"],
+      "Indication_Source": "DOH Traditional Medicine / Package Insert",
+      "Contraindications": ["Hypersensitivity to lagundi"],
+      "Warnings": ["Herbal product — not for severe respiratory conditions", "Consult doctor if cough persists beyond 7 days"],
+      "Drug_Interactions": ["None known"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "DOH Philippines / Package Insert"
     },
     {
       "Brand": "Solmux",
@@ -98,7 +161,14 @@
       "Typical Symptoms Treated": "cough with thick phlegm, wet cough, hard-to-expel mucus, chest congestion",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when thick phlegm is present"
+      "Notes": "Best used when thick phlegm is present",
+      "Approved_Indications": ["productive cough", "mucus clearance", "bronchitis"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Active peptic ulcer", "Hypersensitivity to carbocisteine"],
+      "Warnings": ["Not for dry cough", "Use caution in peptic ulcer history"],
+      "Drug_Interactions": ["Cough suppressants (opposing mechanism)"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Solmux",
@@ -108,7 +178,14 @@
       "Typical Symptoms Treated": "cough with phlegm, chest congestion",
       "Dosage Form": "Capsule",
       "Minimum Age": 12,
-      "Notes": "Best used when productive cough persists"
+      "Notes": "Best used when productive cough persists",
+      "Approved_Indications": ["productive cough", "mucus clearance"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Active peptic ulcer", "Hypersensitivity to carbocisteine"],
+      "Warnings": ["Not for dry cough"],
+      "Drug_Interactions": ["Cough suppressants (opposing mechanism)"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Robitussin",
@@ -118,7 +195,14 @@
       "Typical Symptoms Treated": "chest congestion, mucus in chest, phlegm buildup, wet cough",
       "Dosage Form": "Capsule",
       "Minimum Age": 6,
-      "Notes": "Best used when chest congestion and phlegm are present"
+      "Notes": "Best used when chest congestion and phlegm are present",
+      "Approved_Indications": ["chest congestion", "productive cough", "mucus clearance"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to guaifenesin"],
+      "Warnings": ["Do not use with cough suppressants", "Drink plenty of fluids"],
+      "Drug_Interactions": ["Cough suppressants (opposing mechanism)"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Sinecod Forte",
@@ -128,7 +212,14 @@
       "Typical Symptoms Treated": "dry cough, persistent cough, non-productive cough",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when cough is dry and non-productive"
+      "Notes": "Best used when cough is dry and non-productive",
+      "Approved_Indications": ["dry cough", "non-productive cough", "persistent cough"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to butamirate", "Children under 2 (syrup) or 6 (tablet)"],
+      "Warnings": ["Do not use with expectorants", "Not for productive cough"],
+      "Drug_Interactions": ["Expectorants (Solmux, Robitussin — opposing mechanism)", "CNS depressants"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Biogesic",
@@ -138,7 +229,14 @@
       "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when fever or body pain is present"
+      "Notes": "Best used when fever or body pain is present",
+      "Approved_Indications": ["fever", "headache", "mild to moderate pain"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Hypersensitivity to paracetamol"],
+      "Warnings": ["Do not exceed 4g/day in adults", "Avoid alcohol", "Contains paracetamol — do not combine with other paracetamol products"],
+      "Drug_Interactions": ["Warfarin (increased INR risk)", "Other paracetamol-containing products", "Alcohol"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Biogesic",
@@ -148,7 +246,14 @@
       "Typical Symptoms Treated": "fever, headache, body pain, muscle pain, mild aches, sore throat pain",
       "Dosage Form": "Tablet",
       "Minimum Age": 2,
-      "Notes": "Best used when mild to moderate pain or fever is present"
+      "Notes": "Best used when mild to moderate pain or fever is present",
+      "Approved_Indications": ["fever", "headache", "mild to moderate pain", "sore throat pain"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe hepatic impairment", "Hypersensitivity to paracetamol"],
+      "Warnings": ["Do not exceed 4g/day in adults", "Avoid alcohol", "Contains paracetamol — do not combine with other paracetamol products"],
+      "Drug_Interactions": ["Warfarin (increased INR risk)", "Other paracetamol-containing products", "Alcohol"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Advil",
@@ -158,7 +263,14 @@
       "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation, sore throat",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when pain or fever is present with inflammation"
+      "Notes": "Best used when pain or fever is present with inflammation",
+      "Approved_Indications": ["pain", "headache", "fever", "inflammation", "dysmenorrhea"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Active peptic ulcer", "Severe renal impairment", "Third trimester of pregnancy", "Aspirin allergy"],
+      "Warnings": ["Take with food", "Not for prolonged use", "Risk of GI bleeding"],
+      "Drug_Interactions": ["Aspirin", "Warfarin", "ACE inhibitors", "Corticosteroids"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Advil",
@@ -168,7 +280,14 @@
       "Typical Symptoms Treated": "pain, headache, muscle pain, joint pain, fever with inflammation, sore throat",
       "Dosage Form": "Tablet",
       "Minimum Age": 12,
-      "Notes": "Best used when pain or inflammation is present"
+      "Notes": "Best used when pain or inflammation is present",
+      "Approved_Indications": ["pain", "headache", "fever", "inflammation", "dysmenorrhea"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Active peptic ulcer", "Severe renal impairment", "Third trimester of pregnancy", "Aspirin allergy"],
+      "Warnings": ["Take with food", "Not for prolonged use", "Risk of GI bleeding"],
+      "Drug_Interactions": ["Aspirin", "Warfarin", "ACE inhibitors", "Corticosteroids"],
+      "Max_Duration_Days": 5,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Cetirizine",
@@ -178,7 +297,14 @@
       "Typical Symptoms Treated": "allergy symptoms, runny nose from allergy, sneezing, itchy nose, itchy eyes",
       "Dosage Form": "Syrup",
       "Minimum Age": 2,
-      "Notes": "Best used when allergic symptoms occur together"
+      "Notes": "Best used when allergic symptoms occur together",
+      "Approved_Indications": ["allergic rhinitis", "urticaria", "pruritus", "skin allergy"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe renal impairment", "Hypersensitivity to cetirizine or hydroxyzine"],
+      "Warnings": ["May cause drowsiness", "Avoid alcohol", "Use caution when driving"],
+      "Drug_Interactions": ["CNS depressants", "Alcohol", "Theophylline (minor)"],
+      "Max_Duration_Days": 14,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Cetirizine",
@@ -188,7 +314,14 @@
       "Typical Symptoms Treated": "allergy symptoms, runny nose from allergy, sneezing, itchy nose, itchy eyes",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when allergy symptoms persist"
+      "Notes": "Best used when allergy symptoms persist",
+      "Approved_Indications": ["allergic rhinitis", "urticaria", "pruritus", "skin allergy"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe renal impairment", "Hypersensitivity to cetirizine or hydroxyzine"],
+      "Warnings": ["May cause drowsiness", "Avoid alcohol", "Use caution when driving"],
+      "Drug_Interactions": ["CNS depressants", "Alcohol", "Theophylline (minor)"],
+      "Max_Duration_Days": 14,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Loperamide (Diatabs)",
@@ -198,7 +331,14 @@
       "Typical Symptoms Treated": "diarrhea, loose stools, frequent bowel movements, watery stool",
       "Dosage Form": "Tablet",
       "Minimum Age": 6,
-      "Notes": "Best used when frequent loose stools occur without red flags"
+      "Notes": "Best used when frequent loose stools occur without red flags",
+      "Approved_Indications": ["acute diarrhea", "chronic diarrhea", "traveler's diarrhea"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Bloody diarrhea", "Bacterial enterocolitis", "Children under 2", "Abdominal distention", "Acute ulcerative colitis"],
+      "Warnings": ["Stop use if no improvement in 48 hours", "Not for dysentery", "Maintain hydration"],
+      "Drug_Interactions": ["P-glycoprotein inhibitors (ritonavir)", "Opioids"],
+      "Max_Duration_Days": 2,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
       "Brand": "Erceflora",
@@ -208,7 +348,48 @@
       "Typical Symptoms Treated": "diarrhea, stomach imbalance, digestive upset",
       "Dosage Form": "Oral Suspension",
       "Minimum Age": "All ages",
-      "Notes": "Best used when diarrhea is present to restore gut flora"
+      "Notes": "Best used when diarrhea is present to restore gut flora",
+      "Approved_Indications": ["diarrhea", "intestinal flora restoration", "antibiotic-associated diarrhea"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Hypersensitivity to Bacillus clausii"],
+      "Warnings": ["Safe for most ages", "Can be used alongside antibiotics"],
+      "Drug_Interactions": ["None significant"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
+    },
+    {
+      "Brand": "Kremil-S",
+      "Generic/Main Use": "Aluminum hydroxide + Magnesium hydroxide + Simethicone",
+      "Drug Category": "Antacid",
+      "Primary Symptom": "hyperacidity",
+      "Typical Symptoms Treated": "hyperacidity, heartburn, stomach acid, gastric discomfort, kabag, acid reflux, indigestion, stomach cramps",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 12,
+      "Notes": "Best used when heartburn or hyperacidity occurs",
+      "Approved_Indications": ["hyperacidity", "heartburn", "flatulence", "gastric discomfort"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Severe renal impairment", "Hypophosphatemia"],
+      "Warnings": ["Not for prolonged use without medical advice", "May affect absorption of other drugs"],
+      "Drug_Interactions": ["Tetracyclines", "Iron supplements", "Fluoroquinolones"],
+      "Max_Duration_Days": 7,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
+    },
+    {
+      "Brand": "Buscopan",
+      "Generic/Main Use": "Hyoscine butylbromide",
+      "Drug Category": "Antispasmodic",
+      "Primary Symptom": "stomach cramps",
+      "Typical Symptoms Treated": "stomach cramps, abdominal cramps, menstrual cramps, intestinal spasm, kabag, bloating, colic",
+      "Dosage Form": "Tablet",
+      "Minimum Age": 6,
+      "Notes": "Best used when abdominal cramping or spasms occur",
+      "Approved_Indications": ["abdominal cramps", "intestinal spasm", "biliary colic", "dysmenorrhea"],
+      "Indication_Source": "Package Insert / MIMS Philippines",
+      "Contraindications": ["Myasthenia gravis", "Megacolon", "Narrow-angle glaucoma", "Tachycardia"],
+      "Warnings": ["May cause dry mouth", "Use caution in elderly", "Not for chronic abdominal pain without diagnosis"],
+      "Drug_Interactions": ["Anticholinergics (additive effect)", "Metoclopramide (opposing effect)"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "Package Insert / MIMS Philippines"
     }
   ]
 }

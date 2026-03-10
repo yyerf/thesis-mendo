@@ -6,7 +6,7 @@ test_id,input_text,age,cough_type,expected_symptoms,test_category,notes
 5,sipon ako,18,,RUNNY_NOSE,simple_single,Basic runny nose
 6,masakit ang tiyan ko,28,,STOMACH_ACHE,simple_single,Basic stomach ache
 7,pagtatae ako,35,,DIARRHEA,simple_single,Basic diarrhea
-8,may pantal ako,22,,RASH,simple_single,Basic rash/allergy
+8,may pantal ako,22,,RASHES,simple_single,Basic rash/allergy
 9,barado ang ilong ko,27,,NASAL_CONGESTION,simple_single,Basic nasal congestion
 10,masakit ang katawan ko,33,,BODY_ACHES,simple_single,Basic body aches
 11,"may lagnat, ubo, at sipon ako",25,productive,"FEVER,COUGH_PRODUCTIVE,RUNNY_NOSE",multiple_symptoms,Flu-like symptoms
@@ -17,7 +17,7 @@ test_id,input_text,age,cough_type,expected_symptoms,test_category,notes
 16,pagtatae at masakit ang tiyan,27,,"DIARRHEA,STOMACH_ACHE",multiple_symptoms,Diarrhea with stomach pain
 17,"lagnat, sakit ng ulo, sakit ng katawan",40,,"FEVER,HEADACHE,BODY_ACHES",multiple_symptoms,Fever with pains
 18,"ubo may plema, barado ang ilong",23,productive,"COUGH_PRODUCTIVE,NASAL_CONGESTION",multiple_symptoms,Productive cough with congestion
-19,"sipon, bahing, makati ang ilong",21,,"RUNNY_NOSE,ALLERGY",multiple_symptoms,Allergic rhinitis
+19,"sipon, bahing, makati ang ilong",21,,"RUNNY_NOSE,ALLERGIC_RHINITIS",multiple_symptoms,Allergic rhinitis
 20,"masakit ang ulo, sipon, ubo",26,dry,"HEADACHE,RUNNY_NOSE,COUGH_DRY",multiple_symptoms,Cold symptoms
 21,wala akong cough,25,,NONE,negation,Negation - no cough
 22,wala koy fever,30,,NONE,negation,Negation - no fever (Cebuano)
@@ -35,7 +35,7 @@ test_id,input_text,age,cough_type,expected_symptoms,test_category,notes
 34,ano ba ubo ako eh,24,productive,COUGH_PRODUCTIVE,noisy_input,Casual speech
 35,grabe lagnat ko sobra,30,,FEVER,noisy_input,With intensifiers
 36,parang may lagnat ata ako,26,,FEVER,noisy_input,Uncertain language
-37,baka ubo lang to,23,dry,COUGH_GENERAL,noisy_input,Downplaying
+37,baka ubo lang to,23,dry,COUGH_DRY,noisy_input,Downplaying
 38,medyo masakit lang ulo,27,,HEADACHE,noisy_input,Minimizing
 39,super sakit ng ulo ko grabe,29,,HEADACHE,noisy_input,Multiple intensifiers
 40,ubo ubo lang tapos sipon din,21,dry,"COUGH_DRY,RUNNY_NOSE",noisy_input,Casual with multiple symptoms
@@ -47,28 +47,28 @@ test_id,input_text,age,cough_type,expected_symptoms,test_category,notes
 46,masakit tyan,27,,STOMACH_ACHE,misspelling,Misspelled stomach
 47,barado ilong,23,,NASAL_CONGESTION,misspelling,Misspelled/shortened
 48,masakit ktawan,32,,BODY_ACHES,misspelling,Misspelled body
-49,pantl ako,20,,RASH,misspelling,Misspelled rash
+49,pantl ako,20,,RASHES,misspelling,Misspelled rash
 50,lgnat at ubo,26,productive,"FEVER,COUGH_PRODUCTIVE",misspelling,Multiple misspelled
 51,mainit ang katawan ko,29,,FEVER,alternative_phrasing,Alternative for fever
 52,may plema ang ubo ko,24,productive,COUGH_PRODUCTIVE,alternative_phrasing,Phlegm description
 53,tumitibok ang ulo ko,27,,HEADACHE,alternative_phrasing,Throbbing head
-54,sumasakit ang lalamunan ko at umuubo,23,dry,COUGH_DRY,alternative_phrasing,Throat + cough
-55,nag-aalerdyi ako,25,,ALLERGY,alternative_phrasing,Allergy alternate
+54,sumasakit ang lalamunan ko at umuubo,23,dry,"SORE_THROAT,COUGH_DRY",alternative_phrasing,Throat pain + cough
+55,nag-aalerdyi ako,25,,ALLERGIC_RHINITIS,alternative_phrasing,Allergy alternate
 56,matubig ang dumi ko,31,,DIARRHEA,alternative_phrasing,Watery stool
 57,buhol-buhol ang tiyan ko,28,,STOMACH_ACHE,alternative_phrasing,Stomach cramps
 58,ang init ng katawan ko,33,,FEVER,alternative_phrasing,Hot body
-59,namumula ang balat ko at makati,22,,RASH,alternative_phrasing,Red itchy skin
+59,namumula ang balat ko at makati,22,,RASHES,alternative_phrasing,Red itchy skin
 60,hirap huminga dahil barado ilong,26,,NASAL_CONGESTION,alternative_phrasing,Breathing difficulty due to congestion
 61,i have fever,25,,FEVER,english,English input
 62,headache and cough,28,dry,"HEADACHE,COUGH_DRY",english,English multiple symptoms
-63,my throat is sore and i'm coughing,24,dry,COUGH_DRY,english,English sore throat
+63,my throat is sore and i'm coughing,24,dry,"SORE_THROAT,COUGH_DRY",english,English sore throat + cough
 64,runny nose,22,,RUNNY_NOSE,english,English runny nose
 65,stomach pain,30,,STOMACH_ACHE,english,English stomach pain
 66,lagnat ako and headache,27,,"FEVER,HEADACHE",code_switching,Tagalog-English mix
 67,may cough ako,23,productive,COUGH_PRODUCTIVE,code_switching,English-Tagalog mix
 68,umuubo and may fever,29,dry,"COUGH_DRY,FEVER",code_switching,Tagalog-English mix
 69,masakit ulo tapos body aches din,32,,"HEADACHE,BODY_ACHES",code_switching,Mixed language
-70,allergic rhinitis yata ako,26,,ALLERGY,code_switching,Medical term mixed
+70,allergic rhinitis yata ako,26,,ALLERGIC_RHINITIS,code_switching,Medical term mixed
 71,masakit ang tiyan ng anak ko 3 years old,35,,STOMACH_ACHE,third_person,Parent describing child
 72,ang asawa ko may lagnat,40,,FEVER,third_person,Describing spouse
 73,yung bata umuubo,30,productive,COUGH_PRODUCTIVE,third_person,Describing child
@@ -96,6 +96,194 @@ test_id,input_text,age,cough_type,expected_symptoms,test_category,notes
 95,light headache lang,26,,HEADACHE,mild_intensity,Light pain
 96,may lagnat ba ako,25,,FEVER,question_form,Asking if has fever
 97,umuubo ba ako,23,dry,COUGH_DRY,question_form,Asking about cough
-98,sipon ba to o allergy,24,,"RUNNY_NOSE,ALLERGY",question_form,Uncertain between symptoms
+98,sipon ba to o allergy,24,,"RUNNY_NOSE,ALLERGIC_RHINITIS",question_form,Uncertain between symptoms
 99,normal lang ba to na masakit ulo,28,,HEADACHE,question_form,Questioning if normal
 100,pwede bang gamot for ubo at sipon,21,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE",question_form,Asking for medicine
+101,s@k1t ul0 q,22,,HEADACHE,jejemon_leetspeak,Leetspeak headache - s@k1t=sakit ul0=ulo q=ko
+102,lgn4t 4q,25,,FEVER,jejemon_leetspeak,Leetspeak fever - lgn4t=lagnat 4q=ako
+103,um0ub0 4k0,20,dry,COUGH_DRY,jejemon_leetspeak,Leetspeak cough - um0ub0=umuubo
+104,s3p0n 4k0,19,,RUNNY_NOSE,jejemon_leetspeak,Leetspeak runny nose - s3p0n=sipon
+105,m4s4k1t 71y4n,28,,STOMACH_ACHE,jejemon_leetspeak,Leetspeak stomach ache
+106,s@k!t k@tawan,30,,BODY_ACHES,jejemon_leetspeak,Leetspeak body aches
+107,m4y p4nt4l 4k0,22,,RASHES,jejemon_leetspeak,Leetspeak rashes
+108,"lgn4t 4t ub0 q, s3p0n p4",24,productive,"FEVER,COUGH_PRODUCTIVE,RUNNY_NOSE",jejemon_leetspeak,Leetspeak multiple symptoms
+109,labad akong ulo unya gihilanat pud ko,28,,"HEADACHE,FEVER",bisaya_heavy,Bisaya headache + fever
+110,"sakit akong tiyan, nagkalibang pud ko",35,,"STOMACH_ACHE,DIARRHEA",bisaya_heavy,Bisaya stomach + diarrhea
+111,init kaayo akong lawas ron unya naay plema akong ubo,30,productive,"FEVER,COUGH_PRODUCTIVE",bisaya_heavy,Bisaya hot body + productive cough
+112,katol akong panit unya pantal pud,25,,RASHES,bisaya_heavy,Bisaya itchy skin + rashes
+113,sakit akong lawas unya gibukbok akong ulo,32,,"BODY_ACHES,HEADACHE",bisaya_heavy,Bisaya body aches + headache
+114,walay plema akong ubo pero barado akong ilong,22,dry,"COUGH_DRY,NASAL_CONGESTION",bisaya_heavy,Bisaya dry cough + congestion
+115,gi-ubo ko unya gatusok ang sipon,20,dry,"COUGH_DRY,RUNNY_NOSE",bisaya_heavy,Bisaya cough + runny nose
+116,"lagnat, ubo, sipon, sakit ng ulo, sakit ng katawan",28,dry,"FEVER,COUGH_DRY,RUNNY_NOSE,HEADACHE,BODY_ACHES",compound_multi,5 symptoms flu-like complex
+117,"masakit ang ulo, may lagnat, umuubo, may sipon, at barado ang ilong",25,productive,"HEADACHE,FEVER,COUGH_PRODUCTIVE,RUNNY_NOSE,NASAL_CONGESTION",compound_multi,5 symptoms full sentence
+118,"pagtatae, sakit tiyan, at lagnat",30,,"DIARRHEA,STOMACH_ACHE,FEVER",compound_multi,3 symptoms gastro + fever
+119,"umuubo may plema, sipon, barado ilong, at masakit lalamunan",23,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE,NASAL_CONGESTION,SORE_THROAT",compound_multi,4 symptoms upper respiratory + sore throat
+120,"pantal, makati balat, lagnat, at sakit katawan",27,,"RASHES,FEVER,BODY_ACHES",compound_multi,4 symptoms mixed
+121,wala naman akong lagnat pero grabe ang ubo at sipon ko,26,dry,"COUGH_DRY,RUNNY_NOSE",contrastive_negation,No fever but has cough + runny nose
+122,hindi naman masakit ang ulo ko pero nilalagnat ako at may sipon,29,,"FEVER,RUNNY_NOSE",contrastive_negation,No headache but fever + runny nose
+123,walang ubo pero masakit ang ulo at may lagnat,24,,"HEADACHE,FEVER",contrastive_negation,No cough but headache + fever
+124,wala akong sipon pero umuubo ako at masakit ang katawan,31,dry,"COUGH_DRY,BODY_ACHES",contrastive_negation,No runny nose but cough + body aches
+125,hindi masakit katawan ko pero may lagnat at ubo,27,productive,"FEVER,COUGH_PRODUCTIVE",contrastive_negation,No body aches but fever + cough
+126,wala naman akong lagnat kaso grabe ang sakit ng ulo ko at umuubo pa,33,dry,"HEADACHE,COUGH_DRY",contrastive_negation,Kaso contrastive - no fever but headache + cough
+127,kanina pa ako umuubo tapos ngayon sumasakit na rin ulo ko at parang nilalagnat na rin,26,dry,"COUGH_DRY,HEADACHE,FEVER",run_on_realistic,Long realistic kiosk input with temporal progression
+128,grabe ang pakiramdam ko ang sakit sakit ng ulo ko tapos yung katawan ko parang binugbog at nilalagnat pa ako,30,,"HEADACHE,BODY_ACHES,FEVER",run_on_realistic,Long dramatic complaint multiple symptoms
+129,kasi po ganito may ubo po ako tapos yung sipon ko ang dami tapos barado pa yung ilong,22,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE,NASAL_CONGESTION",run_on_realistic,Realistic hesitant kiosk speech
+130,eto po kasi masakit yung tiyan ko tapos nagtatae pa ako simula kahapon,28,,"STOMACH_ACHE,DIARRHEA",run_on_realistic,Realistic speech with temporal marker
+131,ang sakit sakit ng ulo ko hindi na ako makatiis tapos mainit pa katawan ko parang may lagnat,27,,"HEADACHE,FEVER",run_on_realistic,Dramatic pain with fever suspicion
+132,yung anak ko po kasi umuubo siya tapos may sipon at nilalagnat pa siya,35,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE,FEVER",run_on_realistic,Parent describing child symptoms at kiosk
+133,di ko alam kung allergy ba to o sipon kasi bahing ng bahing ako tapos makati pa ilong ko,24,,"ALLERGIC_RHINITIS,RUNNY_NOSE",diagnostic_confusion,Allergy vs cold confusion
+134,parang may trangkaso ako lagnat ubo sipon sakit katawan,29,,"FEVER,COUGH_GENERAL,RUNNY_NOSE,BODY_ACHES",diagnostic_confusion,Trangkaso (flu) self-diagnosis - no cough qualifier
+135,allergy ba to o rashes kasi pula pula yung balat ko at makati,22,,"RASHES,ALLERGIC_RHINITIS",diagnostic_confusion,Allergy vs rashes - both mentioned
+136,baka hyperacidity to o sakit lang ng tiyan,30,,STOMACH_ACHE,diagnostic_confusion,Hyperacidity self-diagnosis
+137,parang asthma yung ubo ko dry na dry walang plema,25,dry,COUGH_DRY,diagnostic_confusion,Self-diagnosing asthma but describing dry cough
+138,ugh ang sakit ng ulo ko,26,,HEADACHE,interjection_filler,With interjection
+139,hay nako nilalagnat na naman ako,28,,FEVER,interjection_filler,With Tagalog interjection
+140,ay grabe ang ubo ko talaga,22,dry,COUGH_DRY,interjection_filler,With exclamation
+141,aray masakit tiyan ko sobra,29,,STOMACH_ACHE,interjection_filler,Pain interjection
+142,hala nagtatae na naman ako,25,,DIARRHEA,interjection_filler,Bisaya interjection
+143,hmm parang may sipon ako eh,21,,RUNNY_NOSE,interjection_filler,Hesitant with filler
+144,naku po ang sakit ng katawan ko,33,,BODY_ACHES,interjection_filler,With po (polite)
+145,nakakahilo yung lagnat ko at sumasakit pa ulo ko,27,,"FEVER,HEADACHE",symptom_chain,Dizziness + fever + headache chain
+146,dahil sa sipon ko barado na rin ilong ko,23,,"RUNNY_NOSE,NASAL_CONGESTION",symptom_chain,Runny nose causing congestion
+147,nagtatae ako kaya masakit ang tiyan ko,30,,"DIARRHEA,STOMACH_ACHE",symptom_chain,Diarrhea causing stomach pain
+148,umuubo ako kaya sumasakit na lalamunan ko,24,dry,"COUGH_DRY,SORE_THROAT",symptom_chain,Cough causing throat pain - both detected
+149,may lagnat ako kaya nanginginig at masakit ang katawan,31,,"FEVER,BODY_ACHES",symptom_chain,Fever causing chills + body aches
+150,3 araw na akong umuubo at ngayon may lagnat na rin,26,dry,"COUGH_DRY,FEVER",temporal_progression,Multi-day progression
+151,kagabi pa masakit tiyan ko at kanina pa ako nagtatae,29,,"STOMACH_ACHE,DIARRHEA",temporal_progression,Night to morning progression
+152,isang linggo na akong may sipon at ngayon barado na ilong,24,,"RUNNY_NOSE,NASAL_CONGESTION",temporal_progression,Week-long progression
+153,kahapon pa ako nilalagnat tapos ngayon sumasakit na rin ulo at katawan,28,,"FEVER,HEADACHE,BODY_ACHES",temporal_progression,Yesterday to today progression
+154,simula kaninang umaga umuubo ako at ngayon may sipon na rin,22,dry,"COUGH_DRY,RUNNY_NOSE",temporal_progression,Morning to now progression
+155,excuse me po may tanong lang pwede ba ibigay yung gamot para sa ubo at sipon,23,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE",polite_formal,Formal polite kiosk request
+156,pakibigay po ng gamot para sa sakit ng ulo at lagnat,30,,"HEADACHE,FEVER",polite_formal,Polite request headache + fever
+157,good morning po may lagnat po kasi ako at umuubo,25,dry,"FEVER,COUGH_DRY",polite_formal,Polite greeting + symptoms
+158,pwede po bang magtanong kung anong gamot sa pagtatae at sakit ng tiyan,28,,"DIARRHEA,STOMACH_ACHE",polite_formal,Polite question for medicine
+159,hi ask ko lang kung ano maganda para sa allergy at sipon ko,22,,"ALLERGIC_RHINITIS,RUNNY_NOSE",polite_formal,Casual + English polite request
+160,sobrang sakit ng ulo ko parang sasabog at hindi na ako makagalaw dahil sa sakit ng katawan,29,,"HEADACHE,BODY_ACHES",extreme_severity,Extreme headache + body aches
+161,grabe ang lagnat ko 40 degrees na daw at nanginginig ako nonstop,32,,FEVER,extreme_severity,Extreme high fever + chills (nanginginig is a fever symptom)
+162,paulit ulit na pagtatae ko at grabe na ang sakit ng tiyan ko,27,,"DIARRHEA,STOMACH_ACHE",extreme_severity,Severe diarrhea + stomach
+163,hindi na ako makatulog dahil sa sobrang ubo at barado na barado ang ilong ko,24,dry,"COUGH_DRY,NASAL_CONGESTION",extreme_severity,Severe cough + congestion affecting sleep
+164,sobrang pula at makati ng balat ko parang namamaga na,22,,RASHES,extreme_severity,Severe rashes description
+165,konting ubo lang naman,21,dry,COUGH_DRY,very_mild,Very mild cough
+166,parang medyo mainit lang katawan ko,27,,FEVER,very_mild,Very mild fever hint
+167,bahagyang sakit ng ulo,24,,HEADACHE,very_mild,Very mild headache
+168,konting sipon lang,20,,RUNNY_NOSE,very_mild,Very mild runny nose
+169,medyo masakit lang ng konti ang tiyan,29,,STOMACH_ACHE,very_mild,Very mild stomach ache
+170,i have a headache and fever and my body aches all over,30,,"HEADACHE,FEVER,BODY_ACHES",english_complex,Complex English multiple symptoms
+171,i've been coughing with phlegm and my nose is stuffy and runny,25,productive,"COUGH_PRODUCTIVE,NASAL_CONGESTION,RUNNY_NOSE",english_complex,Complex English respiratory
+172,my stomach hurts and i have diarrhea since yesterday,28,,"STOMACH_ACHE,DIARRHEA",english_complex,Complex English gastro
+173,i think i have allergies because i keep sneezing and my nose is itchy,22,,"ALLERGIC_RHINITIS",english_complex,Complex English allergy
+174,i have a dry cough and sore throat and slight fever,26,dry,"COUGH_DRY,SORE_THROAT,FEVER",english_complex,Complex English dry cough + sore throat + fever
+175,"nag start sa ubo, tapos naging fever, now headache na rin",27,dry,"COUGH_DRY,FEVER,HEADACHE",heavy_code_switch,Heavy Tagalog-English switching
+176,ang init ng body ko parang may fever tapos coughing pa,29,productive,"FEVER,COUGH_PRODUCTIVE",heavy_code_switch,Body temperature code-switch
+177,my sipon is so bad tapos barado na rin ang nose ko,23,,"RUNNY_NOSE,NASAL_CONGESTION",heavy_code_switch,Nose symptoms code-switch
+178,stomach ko ang sakit may diarrhea pa ako,30,,"STOMACH_ACHE,DIARRHEA",heavy_code_switch,Gastro code-switch
+179,ang itchy ng skin ko pantal pantal na everywhere,22,,RASHES,heavy_code_switch,Skin symptoms code-switch
+180,so kasi ganito ubo ako tapos after 2 days naging fever na rin then headache na ngayon,26,dry,"COUGH_DRY,FEVER,HEADACHE",heavy_code_switch,Timeline narrative code-switch
+181,"doc masakit po ulo, katawan, at may lagnat po ako",35,,"HEADACHE,BODY_ACHES,FEVER",pharmacy_kiosk_realistic,Addressing pharmacist with multiple complaints
+182,ate may gamot ba kayo dyan para sa ubo at sipon ng baby ko,30,productive,"COUGH_PRODUCTIVE,RUNNY_NOSE",pharmacy_kiosk_realistic,Parent asking pharmacist for child
+183,kuya pabili po ng gamot pangtanggal ng lagnat at sakit ng ulo,28,,"FEVER,HEADACHE",pharmacy_kiosk_realistic,Buying medicine request
+184,miss pwede po bang magtanong bakit kaya sumasakit ang tiyan ko at nagtatae,27,,"STOMACH_ACHE,DIARRHEA",pharmacy_kiosk_realistic,Asking pharmacist about gastro symptoms
+185,manong may pantal kasi ako dito sa braso at sobrang makati,25,,RASHES,pharmacy_kiosk_realistic,Showing rash to pharmacist
+186,wala akong kahit anong sakit,30,,NONE,negation_complex,Complex negation - no illness
+187,okay lang naman ako walang lagnat walang ubo,25,,NONE,negation_complex,Multiple negations - no fever no cough
+188,hindi naman ako nilalagnat at wala rin akong ubo,28,,NONE,negation_complex,Double negation - no fever and no cough
+189,wala po akong nararamdamang kahit ano,35,,NONE,negation_complex,Polite complex negation
+190,feeling okay naman ako no fever no cough no sipon,23,,NONE,negation_complex,English-Tagalog mixed negation
+191,masaket olo ko at lgnt,25,,"HEADACHE,FEVER",double_misspelling,Double misspelled headache + fever
+192,umoubo at sepun,22,dry,"COUGH_DRY,RUNNY_NOSE",double_misspelling,Double misspelled cough + runny nose
+193,pagtate at masaket tyan,28,,"DIARRHEA,STOMACH_ACHE",double_misspelling,Double misspelled diarrhea + stomach
+194,masaket ang ktawan ko at lgnt,30,,"BODY_ACHES,FEVER",double_misspelling,Double misspelled body aches + fever
+195,pantl at masaket blat,22,,RASHES,double_misspelling,Double misspelled rashes
+196,parang binugbog ang buong katawan ko,33,,BODY_ACHES,figurative_speech,Figurative - like beaten up
+197,parang sasabog ang ulo ko,27,,HEADACHE,figurative_speech,Figurative - head about to explode
+198,kumukulo ang tiyan ko,29,,STOMACH_ACHE,figurative_speech,Figurative - stomach boiling
+199,parang pinukpok ang katawan ko at sumasakit ulo,31,,"BODY_ACHES,HEADACHE",figurative_speech,Figurative - hammered + headache
+200,binibiyak ang ulo ko at mainit ang katawan,28,,"HEADACHE,FEVER",figurative_speech,Figurative - splitting head + hot body
+201,walang pantal,22,,NONE,adversarial_neg_universal,Negation: rashes explicitly denied
+202,walang sakit ng tiyan,28,,NONE,adversarial_neg_universal,Negation: stomach ache explicitly denied
+203,hindi masakit ang lalamunan ko,25,,NONE,adversarial_neg_universal,Negation: sore throat explicitly denied
+204,walang pagtatae,30,,NONE,adversarial_neg_universal,Negation: diarrhea explicitly denied
+205,wala akong allergy,24,,NONE,adversarial_neg_universal,Negation: allergy explicitly denied
+206,walang barado ang ilong ko,22,,NONE,adversarial_neg_universal,Negation: nasal congestion explicitly denied
+207,hindi masakit ang katawan ko,33,,NONE,adversarial_neg_universal,Negation: body aches explicitly denied
+208,bumili ako ng tubo sa palengke,30,,NONE,adversarial_false_positive,tubo (sugarcane) should NOT trigger cough
+209,ubos na ang gamot ko,25,,NONE,adversarial_false_positive,ubos (depleted) should NOT trigger cough
+210,kumain ako ng ubi kahapon,28,,NONE,adversarial_false_positive,ubi (yam) should NOT trigger cough
+211,gusto ko ng ube ice cream,22,,NONE,adversarial_false_positive,ube (purple yam) should NOT trigger cough
+212,ang ubod ng init ngayon,29,,NONE,adversarial_false_positive,ubod (core) should NOT trigger cough
+213,nagtanim ako ng kamote at ubi,35,,NONE,adversarial_false_positive,Multiple food words with no symptoms
+214,ipinantal niya ang pinto,27,,NONE,adversarial_false_positive,ipinantal (bumped) should NOT trigger rashes
+215,nagsuot siya ng pantalon,24,,NONE,adversarial_false_positive,pantalon (pants) should NOT trigger rashes
+216,bumili ako ng tuba sa tindahan,26,,NONE,adversarial_false_positive,tuba (coconut wine) should NOT trigger cough
+217,ang ganda ng pantalan sa Cebu,30,,NONE,adversarial_false_positive,pantalan (wharf) should NOT trigger rashes
+218,masakit ang lalamunan ko,23,,SORE_THROAT,adversarial_sore_throat,SORE_THROAT direct with ang article
+219,lalamunan ko ang sumasakit,25,,SORE_THROAT,adversarial_sore_throat,SORE_THROAT reversed word order
+220,masakit ang tutunlan ko,28,,SORE_THROAT,adversarial_sore_throat,SORE_THROAT Bisaya throat word
+221,hindi naman masakit ang lalamunan ko,24,,NONE,adversarial_neg_sore_throat,Negated sore throat with filler
+222,walang sore throat,22,,NONE,adversarial_neg_sore_throat,Negated sore throat (English)
+223,hindi masakit ang lalamunan ko pero may lagnat,26,,FEVER,adversarial_contrastive_new,Negated throat + positive fever across pero
+224,walang sore throat pero umuubo,28,dry,COUGH_DRY,adversarial_contrastive_new,Negated throat + positive cough across pero
+225,walang pantal pero may lagnat,29,,FEVER,adversarial_contrastive_new,Negated rashes + positive fever across pero
+226,hindi masakit ang tiyan ko pero nagtatae,27,,DIARRHEA,adversarial_contrastive_new,Negated stomach + positive diarrhea
+227,wala akong allergy pero may sipon,24,,RUNNY_NOSE,adversarial_contrastive_new,Negated allergy + positive runny nose
+228,walang allergy pero barado ang ilong,25,,NASAL_CONGESTION,adversarial_contrastive_new,Negated allergy but positive congestion (nasal fix)
+229,walang sipon pero barado ilong,23,,NASAL_CONGESTION,adversarial_contrastive_new,Negated runny nose but positive congestion
+230,"walang lagnat walang ubo walang sipon",30,,NONE,adversarial_multi_negation,Triple negation - all denied
+231,hindi ako nagtatae at walang sakit ng tiyan,28,,NONE,adversarial_multi_negation,Double negation gastro symptoms
+232,"walang lagnat at walang ubo pero masakit ulo at may sipon",26,,"HEADACHE,RUNNY_NOSE",adversarial_mixed_complex,2 negated + 2 positive symptoms
+233,"hindi ako nagtatae pero may pantal at masakit ang katawan",29,,"RASHES,BODY_ACHES",adversarial_mixed_complex,1 negated + 2 positive symptoms
+234,"walang lagnat at walang ubo pero masakit ang ulo at may pantal",30,,"HEADACHE,RASHES",adversarial_mixed_complex,Triple contrastive - 2 neg + 2 pos across pero
+235,magandang umaga po,40,,NONE,adversarial_non_symptom,Greeting - no symptoms expected
+236,hello kumusta ka,25,,NONE,adversarial_non_symptom,Casual greeting
+237,pabili po ng gatas,35,,NONE,adversarial_non_symptom,Purchase request - non-medical
+238,salamat po sa tulong,28,,NONE,adversarial_non_symptom,Thank you - no symptoms
+239,saan po ang pharmacy,22,,NONE,adversarial_non_symptom,Location question
+240,ano po ba ang presyo,30,,NONE,adversarial_non_symptom,Price question
+241,ubo,20,,COUGH_GENERAL,adversarial_single_word,Single word - cough
+242,lagnat,25,,FEVER,adversarial_single_word,Single word - fever
+243,sipon,18,,RUNNY_NOSE,adversarial_single_word,Single word - runny nose
+244,pantal,22,,RASHES,adversarial_single_word,Single word - rashes
+245,pagtatae,30,,DIARRHEA,adversarial_single_word,Single word - diarrhea
+246,bahing,24,,ALLERGIC_RHINITIS,adversarial_single_word,Single word - sneezing/allergy
+247,"may lagnat, ubo, sipon, sakit ulo, sakit katawan, pagtatae, pantal, barado ilong, sakit tiyan",28,,"FEVER,COUGH_GENERAL,RUNNY_NOSE,HEADACHE,BODY_ACHES,DIARRHEA,RASHES,NASAL_CONGESTION,STOMACH_ACHE",adversarial_stress_all,Stress test: 9 symptoms at once
+248,walay ubo,22,,NONE,adversarial_bisaya_negation,Bisaya negation - no cough
+249,dili ko sakit akong ulo,28,,NONE,adversarial_bisaya_negation,Bisaya negation - no headache
+250,walay hilanat,30,,NONE,adversarial_bisaya_negation,Bisaya negation - no fever
+251,ulo ko ang masakit,27,,HEADACHE,adversarial_reversed_order,Reversed word order - headache
+252,katawan ko ang sumasakit,30,,BODY_ACHES,adversarial_reversed_order,Reversed word order - body aches
+253,tiyan ko ang masakit,25,,STOMACH_ACHE,adversarial_reversed_order,Reversed word order - stomach ache
+254,"like ang sakit ng head ko and parang may fever din",24,,"HEADACHE,FEVER",adversarial_conyo,Heavy conyo/Taglish mixing
+255,"omg ang sakit ng tummy ko i think may diarrhea na ako",28,,"STOMACH_ACHE,DIARRHEA",adversarial_conyo,Conyo style with English medical terms
+256,"masakit ang lalamunan ko at may lagnat",25,,"SORE_THROAT,FEVER",adversarial_sore_throat_combo,Sore throat with fever combination
+257,"umuubo at masakit ang lalamunan ko at may sipon",23,dry,"COUGH_DRY,SORE_THROAT,RUNNY_NOSE",adversarial_sore_throat_combo,Sore throat with cough and runny nose
+258,dili katulon ang akong pagkaon,30,,SORE_THROAT,adversarial_bisaya_sore_throat,Bisaya: can't swallow (sore throat)
+259,asdfghjkl,25,,NONE,adversarial_gibberish,Random keyboard mashing
+260,hahaha lol,20,,NONE,adversarial_gibberish,Laughter / non-medical
+261,...,30,,NONE,adversarial_gibberish,Just punctuation
+262,lagnat wala naman,28,,FEVER,adversarial_post_negation,Negation AFTER symptom word - should still detect
+263,"kasi po doc ganito simula nung Monday may lagnat ako tapos naging ubo pa then ngayon masakit na rin ang katawan ko",35,,"FEVER,COUGH_GENERAL,BODY_ACHES",adversarial_long_realistic,Very long multi-language kiosk input
+264,makati ang ilong ko at bahing ng bahing,22,,ALLERGIC_RHINITIS,adversarial_allergy_nasal,Allergy with itchy nose and sneezing
+265,masakit ang dibdib ko,30,,NONE,triage_chest_pain,Pure chest pain - red flag - no OTC symptoms
+266,chest pain,25,,NONE,triage_chest_pain,English chest pain
+267,sumasakit ang dibdib ko,28,,NONE,triage_chest_pain,Tagalog chest pain variant
+268,sakit akong dughan,40,,NONE,triage_chest_pain,Bisaya chest pain
+269,hirap huminga,35,,NONE,triage_breathing,Difficulty breathing Tagalog
+270,shortness of breath,30,,NONE,triage_breathing,English shortness of breath
+271,hindi ako makahinga,25,,NONE,triage_breathing,Cannot breathe Tagalog
+272,lisud moginhawa,45,,NONE,triage_breathing,Bisaya breathing difficulty
+273,may dugo sa dumi ko,32,,NONE,triage_blood,Blood in stool Tagalog
+274,bloody stool,28,,NONE,triage_blood,English bloody stool
+275,nagsusuka ng dugo,40,,NONE,triage_blood,Vomiting blood Tagalog
+276,vomiting blood,35,,NONE,triage_blood,English vomiting blood
+277,nahimatay,20,,NONE,triage_consciousness,Fainted Tagalog
+278,nawalan ng malay,50,,NONE,triage_consciousness,Loss of consciousness Tagalog
+279,fainted,30,,NONE,triage_consciousness,English fainted
+280,seizure,25,,NONE,triage_seizure,English seizure
+281,kombulsyon,18,,NONE,triage_seizure,Tagalog convulsion
+282,swollen throat,22,,NONE,triage_allergic_severe,Severe allergic - swollen throat
+283,namamaga ang lalamunan,28,,NONE,triage_allergic_severe,Tagalog swollen throat
+284,lagnat na 41 degrees,30,,FEVER,triage_high_fever,Dangerously high fever
+285,fever of 40 degrees,25,,FEVER,triage_high_fever,English dangerous fever
+286,chest pain at masakit ang ulo ko,35,,HEADACHE,triage_mixed,Red flag + OTC symptom - headache still detected
+287,hirap huminga at may lagnat,40,,FEVER,triage_mixed,Red flag + fever still detected
+288,masakit ang dibdib ko at umuubo,30,,COUGH_GENERAL,triage_mixed,Red flag + cough still detected

@@ -19,9 +19,142 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from typing import List
+from typing import Dict, List, Optional, Tuple
 
 from .step1 import extract_symptoms as extract_symptoms_dictionary
+
+
+# ---------------------------------------------------------------------------
+# RED-FLAG / TRIAGE LAYER
+# ---------------------------------------------------------------------------
+# Emergency symptoms that should NOT receive OTC recommendations.
+# The system must redirect to "Consult a doctor immediately."
+# Covers English, Tagalog, Bisaya, and Taglish.
+
+RED_FLAG_PATTERNS: Dict[str, List[str]] = {
+    "chest_pain": [
+        # English
+        r"\bchest\s+pain\b",
+        r"\bchest\s+tightness\b",
+        r"\btight\s+chest\b",
+        r"\bpain\s+in\s+(my\s+)?chest\b",
+        r"\bchest\s+hurts?\b",
+        # Tagalog
+        r"\bsakit\s+(ng\s+|sa\s+)?dibdib\b",
+        r"\bmasakit\s+(ang\s+)?dibdib\b",
+        r"\bsumasakit\s+(ang\s+)?dibdib\b",
+        r"\bkirot\s+(ng\s+|sa\s+)?dibdib\b",
+        # Bisaya
+        r"\bsakit\s+(akong\s+)?dughan\b",
+    ],
+    "difficulty_breathing": [
+        # English
+        r"\bshortness\s+of\s+breath\b",
+        r"\bdifficulty\s+breathing\b",
+        r"\bcan'?t\s+breathe\b",
+        r"\bhard\s+to\s+breathe\b",
+        r"\btrouble\s+breathing\b",
+        r"\bbreathing\s+difficulty\b",
+        r"\bstruggle\s+to\s+breathe\b",
+        # Tagalog
+        r"\bhirap\s+huminga\b",
+        r"\bhindi\s+(ako\s+)?makahinga\b",
+        r"\bnahihirapan\s+huminga\b",
+        r"\bhingal\s+na\s+hingal\b",
+        r"\bdi\s+(ako\s+)?makahinga\b",
+        # Bisaya
+        r"\blisud\s+moginhawa\b",
+        r"\bdili\s+(ko\s+)?makaginhawa\b",
+    ],
+    "blood_in_stool": [
+        r"\bblood\s+in\s+(my\s+)?(stool|poop|feces)\b",
+        r"\bbloody\s+(stool|poop|diarrhea)\b",
+        r"\bmay\s+dugo\s+(sa|ang)\s+(dumi|tae)\b",
+        r"\bdugo\s+(sa|ang)\s+(dumi|tae)\b",
+        r"\bmadugo\s+(ang\s+)?(dumi|tae)\b",
+    ],
+    "blood_vomit": [
+        r"\bvomiting\s+blood\b",
+        r"\bblood\s+in\s+(my\s+)?vomit\b",
+        r"\bbloody\s+vomit\b",
+        r"\bnag(su)?suka\s+(ng|ako\s+ng?)\s+dugo\b",
+        r"\bmay\s+dugo\s+(sa|ang)\s+suka\b",
+    ],
+    "severe_allergic_reaction": [
+        r"\banaphyla(xis|ctic)\b",
+        r"\bswollen\s+(throat|tongue|lips?|face)\b",
+        r"\bface\s+swelling\b",
+        r"\bnamamaga\s+(ang\s+)?(lalamunan|dila|labi|mukha)\b",
+        r"\bhives\s+all\s+over\b",
+        r"\bcan'?t\s+swallow\b",
+        r"\bhindi\s+(ako\s+)?makalunok\b",
+    ],
+    "high_fever_prolonged": [
+        r"\bfever\s+(?:of\s+)?4[0-2]\b",
+        r"\b4[0-2]\s*(?:degrees?|deg|celsius)\b",
+        r"\blagnat\s*(?:na\s*)?4[0-2]\b",
+        r"\b4[0-2]\s*(?:degrees?|deg)\s*(?:na\s+)?lagnat\b",
+        r"\bfever\b.*\b4[0-2]\b",
+        r"\blagnat\b.*\b4[0-2]\b",
+    ],
+    "seizure": [
+        r"\bseizure\b",
+        r"\bconvulsion\b",
+        r"\bkombulsyon\b",
+        r"\bnanginginig\s+(buong|ang\s+buong)\s+katawan\b",
+    ],
+    "loss_of_consciousness": [
+        r"\bfainted\b",
+        r"\bpassed\s+out\b",
+        r"\bunconscious\b",
+        r"\bloss\s+of\s+consciousness\b",
+        r"\bnahimatay\b",
+        r"\bnawalan\s+ng\s+malay\b",
+        r"\bhinimatay\b",
+    ],
+}
+
+# Human-friendly label → message mapping
+RED_FLAG_MESSAGES: Dict[str, str] = {
+    "chest_pain": "Chest pain detected",
+    "difficulty_breathing": "Difficulty breathing detected",
+    "blood_in_stool": "Blood in stool detected",
+    "blood_vomit": "Blood in vomit detected",
+    "severe_allergic_reaction": "Severe allergic reaction signs detected",
+    "high_fever_prolonged": "Dangerously high fever detected (≥40°C)",
+    "seizure": "Seizure/convulsion reported",
+    "loss_of_consciousness": "Loss of consciousness reported",
+}
+
+
+def detect_red_flags(user_input: str) -> List[Dict[str, str]]:
+    """Scan user input for emergency/red-flag symptoms.
+
+    Returns a list of dicts: [{"flag": "chest_pain", "message": "...", "matched": "..."}]
+    Empty list means no red flags detected.
+
+    NOTE: Uses a LIGHT normalization (lowercase + collapse whitespace) instead
+    of the full de-jejemize ``_normalize()`` because the latter converts digits
+    (0→o, 4→a, 1→i) which destroys temperature values like "40 degrees".
+    """
+    nt = user_input.lower().strip()
+    nt = re.sub(r"[''']", "", nt)           # can't → cant
+    nt = re.sub(r"\s+", " ", nt)
+    flags: List[Dict[str, str]] = []
+    seen: set = set()
+
+    for flag_name, patterns in RED_FLAG_PATTERNS.items():
+        for pat in patterns:
+            m = re.search(pat, nt)
+            if m and flag_name not in seen:
+                seen.add(flag_name)
+                flags.append({
+                    "flag": flag_name,
+                    "message": RED_FLAG_MESSAGES.get(flag_name, flag_name),
+                    "matched": m.group(),
+                })
+                break  # one match per flag category is enough
+    return flags
 
 
 def _normalize(text: str) -> str:
@@ -56,11 +189,11 @@ def _explicitly_negates_fever(user_input: str) -> bool:
     # - "wala akong fever" / "walang fever" / "no fever"
     # - "wala akong lagnat" / "walang lagnat" / "walay hilanat"
     return (
-        re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\bfever\b", nt)
+        re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\bfever\b", nt)
         is not None
-        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\blagnat\b", nt)
+        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\blagnat\b", nt)
         is not None
-        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(hilanat)\b", nt)
+        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(hilanat)\b", nt)
         is not None
     )
 
@@ -71,7 +204,7 @@ def _explicitly_negates_headache(user_input: str) -> bool:
     # - "no headache" / "not headache"
     # - "not sakit ulo" / "walang sakit ulo" / "dili sakit ulo"
     # - "wala akong headache" / "wala koy sakit ulo"
-    neg = r"(wala|walang|walay|no|not|without|dili|di)"
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
         re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(headache|head|ulo)\b", nt) is not None
         or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+sakit\s+ulo\b", nt) is not None
@@ -83,7 +216,7 @@ def _explicitly_negates_headache(user_input: str) -> bool:
 def _explicitly_negates_cough(user_input: str) -> bool:
     nt = _normalize(user_input)
     return (
-        re.search(r"\b(wala|walang|walay|no|not|without|dili|di)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing)\b", nt)
+        re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing|umuubo|inuubo)\b", nt)
         is not None
     )
 
@@ -139,6 +272,10 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "lbm",
         "kalibang",
         "tae",
+        # Alternative phrasings
+        "dumi",
+        "pabalik balik",
+        "loose bowel",
     ]
 
     nasal_keywords = [
@@ -176,6 +313,15 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "masakit ulo",
         "labad",
         "migraine",
+        # Alternative phrasings
+        "tumitibok",
+        "kumikislot",
+        "humahapdi",
+        "pounding",
+        "throbbing",
+        "gibukbok",
+        "sasabog",
+        "binibiyak",
     ]
 
     body_aches_keywords = [
@@ -194,6 +340,14 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "kasukasuan",
         "likod",
         "back pain",
+        # Alternative phrasings
+        "binugbog",
+        "pinukpok",
+        "nanlalamig",
+        "giniginaw",
+        "nanlalambot",
+        "ngalay",
+        "buto",
     ]
 
     stomach_keywords = [
@@ -210,6 +364,16 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "sakit sa tiyan",
         "sakit sa sikmura",
         "stomach ache",
+        # Alternative phrasings
+        "buhol buhol",
+        "kumukulo",
+        "kinukurot",
+        "puson",
+        "hyperacidity",
+        "acidic",
+        "heartburn",
+        "maasim",
+        "cramping",
     ]
 
     rhinitis_keywords = [
@@ -229,6 +393,9 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "itchy eyes",
         "katol mata",
         "makati mata",
+        # Alternative phrasings
+        "alerdyi",
+        "aalerdyi",
     ]
 
     rash_keywords = [
@@ -248,6 +415,18 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "red",
         "namumula",
         "nagpula",
+    ]
+
+    sore_throat_keywords = [
+        "sore throat",
+        "throat",
+        "lalamunan",
+        "tutunlan",
+        "tulon",
+        "katulon",
+        "lunukin",
+        "paos",
+        "hapdi",
     ]
 
     allowed: List[str] = []
@@ -303,6 +482,11 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
 
         if s == "RASHES":
             if _has_any(nt, rash_keywords):
+                allowed.append(s)
+            continue
+
+        if s == "SORE_THROAT":
+            if _has_any(nt, sore_throat_keywords):
                 allowed.append(s)
             continue
 
@@ -438,6 +622,15 @@ def extract_symptoms_hybrid_report(
         "stages": [],
         "final": {"symptoms": []},
     }
+
+    # ── RED-FLAG / TRIAGE CHECK (runs before everything else) ──
+    red_flags = detect_red_flags(user_input)
+    if red_flags:
+        report["red_flags"] = red_flags
+        # NOTE: We do NOT short-circuit here — we still extract symptoms so
+        # the benchmark can validate symptom detection accuracy.  The triage
+        # warning is consumed by step4 / the route layer which decides whether
+        # to suppress OTC recommendations and show a "consult a doctor" alert.
 
     dict_symptoms = extract_symptoms_dictionary(user_input)
 
