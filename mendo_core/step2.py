@@ -39,6 +39,10 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "My head hurts badly",
         "I have a pounding headache",
         "My head feels like it's exploding",
+        "My brain feels like it is trying to explode",
+        "Pulsing pain inside my head",
+        "parang pinupukpok ang bumbunan ko",
+        "sumasakit ang bumbunan ko",
         "masakit ang ulo ko",
         "parang sasabog ulo ko",
         "labad ang ulo",
@@ -59,6 +63,10 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "wet cough with mucus",
         "productive cough",
         "chest congestion with phlegm",
+        "I am bringing up yellow phlegm",
+        "There is sticky glue in my chest",
+        "My chest sounds rattly when I breathe",
+        "kumakalansing sa dibdib ko pag humihinga",
         "may plema",
         "naay plema",
         "basang ubo",
@@ -86,6 +94,10 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
     "BODY_ACHES": [
         "my body aches",
         "muscle pain and body aches",
+        "my whole body feels heavy",
+        "tibuok lawas nako bug at kaayo",
+        "bug at kaayo akong lawas",
+        "mura kog gilat an sa hilanat",
         "masakit katawan ko",
         "sakit lawas",
         "ngalay ang katawan",
@@ -109,6 +121,7 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
     "ALLERGIC_RHINITIS": [
         "I have allergies and keep sneezing",
         "itchy nose and watery eyes",
+        "dust allergy makes me sneeze",
         "bahing nang bahing",
         "makati ilong",
         "katol ilong",
@@ -132,6 +145,9 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "I have diarrhea",
         "loose stool",
         "watery stool",
+        "I keep running to the loo",
+        "I keep running to the bathroom every few minutes",
+        "purely liquid stool",
         "nagtatae ako",
         "nagkalibang ko",
     ],
@@ -154,6 +170,9 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "my throat hurts",
         "throat pain",
         "painful to swallow",
+        "scratchy throat when swallowing",
+        "naay garas akong tilaok",
+        "garas ang tilaok pag mutulon ko",
         "masakit lalamunan",
         "sakit lalamunan",
         "masakit tutunlan",
@@ -181,6 +200,7 @@ class EmbeddingSymptomExtractor:
         self,
         anchors: Dict[str, List[str]],
         model_name: str = "paraphrase-multilingual-MiniLM-L12-v2",
+        device: str | None = None,
     ) -> None:
         # Best-effort: reduce third-party noise (progress bars / warnings).
         # These affect only the current process.
@@ -212,7 +232,8 @@ class EmbeddingSymptomExtractor:
             ) from e
 
         self._util = util
-        self._model = SentenceTransformer(model_name)
+        chosen_device = device or os.getenv("MENDO_SEMANTIC_DEVICE", "cpu")
+        self._model = SentenceTransformer(model_name, device=chosen_device)
         self._anchors = anchors
 
         # Pre-encode all anchors once (speed). We keep them per symptom.

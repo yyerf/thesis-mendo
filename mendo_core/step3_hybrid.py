@@ -215,10 +215,50 @@ def _explicitly_negates_headache(user_input: str) -> bool:
 
 def _explicitly_negates_cough(user_input: str) -> bool:
     nt = _normalize(user_input)
+    matches = re.finditer(
+        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
+        nt,
+    )
+    for m in matches:
+        filler_tokens = m.group(2).split()
+        if any(tok in {"plema", "phlegm", "mucus"} for tok in filler_tokens):
+            continue
+        return True
+    return False
+
+
+def _explicitly_negates_diarrhea(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
+    return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(diarrhea|lbm|pagtatae|nagtatae|kalibang)\b", nt) is not None
+
+
+def _explicitly_negates_sore_throat(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
-        re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing|umuubo|inuubo)\b", nt)
+        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sore\s+throat|throat\s+pain|lalamunan|tutunlan|tilaok)\b", nt)
+        is not None
+        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+(masakit|hapdi|garas)\b(?:\s+\w+){{0,3}}\s+\b(lalamunan|tutunlan|tilaok)\b", nt)
         is not None
     )
+
+
+def _explicitly_negates_nasal(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
+    return (
+        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion)\b", nt)
+        is not None
+        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+barado\b(?:\s+\w+){{0,3}}\s+\b(ilong|nose)\b", nt)
+        is not None
+    )
+
+
+def _explicitly_negates_allergy(user_input: str) -> bool:
+    nt = _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
+    return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(allergy|allergies|allergic)\b", nt) is not None
 
 
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
@@ -227,12 +267,57 @@ def _has_any(normalized_text: str, keywords: List[str]) -> bool:
         if not nkw:
             continue
         if " " in nkw:
-            if nkw in normalized_text:
+            if re.search(rf"\b{re.escape(nkw)}\b", normalized_text):
                 return True
         else:
             if re.search(rf"\b{re.escape(nkw)}\b", normalized_text):
                 return True
     return False
+
+
+def _apply_semantic_safety_filters(
+    user_input: str,
+    semantic_detected: List[str],
+    diag_rows: Optional[List[dict]] = None,
+    red_flags: Optional[List[Dict[str, str]]] = None,
+) -> Tuple[List[str], Optional[List[dict]]]:
+    filtered = list(semantic_detected)
+    filtered_rows = list(diag_rows) if diag_rows is not None else None
+
+    def _drop(symptoms: set[str]) -> None:
+        nonlocal filtered, filtered_rows
+        filtered = [s for s in filtered if s not in symptoms]
+        if filtered_rows is not None:
+            filtered_rows = [row for row in filtered_rows if row.get("symptom") not in symptoms]
+
+    if _explicitly_negates_fever(user_input):
+        _drop({"FEVER"})
+
+    if _explicitly_negates_headache(user_input):
+        _drop({"HEADACHE"})
+
+    if _explicitly_negates_cough(user_input):
+        _drop({"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"})
+
+    if _explicitly_negates_diarrhea(user_input):
+        _drop({"DIARRHEA"})
+
+    if _explicitly_negates_sore_throat(user_input):
+        _drop({"SORE_THROAT"})
+
+    if _explicitly_negates_nasal(user_input):
+        _drop({"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"})
+
+    if _explicitly_negates_allergy(user_input):
+        _drop({"ALLERGIC_RHINITIS"})
+
+    red_flag_names = {row.get("flag") for row in (red_flags or detect_red_flags(user_input))}
+    if "blood_in_stool" in red_flag_names:
+        _drop({"DIARRHEA"})
+    if "severe_allergic_reaction" in red_flag_names:
+        _drop({"SORE_THROAT"})
+
+    return filtered, filtered_rows
 
 
 def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> List[str]:
@@ -258,13 +343,19 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "gubo",
         "hubak",
         "halak",
+        "rattly chest",
+        "kumakalansing",
     ]
-    plema_keywords = ["plema", "phlegm", "mucus"]
+    plema_keywords = ["plema", "phlegm", "mucus", "yellow stuff", "bringing up", "bring up", "sticky", "glue"]
 
     diarrhea_keywords = [
         "diarrhea",
         "loose stool",
         "watery stool",
+        "loo",
+        "bathroom",
+        "toilet",
+        "liquid",
         "stool",
         "bowel",
         "pagtatae",
@@ -322,6 +413,11 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "gibukbok",
         "sasabog",
         "binibiyak",
+        "brain",
+        "explode",
+        "exploding",
+        "pulsing",
+        "bumbunan",
     ]
 
     body_aches_keywords = [
@@ -348,6 +444,10 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "nanlalambot",
         "ngalay",
         "buto",
+        "bugat",
+        "bug at",
+        "tibuok lawas",
+        "heavy body",
     ]
 
     stomach_keywords = [
@@ -415,6 +515,8 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "red",
         "namumula",
         "nagpula",
+        "bumps",
+        "red bumps",
     ]
 
     sore_throat_keywords = [
@@ -427,15 +529,22 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "lunukin",
         "paos",
         "hapdi",
+        "garas",
+        "tilaok",
+        "mutulon",
+        "scratchy",
     ]
 
     allowed: List[str] = []
     for s in semantic_detected:
         if s in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}:
+            if s == "COUGH_PRODUCTIVE":
+                has_classic_cough = _has_any(nt, cough_keywords) and _has_any(nt, plema_keywords)
+                has_chest_expectoration = _has_any(nt, ["chest", "dibdib", "congestion", "kumakalansing"]) and _has_any(nt, plema_keywords)
+                if has_classic_cough or has_chest_expectoration:
+                    allowed.append(s)
+                continue
             if _has_any(nt, cough_keywords):
-                # For productive cough, require plema/phlegm/mucus mention too.
-                if s == "COUGH_PRODUCTIVE" and not _has_any(nt, plema_keywords):
-                    continue
                 allowed.append(s)
             continue
 
@@ -553,6 +662,7 @@ def extract_symptoms_hybrid(
     Returns a distinct list of symptom labels.
     """
 
+    red_flags = detect_red_flags(user_input)
     detected = extract_symptoms_dictionary(user_input)
 
     # Global negation override for cough at dictionary stage too.
@@ -583,17 +693,7 @@ def extract_symptoms_hybrid(
     # primarily controlled by the threshold + top-N cap.)
     semantic_detected = _semantic_lexical_guard(user_input, semantic_detected)
 
-    # Global negation override: don't re-add FEVER if explicitly negated.
-    if _explicitly_negates_fever(user_input):
-        semantic_detected = [s for s in semantic_detected if s != "FEVER"]
-
-    # Global negation override: don't re-add HEADACHE if explicitly negated.
-    if _explicitly_negates_headache(user_input):
-        semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
-
-    # Global negation override: don't re-add COUGH if explicitly negated.
-    if _explicitly_negates_cough(user_input):
-        semantic_detected = [s for s in semantic_detected if s not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}]
+    semantic_detected, _ = _apply_semantic_safety_filters(user_input, semantic_detected, red_flags=red_flags)
 
     scored = sorted(
         ((m.symptom, float(m.score)) for m in diag if m.symptom in semantic_detected),
@@ -671,24 +771,12 @@ def extract_symptoms_hybrid_report(
             reverse=True,
         )
 
-        # Global negation override: don't let semantic fallback re-add fever
-        # when user explicitly denies it.
-        if _explicitly_negates_fever(user_input):
-            semantic_detected = [s for s in semantic_detected if s != "FEVER"]
-            diag_sorted = [row for row in diag_sorted if row.get("symptom") != "FEVER"]
-
-        # Global negation override: don't let semantic fallback re-add headache
-        # when user explicitly denies it.
-        if _explicitly_negates_headache(user_input):
-            semantic_detected = [s for s in semantic_detected if s != "HEADACHE"]
-            diag_sorted = [row for row in diag_sorted if row.get("symptom") != "HEADACHE"]
-
-        # Global negation override: don't let semantic fallback re-add cough
-        # when user explicitly denies it.
-        if _explicitly_negates_cough(user_input):
-            cough_labels = {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
-            semantic_detected = [s for s in semantic_detected if s not in cough_labels]
-            diag_sorted = [row for row in diag_sorted if row.get("symptom") not in cough_labels]
+        semantic_detected, diag_sorted = _apply_semantic_safety_filters(
+            user_input,
+            semantic_detected,
+            diag_rows=diag_sorted,
+            red_flags=red_flags,
+        )
     except Exception as e:
         report["stages"].append(
             {

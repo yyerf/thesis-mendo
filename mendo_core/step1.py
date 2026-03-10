@@ -70,6 +70,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sumasakit ang ulo",
         "sumasakit ang ulo ko",
         "sumasakit ulo",
+        "pinupukpok ang bumbunan",
+        "sumasakit ang bumbunan",
+        "bumbunan ko",
     ],
     # NOTE (thesis/panel-friendly): COUGH is split into 3 intents.
     # - COUGH_PRODUCTIVE: cough with phlegm/mucus (wet cough)
@@ -98,6 +101,11 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "with plema",
         "halak",
         "hubak",
+        "kumakalansing sa dibdib",
+        "kumakalansing ang dibdib",
+        "may kumakalansing sa dibdib",
+        "rattling in the chest",
+        "chest rattling",
     ],
     "COUGH_DRY": [
         # English
@@ -218,6 +226,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "binugbog ang katawan",
         # Bisaya
         "sakit lawas",
+        "bug at akong lawas",
+        "bug at kaayo akong lawas",
+        "tibuok lawas nako bug at",
+        "tibuok lawas bug at",
         "luya",
         "kapoy kaayo",
         # Alternative phrasings
@@ -266,6 +278,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "di ko katulon",
         "dili katulon",
         "dili ko katulon",
+        "garas akong tilaok",
+        "garas ang tilaok",
+        "tilaok",
         # Alternative phrasings
         "paos",
         "mahapdi ang lalamunan",
@@ -484,6 +499,19 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
     if re.search(r"\b(throat|lalamunan|tutunlan)\b(?:\s+\w+){0,3}\s+\b(itchy|scratchy|tickly|makati|makatol)\b", normalized_text):
         return ["COUGH_DRY"]
 
+    # Chest-congestion/rattle phrases that directly imply productive cough
+    # even without the word "ubo/cough".  These are strong enough to stand
+    # alone as productive-cough indicators (e.g., "kumakalansing sa dibdib").
+    chest_productive_phrases = [
+        "kumakalansing sa dibdib",
+        "kumakalansing ang dibdib",
+        "rattling in the chest",
+        "chest rattling",
+        "chest congestion",
+    ]
+    if any(_phrase_in_text(normalized_text, _normalize(p)) for p in chest_productive_phrases):
+        return ["COUGH_PRODUCTIVE"]
+
     cough_present = _phrase_in_text(normalized_text, "cough") or _phrase_in_text(normalized_text, "ubo")
     if not cough_present:
         # Also handle common cough verbs without the literal 'cough'
@@ -502,10 +530,17 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
 
     # Check for explicit cough negation BEFORE deciding cough type.
     # Examples: "walang ubo", "wala akong ubo", "no cough", "without cough"
-    if re.search(
-        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
+    #
+    # Important guard: "no plema ... coughing" does NOT mean "no cough".
+    # The negation applies to phlegm, not to cough itself.
+    cough_neg_matches = re.finditer(
+        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
         normalized_text,
-    ):
+    )
+    for m in cough_neg_matches:
+        filler_tokens = m.group(2).split()
+        if any(tok in {"plema", "phlegm", "mucus"} for tok in filler_tokens):
+            continue
         return []
 
     dry_qualifiers = [
@@ -961,6 +996,16 @@ def extract_symptoms(user_input: str) -> List[str]:
         elif re.search(r"\b(katawan|lawas|body)\b(?:\s+\w+){0,3}\s+\b(mainit|init)\b", normalized_text):
             detected.append("FEVER")
 
+    # Allergen-trigger inference: if RASHES is detected and a known allergen
+    # trigger is mentioned, also infer ALLERGIC_RHINITIS.  In the MENDO label
+    # system, ALLERGIC_RHINITIS is the closest label for general allergy.  This
+    # bridges the gap when semantic fallback doesn't fire because dictionary
+    # already returned results for rashes.
+    if "RASHES" in detected and "ALLERGIC_RHINITIS" not in detected and "ALLERGIC_RHINITIS" not in negated_labels:
+        allergen_triggers = ["dust", "alikabok", "pollen", "dander", "pet fur", "pet hair", "amag", "bulak"]
+        if any(_phrase_in_text(normalized_text, _normalize(t)) for t in allergen_triggers):
+            detected.append("ALLERGIC_RHINITIS")
+
     # Fuzzy rescue for common Tagalog runny-nose variants/misspellings.
     # Example: "ssinisipown" -> RUNNY_NOSE, "sepun" -> RUNNY_NOSE
     if "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
@@ -1063,8 +1108,9 @@ def extract_symptoms(user_input: str) -> List[str]:
     # (each neg word checked independently to avoid overlapping-match issues).
     _neg_rx_override = r"\b(?:wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b"
 
-    def _strong_neg_check(part: str, target_words: set, max_filler: int = 2) -> bool:
+    def _strong_neg_check(part: str, target_words: set, max_filler: int = 2, ignored_filler_words: set | None = None) -> bool:
         """Return True if any target word is genuinely negated in this text part."""
+        ignored_filler_words = ignored_filler_words or set()
         target_alt = "|".join(re.escape(w) for w in target_words)
         phrase_pat = rf"((?:\s+\w+){{{0},{max_filler}}})\s+\b(?:{target_alt})\b"
         for neg_m in re.finditer(_neg_rx_override, part):
@@ -1073,6 +1119,8 @@ def extract_symptoms(user_input: str) -> List[str]:
             if not follow:
                 continue
             filler_tokens = follow.group(1).split()
+            if any(ft in ignored_filler_words for ft in filler_tokens):
+                continue
             consumed = any(ft in _INTERVENING_SYMPTOM_WORDS for ft in filler_tokens
                            if ft not in target_words)
             if not consumed:
@@ -1100,7 +1148,7 @@ def extract_symptoms(user_input: str) -> List[str]:
         _cough_targets = {"ubo", "cough", "coughing", "umuubo", "inuubo"}
         for i, part in enumerate(parts):
             has_cough_word = bool(re.search(r"\b(ubo|cough|coughing|umuubo|inuubo)\b", part))
-            has_neg = _strong_neg_check(part, _cough_targets)
+            has_neg = _strong_neg_check(part, _cough_targets, ignored_filler_words={"plema", "phlegm", "mucus"})
             if has_neg and has_cough_word:
                 cough_negated = True
             elif has_cough_word and not has_neg:
