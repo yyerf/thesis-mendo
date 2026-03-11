@@ -304,6 +304,30 @@
       margin-top: 12px; font-style: italic;
     }
 
+    /* Triage / Red-flag emergency banner */
+    .triage-banner {
+      background: linear-gradient(135deg, #fef2f2, #fff1f2);
+      border: 2px solid #ef4444; border-radius: 12px;
+      padding: 32px 24px; text-align: center;
+    }
+    .triage-banner .icon { font-size: 56px; margin-bottom: 12px; }
+    .triage-banner h3 {
+      font-size: 20px; font-weight: 800; color: #991b1b; margin-bottom: 12px;
+    }
+    .triage-banner p {
+      font-size: 14px; color: #b91c1c; line-height: 1.7; max-width: 540px; margin: 0 auto;
+    }
+    .triage-banner .flag-list {
+      list-style: none; padding: 0; margin: 16px auto; max-width: 400px; text-align: left;
+    }
+    .triage-banner .flag-list li {
+      padding: 6px 0; font-size: 14px; font-weight: 600; color: #dc2626;
+    }
+    .triage-banner .triage-note {
+      font-size: 12px; color: var(--text-muted); margin-top: 16px;
+      font-style: italic;
+    }
+
     /* Clarify question */
     .clarify-box {
       background: var(--warning-light); border: 1px solid var(--warning-border);
@@ -709,6 +733,24 @@
     const rec = data.recommendation || {};
     const source = data.source || 'unknown';
     const referral = data.referral || null;
+
+    // ── TRIAGE: Red-flag emergency detected ──
+    if (rec.action === 'triage') {
+      const flags = rec.triage_flags || [];
+      const flagItems = flags.map(f => `<li>🚨 ${f.message}</li>`).join('');
+      container.innerHTML = `
+        <div class="triage-banner">
+          <div class="icon">🏥</div>
+          <h3>Emergency Detected — Please Consult a Doctor</h3>
+          <p>The following serious condition(s) were detected from your input:</p>
+          <ul class="flag-list">${flagItems}</ul>
+          <p>Self-medication with OTC products is <strong>not recommended</strong> for these symptoms.
+             Please seek professional medical help immediately.</p>
+          <p class="triage-note">This is not a diagnosis. The system detected keywords that may indicate
+             a condition requiring urgent medical attention.</p>
+        </div>`;
+      return;
+    }
 
     // No symptoms found
     if (!symptoms.length) {

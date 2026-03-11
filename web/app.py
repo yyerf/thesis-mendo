@@ -32,6 +32,25 @@ except Exception as e:
     log.error("Failed to initialize POS: %s", e)
 
 
+# ── Preload semantic model (background thread) ──
+# The transformer model takes ~25s to load from disk on Raspberry Pi.
+# Loading it eagerly in a background thread means the first user query
+# never has to wait for the cold-start penalty.
+import threading
+
+def _preload_semantic_model():
+    try:
+        from mendo_core.step3_hybrid import _get_semantic_extractor
+        ext = _get_semantic_extractor()
+        # Warm up PyTorch buffers with a throwaway encode
+        ext.analyze("warmup", threshold=0.99)
+        log.info("Semantic model preloaded and warmed up")
+    except Exception as e:
+        log.warning("Semantic model preload failed (will retry on first query): %s", e)
+
+threading.Thread(target=_preload_semantic_model, daemon=True).start()
+
+
 # ── Root redirect ──
 @app.route("/")
 def index():

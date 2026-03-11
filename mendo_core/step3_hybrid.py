@@ -183,8 +183,8 @@ def _normalize(text: str) -> str:
     return text
 
 
-def _explicitly_negates_fever(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_fever(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     # Handle common mixed-language patterns like:
     # - "wala akong fever" / "walang fever" / "no fever"
     # - "wala akong lagnat" / "walang lagnat" / "walay hilanat"
@@ -198,8 +198,8 @@ def _explicitly_negates_fever(user_input: str) -> bool:
     )
 
 
-def _explicitly_negates_headache(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_headache(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     # Examples we want to respect:
     # - "no headache" / "not headache"
     # - "not sakit ulo" / "walang sakit ulo" / "dili sakit ulo"
@@ -213,8 +213,8 @@ def _explicitly_negates_headache(user_input: str) -> bool:
     )
 
 
-def _explicitly_negates_cough(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_cough(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     matches = re.finditer(
         r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
         nt,
@@ -227,14 +227,14 @@ def _explicitly_negates_cough(user_input: str) -> bool:
     return False
 
 
-def _explicitly_negates_diarrhea(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_diarrhea(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(diarrhea|lbm|pagtatae|nagtatae|kalibang)\b", nt) is not None
 
 
-def _explicitly_negates_sore_throat(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_sore_throat(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
         re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sore\s+throat|throat\s+pain|lalamunan|tutunlan|tilaok)\b", nt)
@@ -244,8 +244,8 @@ def _explicitly_negates_sore_throat(user_input: str) -> bool:
     )
 
 
-def _explicitly_negates_nasal(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_nasal(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
         re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion)\b", nt)
@@ -255,15 +255,17 @@ def _explicitly_negates_nasal(user_input: str) -> bool:
     )
 
 
-def _explicitly_negates_allergy(user_input: str) -> bool:
-    nt = _normalize(user_input)
+def _explicitly_negates_allergy(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(allergy|allergies|allergic)\b", nt) is not None
 
 
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
     for kw in keywords:
-        nkw = _normalize(kw)
+        # Keywords are expected to already be lowercase simple words;
+        # skip the full _normalize() call for speed.
+        nkw = kw.lower().strip()
         if not nkw:
             continue
         if " " in nkw:
@@ -284,31 +286,34 @@ def _apply_semantic_safety_filters(
     filtered = list(semantic_detected)
     filtered_rows = list(diag_rows) if diag_rows is not None else None
 
+    # Normalize once, reuse across all negation checks
+    nt = _normalize(user_input)
+
     def _drop(symptoms: set[str]) -> None:
         nonlocal filtered, filtered_rows
         filtered = [s for s in filtered if s not in symptoms]
         if filtered_rows is not None:
             filtered_rows = [row for row in filtered_rows if row.get("symptom") not in symptoms]
 
-    if _explicitly_negates_fever(user_input):
+    if _explicitly_negates_fever(user_input, _nt=nt):
         _drop({"FEVER"})
 
-    if _explicitly_negates_headache(user_input):
+    if _explicitly_negates_headache(user_input, _nt=nt):
         _drop({"HEADACHE"})
 
-    if _explicitly_negates_cough(user_input):
+    if _explicitly_negates_cough(user_input, _nt=nt):
         _drop({"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"})
 
-    if _explicitly_negates_diarrhea(user_input):
+    if _explicitly_negates_diarrhea(user_input, _nt=nt):
         _drop({"DIARRHEA"})
 
-    if _explicitly_negates_sore_throat(user_input):
+    if _explicitly_negates_sore_throat(user_input, _nt=nt):
         _drop({"SORE_THROAT"})
 
-    if _explicitly_negates_nasal(user_input):
+    if _explicitly_negates_nasal(user_input, _nt=nt):
         _drop({"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"})
 
-    if _explicitly_negates_allergy(user_input):
+    if _explicitly_negates_allergy(user_input, _nt=nt):
         _drop({"ALLERGIC_RHINITIS"})
 
     red_flag_names = {row.get("flag") for row in (red_flags or detect_red_flags(user_input))}

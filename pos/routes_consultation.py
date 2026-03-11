@@ -30,6 +30,8 @@ from flask import (
     jsonify,
 )
 
+from mendo_core.interaction_logger import log_interaction
+
 log = logging.getLogger("mendo.consultation")
 
 consultation_bp = Blueprint(
@@ -186,6 +188,21 @@ def api_analyze():
         if referral is not None:
             resp["referral"] = referral
 
+        # ── Log interaction for Iteration 2 expert validation ──
+        try:
+            log_interaction(
+                user_input=user_text,
+                extracted_symptoms=symptoms,
+                extraction_source=source,
+                pipeline_stages=report.get("stages", []),
+                recommendation=recommendation,
+                red_flags=red_flags,
+                severity=severity,
+                age=user_age,
+            )
+        except Exception:
+            pass  # logging must never break the main flow
+
         return jsonify(resp)
 
     except Exception as e:
@@ -255,6 +272,20 @@ def api_clarify():
                 recommendation["recommendations"] = filtered_recs
         except Exception:
             pass
+
+        # ── Log clarification interaction ──
+        try:
+            log_interaction(
+                user_input="[clarification]",
+                extracted_symptoms=symptoms,
+                extraction_source="clarification",
+                pipeline_stages=[],
+                recommendation=recommendation,
+                clarification=clarification,
+                age=user_age,
+            )
+        except Exception:
+            pass  # logging must never break the main flow
 
         return jsonify({
             "symptoms": symptoms,

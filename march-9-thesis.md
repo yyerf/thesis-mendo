@@ -123,6 +123,17 @@ Instead of relying on a single expert's annotations, we grounded every recommend
 │  • Opposing mechanism warning (expectorant + suppressant)│
 │  • Source attribution per recommendation                 │
 │  • Safety warnings in output                             │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────────────┐
+│  INTERACTION LOGGER (interaction_logger.py)               │
+│  • Records every consultation to logs/interactions.jsonl │
+│  • Captures: raw input, extracted symptoms, source,      │
+│    red flags, pipeline stages, recommendations,          │
+│    clarifications, severity, age                         │
+│  • Non-blocking: logging failures never interrupt UX     │
+│  • Data source for Iteration 2 expert annotation         │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -751,6 +762,10 @@ This captures the common real-world pattern where patients describe allergy-trig
 
 This centralized design means that **every expansion to semantic coverage automatically inherits all safety checks** without requiring per-feature safety engineering.
 
+### 10.19 Interaction Logging for Expert Validation
+**Problem:** Automated benchmarks (288-case, 9-case semantic, 80-case real-user) validate system correctness on synthetic and simulated inputs, but cannot confirm clinical appropriateness of recommendations on real patient interactions. Panelists may ask: "Who validated that the recommendations are actually correct?"
+**Solution:** A structured interaction logging system (`mendo_core/interaction_logger.py`) records every consultation to a persistent JSON-Lines file (`logs/interactions.jsonl`). Each log entry captures: timestamp, raw user input, extracted symptoms, extraction source (dictionary or semantic), red-flag triggers, pipeline stage details, recommended medicines (brand + generic), cough-type clarification, severity, and age. The logger is non-blocking — failures never interrupt the user-facing consultation flow. This log serves as the primary data source for Iteration 2, where domain-expert annotators (licensed pharmacists) independently review each interaction to evaluate: (1) symptom extraction correctness, (2) recommendation appropriateness, and (3) missed symptoms. Inter-annotator agreement (Cohen's Kappa) quantifies reliability. This deployment-then-expert-validation design bridges automated evaluation with human clinical judgment.
+
 ---
 
 ## 11. Panel Defense Talking Points
@@ -805,6 +820,12 @@ This centralized design means that **every expansion to semantic coverage automa
 
 ### Q: "Is the current system already good enough?"
 > Yes — it is both thesis-defensible and deployment-ready. It achieves 288/288 (F1 = 1.000) on the structured benchmark, 9/9 on the semantic stress set (figurative, metaphorical, and vague patient inputs), and 72/80 on unrehearsed real-user simulation with zero failures. It includes a triage safety layer, 7 negation override functions, centralized semantic safety filters, and red-flag suppression. For market deployment, the recommended next step is external validation with real kiosk utterances and pharmacist review — incremental robustness engineering, not architecture replacement.
+
+### Q: "Who validated that the recommendations are actually correct?"
+> In Iteration 1, we validated through automated benchmarks (288/288 + 9/9 + 72/80). For Iteration 2, we implemented a **structured interaction logging system** that records every consultation — raw input, extracted symptoms, pipeline source, red flags, and recommended medicines — to a persistent log file. In Iteration 2, licensed pharmacists will independently annotate these logged real-world interactions on three dimensions: (1) symptom extraction correctness, (2) recommendation appropriateness, and (3) missed symptoms. We will compute **Cohen's Kappa (κ)** for inter-annotator agreement, targeting κ ≥ 0.61 (substantial agreement). This deployment-then-expert-validation approach provides ecological validity — we're validating on real patient interactions, not synthetic test cases. The automated benchmarks prove the system works correctly; the expert annotations prove the recommendations are clinically appropriate.
+
+### Q: "Why not have experts validate before deployment?"
+> This is a deliberate methodological choice. Pre-deployment expert validation would require experts to evaluate synthetic test cases or manually construct scenarios — which is essentially what the 288-case benchmark already does. By deploying first with logging, we collect **genuine user interactions** in the target environment (pharmacy kiosk, multilingual, noisy input). Expert annotation of real data provides stronger ecological validity and uncovers patterns that no synthetic benchmark can anticipate. This approach is well-established in applied NLP research (Pustejovsky & Stubbs, 2012).
 
 ---
 
@@ -928,16 +949,31 @@ If the goal is real market deployment, the best computer science recommendation 
 
 In short: **the current architecture is both thesis-defensible and deployment-ready. The next step is external validation and real-user data collection, not premature model replacement.**
 
-### 12.7 Future Work
+### 12.7 Future Work — Iteration 2: Expert Annotation and Validation
 
-- Conduct a **pharmacist-reviewed evaluation** of recommendation appropriateness.
-- Collect anonymized **real kiosk utterances** to build an external test set.
-- Expand the medicine dataset beyond the current 23 OTC entries.
-- Add formal metrics for **recommendation quality** in addition to symptom-extraction accuracy.
-- Explore **selective semantic augmentation** for partial dictionary matches under safety constraints.
-- Investigate whether lexical guards can be expanded without materially increasing false positives.
+Iteration 1 produced the complete working system with interaction logging. Iteration 2 centers on **domain-expert validation** of logged real-world consultations.
+
+**Phase 2A: Expert Annotation of Logged Interactions**
+- Recruit licensed pharmacists or pharmacy interns as domain-expert annotators.
+- Each annotator independently reviews logged interactions and evaluates three dimensions:
+  1. **Symptom Extraction Correctness** — did the system correctly identify the symptoms? (precision/recall)
+  2. **Recommendation Appropriateness** — are the suggested OTC medicines clinically suitable?
+  3. **Missed Symptoms** — were any symptoms present in the input not detected? (false negatives)
+- Compute **Cohen's Kappa (κ)** between annotator pairs for inter-annotator agreement (target: κ ≥ 0.61, substantial agreement).
+- Resolve disagreements through adjudication discussion.
+
+**Phase 2B: Analysis and System Refinement**
+- Compute **expert-validated precision, recall, and F1** based on annotator judgments (ecological validity on real interactions, not synthetic test cases).
+- Categorize annotator-identified errors by symptom label, language variant, and input pattern to inform targeted refinements.
+- Produce a **clinical appropriateness rate** — percentage of recommendations deemed suitable by domain experts.
+- Apply targeted improvements (dictionary expansion, anchor additions, heuristic adjustments) and regression-test against the full 288-case benchmark.
+
+**Phase 2C: Additional Enhancements (Scope-Dependent)**
+- Investigate the 8 partial matches from the 80-case real-user simulation.
+- Expand medicine dataset beyond 23 entries based on pharmacy partner feedback and dispensing patterns observed in the logs.
+- Expand symptom taxonomy beyond 13 labels (nausea, dizziness, fatigue) pending appropriate OTC medications.
 - Explore fine-tuning **only if** a sufficiently large, ethically sourced, professionally annotated multilingual dataset becomes available.
-- Compare the current hybrid architecture against a purely fine-tuned baseline and against lightweight multilingual encoders in a future study.
+- Compare the current hybrid architecture against a purely fine-tuned baseline in a future study.
 
 ---
 
@@ -949,6 +985,7 @@ In short: **the current architecture is both thesis-defensible and deployment-re
 | `mendo_core/step2.py` | ~320 | Semantic fallback (sentence-transformers, CPU-safe) |
 | `mendo_core/step3_hybrid.py` | ~931 | Hybrid merge + lexical guards + triage/red-flag layer + semantic safety filters |
 | `mendo_core/step4_recommend.py` | ~397 | ASG recommendation engine + triage gate |
+| `mendo_core/interaction_logger.py` | ~99 | Interaction logging for Iteration 2 expert validation |
 | `mendo_core/symptom_models.py` | ~178 | Benchmarking model protocol |
 | `data/Mendo-Datasets.json` | — | 23 medicine entries with ASG fields |
 | `testing/benchmark/testing.csv` | 289 | 288 test cases (header + 288 rows) |
