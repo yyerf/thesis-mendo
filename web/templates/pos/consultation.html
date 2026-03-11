@@ -184,7 +184,7 @@
        KIOSK CONTAINER
     ═══════════════════════════════ */
     .kiosk {
-      min-height: 100vh; display: flex; flex-direction: column;
+      height: 100vh; display: flex; flex-direction: column;
       background: var(--zinc-50); padding-top: 26px;
     }
 
@@ -236,13 +236,12 @@
     /* Main content */
     .kiosk-body {
       flex: 1; display: flex; flex-direction: column;
-      overflow-y: auto; min-height: 0;
+      overflow: hidden; min-height: 0;
     }
 
     /* Each panel */
     .kiosk-panel {
-      display: none; flex: 1; flex-direction: column;
-      min-height: 100%;
+      display: none; flex: 1; flex-direction: column; min-height: 0;
     }
     .kiosk-panel.active { display: flex; }
 
@@ -257,6 +256,7 @@
       padding: 16px 24px; background: var(--white);
       border-top: 1px solid var(--zinc-200);
       display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0;
     }
 
     /* ── Section title ── */
