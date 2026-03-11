@@ -64,10 +64,6 @@
       flex: 1; position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
-    .home-bg img.bg-img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; filter: brightness(0.45);
-    }
     .home-logo-wrap {
       position: relative; z-index: 2; text-align: center;
     }
@@ -75,14 +71,19 @@
       width: 320px; height: auto;
       filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4));
     }
-    .home-tagline {
-      color: rgba(255,255,255,0.85); font-size: 16px; font-weight: 500;
-      margin-top: 12px; letter-spacing: 0.5px;
+    /* Carousel */
+    .carousel-slide {
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity 1.2s ease;
     }
-
+    .carousel-slide.active { opacity: 1; }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover; filter: brightness(0.45);
+    }
     /* Admin link */
     .admin-link {
-      position: fixed; top: 20px; left: 20px; z-index: 600;
+      position: fixed; top: 46px; left: 20px; z-index: 600;
       padding: 8px 16px; border-radius: var(--radius);
       font-size: 13px; font-weight: 600;
       background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7);
@@ -94,7 +95,7 @@
 
     /* Help button — single instance on home screen */
     .help-btn-home {
-      position: fixed; top: 20px; right: 20px; z-index: 600;
+      position: fixed; top: 46px; right: 20px; z-index: 600;
       width: 44px; height: 44px; border-radius: 50%;
       background: var(--white); border: 2px solid var(--zinc-200);
       font-size: 20px; font-weight: 700; color: var(--zinc-500);
@@ -162,12 +163,29 @@
 
     @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
+    /* ── Disclaimer ticker ── */
+    .disclaimer-ticker {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 26px; overflow: hidden;
+      background: var(--white); border-bottom: 1px solid var(--zinc-200);
+      display: flex; align-items: center;
+    }
+    .disclaimer-track {
+      white-space: nowrap; font-size: 11px; font-weight: 500;
+      color: var(--zinc-500); letter-spacing: 0.2px;
+      animation: ticker-scroll 40s linear infinite;
+    }
+    @keyframes ticker-scroll {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(-100%); }
+    }
+
     /* ═══════════════════════════════
        KIOSK CONTAINER
     ═══════════════════════════════ */
     .kiosk {
       min-height: 100vh; display: flex; flex-direction: column;
-      background: var(--zinc-50);
+      background: var(--zinc-50); padding-top: 26px;
     }
 
     /* Top bar */
@@ -177,7 +195,7 @@
       display: flex; align-items: center; justify-content: space-between;
     }
     .kiosk-brand {
-      display: flex; align-items: center;
+      display: flex; align-items: center; cursor: pointer;
     }
     .kiosk-brand img { height: 56px; }
 
@@ -661,10 +679,29 @@
       .analysis-result { padding: 24px 16px; }
       .clarify-buttons { flex-direction: column; }
       .results-actions { flex-direction: column; }
+
+      /* Topbar — hide logo, center steps */
+      .kiosk-brand { display: none; }
+      .kiosk-topbar {
+        padding: 8px 12px;
+        justify-content: center;
+        position: relative;
+      }
+      .help-btn-bar {
+        position: absolute; right: 12px;
+        top: 50%; transform: translateY(-50%);
+      }
+      .kiosk-steps { gap: 2px; }
+      .kiosk-step { padding: 6px 10px; }
+      .kiosk-step-divider { width: 14px; }
     }
   </style>
 </head>
 <body>
+
+<div class="disclaimer-ticker">
+  <div class="disclaimer-track">This system is not a substitute for professional medical advice. Always consult a healthcare provider for serious or persistent symptoms.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This system is not a substitute for professional medical advice. Always consult a healthcare provider for serious or persistent symptoms.</div>
+</div>
 
 <!-- ═══════════════════════════════
      SCREEN 0 — Home / Welcome
@@ -674,16 +711,28 @@
   <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
 
   <div class="home-bg" onclick="startKiosk()">
-    <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="" class="bg-img">
+    <div class="carousel-slide active">
+      <img src="{{ url_for('static', filename='images/banner1.jpg') }}" alt="">
+    </div>
+    <div class="carousel-slide">
+      <img src="{{ url_for('static', filename='images/banner2.jpg') }}" alt="">
+    </div>
+    <div class="carousel-slide">
+      <img src="{{ url_for('static', filename='images/banner3.jpg') }}" alt="">
+    </div>
     <div class="home-logo-wrap">
       <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
-      <div class="home-tagline">AI-Powered OTC Medicine Vending</div>
     </div>
   </div>
 
   <div class="home-cta" onclick="startKiosk()">
-    <svg class="home-cta-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+    <svg class="home-cta-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v4.5"/>
+      <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/>
+      <path d="M14 10.5a1.5 1.5 0 0 1 3 0v2.5"/>
+      <path d="M17 11.5a1.5 1.5 0 0 1 3 0v5.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5.012-2.7l-3.286-5.728a1.5 1.5 0 0 1 .536-2.022 1.867 1.867 0 0 1 2.28.28l1.47 1.47"/>
+      <path d="M2.5 5.5a13 13 0 0 1 2.46-1.6"/>
+      <path d="M14 3.46a13 13 0 0 1 3.54 1.59"/>
     </svg>
     <span class="home-cta-text">Tap anywhere to begin</span>
   </div>
@@ -759,7 +808,7 @@
 
   <!-- Top Bar -->
   <div class="kiosk-topbar">
-    <div class="kiosk-brand">
+    <div class="kiosk-brand" onclick="resetAll()" title="Back to home">
       <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
     </div>
     <div class="kiosk-steps" id="stepsBar">
@@ -1445,6 +1494,18 @@
     voiceBtn.style.display = 'none';
   }
 
+})();
+
+// ── Carousel auto-play ──────────────────────────────────────────────────
+(function () {
+  var slides = document.querySelectorAll('.carousel-slide');
+  var cur    = 0;
+
+  setInterval(function () {
+    slides[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('active');
+  }, 4000);
 })();
 </script>
 </body>
