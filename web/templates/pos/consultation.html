@@ -7,586 +7,957 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pos.css') }}">
   <style>
-    /* ── Consultation-specific overrides ── */
-    body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); min-height: 100vh; }
+    :root {
+      --white: #ffffff;
+      --blue-50: #f0f9ff;
+      --blue-100: #e0f2fe;
+      --blue-200: #bae6fd;
+      --blue-300: #7dd3fc;
+      --blue-400: #38bdf8;
+      --blue-500: #0ea5e9;
+      --blue-600: #0284c7;
+      --blue-700: #0369a1;
 
-    .consult-page {
-      max-width: 900px; margin: 0 auto; padding: 32px 24px;
-      min-height: 100vh; display: flex; flex-direction: column;
+      --zinc-50: #fafafa;
+      --zinc-100: #f4f4f5;
+      --zinc-200: #e4e4e7;
+      --zinc-300: #d4d4d8;
+      --zinc-400: #a1a1aa;
+      --zinc-500: #71717a;
+      --zinc-600: #52525b;
+      --zinc-700: #3f3f46;
+      --zinc-800: #27272a;
+      --zinc-900: #18181b;
+
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --success: #22c55e;
+      --success-light: #f0fdf4;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --radius: 10px;
     }
 
-    /* Header */
-    .consult-header {
-      text-align: center; padding: 24px 0 32px;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font); color: var(--zinc-800);
+      background: var(--white); min-height: 100vh;
+      overflow: hidden;
     }
-    .consult-header h1 {
-      font-size: 36px; font-weight: 900; color: #fff;
-      letter-spacing: -1px; margin-bottom: 4px;
+
+    .hidden { display: none !important; }
+
+    /* ═══════════════════════════════
+       SCREEN 0 — Home / Intro
+    ═══════════════════════════════ */
+    .screen-home {
+      position: fixed; inset: 0; z-index: 500;
+      display: flex; flex-direction: column;
+      cursor: pointer;
     }
-    .consult-header h1 span { color: var(--primary); }
-    .consult-header p {
-      font-size: 15px; color: #94a3b8; max-width: 500px; margin: 0 auto;
+
+    .home-bg {
+      flex: 1; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
     }
-    .consult-header .subtitle {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.5px; color: var(--primary);
+    .home-logo-wrap {
+      position: relative; z-index: 2; text-align: center;
+    }
+    .home-logo-wrap img {
+      width: 320px; height: auto;
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4));
+    }
+    /* Carousel */
+    .carousel-slide {
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity 1.2s ease;
+    }
+    .carousel-slide.active { opacity: 1; }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover; filter: brightness(0.45);
+    }
+    /* Admin link */
+    .admin-link {
+      position: fixed; top: 46px; left: 20px; z-index: 600;
+      padding: 8px 16px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 600;
+      background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7);
+      text-decoration: none; backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.2s;
+    }
+    .admin-link:hover { background: rgba(255,255,255,0.25); color: #fff; }
+
+    /* Help button — single instance on home screen */
+    .help-btn-home {
+      position: fixed; top: 46px; right: 20px; z-index: 600;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--white); border: 2px solid var(--zinc-200);
+      font-size: 20px; font-weight: 700; color: var(--zinc-500);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .help-btn-home:hover { background: var(--blue-50); border-color: var(--blue-300); color: var(--blue-600); }
+
+    /* Help button in top bar */
+    .help-btn-bar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--white); border: 2px solid var(--zinc-200);
+      font-size: 16px; font-weight: 700; color: var(--zinc-500);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+    }
+    .help-btn-bar:hover { background: var(--blue-50); border-color: var(--blue-300); color: var(--blue-600); }
+
+    /* CTA Footer */
+    .home-cta {
+      background: var(--blue-500); color: var(--white);
+      padding: 28px 24px; text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .home-cta-icon {
+      width: 36px; height: 36px;
+      animation: tap-bounce 2s ease-in-out infinite;
+    }
+    .home-cta-text {
+      font-size: 20px; font-weight: 700; letter-spacing: 0.3px;
+    }
+
+    @keyframes tap-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; animation: fadeIn 0.15s ease;
+    }
+    .modal-overlay.hidden { display: none !important; }
+    .modal-box {
+      background: var(--white); border-radius: 16px;
+      width: 100%; max-width: 440px;
+      padding: 32px; position: relative;
+    }
+    .modal-box h3 {
+      font-size: 20px; font-weight: 800; color: var(--zinc-800);
+      margin-bottom: 16px;
+    }
+    .modal-box p {
+      font-size: 14px; color: var(--zinc-600); line-height: 1.7;
       margin-bottom: 12px;
     }
-    .consult-header .subtitle::before,
-    .consult-header .subtitle::after {
-      content: ''; width: 20px; height: 1px; background: var(--primary); opacity: .5;
+    .modal-box .close-btn {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 22px;
+      color: var(--zinc-400); cursor: pointer;
+    }
+    .modal-box .close-btn:hover { color: var(--zinc-700); }
+
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+    /* ── Disclaimer ticker ── */
+    .disclaimer-ticker {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 26px; overflow: hidden;
+      background: var(--white); border-bottom: 1px solid var(--zinc-200);
+      display: flex; align-items: center;
+    }
+    .disclaimer-track {
+      white-space: nowrap; font-size: 11px; font-weight: 500;
+      color: var(--zinc-500); letter-spacing: 0.2px;
+      animation: ticker-scroll 40s linear infinite;
+    }
+    @keyframes ticker-scroll {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(-100%); }
     }
 
-    /* Main card */
-    .consult-card {
-      background: var(--surface); border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.3);
-      overflow: hidden; flex: 1; display: flex; flex-direction: column;
+    /* ═══════════════════════════════
+       KIOSK CONTAINER
+    ═══════════════════════════════ */
+    .kiosk {
+      height: 100vh; display: flex; flex-direction: column;
+      background: var(--zinc-50); padding-top: 26px;
     }
+
+    /* Top bar */
+    .kiosk-topbar {
+      background: var(--white); border-bottom: 1px solid var(--zinc-200);
+      padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .kiosk-brand {
+      display: flex; align-items: center; cursor: pointer;
+    }
+    .kiosk-brand img { height: 56px; }
 
     /* Steps indicator */
-    .steps-bar {
-      display: flex; background: #f8fafc;
-      border-bottom: 1px solid var(--border);
+    .kiosk-steps {
+      display: flex; align-items: center; gap: 4px;
     }
-    .step-tab {
-      flex: 1; padding: 14px 12px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      transition: all .2s;
-      position: relative;
+    .kiosk-step {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 13px; font-weight: 600;
+      color: var(--zinc-400); background: transparent;
+      transition: all 0.2s;
     }
-    .step-tab.active { color: var(--primary); background: #fff; }
-    .step-tab.done { color: var(--success); }
-    .step-tab .step-num {
+    .kiosk-step .num {
       width: 24px; height: 24px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-      background: var(--bg); border: 2px solid var(--border);
+      font-size: 12px; font-weight: 700;
+      border: 2px solid var(--zinc-300); color: var(--zinc-400);
+      background: var(--white);
+      transition: all 0.2s;
     }
-    .step-tab.active .step-num { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
-    .step-tab.done .step-num { background: var(--success-light); border-color: var(--success); color: var(--success); }
+    .kiosk-step.active { color: var(--blue-600); }
+    .kiosk-step.active .num {
+      background: var(--blue-500); color: var(--white);
+      border-color: var(--blue-500);
+    }
+    .kiosk-step.done { color: var(--blue-500); }
+    .kiosk-step.done .num {
+      background: var(--blue-200); color: var(--blue-700);
+      border-color: var(--blue-200);
+    }
+    .kiosk-step-divider {
+      width: 24px; height: 2px; background: var(--zinc-200);
+      border-radius: 1px;
+    }
 
-    /* Step panels */
-    .step-panel { display: none; flex: 1; flex-direction: column; }
-    .step-panel.active { display: flex; }
-    .step-body { padding: 32px; flex: 1; }
-    .step-footer {
-      padding: 16px 32px; border-top: 1px solid var(--border);
+    /* Main content */
+    .kiosk-body {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* Each panel */
+    .kiosk-panel {
+      display: none; flex: 1; flex-direction: column; min-height: 0;
+    }
+    .kiosk-panel.active { display: flex; }
+
+    .panel-content {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 24px;
+      max-width: 700px; margin: 0 auto; width: 100%;
+    }
+
+    .panel-footer {
+      padding: 16px 24px; background: var(--white);
+      border-top: 1px solid var(--zinc-200);
       display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0;
     }
 
-    /* ── Step 1: Patient Info (Age) ── */
-    .patient-info-section {
-      max-width: 440px; margin: 0 auto; text-align: center;
+    /* ── Section title ── */
+    .section-title {
+      font-size: 32px; font-weight: 800; color: var(--zinc-800);
+      text-align: center; margin-bottom: 6px; letter-spacing: -0.5px;
     }
-    .patient-info-section h2 {
-      font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px;
-    }
-    .patient-info-section .sub {
-      font-size: 14px; color: var(--text-secondary); margin-bottom: 28px;
-    }
-    .age-input-group {
-      display: flex; flex-direction: column; gap: 8px; align-items: center;
-    }
-    .age-input-group label {
-      font-size: 13px; font-weight: 600; color: var(--text-secondary);
-    }
-    .age-input-wrap {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .age-input-wrap input {
-      width: 100px; padding: 14px 16px;
-      border: 2px solid var(--border); border-radius: 12px;
-      font-size: 22px; font-weight: 700; text-align: center;
-      font-family: var(--font); color: var(--text);
-      transition: border-color .2s;
-    }
-    .age-input-wrap input:focus {
-      outline: none; border-color: var(--primary);
-      box-shadow: 0 0 0 4px var(--primary-light);
-    }
-    .age-input-wrap .unit {
-      font-size: 15px; font-weight: 600; color: var(--text-muted);
-    }
-    .age-note {
-      font-size: 12px; color: var(--text-muted); margin-top: 16px;
-      padding: 12px 16px; background: var(--bg); border-radius: 8px;
-      line-height: 1.6;
-    }
-    .age-note strong { color: var(--text-secondary); }
-    .age-quick-btns {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px;
-    }
-    .age-quick-btn {
-      padding: 8px 16px; border: 2px solid var(--border); border-radius: 8px;
-      font-size: 13px; font-weight: 600; background: #fff; color: var(--text);
-      cursor: pointer; transition: all .2s;
-    }
-    .age-quick-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .age-quick-btn.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-
-    /* ── Step 2: Symptom Input ── */
-    .input-area {
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .input-main {
-      position: relative;
-    }
-    .input-main textarea {
-      width: 100%; min-height: 120px; padding: 16px 20px;
-      border: 2px solid var(--border); border-radius: 12px;
-      font-size: 16px; line-height: 1.6; resize: vertical;
-      font-family: var(--font); color: var(--text);
-      transition: border-color .2s;
-    }
-    .input-main textarea:focus {
-      outline: none; border-color: var(--primary);
-      box-shadow: 0 0 0 4px var(--primary-light);
-    }
-    .input-main textarea::placeholder { color: #b0b8c8; }
-    .input-tools {
-      display: flex; gap: 8px; align-items: center;
-    }
-    .voice-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 20px; border: 2px solid var(--border);
-      border-radius: 10px; background: #fff;
-      font-size: 14px; font-weight: 600; color: var(--text);
-      cursor: pointer; transition: all .2s;
-    }
-    .voice-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .voice-btn.recording {
-      border-color: var(--danger); color: var(--danger);
-      animation: pulse-border 1.5s infinite;
-    }
-    @keyframes pulse-border {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.3); }
-      50% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
-    }
-    .input-hint {
-      font-size: 12px; color: var(--text-muted); line-height: 1.5;
-    }
-    .lang-badges { display: flex; gap: 4px; margin-top: 4px; }
-    .lang-badge {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      padding: 2px 6px; border-radius: 4px;
-      background: var(--bg); color: var(--text-secondary);
-      letter-spacing: .5px;
+    .section-sub {
+      font-size: 15px; color: var(--zinc-500); text-align: center;
+      margin-bottom: 32px; line-height: 1.5;
     }
 
-    /* ── Severity slider ── */
-    .severity-section {
-      margin-top: 24px; padding: 20px 24px;
-      border: 2px solid var(--border); border-radius: 12px;
-      background: var(--bg);
+    /* ═══ Buttons ═══ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 14px 28px;
+      border-radius: var(--radius); font-size: 16px; font-weight: 600;
+      border: 1px solid var(--zinc-200); background: var(--white);
+      color: var(--zinc-700); cursor: pointer; transition: all 0.2s;
+      font-family: var(--font);
     }
-    .severity-section h4 {
-      font-size: 13px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .5px; color: var(--text-secondary); margin-bottom: 4px;
+    .btn:hover { background: var(--zinc-50); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn--primary {
+      background: var(--blue-500); color: var(--white);
+      border-color: var(--blue-500);
     }
-    .severity-section .sub {
-      font-size: 12px; color: var(--text-muted); margin-bottom: 16px;
+    .btn--primary:hover { background: var(--blue-600); border-color: var(--blue-600); }
+
+    .btn--lg { padding: 16px 36px; font-size: 17px; }
+
+    .btn--outline {
+      background: var(--white); color: var(--zinc-700);
+      border: 2px solid var(--zinc-200);
     }
-    .severity-slider-wrap {
-      display: flex; align-items: center; gap: 16px;
+    .btn--outline:hover { border-color: var(--zinc-400); }
+
+    .btn--danger {
+      background: var(--danger); color: var(--white);
+      border-color: var(--danger);
     }
-    .severity-slider-wrap input[type="range"] {
-      flex: 1; height: 8px; -webkit-appearance: none; appearance: none;
-      background: linear-gradient(to right, var(--success), #eab308, var(--danger));
-      border-radius: 4px; outline: none;
+
+    /* ═══════════════════════════════
+       STEP 1 — Age Input
+    ═══════════════════════════════ */
+    .age-input-area {
+      width: 100%; text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center;
     }
-    .severity-slider-wrap input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 24px; height: 24px;
-      border-radius: 50%; background: #fff;
-      border: 3px solid var(--primary);
-      box-shadow: 0 2px 6px rgba(0,0,0,.2);
-      cursor: pointer;
+
+    .age-display {
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 32px;
     }
-    .severity-slider-wrap input[type="range"]::-moz-range-thumb {
-      width: 24px; height: 24px;
-      border-radius: 50%; background: #fff;
-      border: 3px solid var(--primary);
-      box-shadow: 0 2px 6px rgba(0,0,0,.2);
-      cursor: pointer;
+    .age-display input {
+      width: 140px; padding: 16px; text-align: center;
+      font-size: 42px; font-weight: 800; font-family: var(--font);
+      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      color: var(--zinc-800); background: var(--white);
+      transition: border-color 0.2s;
     }
-    .severity-value {
-      min-width: 44px; text-align: center;
-      font-size: 22px; font-weight: 800;
-      padding: 4px 8px; border-radius: 8px;
+    .age-display input:focus {
+      outline: none; border-color: var(--blue-400);
     }
-    .severity-value.low { color: var(--success); }
-    .severity-value.moderate { color: #eab308; }
-    .severity-value.high { color: var(--danger); }
-    .severity-labels {
+    .age-display input::placeholder { color: var(--zinc-300); }
+
+    /* Age slider */
+    .age-slider-wrap {
+      width: 100%; margin-bottom: 12px;
+    }
+    .age-slider-labels {
       display: flex; justify-content: space-between;
-      font-size: 10px; font-weight: 600; color: var(--text-muted);
-      margin-top: 6px; text-transform: uppercase; letter-spacing: .5px;
+      font-size: 12px; font-weight: 600; color: var(--zinc-400);
+      margin-top: 8px; padding: 0;
     }
+    .age-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px; border-radius: 3px;
+      background: var(--zinc-200); outline: none;
+      cursor: pointer; display: block;
+    }
+    .age-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 28px; height: 28px;
+      border-radius: 50%; background: var(--blue-500);
+      border: 3px solid var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .age-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .age-slider::-moz-range-thumb {
+      width: 28px; height: 28px;
+      border-radius: 50%; background: var(--blue-500);
+      border: 3px solid var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+
+    /* "Why do we ask" link — sits near footer */
+    .why-ask-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--zinc-400);
+      cursor: pointer; background: none; border: none;
+      font-family: var(--font); margin-top: 32px;
+      transition: color 0.2s;
+    }
+    .why-ask-link:hover { color: var(--blue-500); }
+    .why-ask-link .q-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+
+    /* ═══════════════════════════════
+       STEP 2 — Symptoms
+    ═══════════════════════════════ */
+    .symptom-input-area { width: 100%; }
+
+    .symptom-input-wrap {
+      position: relative; width: 100%;
+    }
+    .symptom-textarea {
+      width: 100%; min-height: 160px; padding: 20px 56px 20px 20px;
+      font-size: 17px; line-height: 1.6; font-family: var(--font);
+      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      color: var(--zinc-800); background: var(--white);
+      resize: vertical; transition: border-color 0.2s;
+    }
+    .symptom-textarea:focus {
+      outline: none; border-color: var(--blue-400);
+    }
+    .symptom-textarea::placeholder { color: var(--zinc-300); }
+
+    /* Mic button inside textarea */
+    .mic-btn {
+      position: absolute; right: 12px; bottom: 12px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--zinc-100); border: 1px solid var(--zinc-200);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .mic-btn:hover { background: var(--blue-50); border-color: var(--blue-300); }
+    .mic-btn.recording {
+      background: var(--danger-light); border-color: var(--danger);
+      animation: pulse-mic 1.5s infinite;
+    }
+    .mic-btn svg { width: 20px; height: 20px; }
+    .mic-btn.recording svg { stroke: var(--danger); }
+
+    @keyframes pulse-mic {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+      50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+    }
+
+    .lang-row {
+      display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;
+      align-items: center;
+    }
+    .lang-tag {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 4px 10px; border-radius: 6px;
+      background: var(--zinc-100); color: var(--zinc-500);
+    }
+    .lang-info-btn {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid var(--zinc-300); background: none;
+      font-size: 12px; font-weight: 800; color: var(--zinc-400);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; margin-left: auto;
+      transition: all 0.2s; font-family: var(--font);
+    }
+    .lang-info-btn:hover { color: var(--blue-500); border-color: var(--blue-400); }
+
+    /* ═══════════════════════════════
+       STEP 3 — Pain Scale
+    ═══════════════════════════════ */
+    .pain-scale-area { width: 100%; text-align: center; }
+
+    .pain-value-display {
+      font-size: 72px; font-weight: 900; letter-spacing: -2px;
+      margin-bottom: 8px; line-height: 1;
+      color: var(--zinc-800);
+    }
+
+    .pain-label {
+      font-size: 15px; font-weight: 600; margin-bottom: 28px;
+      color: var(--zinc-500);
+    }
+
+    .pain-slider-wrap {
+      width: 100%; padding: 0 4px;
+    }
+    .pain-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px; border-radius: 3px;
+      background: var(--zinc-200); outline: none;
+      cursor: pointer;
+    }
+    .pain-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 28px; height: 28px;
+      border-radius: 50%; background: var(--blue-500);
+      border: 3px solid var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .pain-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .pain-slider::-moz-range-thumb {
+      width: 28px; height: 28px;
+      border-radius: 50%; background: var(--blue-500);
+      border: 3px solid var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+
+    .pain-labels {
+      display: flex; justify-content: space-between;
+      margin-top: 10px; padding: 0 2px;
+    }
+    .pain-labels span {
+      font-size: 12px; font-weight: 600; color: var(--zinc-400);
+    }
+
+    /* Severity warning */
     .severity-warning {
-      margin-top: 12px; padding: 12px 16px;
-      background: #fef2f2; border: 1px solid #fecaca;
-      border-radius: 8px; display: none;
+      margin-top: 24px; padding: 16px 20px;
+      background: var(--danger-light); border: 1px solid #fecaca;
+      border-radius: var(--radius); text-align: left;
     }
     .severity-warning p {
-      font-size: 13px; color: #991b1b; font-weight: 600; margin: 0;
+      font-size: 14px; font-weight: 600; color: #991b1b; margin: 0;
     }
     .severity-warning .sub-msg {
-      font-size: 12px; color: #b91c1c; font-weight: 400; margin-top: 4px;
+      font-size: 13px; font-weight: 400; color: #b91c1c; margin-top: 4px;
     }
 
-    /* Step 3: Analysis */
+    /* ═══════════════════════════════
+       STEP 4 — Analysis / Results
+    ═══════════════════════════════ */
     .analysis-loading {
-      text-align: center; padding: 60px 20px;
-      color: var(--text-secondary);
+      text-align: center; padding: 48px 20px; color: var(--zinc-500);
     }
-    .analysis-loading .spinner {
-      width: 48px; height: 48px; border: 4px solid var(--border);
-      border-top-color: var(--primary); border-radius: 50%;
-      animation: spin .8s linear infinite;
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid var(--zinc-200); border-top-color: var(--blue-500);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
       margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .analysis-result { display: flex; flex-direction: column; gap: 20px; }
+    .analysis-result {
+      width: 100%; max-width: 700px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 32px 24px;
+    }
+
+    .patient-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 100px;
+      font-size: 13px; font-weight: 600;
+      background: var(--zinc-100); color: var(--zinc-600);
+    }
+    .patient-badge .sep { color: var(--zinc-300); }
+
     .detected-section h3 {
       font-size: 13px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .5px; color: var(--text-secondary); margin-bottom: 10px;
+      letter-spacing: 0.5px; color: var(--zinc-500); margin-bottom: 10px;
     }
     .symptom-pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .symptom-pill {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 8px 16px; border-radius: 100px;
       font-size: 13px; font-weight: 600;
-      background: var(--primary-light); color: var(--primary);
-      border: 1px solid rgba(59,130,246,.2);
+      background: var(--blue-100); color: var(--blue-700);
     }
-    .symptom-pill::before { content: '✓'; font-size: 11px; }
+    .symptom-pill::before { content: '\2713'; font-size: 11px; }
 
     .pipeline-info {
-      font-size: 12px; color: var(--text-muted);
-      padding: 12px 16px; background: var(--bg);
-      border-radius: 8px;
+      font-size: 12px; color: var(--zinc-400);
+      padding: 12px 16px; background: var(--zinc-100); border-radius: var(--radius);
     }
-    .pipeline-info strong { color: var(--text-secondary); }
+    .pipeline-info strong { color: var(--zinc-600); }
 
     .no-symptoms {
-      text-align: center; padding: 40px 20px;
-      color: var(--text-secondary);
+      text-align: center; padding: 40px 20px; color: var(--zinc-500);
     }
     .no-symptoms .icon { font-size: 40px; margin-bottom: 12px; }
 
-    /* Referral warning (high severity) */
     .referral-banner {
-      background: linear-gradient(135deg, #fef2f2, #fff1f2);
-      border: 2px solid #fca5a5; border-radius: 12px;
-      padding: 24px; text-align: center;
+      background: var(--danger-light); border: 1px solid #fca5a5;
+      border-radius: var(--radius); padding: 24px; text-align: center;
     }
-    .referral-banner .icon { font-size: 48px; margin-bottom: 8px; }
+    .referral-banner .icon { font-size: 40px; margin-bottom: 8px; }
     .referral-banner h3 {
-      font-size: 18px; font-weight: 800; color: #991b1b; margin-bottom: 8px;
+      font-size: 17px; font-weight: 800; color: #991b1b; margin-bottom: 8px;
     }
-    .referral-banner p {
-      font-size: 14px; color: #b91c1c; line-height: 1.6; max-width: 500px; margin: 0 auto;
-    }
+    .referral-banner p { font-size: 14px; color: #b91c1c; line-height: 1.6; }
     .referral-banner .severity-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 4px 12px; border-radius: 100px;
+      display: inline-flex; padding: 4px 12px; border-radius: 100px;
       font-size: 12px; font-weight: 700;
-      background: #fee2e2; color: #dc2626;
-      margin-top: 12px;
+      background: #fee2e2; color: #dc2626; margin-top: 12px;
     }
     .referral-note {
-      font-size: 12px; color: var(--text-muted);
-      margin-top: 12px; font-style: italic;
+      font-size: 12px; color: var(--zinc-500); margin-top: 12px; font-style: italic;
     }
 
-    /* Triage / Red-flag emergency banner */
     .triage-banner {
-      background: linear-gradient(135deg, #fef2f2, #fff1f2);
-      border: 2px solid #ef4444; border-radius: 12px;
-      padding: 32px 24px; text-align: center;
+      background: var(--danger-light); border: 1px solid #ef4444;
+      border-radius: var(--radius); padding: 28px 24px; text-align: center;
     }
-    .triage-banner .icon { font-size: 56px; margin-bottom: 12px; }
-    .triage-banner h3 {
-      font-size: 20px; font-weight: 800; color: #991b1b; margin-bottom: 12px;
-    }
-    .triage-banner p {
-      font-size: 14px; color: #b91c1c; line-height: 1.7; max-width: 540px; margin: 0 auto;
-    }
+    .triage-banner .icon { font-size: 48px; margin-bottom: 12px; }
+    .triage-banner h3 { font-size: 18px; font-weight: 800; color: #991b1b; margin-bottom: 10px; }
+    .triage-banner p { font-size: 14px; color: #b91c1c; line-height: 1.7; }
     .triage-banner .flag-list {
       list-style: none; padding: 0; margin: 16px auto; max-width: 400px; text-align: left;
     }
-    .triage-banner .flag-list li {
-      padding: 6px 0; font-size: 14px; font-weight: 600; color: #dc2626;
-    }
+    .triage-banner .flag-list li { padding: 4px 0; font-size: 14px; font-weight: 600; color: #dc2626; }
     .triage-banner .triage-note {
-      font-size: 12px; color: var(--text-muted); margin-top: 16px;
-      font-style: italic;
+      font-size: 12px; color: var(--zinc-500); margin-top: 14px; font-style: italic;
     }
 
-    /* Clarify question */
     .clarify-box {
-      background: var(--warning-light); border: 1px solid var(--warning-border);
-      border-radius: 12px; padding: 24px;
+      background: var(--warning-light); border: 1px solid #fde68a;
+      border-radius: var(--radius); padding: 24px;
     }
-    .clarify-box h3 {
-      font-size: 15px; font-weight: 700; color: var(--warning); margin-bottom: 8px;
-    }
+    .clarify-box h3 { font-size: 15px; font-weight: 700; color: #92400e; margin-bottom: 8px; }
     .clarify-box p { font-size: 14px; color: #92400e; margin-bottom: 16px; }
     .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
     .clarify-btn {
-      flex: 1; min-width: 180px; padding: 16px;
-      border: 2px solid var(--border); border-radius: 12px;
-      background: #fff; cursor: pointer;
-      text-align: center; transition: all .2s;
+      flex: 1; min-width: 160px; padding: 18px;
+      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      background: var(--white); cursor: pointer;
+      text-align: center; transition: all 0.2s;
+      font-family: var(--font);
     }
-    .clarify-btn:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+    .clarify-btn:hover { border-color: var(--blue-400); }
     .clarify-btn .emoji { font-size: 28px; margin-bottom: 4px; }
-    .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--text); }
-    .clarify-btn .desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
+    .clarify-btn .desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
 
-    /* Step 4: Recommendations */
-    .rec-list { display: flex; flex-direction: column; gap: 12px; }
+    /* Recommendations */
+    .rec-list { display: flex; flex-direction: column; gap: 10px; }
     .rec-card {
-      border: 1px solid var(--border); border-radius: 12px;
-      padding: 20px; display: flex; gap: 16px;
-      align-items: flex-start; transition: all .2s;
+      border: 1px solid var(--zinc-200); border-radius: var(--radius);
+      padding: 18px; display: flex; gap: 14px;
+      align-items: flex-start; background: var(--white);
+      transition: border-color 0.2s;
     }
-    .rec-card:hover { box-shadow: var(--shadow); }
-    .rec-card.out-of-stock { opacity: .5; }
+    .rec-card:hover { border-color: var(--blue-300); }
+    .rec-card.out-of-stock { opacity: 0.4; }
     .rec-rank {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--primary-light); color: var(--primary);
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--blue-100); color: var(--blue-600);
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; font-weight: 800; flex-shrink: 0;
     }
     .rec-info { flex: 1; min-width: 0; }
-    .rec-brand { font-size: 16px; font-weight: 700; color: var(--text); }
-    .rec-generic { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-    .rec-meta {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;
-    }
+    .rec-brand { font-size: 15px; font-weight: 700; color: var(--zinc-800); }
+    .rec-generic { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .rec-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .rec-tag {
       font-size: 10px; font-weight: 600; text-transform: uppercase;
       padding: 3px 8px; border-radius: 4px;
-      background: var(--bg); color: var(--text-secondary);
+      background: var(--zinc-100); color: var(--zinc-500);
     }
-    .rec-stock {
-      margin-left: auto; text-align: right; flex-shrink: 0;
-    }
-    .rec-stock .price {
-      font-size: 18px; font-weight: 800; color: var(--primary);
-    }
-    .rec-stock .avail {
-      font-size: 11px; font-weight: 600; margin-top: 2px;
-    }
+    .rec-stock { margin-left: auto; text-align: right; flex-shrink: 0; }
+    .rec-stock .price { font-size: 17px; font-weight: 800; color: var(--blue-600); }
+    .rec-stock .avail { font-size: 11px; font-weight: 600; margin-top: 2px; }
     .rec-stock .avail.in { color: var(--success); }
     .rec-stock .avail.out { color: var(--danger); }
 
     .rec-disclaimer {
-      font-size: 11px; color: var(--text-muted);
-      padding: 16px; background: var(--bg);
-      border-radius: 8px; line-height: 1.6;
-      margin-top: 8px;
+      font-size: 12px; color: var(--zinc-400);
+      padding: 14px 16px; background: var(--zinc-100);
+      border-radius: var(--radius); line-height: 1.6; margin-top: 8px;
+    }
+    .rec-disclaimer strong { color: var(--zinc-600); }
+
+    /* Results footer buttons */
+    .results-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;
+    }
+    .results-actions .btn { flex: 1; min-width: 140px; }
+
+    /* ── Toast ── */
+    .toast-container {
+      position: fixed; top: 20px; right: 20px; z-index: 2000;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: var(--radius);
+      font-size: 14px; font-weight: 500;
+      color: var(--white); min-width: 280px;
+      animation: slideIn 0.25s ease;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast--success { background: var(--success); }
+    .toast--error { background: var(--danger); }
+    .toast--warning { background: var(--warning); }
+    .toast--info { background: var(--blue-500); }
+    .toast button {
+      background: none; border: none; color: var(--white);
+      font-size: 18px; cursor: pointer; margin-left: auto;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
-    /* Patient info badge on results */
-    .patient-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px; border-radius: 100px;
-      font-size: 12px; font-weight: 600;
-      background: var(--bg); color: var(--text-secondary);
-      border: 1px solid var(--border); margin-bottom: 12px;
-    }
-    .patient-badge .sep { color: var(--border); }
-
-    /* Back to admin link */
-    .admin-link {
-      position: fixed; top: 16px; right: 16px;
-      padding: 8px 16px; border-radius: 8px;
-      font-size: 12px; font-weight: 600;
-      background: rgba(255,255,255,.1); color: #94a3b8;
-      text-decoration: none; transition: all .2s;
-      backdrop-filter: blur(8px);
-    }
-    .admin-link:hover { background: rgba(255,255,255,.2); color: #fff; text-decoration: none; }
-
-    /* Responsive */
+    /* ── Responsive ── */
     @media (max-width: 600px) {
-      .consult-header h1 { font-size: 26px; }
-      .step-body { padding: 20px; }
-      .step-footer { padding: 12px 20px; }
-      .step-tab span:not(.step-num) { display: none; }
+      .section-title { font-size: 26px; }
+      .pain-value-display { font-size: 56px; }
+      .age-display input { font-size: 32px; width: 120px; }
+      .kiosk-step span:not(.num) { display: none; }
+      .home-cta-text { font-size: 17px; }
+      .panel-content { padding: 28px 16px; }
+      .analysis-result { padding: 24px 16px; }
       .clarify-buttons { flex-direction: column; }
-      .severity-slider-wrap { flex-direction: column; }
+      .results-actions { flex-direction: column; }
+
+      /* Topbar — hide logo, center steps */
+      .kiosk-brand { display: none; }
+      .kiosk-topbar {
+        padding: 8px 12px;
+        justify-content: center;
+        position: relative;
+      }
+      .help-btn-bar {
+        position: absolute; right: 12px;
+        top: 50%; transform: translateY(-50%);
+      }
+      .kiosk-steps { gap: 2px; }
+      .kiosk-step { padding: 6px 10px; }
+      .kiosk-step-divider { width: 14px; }
     }
   </style>
 </head>
 <body>
 
-<a href="{{ url_for('admin.dashboard') }}" class="admin-link">← Admin Panel</a>
+<div class="disclaimer-ticker">
+  <div class="disclaimer-track">This system is not a substitute for professional medical advice. Always consult a healthcare provider for serious or persistent symptoms.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This system is not a substitute for professional medical advice. Always consult a healthcare provider for serious or persistent symptoms.</div>
+</div>
 
-<div class="consult-page">
-  <!-- Header -->
-  <header class="consult-header">
-    <div class="subtitle">AI-Powered OTC Medicine</div>
-    <h1>💊 Mendo <span>Vendo</span></h1>
-    <p>Describe how you feel and our AI will recommend the right over-the-counter medicine for you.</p>
-  </header>
+<!-- ═══════════════════════════════
+     SCREEN 0 — Home / Welcome
+═══════════════════════════════ -->
+<div class="screen-home" id="screenHome">
+  <a href="{{ url_for('admin.dashboard') }}" class="admin-link">Admin Panel</a>
+  <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
 
-  <!-- Main Card -->
-  <div class="consult-card">
-    <!-- Steps Bar -->
-    <div class="steps-bar">
-      <div class="step-tab active" id="stepTab1">
-        <span class="step-num">1</span>
-        <span>Patient Info</span>
-      </div>
-      <div class="step-tab" id="stepTab2">
-        <span class="step-num">2</span>
-        <span>Symptoms</span>
-      </div>
-      <div class="step-tab" id="stepTab3">
-        <span class="step-num">3</span>
-        <span>Analysis</span>
-      </div>
-      <div class="step-tab" id="stepTab4">
-        <span class="step-num">4</span>
-        <span>Recommendation</span>
-      </div>
+  <div class="home-bg" onclick="startKiosk()">
+    <div class="carousel-slide active">
+      <img src="{{ url_for('static', filename='images/banner1.jpg') }}" alt="">
     </div>
+    <div class="carousel-slide">
+      <img src="{{ url_for('static', filename='images/banner2.jpg') }}" alt="">
+    </div>
+    <div class="carousel-slide">
+      <img src="{{ url_for('static', filename='images/banner3.jpg') }}" alt="">
+    </div>
+    <div class="home-logo-wrap">
+      <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
+    </div>
+  </div>
 
-    <!-- ═══ STEP 1: Patient Info (Age) ═══ -->
-    <div class="step-panel active" id="step1">
-      <div class="step-body">
-        <div class="patient-info-section">
-          <h2>👤 Patient Information</h2>
-          <p class="sub">We need your age to recommend safe and appropriate medicine.</p>
+  <div class="home-cta" onclick="startKiosk()">
+    <svg class="home-cta-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v4.5"/>
+      <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/>
+      <path d="M14 10.5a1.5 1.5 0 0 1 3 0v2.5"/>
+      <path d="M17 11.5a1.5 1.5 0 0 1 3 0v5.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5.012-2.7l-3.286-5.728a1.5 1.5 0 0 1 .536-2.022 1.867 1.867 0 0 1 2.28.28l1.47 1.47"/>
+      <path d="M2.5 5.5a13 13 0 0 1 2.46-1.6"/>
+      <path d="M14 3.46a13 13 0 0 1 3.54 1.59"/>
+    </svg>
+    <span class="home-cta-text">Tap anywhere to begin</span>
+  </div>
+</div>
 
-          <div class="age-input-group">
-            <label for="ageInput">How old are you?</label>
-            <div class="age-input-wrap">
-              <input type="number" id="ageInput" min="1" max="120" placeholder="—" autocomplete="off">
-              <span class="unit">years old</span>
+<!-- ═══ MODALS ═══ -->
+
+<!-- About Mendo Modal -->
+<div class="modal-overlay hidden" id="helpModal" onclick="closeModal('helpModal', event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="close-btn" onclick="document.getElementById('helpModal').classList.add('hidden')">&times;</button>
+    <h3>About Mendo</h3>
+    <p>
+      <strong>Mendo</strong> is an AI-powered over-the-counter (OTC) medicine vending system.
+      It uses natural language processing to understand your symptoms and recommend
+      safe, age-appropriate medicines.
+    </p>
+    <p>
+      Describe your symptoms in <strong>English</strong>, <strong>Tagalog</strong>,
+      <strong>Bisaya</strong>, or a mix (Taglish) and the system will match them
+      to appropriate OTC medication available in the vending machine.
+    </p>
+    <p style="color: var(--zinc-400); font-size: 13px;">
+      This system is not a substitute for professional medical advice. Always consult
+      a healthcare provider for serious or persistent symptoms.
+    </p>
+  </div>
+</div>
+
+<!-- Why We Ask Age Modal -->
+<div class="modal-overlay hidden" id="whyAgeModal" onclick="closeModal('whyAgeModal', event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="close-btn" onclick="document.getElementById('whyAgeModal').classList.add('hidden')">&times;</button>
+    <h3>Why do we ask your age?</h3>
+    <p>
+      Some over-the-counter medicines have <strong>minimum age requirements</strong>.
+      For example, certain pain relievers are not recommended for children under 12.
+    </p>
+    <p>
+      By entering your age, we automatically filter out any medicines that are
+      not safe for your age group. This ensures every recommendation is
+      appropriate for you.
+    </p>
+  </div>
+</div>
+
+<!-- Supported Languages Modal -->
+<div class="modal-overlay hidden" id="langModal" onclick="closeModal('langModal', event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="close-btn" onclick="document.getElementById('langModal').classList.add('hidden')">&times;</button>
+    <h3>Supported Languages</h3>
+    <p>
+      Our AI understands multiple Philippine languages. You can describe
+      your symptoms in any of the following:
+    </p>
+    <p>
+      <strong>English</strong> — "I have a headache and cough"<br>
+      <strong>Tagalog</strong> — "Masakit ulo ko, may ubo"<br>
+      <strong>Bisaya</strong> — "Sakit akong ulo, naay ubo"<br>
+      <strong>Taglish</strong> — Mix of any of the above
+    </p>
+    <p>
+      Voice input also supports these languages. Just tap the microphone
+      and speak naturally.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     KIOSK — Main Flow
+═══════════════════════════════ -->
+<div class="kiosk hidden" id="kioskMain">
+
+  <!-- Top Bar -->
+  <div class="kiosk-topbar">
+    <div class="kiosk-brand" onclick="resetAll()" title="Back to home">
+      <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
+    </div>
+    <div class="kiosk-steps" id="stepsBar">
+      <div class="kiosk-step active" data-step="1"><span class="num">1</span><span>Age</span></div>
+      <div class="kiosk-step-divider"></div>
+      <div class="kiosk-step" data-step="2"><span class="num">2</span><span>Symptoms</span></div>
+      <div class="kiosk-step-divider"></div>
+      <div class="kiosk-step" data-step="3"><span class="num">3</span><span>Pain</span></div>
+      <div class="kiosk-step-divider"></div>
+      <div class="kiosk-step" data-step="4"><span class="num">4</span><span>Results</span></div>
+    </div>
+    <button class="help-btn-bar" onclick="openModal('helpModal', event)" title="About Mendo">?</button>
+  </div>
+
+  <div class="kiosk-body">
+
+    <!-- ═══ STEP 1: Age ═══ -->
+    <div class="kiosk-panel active" id="panel1">
+      <div class="panel-content">
+        <div class="section-title">How old are you?</div>
+        <div style="height: 24px;"></div>
+
+        <div class="age-input-area">
+          <div class="age-display">
+            <input type="text" inputmode="numeric" id="ageInput" placeholder="--" autocomplete="off" maxlength="3">
+          </div>
+
+          <div class="age-slider-wrap">
+            <input type="range" class="age-slider" id="ageSlider" min="1" max="60" value="1" step="1">
+            <div class="age-slider-labels">
+              <span>1</span><span>20</span><span>40</span><span>60+</span>
             </div>
           </div>
 
-          <div class="age-quick-btns">
-            <button class="age-quick-btn" data-age="5">Child (5)</button>
-            <button class="age-quick-btn" data-age="12">Tween (12)</button>
-            <button class="age-quick-btn" data-age="18">Teen (18)</button>
-            <button class="age-quick-btn" data-age="30">Adult (30)</button>
-            <button class="age-quick-btn" data-age="60">Senior (60)</button>
-          </div>
-
-          <div class="age-note">
-            <strong>ℹ️ Why we ask:</strong> Some OTC medicines have minimum age requirements.
-            We'll only show medicines that are safe for your age group.
-            Medicines below your age threshold will be automatically filtered out.
-          </div>
+          <button class="why-ask-link" onclick="openModal('whyAgeModal', event)">
+            <span class="q-icon">?</span> Why do we ask?
+          </button>
         </div>
       </div>
-      <div class="step-footer">
-        <div></div>
-        <button class="btn btn--primary btn--lg" id="toStep2Btn" disabled>
-          Continue →
+      <div class="panel-footer">
+        <button class="btn" onclick="backToHome()">Cancel</button>
+        <button class="btn btn--primary btn--lg" id="toStep2Btn" disabled onclick="goToStep(2)">
+          Continue
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- ═══ STEP 2: Symptom Input + Severity ═══ -->
-    <div class="step-panel" id="step2">
-      <div class="step-body">
-        <div class="input-area">
-          <div class="input-main">
-            <textarea id="symptomInput"
-              placeholder="Example: Masakit ulo ko tapos inuubo na walang plema…&#10;&#10;Describe your symptoms in any language — English, Tagalog, Bisaya, or mix them!"></textarea>
-          </div>
-          <div class="input-tools">
-            <button class="voice-btn" id="voiceBtn" title="Tap to speak">
-              🎤 <span id="voiceBtnText">Tap to Speak</span>
+    <!-- ═══ STEP 2: Symptoms ═══ -->
+    <div class="kiosk-panel" id="panel2">
+      <div class="panel-content">
+        <div class="section-title">What are you feeling?</div>
+        <div class="section-sub">Describe your symptoms in your own words.</div>
+
+        <div class="symptom-input-area">
+          <div class="symptom-input-wrap">
+            <textarea class="symptom-textarea" id="symptomInput"
+              placeholder="Example: Masakit ulo ko tapos inuubo na walang plema..."></textarea>
+            <button class="mic-btn" id="voiceBtn" title="Tap to speak">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
             </button>
-            <span class="input-hint">or type your symptoms above</span>
           </div>
-          <div class="input-hint">
-            <strong>Supported languages:</strong>
-            <div class="lang-badges">
-              <span class="lang-badge">English</span>
-              <span class="lang-badge">Tagalog</span>
-              <span class="lang-badge">Bisaya</span>
-              <span class="lang-badge">Taglish</span>
-            </div>
+
+          <div class="lang-row">
+            <span class="lang-tag">English</span>
+            <span class="lang-tag">Tagalog</span>
+            <span class="lang-tag">Bisaya</span>
+            <span class="lang-tag">Taglish</span>
+            <button class="lang-info-btn" onclick="openModal('langModal', event)" title="Supported languages">?</button>
           </div>
         </div>
+      </div>
+      <div class="panel-footer">
+        <button class="btn" onclick="goToStep(1)">Back</button>
+        <button class="btn btn--primary btn--lg" id="toStep3Btn" disabled onclick="goToStep(3)">
+          Continue
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
 
-        <!-- Severity Slider -->
-        <div class="severity-section">
-          <h4>📊 How severe is your discomfort?</h4>
-          <p class="sub">Rate your overall symptom severity on a scale of 1 to 10</p>
-          <div class="severity-slider-wrap">
-            <input type="range" id="severitySlider" min="1" max="10" value="3" step="1">
-            <div class="severity-value low" id="severityValue">3</div>
+    <!-- ═══ STEP 3: Pain Scale ═══ -->
+    <div class="kiosk-panel" id="panel3">
+      <div class="panel-content">
+        <div class="section-title">On a scale of 1 to 10,<br>how would you rate your pain?</div>
+        <div style="height: 24px;"></div>
+
+        <div class="pain-scale-area">
+          <div class="pain-value-display" id="painValue">3</div>
+          <div class="pain-label" id="painLabel">Mild discomfort</div>
+
+          <div class="pain-slider-wrap">
+            <input type="range" class="pain-slider" id="painSlider" min="1" max="10" value="3" step="1">
+            <div class="pain-labels">
+              <span>1 Mild</span>
+              <span>5 Moderate</span>
+              <span>10 Severe</span>
+            </div>
           </div>
-          <div class="severity-labels">
-            <span>1 — Mild</span>
-            <span>5 — Moderate</span>
-            <span>10 — Severe</span>
-          </div>
-          <div class="severity-warning" id="severityWarning">
-            <p>⚠️ High Severity Detected</p>
+
+          <div class="severity-warning hidden" id="severityWarning">
+            <p>High severity detected</p>
             <p class="sub-msg">
-              At this level of discomfort, we strongly recommend visiting a licensed
-              pharmacist or healthcare professional. You may still proceed, but our
-              AI recommendations will include a professional consultation advisory.
+              At this level, we recommend consulting a licensed pharmacist or
+              healthcare professional. You may still proceed.
             </p>
           </div>
         </div>
       </div>
-      <div class="step-footer">
-        <button class="btn" id="backToStep1">← Patient Info</button>
-        <button class="btn btn--primary btn--lg" id="analyzeBtn" disabled>
-          Analyze Symptoms →
+      <div class="panel-footer">
+        <button class="btn" onclick="goToStep(2)">Back</button>
+        <button class="btn btn--primary btn--lg" id="analyzeBtn" onclick="runAnalysis()">
+          Analyze Symptoms
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- ═══ STEP 3: Analysis ═══ -->
-    <div class="step-panel" id="step3">
-      <div class="step-body">
+    <!-- ═══ STEP 4: Analysis + Recommendations ═══ -->
+    <div class="kiosk-panel" id="panel4">
+      <div class="kiosk-body" style="overflow-y:auto;">
         <!-- Loading -->
         <div class="analysis-loading" id="analysisLoading">
           <div class="spinner"></div>
-          <p><strong>Analyzing your symptoms…</strong></p>
-          <p>Running hybrid NLP pipeline (dictionary + semantic matching)</p>
+          <p style="font-weight:600;">Analyzing your symptoms...</p>
+          <p style="font-size:13px;color:var(--zinc-400);">Running hybrid NLP pipeline</p>
         </div>
 
         <!-- Results -->
-        <div class="analysis-result" id="analysisResult" style="display: none;"></div>
+        <div class="analysis-result hidden" id="analysisResult"></div>
       </div>
-      <div class="step-footer">
-        <button class="btn" id="backToStep2">← Change Input</button>
-        <button class="btn btn--primary btn--lg" id="toStep4Btn" style="display: none;">
-          View Recommendations →
-        </button>
+      <div class="panel-footer">
+        <button class="btn hidden" id="backFromResults" onclick="goBackFromResults()">Back</button>
+        <div style="display:flex;gap:10px;margin-left:auto;">
+          <button class="btn btn--primary btn--lg hidden" id="viewRecsBtn" onclick="showRecommendations()">
+            View Recommendations
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn btn--primary hidden" id="assessAgainBtn" onclick="assessAgain()">Assess Again</button>
+          <button class="btn btn--outline hidden" id="exitBtn" onclick="resetAll()">Exit</button>
+        </div>
       </div>
     </div>
 
-    <!-- ═══ STEP 4: Recommendations ═══ -->
-    <div class="step-panel" id="step4">
-      <div class="step-body">
-        <div id="recContent"></div>
-      </div>
-      <div class="step-footer">
-        <button class="btn" id="backToStep3">← Back</button>
-        <button class="btn btn--primary btn--lg" id="newConsultBtn">
-          🔄 New Consultation
-        </button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -595,117 +966,191 @@
 <script>
 (() => {
   // ── State ──
-  const TOTAL_STEPS = 4;
-  let currentStep = 1;
-  let analysisData = null;
+  let currentStep = 0;
   let patientAge = null;
   let severity = 3;
+  let analysisData = null;
+  let showingRecs = false;
 
   // ── DOM ──
+  const screenHome = document.getElementById('screenHome');
+  const kioskMain = document.getElementById('kioskMain');
   const ageInput = document.getElementById('ageInput');
+  const ageSlider = document.getElementById('ageSlider');
   const toStep2Btn = document.getElementById('toStep2Btn');
   const symptomInput = document.getElementById('symptomInput');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const voiceBtn = document.getElementById('voiceBtn');
-  const voiceBtnText = document.getElementById('voiceBtnText');
-  const severitySlider = document.getElementById('severitySlider');
-  const severityValue = document.getElementById('severityValue');
+  const toStep3Btn = document.getElementById('toStep3Btn');
+  const painSlider = document.getElementById('painSlider');
+  const painValue = document.getElementById('painValue');
+  const painLabel = document.getElementById('painLabel');
   const severityWarning = document.getElementById('severityWarning');
 
   // ── Toast ──
   function showToast(msg, type = 'info') {
-    const container = document.getElementById('toastContainer');
+    const c = document.getElementById('toastContainer');
     const t = document.createElement('div');
     t.className = `toast toast--${type}`;
     t.innerHTML = `<span>${msg}</span><button onclick="this.parentElement.remove()">&times;</button>`;
-    container.appendChild(t);
+    c.appendChild(t);
     setTimeout(() => t.remove(), 4000);
   }
 
-  // ── Step Navigation ──
-  function goToStep(n) {
-    currentStep = n;
-    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById(`step${n}`).classList.add('active');
-
-    for (let i = 1; i <= TOTAL_STEPS; i++) {
-      const tab = document.getElementById(`stepTab${i}`);
-      tab.classList.remove('active', 'done');
-      if (i === n) tab.classList.add('active');
-      else if (i < n) tab.classList.add('done');
+  // ══════════════════════════════
+  //  MODALS — unified open/close
+  // ══════════════════════════════
+  window.openModal = function(id, e) {
+    if (e) e.stopPropagation();
+    document.getElementById(id).classList.remove('hidden');
+  };
+  window.closeModal = function(id, e) {
+    if (e && e.target === e.currentTarget) {
+      document.getElementById(id).classList.add('hidden');
     }
-  }
+  };
 
-  // ═══ STEP 1: Age ═══
+  // ══════════════════════════════
+  //  HOME SCREEN
+  // ══════════════════════════════
+  window.startKiosk = function() {
+    screenHome.classList.add('hidden');
+    kioskMain.classList.remove('hidden');
+    document.body.style.overflow = '';
+    goToStep(1);
+  };
+
+  window.backToHome = function() {
+    resetAll();
+  };
+
+  // ══════════════════════════════
+  //  STEP NAVIGATION
+  // ══════════════════════════════
+  window.goToStep = function(n) {
+    currentStep = n;
+    showingRecs = false;
+
+    document.querySelectorAll('.kiosk-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById(`panel${n}`);
+    if (panel) panel.classList.add('active');
+
+    document.querySelectorAll('.kiosk-step').forEach(s => {
+      const step = parseInt(s.dataset.step);
+      s.classList.remove('active', 'done');
+      if (step === n) s.classList.add('active');
+      else if (step < n) s.classList.add('done');
+    });
+
+    // Reset step 4 button visibility when navigating to step 4
+    if (n === 4) {
+      document.getElementById('backFromResults').classList.add('hidden');
+      document.getElementById('assessAgainBtn').classList.add('hidden');
+      document.getElementById('exitBtn').classList.add('hidden');
+    }
+  };
+
+  // ══════════════════════════════
+  //  STEP 1: AGE
+  // ══════════════════════════════
   function validateAge() {
-    const val = parseInt(ageInput.value);
-    if (!isNaN(val) && val >= 1 && val <= 120) {
-      patientAge = val;
+    const raw = ageInput.value.trim();
+    const val = parseInt(raw);
+    if (!isNaN(val) && val >= 1) {
+      patientAge = Math.min(val, 120); // allow typing above 60
       toStep2Btn.disabled = false;
     } else {
       patientAge = null;
       toStep2Btn.disabled = true;
     }
-    // Highlight quick buttons
-    document.querySelectorAll('.age-quick-btn').forEach(b => {
-      b.classList.toggle('selected', parseInt(b.dataset.age) === patientAge);
-    });
   }
 
-  ageInput.addEventListener('input', validateAge);
-
-  // Quick age buttons
-  document.querySelectorAll('.age-quick-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      ageInput.value = btn.dataset.age;
-      validateAge();
-    });
-  });
-
-  toStep2Btn.addEventListener('click', () => {
-    if (patientAge) goToStep(2);
-  });
-
-  // ═══ STEP 2: Symptoms + Severity ═══
-  symptomInput.addEventListener('input', () => {
-    analyzeBtn.disabled = !symptomInput.value.trim();
-  });
-
-  // Severity slider
-  function updateSeverity() {
-    severity = parseInt(severitySlider.value);
-    severityValue.textContent = severity;
-
-    // Color class
-    severityValue.classList.remove('low', 'moderate', 'high');
-    if (severity <= 3) severityValue.classList.add('low');
-    else if (severity <= 7) severityValue.classList.add('moderate');
-    else severityValue.classList.add('high');
-
-    // Warning for high severity
-    severityWarning.style.display = severity >= 8 ? 'block' : 'none';
-  }
-  severitySlider.addEventListener('input', updateSeverity);
-  updateSeverity(); // init
-
-  // Enter key to submit
-  symptomInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && symptomInput.value.trim()) {
-      e.preventDefault();
-      runAnalysis();
+  ageInput.addEventListener('input', () => {
+    // Strip non-numeric chars while typing
+    let raw = ageInput.value.replace(/[^0-9]/g, '');
+    const val = parseInt(raw);
+    if (!isNaN(val)) {
+      if (val >= 60) {
+        ageInput.value = '60+';
+        patientAge = 60;
+        ageSlider.value = 60;
+        toStep2Btn.disabled = false;
+      } else if (val >= 1) {
+        ageInput.value = raw;
+        patientAge = val;
+        ageSlider.value = Math.min(val, 60);
+        toStep2Btn.disabled = false;
+      } else {
+        ageInput.value = raw;
+        patientAge = null;
+        toStep2Btn.disabled = true;
+      }
+    } else {
+      ageInput.value = raw;
+      patientAge = null;
+      toStep2Btn.disabled = true;
     }
   });
 
-  analyzeBtn.addEventListener('click', () => runAnalysis());
+  ageSlider.addEventListener('input', () => {
+    const val = parseInt(ageSlider.value);
+    if (val >= 60) {
+      ageInput.value = '60+';
+      patientAge = 60;
+    } else {
+      ageInput.value = val;
+      patientAge = val;
+    }
+    toStep2Btn.disabled = false;
+  });
 
-  async function runAnalysis() {
+  // ══════════════════════════════
+  //  STEP 2: SYMPTOMS
+  // ══════════════════════════════
+  symptomInput.addEventListener('input', () => {
+    toStep3Btn.disabled = !symptomInput.value.trim();
+  });
+
+  symptomInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && symptomInput.value.trim()) {
+      e.preventDefault();
+      goToStep(3);
+    }
+  });
+
+  // ══════════════════════════════
+  //  STEP 3: PAIN SCALE
+  // ══════════════════════════════
+  function updatePain() {
+    severity = parseInt(painSlider.value);
+    painValue.textContent = severity;
+
+    if (severity <= 3) {
+      painLabel.textContent = 'Mild discomfort';
+    } else if (severity <= 7) {
+      painLabel.textContent = 'Moderate pain';
+    } else {
+      painLabel.textContent = 'Severe pain';
+    }
+
+    severityWarning.classList.toggle('hidden', severity < 8);
+  }
+
+  painSlider.addEventListener('input', updatePain);
+  updatePain();
+
+  // ══════════════════════════════
+  //  STEP 4: ANALYSIS
+  // ══════════════════════════════
+  window.runAnalysis = async function() {
     const text = symptomInput.value.trim();
     if (!text) return;
 
-    goToStep(3);
-    document.getElementById('analysisLoading').style.display = '';
-    document.getElementById('analysisResult').style.display = 'none';
-    document.getElementById('toStep4Btn').style.display = 'none';
+    goToStep(4);
+    document.getElementById('analysisLoading').classList.remove('hidden');
+    document.getElementById('analysisResult').classList.add('hidden');
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.add('hidden');
+    document.getElementById('exitBtn').classList.add('hidden');
+    document.getElementById('backFromResults').classList.add('hidden');
 
     try {
       const res = await fetch('/consult/api/analyze', {
@@ -720,76 +1165,75 @@
       renderAnalysis(data);
     } catch (err) {
       showToast(err.message, 'error');
-      goToStep(2);
+      goToStep(3);
     }
-  }
+  };
 
   function renderAnalysis(data) {
-    document.getElementById('analysisLoading').style.display = 'none';
+    document.getElementById('analysisLoading').classList.add('hidden');
     const container = document.getElementById('analysisResult');
-    container.style.display = '';
+    container.classList.remove('hidden');
 
     const symptoms = data.symptoms || [];
     const rec = data.recommendation || {};
     const source = data.source || 'unknown';
     const referral = data.referral || null;
 
-    // ── TRIAGE: Red-flag emergency detected ──
+    // Show back button
+    document.getElementById('backFromResults').classList.remove('hidden');
+
+    // Triage
     if (rec.action === 'triage') {
       const flags = rec.triage_flags || [];
-      const flagItems = flags.map(f => `<li>🚨 ${f.message}</li>`).join('');
+      const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
       container.innerHTML = `
         <div class="triage-banner">
-          <div class="icon">🏥</div>
+          <div class="icon">&#127973;</div>
           <h3>Emergency Detected — Please Consult a Doctor</h3>
-          <p>The following serious condition(s) were detected from your input:</p>
+          <p>The following serious condition(s) were detected:</p>
           <ul class="flag-list">${flagItems}</ul>
-          <p>Self-medication with OTC products is <strong>not recommended</strong> for these symptoms.
-             Please seek professional medical help immediately.</p>
-          <p class="triage-note">This is not a diagnosis. The system detected keywords that may indicate
-             a condition requiring urgent medical attention.</p>
+          <p>Self-medication is <strong>not recommended</strong>. Please seek professional help.</p>
+          <p class="triage-note">This is not a diagnosis. The system detected keywords that may indicate urgent care is needed.</p>
         </div>`;
+      document.getElementById('assessAgainBtn').classList.remove('hidden');
+      document.getElementById('exitBtn').classList.remove('hidden');
       return;
     }
 
-    // No symptoms found
+    // No symptoms
     if (!symptoms.length) {
       container.innerHTML = `
         <div class="no-symptoms">
-          <div class="icon">🤔</div>
-          <h3>No symptoms detected</h3>
-          <p>We couldn't identify specific symptoms from your input. Try describing how you feel more clearly.</p>
-          <p style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">
+          <div class="icon">&#129300;</div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No symptoms detected</h3>
+          <p>We couldn't identify specific symptoms. Try describing how you feel more clearly.</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
             Example: "Masakit ulo ko, may ubo, tapos nilalagnat"
           </p>
         </div>`;
+      document.getElementById('assessAgainBtn').classList.remove('hidden');
+      document.getElementById('exitBtn').classList.remove('hidden');
       return;
     }
 
-    // Patient info badge
     let html = `
       <div class="patient-badge">
-        👤 Age: <strong>${patientAge}</strong>
+        Age: <strong>${patientAge}</strong>
         <span class="sep">|</span>
-        📊 Severity: <strong>${severity}/10</strong>
+        Pain: <strong>${severity}/10</strong>
       </div>`;
 
-    // High severity referral banner
     if (referral && referral.level === 'high') {
       html += `
         <div class="referral-banner">
-          <div class="icon">🏥</div>
+          <div class="icon">&#127973;</div>
           <h3>Professional Consultation Recommended</h3>
           <p>${referral.message}</p>
-          <div class="severity-badge">⚠️ Severity: ${referral.severity}/10</div>
-          <p class="referral-note">
-            You may still view AI-generated recommendations below, but please
-            prioritize consulting a healthcare professional.
-          </p>
+          <div class="severity-badge">Severity: ${referral.severity}/10</div>
+          <p class="referral-note">You may still view recommendations, but please prioritize professional advice.</p>
         </div>`;
     }
 
-    // Build detected symptoms pills
     html += `
       <div class="detected-section">
         <h3>Detected Symptoms</h3>
@@ -798,27 +1242,26 @@
         </div>
       </div>
       <div class="pipeline-info">
-        <strong>Pipeline:</strong> ${source === 'dictionary' ? 'Dictionary match (exact phrases found)' :
-          source === 'semantic_fallback' ? 'Semantic AI fallback (transformer embeddings)' : source}
-        — detected <strong>${symptoms.length}</strong> symptom${symptoms.length > 1 ? 's' : ''}
+        <strong>Pipeline:</strong> ${source === 'dictionary' ? 'Dictionary match' :
+          source === 'semantic_fallback' ? 'Semantic AI fallback' : source}
+        — <strong>${symptoms.length}</strong> symptom${symptoms.length > 1 ? 's' : ''} detected
       </div>`;
 
-    // Clarify question
     if (rec.action === 'ask_clarify') {
       html += `
         <div class="clarify-box">
-          <h3>🤔 Quick Question</h3>
+          <h3>Quick Question</h3>
           <p>${rec.question || 'Please clarify your cough type.'}</p>
           <div class="clarify-buttons">
             <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
-              <div class="emoji">🌬️</div>
+              <div class="emoji">&#127788;&#65039;</div>
               <div class="label">Dry Cough</div>
-              <div class="desc">No phlegm / walang plema / walay plema</div>
+              <div class="desc">No phlegm / walang plema</div>
             </button>
             <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
-              <div class="emoji">💧</div>
+              <div class="emoji">&#128167;</div>
               <div class="label">Wet Cough</div>
-              <div class="desc">With phlegm / may plema / naay plema</div>
+              <div class="desc">With phlegm / may plema</div>
             </button>
           </div>
         </div>`;
@@ -826,13 +1269,12 @@
 
     container.innerHTML = html;
 
-    // Show "View Recommendations" if we have direct results
     if (rec.action === 'recommend') {
-      document.getElementById('toStep4Btn').style.display = '';
+      document.getElementById('viewRecsBtn').classList.remove('hidden');
     }
   }
 
-  // ── Clarify handler ──
+  // ── Clarify ──
   window.handleClarify = async function(coughType) {
     try {
       const res = await fetch('/consult/api/clarify', {
@@ -847,63 +1289,82 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Clarification failed');
 
-      // Update analysis data
       analysisData.symptoms = data.symptoms;
       analysisData.recommendation = data.recommendation;
-
-      // Re-render analysis without the clarify box
       renderAnalysis(analysisData);
     } catch (err) {
       showToast(err.message, 'error');
     }
   };
 
-  // ── Step 4: Recommendations ──
-  document.getElementById('toStep4Btn').addEventListener('click', () => {
-    goToStep(4);
+  // ── Recommendations ──
+  window.showRecommendations = function() {
+    showingRecs = true;
     renderRecommendations(analysisData);
-  });
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.remove('hidden');
+    document.getElementById('exitBtn').classList.remove('hidden');
+  };
+
+  // ── Go back from results ──
+  window.goBackFromResults = function() {
+    if (showingRecs) {
+      showingRecs = false;
+      renderAnalysis(analysisData);
+      document.getElementById('assessAgainBtn').classList.add('hidden');
+      document.getElementById('exitBtn').classList.add('hidden');
+    } else {
+      goToStep(3);
+    }
+  };
+
+  // ── Assess again ──
+  window.assessAgain = function() {
+    symptomInput.value = '';
+    toStep3Btn.disabled = true;
+    severity = 3;
+    painSlider.value = 3;
+    updatePain();
+    analysisData = null;
+    showingRecs = false;
+    goToStep(2);
+  };
 
   function renderRecommendations(data) {
-    const container = document.getElementById('recContent');
+    const container = document.getElementById('analysisResult');
     const recs = (data.recommendation?.recommendations || []).slice(0, 6);
     const symptoms = data.symptoms || [];
     const referral = data.referral || null;
 
-    // Patient badge
     let html = `
       <div class="patient-badge">
-        👤 Age: <strong>${patientAge}</strong>
+        Age: <strong>${patientAge}</strong>
         <span class="sep">|</span>
-        📊 Severity: <strong>${severity}/10</strong>
+        Pain: <strong>${severity}/10</strong>
       </div>`;
 
-    // High severity referral — show again at top of recs
     if (referral && referral.level === 'high') {
       html += `
-        <div class="referral-banner" style="margin-bottom: 20px;">
-          <div class="icon">🏥</div>
+        <div class="referral-banner" style="margin-bottom:12px;">
+          <div class="icon">&#127973;</div>
           <h3>Consult a Pharmacist First</h3>
-          <p>Due to your high severity rating (${referral.severity}/10), we strongly
-             recommend speaking with a licensed pharmacist or healthcare
-             professional before self-medicating.</p>
-          <div class="severity-badge">⚠️ Severity: ${referral.severity}/10 — Professional Consultation Advised</div>
+          <p>Due to your high severity rating (${referral.severity}/10), please speak with a healthcare professional before self-medicating.</p>
+          <div class="severity-badge">Severity: ${referral.severity}/10</div>
         </div>`;
     }
 
     if (!recs.length) {
       html += `
         <div class="no-symptoms">
-          <div class="icon">💊</div>
-          <h3>No suitable medicines found</h3>
-          <p>No matching OTC medicines in our database for your age (${patientAge}) and detected symptoms.
-             Please consult a pharmacist for assistance.</p>
+          <div class="icon">&#128138;</div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No suitable medicines found</h3>
+          <p>No matching OTC medicines for age ${patientAge} and detected symptoms. Please consult a pharmacist.</p>
         </div>`;
       container.innerHTML = html;
       return;
     }
 
-    const fmt = (n) => n != null ? '₱' + Number(n).toFixed(2) : '';
+    const fmt = (n) => n != null ? '\u20B1' + Number(n).toFixed(2) : '';
 
     html += `
       <div class="detected-section">
@@ -925,19 +1386,19 @@
             <div class="rec-stock">
               ${r.pos_price != null ? `<div class="price">${fmt(r.pos_price)}</div>` : ''}
               ${r.in_stock === true
-                ? `<div class="avail in">✓ In Stock (${r.stock_quantity})</div>`
+                ? `<div class="avail in">\u2713 In Stock (${r.stock_quantity})</div>`
                 : r.in_stock === false
-                  ? `<div class="avail out">✗ Out of Stock</div>`
+                  ? `<div class="avail out">\u2717 Out of Stock</div>`
                   : ''}
             </div>
           </div>
         `).join('')}
       </div>
       <div class="rec-disclaimer">
-        ⚠️ <strong>Disclaimer:</strong> These recommendations are generated by an AI system based on
-        symptom matching. This is <strong>not</strong> a medical diagnosis. Always consult a healthcare
-        professional for serious or persistent symptoms. Medicines shown are filtered for your age group (${patientAge} years old).
-        ${severity >= 8 ? '<br><strong style="color: var(--danger);">⚠️ Given your high severity rating, please prioritize professional medical advice.</strong>' : ''}
+        <strong>Disclaimer:</strong> These recommendations are AI-generated based on symptom matching.
+        This is <strong>not</strong> a medical diagnosis. Consult a healthcare professional for serious
+        or persistent symptoms. Medicines shown are filtered for age ${patientAge}.
+        ${severity >= 8 ? '<br><strong style="color:var(--danger);">Given your high severity, please prioritize professional medical advice.</strong>' : ''}
       </div>`;
 
     container.innerHTML = html;
@@ -962,26 +1423,34 @@
     return map[s] || s.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase());
   }
 
-  // ── Navigation buttons ──
-  document.getElementById('backToStep1').addEventListener('click', () => goToStep(1));
-  document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
-  document.getElementById('backToStep3').addEventListener('click', () => goToStep(3));
-  document.getElementById('newConsultBtn').addEventListener('click', () => {
+  // ══════════════════════════════
+  //  RESET
+  // ══════════════════════════════
+  window.resetAll = function() {
     symptomInput.value = '';
     ageInput.value = '';
-    analyzeBtn.disabled = true;
+    ageSlider.value = 1;
     toStep2Btn.disabled = true;
+    toStep3Btn.disabled = true;
     patientAge = null;
     severity = 3;
-    severitySlider.value = 3;
-    updateSeverity();
+    painSlider.value = 3;
+    updatePain();
     analysisData = null;
-    goToStep(1);
-  });
+    showingRecs = false;
 
-  // ── Voice Input (Web Speech API) ──
+    kioskMain.classList.add('hidden');
+    screenHome.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    currentStep = 0;
+  };
+
+  // ══════════════════════════════
+  //  VOICE INPUT
+  // ══════════════════════════════
   let recognition = null;
   let isRecording = false;
+  const voiceBtn = document.getElementById('voiceBtn');
 
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -996,21 +1465,19 @@
         transcript += e.results[i][0].transcript;
       }
       symptomInput.value = transcript;
-      analyzeBtn.disabled = !transcript.trim();
+      toStep3Btn.disabled = !transcript.trim();
     };
 
     recognition.onend = () => {
       isRecording = false;
       voiceBtn.classList.remove('recording');
-      voiceBtnText.textContent = 'Tap to Speak';
     };
 
     recognition.onerror = (e) => {
       isRecording = false;
       voiceBtn.classList.remove('recording');
-      voiceBtnText.textContent = 'Tap to Speak';
       if (e.error !== 'no-speech') {
-        showToast('Voice input error: ' + e.error, 'error');
+        showToast('Voice error: ' + e.error, 'error');
       }
     };
 
@@ -1020,13 +1487,25 @@
       } else {
         isRecording = true;
         voiceBtn.classList.add('recording');
-        voiceBtnText.textContent = 'Listening…';
         recognition.start();
       }
     });
   } else {
     voiceBtn.style.display = 'none';
   }
+
+})();
+
+// ── Carousel auto-play ──────────────────────────────────────────────────
+(function () {
+  var slides = document.querySelectorAll('.carousel-slide');
+  var cur    = 0;
+
+  setInterval(function () {
+    slides[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('active');
+  }, 4000);
 })();
 </script>
 </body>
