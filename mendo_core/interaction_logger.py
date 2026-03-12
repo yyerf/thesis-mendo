@@ -69,7 +69,7 @@ def log_interaction(
         for r in recommendation.get("recommendations", []):
             rec_list.append({
                 "brand": r.get("brand", ""),
-                "generic": r.get("generic_name", r.get("generic", "")),
+                "generic": r.get("active_ingredients", r.get("generic_name", r.get("generic", ""))),  # step4 uses 'active_ingredients'
             })
 
     entry = {

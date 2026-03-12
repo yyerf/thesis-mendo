@@ -543,6 +543,12 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
             continue
         return []
 
+    # Guard: "nonproductive" cough should be classified as DRY, not WET.
+    # Without this check, the substring "productive cough" inside
+    # "nonproductive cough" triggers a false WET classification.
+    if re.search(r"\bnon[- ]?productive\b", normalized_text):
+        return ["COUGH_DRY"]
+
     dry_qualifiers = [
         # English
         "dry cough",
@@ -867,7 +873,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
+            r"\b(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
             normalized_text,
         ) is not None
         if not pain_present:
@@ -885,7 +891,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             # Proximity check: head_word and pain_word must be within 5 tokens of each other
             # This prevents "sakit ng ulo... katawan ko" from triggering HEADACHE when pain refers to body
             head_positions = [i for i, t in enumerate(tokens) if re.match(r"^(head|ulo)$", t)]
-            pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
+            pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
             # Also check for fuzzy-matched head/pain tokens
             for i, t in enumerate(tokens):
                 if len(t) >= 3:
