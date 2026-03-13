@@ -358,6 +358,23 @@
       "Contraindication_Source": "Package Insert / MIMS Philippines"
     },
     {
+      "Brand": "Hydrite (ORS)",
+      "Generic/Main Use": "Oral Rehydration Salts (Sodium, Potassium, Glucose, Citrate)",
+      "Drug Category": "Rehydration",
+      "Primary Symptom": "diarrhea",
+      "Typical Symptoms Treated": "diarrhea, dehydration, loose stools, vomiting, fluid loss",
+      "Dosage Form": "Powder for Solution",
+      "Minimum Age": "All ages",
+      "Notes": "First-line treatment for dehydration from diarrhea (WHO-recommended). Dissolve one sachet in the correct amount of clean drinking water.",
+      "Approved_Indications": ["dehydration", "diarrhea", "vomiting", "fluid replacement"],
+      "Indication_Source": "WHO / DOH Philippines / Package Insert",
+      "Contraindications": ["Severe dehydration requiring IV therapy", "Intestinal obstruction"],
+      "Warnings": ["Dissolve in correct amount of water as indicated on sachet", "Seek medical help if symptoms persist beyond 2 days", "Not a substitute for medical treatment in severe dehydration"],
+      "Drug_Interactions": ["None significant"],
+      "Max_Duration_Days": 3,
+      "Contraindication_Source": "WHO Guidelines / Package Insert"
+    },
+    {
       "Brand": "Kremil-S",
       "Generic/Main Use": "Aluminum hydroxide + Magnesium hydroxide + Simethicone",
       "Drug Category": "Antacid",

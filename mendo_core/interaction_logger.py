@@ -8,19 +8,21 @@ by domain-expert annotators in Iteration 2 for validation of:
   - Missed symptoms (false negatives)
 
 Logged fields per interaction:
+  - interaction_id     : unique identifier for this log entry
   - timestamp          : ISO-8601 datetime
-  - session_id         : unique session identifier
+  - session_id         : unique session identifier (persists across a consultation flow)
+  - interaction_type   : "initial_analysis" | "cough_clarification" | "context_clarification"
   - user_input         : raw text the user typed / spoke
-  - detected_language  : language detected (if available)
+  - extracted_symptoms : final symptom labels
   - extraction_source  : which pipeline stage produced final symptoms
   - red_flags          : list of red-flag categories triggered
-  - extracted_symptoms : final symptom labels
-  - pipeline_stages    : per-stage extraction details
+  - pipeline_stages    : per-stage extraction details (step1 dictionary, step2 semantic)
+  - action             : "recommend" | "ask_clarify" | "triage" | "no_match"
   - recommendations    : list of recommended medicines (brand + generic)
-  - action             : recommend | ask_clarify | red_flag
-  - clarification      : follow-up cough clarification (if any)
-  - severity           : user-reported severity (if any)
-  - age                : user-reported age (if any)
+  - clarification      : follow-up clarification value (e.g. COUGH_DRY, DIARRHEA_NON_INFECTIOUS)
+  - context_override   : explicit OLDCARTS context override when provided (e.g. DIARRHEA_FOOD_POISONING)
+  - severity           : user-reported severity (1-10)
+  - age                : user-reported age
 """
 
 from __future__ import annotations
@@ -51,11 +53,20 @@ def log_interaction(
     recommendation: Dict[str, Any],
     red_flags: Optional[List[str]] = None,
     clarification: Optional[str] = None,
+    context_override: Optional[str] = None,
+    interaction_type: str = "initial_analysis",
     severity: Optional[int] = None,
     age: Optional[int] = None,
     session_id: Optional[str] = None,
 ) -> str:
     """Append one interaction record to the JSONL log file.
+
+    Parameters
+    ----------
+    interaction_type : str
+        One of "initial_analysis", "cough_clarification", "context_clarification".
+    context_override : str | None
+        Explicit OLDCARTS context override (e.g. DIARRHEA_FOOD_POISONING).
 
     Returns the generated interaction_id.
     """
@@ -65,25 +76,37 @@ def log_interaction(
 
     # Build a clean list of recommended medicines (brand + generic only)
     rec_list = []
-    if recommendation.get("action") == "recommend":
+    action = recommendation.get("action", "unknown")
+    if action == "recommend":
         for r in recommendation.get("recommendations", []):
             rec_list.append({
                 "brand": r.get("brand", ""),
                 "generic": r.get("active_ingredients", r.get("generic_name", r.get("generic", ""))),  # step4 uses 'active_ingredients'
             })
 
+    # Number the pipeline stages for clarity (step1, step2, etc.)
+    numbered_stages = []
+    step_num = 1
+    for stage in (pipeline_stages or []):
+        stage_copy = dict(stage)
+        stage_copy["step"] = step_num
+        numbered_stages.append(stage_copy)
+        step_num += 1
+
     entry = {
         "interaction_id": interaction_id,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "session_id": session_id or uuid.uuid4().hex[:8],
+        "interaction_type": interaction_type,
         "user_input": user_input,
         "extracted_symptoms": extracted_symptoms,
         "extraction_source": extraction_source,
         "red_flags": red_flags or [],
-        "pipeline_stages": pipeline_stages,
-        "action": recommendation.get("action", "unknown"),
+        "pipeline_stages": numbered_stages,
+        "action": action,
         "recommendations": rec_list,
         "clarification": clarification,
+        "context_override": context_override,
         "severity": severity,
         "age": age,
     }
@@ -91,8 +114,8 @@ def log_interaction(
     try:
         with open(_LOG_FILE, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-        log.info("Logged interaction %s (%d symptoms, action=%s)",
-                 interaction_id, len(extracted_symptoms), entry["action"])
+        log.info("Logged interaction %s (type=%s, %d symptoms, action=%s)",
+                 interaction_id, interaction_type, len(extracted_symptoms), action)
     except Exception as e:
         log.error("Failed to log interaction: %s", e)
 

@@ -739,6 +739,15 @@ def _infer_nasal_label(normalized_text: str, detected: List[str], negated_labels
     if not re.search(r"\b(ilong|nose)\b", normalized_text):
         return
 
+    # Guard: nosebleed / blood-on-nose should NOT be mapped to colds or congestion.
+    # If blood/bleeding is mentioned near the nose, bail out and let higher-level
+    # safety / rephrase handling take over rather than recommending cold medicines.
+    if (
+        re.search(r"\b(blood|dugo|bleed|bleeding)\b", normalized_text)
+        and re.search(r"\b(ilong|nose)\b", normalized_text)
+    ):
+        return
+
     # Per-cue-group negation detection (avoids blanket early-return which missed
     # cases like "walang allergy pero barado ang ilong" → should detect NASAL_CONGESTION)
     _neg_rx = r"\b(?:wala|walang|walay|waley|no|not|without|dili|di|hindi|hnd)\b"
@@ -1211,6 +1220,16 @@ def extract_symptoms(user_input: str) -> List[str]:
                 body_negated = False
         if body_negated:
             detected = [d for d in detected if d != "BODY_ACHES"]
+
+    # Safety cleanup: nosebleed / blood-on-nose must not be interpreted as a cold.
+    if (
+        re.search(r"\b(blood|dugo|bleed|bleeding)\b", normalized_text)
+        and re.search(r"\b(ilong|nose)\b", normalized_text)
+    ):
+        detected = [
+            d for d in detected
+            if d not in {"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"}
+        ]
 
     # Distinct list (preserve dictionary order). Since Python 3.7+, dict preserves insertion order.
     return list(dict.fromkeys(detected))

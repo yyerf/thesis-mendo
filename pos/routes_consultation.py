@@ -19,6 +19,7 @@ from __future__ import annotations
 import json
 import logging
 import traceback
+import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -96,6 +97,9 @@ def api_analyze():
         if not user_text:
             return jsonify({"error": "Please describe your symptoms."}), 400
 
+        # ── Assign a session ID for this consultation flow ──
+        session["sid"] = uuid.uuid4().hex[:8]
+
         # ── Severity gate: high pain → pharmacist referral ──
         referral = None
         if severity is not None:
@@ -135,7 +139,7 @@ def api_analyze():
 
         med_rows = _get_med_rows()
         recommendation = recommend_from_dataset(
-            symptoms, med_rows, red_flags=red_flags,
+            symptoms, med_rows, red_flags=red_flags, user_input=user_text,
         )
 
         # ── Filter by age + cross-reference POS inventory ──
@@ -197,8 +201,10 @@ def api_analyze():
                 pipeline_stages=report.get("stages", []),
                 recommendation=recommendation,
                 red_flags=red_flags,
+                interaction_type="initial_analysis",
                 severity=severity,
                 age=user_age,
+                session_id=session.get("sid"),
             )
         except Exception:
             pass  # logging must never break the main flow
@@ -208,6 +214,118 @@ def api_analyze():
     except Exception as e:
         log.error("Analyze error: %s\n%s", e, traceback.format_exc())
         return jsonify({"error": f"Analysis failed: {e}"}), 500
+
+
+@consultation_bp.route("/api/context-clarify", methods=["POST"])
+def api_context_clarify():
+    """Handle OLDCARTS-style context clarification (diarrhea / stomach ache).
+
+    Request JSON:
+        {
+            "original_symptoms": ["DIARRHEA"],
+            "clarify_type": "DIARRHEA_CONTEXT",
+            "clarification": "DIARRHEA_FOOD_POISONING"  // or "DIARRHEA_NON_INFECTIOUS"
+        }
+    """
+    try:
+        data = request.get_json(force=True)
+        original = list(data.get("original_symptoms", []))
+        clarify_type = data.get("clarify_type", "")
+        clarification = data.get("clarification", "").strip()
+        user_age = data.get("age")
+
+        if not clarification:
+            return jsonify({"error": "Missing clarification"}), 400
+
+        if user_age is not None:
+            try:
+                user_age = int(user_age)
+            except (TypeError, ValueError):
+                user_age = None
+
+        symptoms = list(original)
+
+        # Provide a light pseudo_input for extra downstream context where useful,
+        # but pass the explicit clarification as a hard override so the user is
+        # not asked the same question again.
+        if clarification == "DIARRHEA_FOOD_POISONING":
+            pseudo_input = "diarrhea food poisoning spoiled"
+        elif clarification == "DIARRHEA_NON_INFECTIOUS":
+            pseudo_input = "diarrhea no spoiled food no fever"
+        elif clarification == "STOMACH_ACIDIC":
+            pseudo_input = "stomach ache acidic burning"
+        elif clarification == "STOMACH_CRAMPING":
+            pseudo_input = "stomach ache cramp bloated"
+        elif clarification == "SIPON_VIRAL_COLD":
+            pseudo_input = "sipon runny nose cough fever cold"
+        elif clarification == "SIPON_ALLERGY":
+            pseudo_input = "sipon allergy sneezing itchy nose"
+        elif clarification == "SIPON_COLD_WEATHER":
+            pseudo_input = "sipon cold weather malamig"
+        else:
+            pseudo_input = None
+
+        from mendo_core.step4_recommend import recommend_from_dataset
+        med_rows = _get_med_rows()
+        recommendation = recommend_from_dataset(
+            symptoms, med_rows, user_input=pseudo_input, context_override=clarification,
+        )
+
+        # Age filter + POS stock cross-reference
+        try:
+            from pos.db import get_inventory_by_brand
+            if recommendation.get("action") == "recommend":
+                filtered_recs = []
+                for rec in recommendation.get("recommendations", []):
+                    min_age_str = rec.get("min_age", "")
+                    try:
+                        min_age = int(min_age_str)
+                    except (TypeError, ValueError):
+                        min_age = 0
+                    if user_age is not None and user_age < min_age:
+                        continue
+                    inv = get_inventory_by_brand(rec["brand"])
+                    if inv:
+                        rec["in_stock"] = inv["stock_quantity"] > 0
+                        rec["stock_quantity"] = inv["stock_quantity"]
+                        rec["pos_price"] = inv["unit_price"]
+                        rec["inventory_id"] = inv["id"]
+                    else:
+                        rec["in_stock"] = False
+                        rec["stock_quantity"] = 0
+                        rec["pos_price"] = None
+                        rec["inventory_id"] = None
+                    filtered_recs.append(rec)
+                recommendation["recommendations"] = filtered_recs
+        except Exception:
+            pass
+
+        # Log
+        try:
+            log_interaction(
+                user_input=f"[context-clarify:{clarify_type}={clarification}]",
+                extracted_symptoms=symptoms,
+                extraction_source="context_clarification",
+                pipeline_stages=[],
+                recommendation=recommendation,
+                clarification=clarification,
+                context_override=clarification,
+                interaction_type="context_clarification",
+                severity=data.get("severity"),
+                age=user_age,
+                session_id=session.get("sid"),
+            )
+        except Exception:
+            pass
+
+        return jsonify({
+            "symptoms": symptoms,
+            "recommendation": recommendation,
+        })
+
+    except Exception as e:
+        log.error("Context-clarify error: %s", e)
+        return jsonify({"error": str(e)}), 500
 
 
 @consultation_bp.route("/api/clarify", methods=["POST"])
@@ -282,7 +400,10 @@ def api_clarify():
                 pipeline_stages=[],
                 recommendation=recommendation,
                 clarification=clarification,
+                interaction_type="cough_clarification",
+                severity=data.get("severity"),
                 age=user_age,
+                session_id=session.get("sid"),
             )
         except Exception:
             pass  # logging must never break the main flow

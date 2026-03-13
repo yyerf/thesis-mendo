@@ -77,6 +77,11 @@ RED_FLAG_PATTERNS: Dict[str, List[str]] = {
         r"\bnag\s+dugo\s+(ang\s+|akong\s+)?(dumi|tae|bawas|stool)\b",
         r"\bmay\s+(blood|dugo)\s+(sa|ang)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
         r"\b(dugo|blood)\s+(sa|ang|akong)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
+        # Bisaya: "naay dugo (gamay) sa akong tae" — allow filler words (gamay/daghan/etc.)
+        r"\bna+y\s+dugo(\s+\w+){0,3}\s+(sa|ang|akong)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
+        # Catch-all: any mention of dugo/blood near stool words with up to 4 tokens gap
+        r"\b(dugo|blood)\b(\s+\w+){0,4}\s+\b(dumi|tae|bawas|stool)\b",
+        r"\b(dumi|tae|bawas|stool)\b(\s+\w+){0,4}\s+\b(dugo|blood)\b",
     ],
     "blood_vomit": [
         r"\bvomiting\s+blood\b",
@@ -321,6 +326,11 @@ def _apply_semantic_safety_filters(
     if _explicitly_negates_allergy(user_input, _nt=nt):
         _drop({"ALLERGIC_RHINITIS"})
 
+    # Safety guard: nose bleeding / blood on the nose should not be interpreted
+    # as runny nose or nasal congestion by the semantic fallback.
+    if re.search(r"\b(blood|dugo|bleed|bleeding)\b", nt) and re.search(r"\b(nose|ilong)\b", nt):
+        _drop({"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"})
+
     red_flag_names = {row.get("flag") for row in (red_flags or detect_red_flags(user_input))}
     if "blood_in_stool" in red_flag_names:
         _drop({"DIARRHEA"})
@@ -360,6 +370,10 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
 
     diarrhea_keywords = [
         "diarrhea",
+        "diarreha",     # common misspelling
+        "diarrea",      # common misspelling
+        "diarhea",      # common misspelling
+        "dayarya",      # Tagalog phonetic
         "loose stool",
         "watery stool",
         "loo",
@@ -373,6 +387,7 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "lbm",
         "kalibang",
         "tae",
+        "bawas",
         # Alternative phrasings
         "dumi",
         "pabalik balik",

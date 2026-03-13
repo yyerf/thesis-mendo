@@ -581,23 +581,82 @@
     }
 
     .clarify-box {
-      background: var(--warning-light); border: 1px solid #fde68a;
-      border-radius: var(--radius); padding: 24px;
+      background: linear-gradient(135deg, #fffbf0 0%, #fff8e8 100%);
+      border: 2px solid #f6d76e;
+      border-radius: 16px; padding: 28px;
+      box-shadow: 0 2px 12px rgba(246, 215, 110, 0.15);
     }
-    .clarify-box h3 { font-size: 15px; font-weight: 700; color: #92400e; margin-bottom: 8px; }
-    .clarify-box p { font-size: 14px; color: #92400e; margin-bottom: 16px; }
+    .clarify-box .clarify-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .clarify-box .clarify-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .clarify-box h3 {
+      font-size: 17px; font-weight: 800; color: #78350f; margin: 0;
+    }
+    .clarify-box .clarify-subtitle {
+      font-size: 13px; color: #92400e; font-weight: 500;
+    }
+    .clarify-box p {
+      font-size: 14px; color: #78350f; margin-bottom: 18px;
+      line-height: 1.6; display: none;
+    }
     .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
     .clarify-btn {
-      flex: 1; min-width: 160px; padding: 18px;
-      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      flex: 1; min-width: 140px; padding: 18px 16px;
+      border: 2px solid var(--zinc-200); border-radius: 14px;
       background: var(--white); cursor: pointer;
-      text-align: center; transition: all 0.2s;
+      text-align: center; transition: all 0.25s;
       font-family: var(--font);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .clarify-btn:hover { border-color: var(--blue-400); }
-    .clarify-btn .emoji { font-size: 28px; margin-bottom: 4px; }
+    .clarify-btn:hover {
+      border-color: var(--blue-400);
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
+      transform: translateY(-2px);
+    }
+    .clarify-btn:active { transform: translateY(0); }
+    .clarify-btn .emoji { font-size: 32px; margin-bottom: 6px; }
     .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
-    .clarify-btn .desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .clarify-btn .desc { font-size: 12px; color: var(--zinc-500); margin-top: 4px; line-height: 1.4; }
+
+    /* Cold-weather / no-medicine advisory card */
+    .advisory-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #7dd3fc;
+      border-radius: 16px; padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(56, 189, 248, 0.1);
+    }
+    .advisory-card .adv-icon { font-size: 48px; margin-bottom: 12px; }
+    .advisory-card h3 {
+      font-size: 18px; font-weight: 800; color: #0c4a6e;
+      margin-bottom: 10px;
+    }
+    .advisory-card p {
+      font-size: 14px; color: #0369a1; line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .advisory-card .tips-list {
+      text-align: left; display: inline-block;
+      margin-top: 14px; padding: 0;
+    }
+    .advisory-card .tips-list li {
+      list-style: none; padding: 6px 0;
+      font-size: 14px; font-weight: 500; color: #0369a1;
+    }
+    .advisory-card .tips-list li::before {
+      content: '✓'; color: #0ea5e9; font-weight: 800;
+      margin-right: 10px;
+    }
+    .advisory-card .adv-note {
+      font-size: 12px; color: var(--zinc-400);
+      margin-top: 16px; font-style: italic;
+    }
 
     /* Recommendations */
     .rec-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1240,29 +1299,71 @@
         <div class="symptom-pills">
           ${symptoms.map(s => `<span class="symptom-pill">${formatSymptom(s)}</span>`).join('')}
         </div>
-      </div>
-      <div class="pipeline-info">
-        <strong>Pipeline:</strong> ${source === 'dictionary' ? 'Dictionary match' :
-          source === 'semantic_fallback' ? 'Semantic AI fallback' : source}
-        — <strong>${symptoms.length}</strong> symptom${symptoms.length > 1 ? 's' : ''} detected
       </div>`;
 
     if (rec.action === 'ask_clarify') {
+      const clarifyType = rec.clarify_type || 'COUGH';
+      let buttonsHtml = '';
+
+      // Map clarify types to display config
+      const clarifyConfig = {
+        'DIARRHEA_CONTEXT': { icon: '🩺', title: 'Quick Question', subtitle: 'Para sa mas tamang gamot' },
+        'STOMACH_CONTEXT':  { icon: '🩺', title: 'Quick Question', subtitle: 'Para sa mas tamang gamot' },
+        'SIPON_CONTEXT':    { icon: '🤧', title: 'Quick Question', subtitle: 'Para malaman ang dahilan ng sipon' },
+        'COUGH':            { icon: '💬', title: 'Quick Question', subtitle: 'Para sa tamang cough medicine' },
+      };
+      const config = clarifyConfig[clarifyType] || { icon: '💬', title: 'Quick Question', subtitle: 'Please answer so we can recommend better' };
+
+      if (rec.options && rec.options.length) {
+        const emojiMap = {
+          'DIARRHEA_FOOD_POISONING': '🍲',
+          'DIARRHEA_NON_INFECTIOUS': '👍',
+          'STOMACH_ACIDIC':  '🔥',
+          'STOMACH_CRAMPING': '💫',
+          'SIPON_VIRAL_COLD': '🤒',
+          'SIPON_ALLERGY': '🤧',
+          'SIPON_COLD_WEATHER': '❄️',
+        };
+        const descMap = {
+          'SIPON_VIRAL_COLD': 'May kasama ring lagnat o ubo',
+          'SIPON_ALLERGY': 'Madalas bumabahing, makati ilong',
+          'SIPON_COLD_WEATHER': 'Galing sa malamig o naulan',
+          'DIARRHEA_FOOD_POISONING': 'Kumain ng panis o expired',
+          'DIARRHEA_NON_INFECTIOUS': 'Hindi naman panis ang kinain',
+          'STOMACH_ACIDIC': 'Maanghang o nasusunog sa tiyan',
+          'STOMACH_CRAMPING': 'Pulikat, kabag, o bloating',
+        };
+        buttonsHtml = rec.options.map(opt => `
+          <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
+            <div class="emoji">${emojiMap[opt.value] || '💊'}</div>
+            <div class="label">${opt.label.split(' / ')[0]}</div>
+            <div class="desc">${descMap[opt.value] || opt.label.split(' / ').slice(1).join(' / ') || ''}</div>
+          </button>`).join('');
+      } else {
+        buttonsHtml = `
+          <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
+            <div class="emoji">&#127788;&#65039;</div>
+            <div class="label">Dry Cough</div>
+            <div class="desc">Walang plema / No phlegm</div>
+          </button>
+          <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
+            <div class="emoji">&#128167;</div>
+            <div class="label">Wet Cough</div>
+            <div class="desc">May plema / With phlegm</div>
+          </button>`;
+      }
+
       html += `
         <div class="clarify-box">
-          <h3>Quick Question</h3>
-          <p>${rec.question || 'Please clarify your cough type.'}</p>
+          <div class="clarify-header">
+            <div class="clarify-icon">${config.icon}</div>
+            <div>
+              <h3>${config.title}</h3>
+              <div class="clarify-subtitle">${config.subtitle}</div>
+            </div>
+          </div>
           <div class="clarify-buttons">
-            <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
-              <div class="emoji">&#127788;&#65039;</div>
-              <div class="label">Dry Cough</div>
-              <div class="desc">No phlegm / walang plema</div>
-            </button>
-            <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
-              <div class="emoji">&#128167;</div>
-              <div class="label">Wet Cough</div>
-              <div class="desc">With phlegm / may plema</div>
-            </button>
+            ${buttonsHtml}
           </div>
         </div>`;
     }
@@ -1274,7 +1375,7 @@
     }
   }
 
-  // ── Clarify ──
+  // ── Clarify (cough type — original) ──
   window.handleClarify = async function(coughType) {
     try {
       const res = await fetch('/consult/api/clarify', {
@@ -1283,6 +1384,33 @@
         body: JSON.stringify({
           original_symptoms: analysisData.symptoms,
           clarification: coughType,
+          age: patientAge,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Clarification failed');
+
+      analysisData.symptoms = data.symptoms;
+      analysisData.recommendation = data.recommendation;
+      renderAnalysis(analysisData);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  // ── Context clarify (OLDCARTS — diarrhea, stomach, etc.) ──
+  window.handleContextClarify = async function(value, clarifyType) {
+    try {
+      const rec = analysisData.recommendation || {};
+      const origSymptoms = rec.original_symptoms || analysisData.symptoms;
+
+      const res = await fetch('/consult/api/context-clarify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          original_symptoms: origSymptoms,
+          clarify_type: clarifyType,
+          clarification: value,
           age: patientAge,
         }),
       });
@@ -1354,12 +1482,30 @@
     }
 
     if (!recs.length) {
-      html += `
-        <div class="no-symptoms">
-          <div class="icon">&#128138;</div>
-          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No suitable medicines found</h3>
-          <p>No matching OTC medicines for age ${patientAge} and detected symptoms. Please consult a pharmacist.</p>
-        </div>`;
+      // Check if the backend sent a message (e.g., cold-weather advisory)
+      const recMsg = data.recommendation?.message || '';
+      if (recMsg) {
+        html += `
+          <div class="advisory-card">
+            <div class="adv-icon">💡</div>
+            <h3>Possible Cause Identified</h3>
+            <p>Based on your symptoms, your runny nose may be caused by exposure to <strong>cold weather</strong> or sudden temperature changes.</p>
+            <p style="font-size:13px;color:#0c4a6e;">❄️ When cold air enters the nose, it can trigger extra mucus production. This is common and usually not a serious illness.</p>
+            <ul class="tips-list">
+              <li>Magpahinga sa mainit na lugar (Rest in a warm place)</li>
+              <li>Uminom ng mainit na tubig o sabaw (Drink warm fluids)</li>
+              <li>Kung hindi mawala sa 2-3 araw, kumonsulta sa pharmacist</li>
+            </ul>
+            <p class="adv-note">If symptoms persist beyond 2-3 days or worsen, please consult a pharmacist or doctor.</p>
+          </div>`;
+      } else {
+        html += `
+          <div class="no-symptoms">
+            <div class="icon">&#128138;</div>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No suitable medicines found</h3>
+            <p>No matching OTC medicines for age ${patientAge} and detected symptoms. Please consult a pharmacist.</p>
+          </div>`;
+      }
       container.innerHTML = html;
       return;
     }
