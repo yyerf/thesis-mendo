@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from mendo_core.step3_hybrid import detect_red_flags, extract_symptoms_hybrid_report
 from mendo_core.step4_recommend import DATASET_DEFAULT, load_mendo_dataset, recommend_from_dataset
+from mendo_core.step1 import extract_conditions
 from web.app import app
 
 
@@ -82,14 +83,165 @@ class RegressionTests(unittest.TestCase):
 
     def test_high_fever_red_flag_variants(self):
         for text in [
-            "fever ko is like 50 ang temp",
-            "fever ko is like 50 degree ang temp",
-            "fever ko is 45",
-            "lagnat na 44 degrees",
+            "fever ko 40 ang temp",
+            "lagnat na 41 degrees",
+            "temperature 42 with fever",
+            "init ang lawas, temp 40",
         ]:
             with self.subTest(text=text):
                 flags = detect_red_flags(text)
                 self.assertTrue(any(flag["flag"] == "high_fever_prolonged" for flag in flags))
+
+    def test_hyperthermia_ignores_age_weight_numbers(self):
+        for text in [
+            "may fever siya, 40 years old na",
+            "lagnat tapos 41 kg timbang",
+            "temp ko 42 years old",  # malformed but should be ignored by lexical exclusion
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertFalse(any(flag["flag"] == "high_fever_prolonged" for flag in flags), flags)
+
+    def test_chest_pain_exclusion_for_cough_context(self):
+        text = "masakit dibdib ko kakaubo at may plema"
+        flags = detect_red_flags(text)
+        self.assertFalse(any(flag["flag"] == "chest_pain" for flag in flags), flags)
+
+    def test_respiratory_emergency_detected_by_cooccurrence(self):
+        for text in [
+            "hirap huminga ako ngayon",
+            "lisod muginhawa kaayo",
+            "nahihirapan ako sa paghinga",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertTrue(any(flag["flag"] == "difficulty_breathing" for flag in flags), flags)
+
+    def test_dengue_warning_fever_with_rashes(self):
+        flags = detect_red_flags("may lagnat ako at may pantal at red spots")
+        self.assertTrue(any(flag["flag"] == "dengue_warning" for flag in flags), flags)
+
+    def test_dengue_warning_exclusion_bite_allergy_context(self):
+        for text in [
+            "may lagnat at pantal dahil sa kagat ng insekto",
+            "fever and rashes from allergy",
+            "pantal at lagnat dahil sa bite",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertFalse(any(flag["flag"] == "dengue_warning" for flag in flags), flags)
+
+    def test_stroke_warning_numb_face_half_side(self):
+        for text in [
+            "manhid kalahati ng mukha ko",
+            "numb yung half face ko",
+            "pamamanhid sa one side ng mukha",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertTrue(any(flag["flag"] == "stroke_warning" for flag in flags), flags)
+
+    def test_stroke_warning_exclusion_tooth_context(self):
+        for text in [
+            "manhid ngipin ko",
+            "numb tooth after bunot",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertFalse(any(flag["flag"] == "stroke_warning" for flag in flags), flags)
+
+    def test_severe_dehydration_diarrhea_no_urine(self):
+        for text in [
+            "nagtatae ako tapos walang ihi",
+            "diarrhea with no urine since morning",
+            "kalibang pero walay ihi",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertTrue(any(flag["flag"] == "severe_dehydration" for flag in flags), flags)
+
+    def test_pregnancy_contraindication_with_proxy_exclusions(self):
+        flags = detect_red_flags("buntis ako at may lagnat")
+        self.assertTrue(any(flag["flag"] == "pregnancy_contraindication" for flag in flags), flags)
+
+        for text in [
+            "buntis yung asawa ko, bibili lang ako",
+            "pregnant sister ko ang iinuman",
+            "misis ko buntis, para sa kanya ito",
+        ]:
+            with self.subTest(text=text):
+                proxy_flags = detect_red_flags(text)
+                self.assertFalse(any(flag["flag"] == "pregnancy_contraindication" for flag in proxy_flags), proxy_flags)
+
+    def test_direct_emergency_terms(self):
+        for text, expected in [
+            ("nag seizure siya kanina", "seizure"),
+            ("nahimatay ako", "loss_of_consciousness"),
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertTrue(any(flag["flag"] == expected for flag in flags), flags)
+
+    def test_head_bleeding_detects_gadugo_variant(self):
+        flags = detect_red_flags("gadugo akong ulo")
+        self.assertTrue(any(flag["flag"] == "head_bleeding" for flag in flags), flags)
+
+    def test_gadugo_ulo_pipeline_triages_not_headache(self):
+        text = "gadugo akong ulo"
+        report = extract_symptoms_hybrid_report(
+            text,
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=2,
+            enable_semantic_fallback=True,
+        )
+        red_flags = report.get("red_flags", [])
+        self.assertTrue(any(f["flag"] == "head_bleeding" for f in red_flags), red_flags)
+
+        symptoms = report.get("final", {}).get("symptoms", [])
+        rec = recommend_from_dataset(symptoms, self.rows, red_flags=red_flags, user_input=text)
+        self.assertEqual(rec.get("action"), "triage")
+
+    def test_headache_detects_gasakit_ulo_variant(self):
+        report = extract_symptoms_hybrid_report(
+            "murag gasakit akong ulo",
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=2,
+            enable_semantic_fallback=False,
+        )
+        symptoms = report.get("final", {}).get("symptoms", [])
+        self.assertIn("HEADACHE", symptoms)
+
+    def test_hypertension_primary_complaint_is_red_flag(self):
+        for text in [
+            "naa koy high blood",
+            "mataas blood pressure ko",
+            "hypertension ako",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertTrue(any(flag["flag"] == "hypertension_risk" for flag in flags), flags)
+
+    def test_hypertension_incidental_after_contrastive_not_triaged(self):
+        text = "May sipon at ubo ako, pero may high blood ako"
+        flags = detect_red_flags(text)
+        self.assertFalse(any(flag["flag"] == "hypertension_risk" for flag in flags), flags)
+
+    def test_hemoptysis_does_not_trigger_on_high_blood_context(self):
+        text = "May sipon at ubo ako, pero may high blood ako"
+        flags = detect_red_flags(text)
+        self.assertFalse(any(flag["flag"] == "hemoptysis" for flag in flags), flags)
+
+    def test_hemoptysis_does_not_trigger_when_blood_is_negated(self):
+        for text in [
+            "naa koy ubo pero walay dugo",
+            "may ubo ako pero walang dugo",
+            "I have cough but no blood",
+        ]:
+            with self.subTest(text=text):
+                flags = detect_red_flags(text)
+                self.assertFalse(any(flag["flag"] == "hemoptysis" for flag in flags), flags)
 
     def test_nonproductive_cough_maps_to_dry(self):
         report = extract_symptoms_hybrid_report(
@@ -225,6 +377,32 @@ class RegressionTests(unittest.TestCase):
         with open("logs/interactions.jsonl", "w") as f:
             f.writelines(lines[:-1])
 
+    def test_stomach_ache_detects_bisaya_gasakit_variant(self):
+        report = extract_symptoms_hybrid_report(
+            "murag gasakit akong tiyan",
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=2,
+            enable_semantic_fallback=False,
+        )
+        symptoms = report.get("final", {}).get("symptoms", [])
+        self.assertIn("STOMACH_ACHE", symptoms)
+
+    def test_context_clarify_returns_specific_display_symptom_for_stomach(self):
+        response = self.client.post(
+            "/consult/api/context-clarify",
+            json={
+                "original_symptoms": ["STOMACH_ACHE"],
+                "clarify_type": "STOMACH_CONTEXT",
+                "clarification": "STOMACH_ACIDIC",
+                "age": 21,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.get_json()
+        self.assertEqual(data.get("symptoms"), ["STOMACH_ACHE"])
+        self.assertEqual(data.get("symptoms_display"), ["STOMACH_ACHE_ACIDIC"])
+
     # ── ORS + Sipon OLDCARTS regression tests ──────────────────────────────
 
     def test_diarrhea_recommends_ors(self):
@@ -286,6 +464,43 @@ class RegressionTests(unittest.TestCase):
         )
         self.assertNotEqual(rec.get("action"), "ask_clarify")
         self.assertEqual(rec.get("action"), "recommend")
+
+    def test_cough_general_with_other_symptoms_still_asks_clarify(self):
+        """COUGH_GENERAL should always request dry/wet clarification for consistency."""
+        rec = recommend_from_dataset(
+            ["COUGH_GENERAL", "RUNNY_NOSE"], self.rows,
+            user_input="naa koy ubo ug sipon",
+        )
+        self.assertEqual(rec.get("action"), "ask_clarify")
+        self.assertIn("dry", (rec.get("question") or "").lower())
+
+    def test_extract_conditions_high_blood_and_pregnancy(self):
+        self.assertIn("HYPERTENSION", extract_conditions("naa koy high blood"))
+        self.assertIn("PREGNANCY", extract_conditions("buntis ko"))
+
+    def test_mixed_input_keeps_symptom_and_condition(self):
+        report = extract_symptoms_hybrid_report(
+            "May sipon pero may high blood",
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=2,
+            enable_semantic_fallback=True,
+        )
+        self.assertIn("RUNNY_NOSE", report.get("final", {}).get("symptoms", []))
+        self.assertIn("HYPERTENSION", report.get("final", {}).get("conditions", []))
+
+    def test_hypertension_contraindication_blocks_cold_combo(self):
+        rec = recommend_from_dataset(
+            ["RUNNY_NOSE"],
+            self.rows,
+            user_input="may sipon pero may high blood",
+            detected_conditions=["HYPERTENSION"],
+        )
+        self.assertEqual(rec.get("action"), "recommend")
+        recommended_brands = [r["brand"] for r in rec.get("recommendations", [])]
+        blocked_brands = [r["brand"] for r in rec.get("blocked_recommendations", [])]
+        self.assertNotIn("Neozep / Neozep Z+", recommended_brands)
+        self.assertIn("Neozep / Neozep Z+", blocked_brands)
 
 
 if __name__ == "__main__":

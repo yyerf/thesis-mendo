@@ -127,19 +127,24 @@ def api_analyze():
             user_text,
             semantic_threshold=0.65,
             semantic_top_margin=0.08,
-            semantic_max_symptoms=3,
+            semantic_max_symptoms=2,
             enable_semantic_fallback=True,
         )
         symptoms = report.get("final", {}).get("symptoms", [])
+        detected_conditions = report.get("final", {}).get("conditions", [])
         source = report.get("final", {}).get("source", "unknown")
         red_flags = report.get("red_flags", [])
 
         # ── Step 4: Recommendation ──
-        from mendo_core.step4_recommend import recommend_from_dataset
+        from mendo_core.step4_recommend import recommend_medicine
 
         med_rows = _get_med_rows()
-        recommendation = recommend_from_dataset(
-            symptoms, med_rows, red_flags=red_flags, user_input=user_text,
+        recommendation = recommend_medicine(
+            symptoms,
+            med_rows,
+            red_flags=red_flags,
+            user_input=user_text,
+            detected_conditions=detected_conditions,
         )
 
         # ── Filter by age + cross-reference POS inventory ──
@@ -181,6 +186,7 @@ def api_analyze():
 
         resp: Dict[str, Any] = {
             "symptoms": symptoms,
+            "detected_conditions": detected_conditions,
             "source": source,
             "pipeline": {
                 "stages": report.get("stages", []),
@@ -230,6 +236,7 @@ def api_context_clarify():
     try:
         data = request.get_json(force=True)
         original = list(data.get("original_symptoms", []))
+        original_conditions = list(data.get("original_conditions", []))
         clarify_type = data.get("clarify_type", "")
         clarification = data.get("clarification", "").strip()
         user_age = data.get("age")
@@ -244,6 +251,25 @@ def api_context_clarify():
                 user_age = None
 
         symptoms = list(original)
+
+        # UI display labels can be more specific than core model labels.
+        # We keep core labels for rule-based recommendation compatibility,
+        # and send a parallel display list for frontend rendering.
+        display_symptoms = list(symptoms)
+        if clarification == "STOMACH_ACIDIC":
+            display_symptoms = ["STOMACH_ACHE_ACIDIC" if s == "STOMACH_ACHE" else s for s in display_symptoms]
+        elif clarification == "STOMACH_CRAMPING":
+            display_symptoms = ["STOMACH_ACHE_CRAMPING" if s == "STOMACH_ACHE" else s for s in display_symptoms]
+        elif clarification == "DIARRHEA_FOOD_POISONING":
+            display_symptoms = ["DIARRHEA_INFECTIOUS_CONTEXT" if s == "DIARRHEA" else s for s in display_symptoms]
+        elif clarification == "DIARRHEA_NON_INFECTIOUS":
+            display_symptoms = ["DIARRHEA_NON_INFECTIOUS_CONTEXT" if s == "DIARRHEA" else s for s in display_symptoms]
+        elif clarification == "SIPON_ALLERGY":
+            display_symptoms = ["RUNNY_NOSE_ALLERGY_CONTEXT" if s == "RUNNY_NOSE" else s for s in display_symptoms]
+        elif clarification == "SIPON_COLD_WEATHER":
+            display_symptoms = ["RUNNY_NOSE_COLD_WEATHER_CONTEXT" if s == "RUNNY_NOSE" else s for s in display_symptoms]
+        elif clarification == "SIPON_VIRAL_COLD":
+            display_symptoms = ["RUNNY_NOSE_VIRAL_CONTEXT" if s == "RUNNY_NOSE" else s for s in display_symptoms]
 
         # Provide a light pseudo_input for extra downstream context where useful,
         # but pass the explicit clarification as a hard override so the user is
@@ -265,10 +291,14 @@ def api_context_clarify():
         else:
             pseudo_input = None
 
-        from mendo_core.step4_recommend import recommend_from_dataset
+        from mendo_core.step4_recommend import recommend_medicine
         med_rows = _get_med_rows()
-        recommendation = recommend_from_dataset(
-            symptoms, med_rows, user_input=pseudo_input, context_override=clarification,
+        recommendation = recommend_medicine(
+            symptoms,
+            med_rows,
+            user_input=pseudo_input,
+            context_override=clarification,
+            detected_conditions=original_conditions,
         )
 
         # Age filter + POS stock cross-reference
@@ -320,6 +350,8 @@ def api_context_clarify():
 
         return jsonify({
             "symptoms": symptoms,
+            "symptoms_display": display_symptoms,
+            "detected_conditions": original_conditions,
             "recommendation": recommendation,
         })
 
@@ -341,6 +373,7 @@ def api_clarify():
     try:
         data = request.get_json(force=True)
         original = list(data.get("original_symptoms", []))
+        original_conditions = list(data.get("original_conditions", []))
         clarification = data.get("clarification", "").strip()
         user_age = data.get("age")  # int or None
 
@@ -357,9 +390,13 @@ def api_clarify():
         symptoms = [clarification if s == "COUGH_GENERAL" else s for s in original]
         symptoms = list(dict.fromkeys(symptoms))
 
-        from mendo_core.step4_recommend import recommend_from_dataset
+        from mendo_core.step4_recommend import recommend_medicine
         med_rows = _get_med_rows()
-        recommendation = recommend_from_dataset(symptoms, med_rows)
+        recommendation = recommend_medicine(
+            symptoms,
+            med_rows,
+            detected_conditions=original_conditions,
+        )
 
         # Cross-reference POS stock + age filter
         try:
@@ -410,6 +447,7 @@ def api_clarify():
 
         return jsonify({
             "symptoms": symptoms,
+            "detected_conditions": original_conditions,
             "recommendation": recommendation,
         })
 

@@ -58,6 +58,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "labad akong ulo",
         "sakit akong ulo",
         "sakit ako'g ulo",
+        "gasakit akong ulo",
+        "ga sakit akong ulo",
+        "murag gasakit akong ulo",
+        "murag sakit akong ulo",
         "gibukbok",
         "gibukbok akong ulo",
         # Alternative phrasings
@@ -178,6 +182,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Bisaya
         "hilanat",
         "gihilanat",
+        "murag gihilanat ko",
+        "murag nilalagnat ko",
+        "murag ga init akong lawas",
         "gi hilanat",
         "gihinlantan",
         "gi hilantan",
@@ -226,6 +233,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "binugbog ang katawan",
         # Bisaya
         "sakit lawas",
+        "gasakit akong lawas",
+        "ga sakit akong lawas",
+        "murag gasakit akong lawas",
         "bug at akong lawas",
         "bug at kaayo akong lawas",
         "tibuok lawas nako bug at",
@@ -278,6 +288,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "di ko katulon",
         "dili katulon",
         "dili ko katulon",
+        "gasakit akong tutunlan",
+        "ga sakit akong tutunlan",
+        "murag gasakit akong tutunlan",
         "garas akong tilaok",
         "garas ang tilaok",
         "tilaok",
@@ -391,6 +404,14 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "masakit sikmura",
         # Bisaya
         "sakit akong tiyan",
+        "gasakit akong tiyan",
+        "ga sakit akong tiyan",
+        "gisakit akong tiyan",
+        "murag gasakit akong tiyan",
+        "murag sakit akong tiyan",
+        "murag sakit sa tiyan",
+        "nisakit akong tiyan",
+        "murag nisakit akong tiyan",
         "sakit sa tiyan",
         "sakit tiyan nako",
         # Alternative phrasings
@@ -414,11 +435,43 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Bisaya
         "kalibang",
         "nagkalibang",
+        "nagkalibanga",
+        "kalibanga",
+        "nag loose ko",
         "laway ang tae",
         # Alternative phrasings
         "matubig ang dumi",
         "sige cr",
         "loose bowel",
+    ],
+}
+
+# Condition entities that should be carried into recommendation safety checks.
+CONDITION_LABELS: Dict[str, List[str]] = {
+    "HYPERTENSION": [
+        "hypertension",
+        "hypertensive",
+        "high blood",
+        "highblood",
+        "high blood pressure",
+        "hbp",
+        "alta presyon",
+        "mataas na presyon",
+        "taas ug presyon",
+        "taas ang presyon",
+        "taas ug bp",
+        "high bp",
+        "bp high",
+    ],
+    "PREGNANCY": [
+        "pregnant",
+        "pregnancy",
+        "buntis",
+        "nagbubuntis",
+        "nagdadalang tao",
+        "dadalang tao",
+        "expecting",
+        "with child",
     ],
 }
 
@@ -675,6 +728,34 @@ def _phrase_in_text(normalized_text: str, normalized_phrase: str) -> bool:
     return re.search(rf"\b{re.escape(normalized_phrase)}\b", normalized_text) is not None
 
 
+def _extract_conditions_from_normalized(normalized_text: str) -> List[str]:
+    """Extract condition entities (e.g., hypertension, pregnancy).
+
+    Conditions are independent from symptom labels and are intended for
+    contraindication checks in the recommendation stage.
+    """
+
+    detected_conditions: List[str] = []
+    for condition_label, phrases in CONDITION_LABELS.items():
+        for phrase in phrases:
+            normalized_phrase = _normalize(phrase)
+            if not _phrase_in_text(normalized_text, normalized_phrase):
+                continue
+            if _is_negated(normalized_text, normalized_phrase):
+                continue
+            detected_conditions.append(condition_label)
+            break
+
+    return list(dict.fromkeys(detected_conditions))
+
+
+def extract_conditions(user_input: str) -> List[str]:
+    """Public helper for Stage 1 condition extraction."""
+
+    normalized_text = _normalize(user_input)
+    return _extract_conditions_from_normalized(normalized_text)
+
+
 def _levenshtein_within(a: str, b: str, max_dist: int) -> bool:
     """Return True if edit distance(a, b) <= max_dist.
 
@@ -882,7 +963,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
+            r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|kasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
             normalized_text,
         ) is not None
         if not pain_present:
@@ -1053,7 +1134,15 @@ def extract_symptoms(user_input: str) -> List[str]:
     if "DIARRHEA" not in detected and "DIARRHEA" not in negated_labels:
         tokens = normalized_text.split()
         diarrhea_exclusion = {"kaninang", "kanina", "kaninag"}
-        diarrhea_targets = ["pagtatae", "nagtatae", "kalibang"]
+        diarrhea_targets = [
+            "pagtatae",
+            "nagtatae",
+            "kalibang",
+            "diarrhea",
+            "diarreha",
+            "diarhea",
+            "diarrea",
+        ]
         for tok in tokens:
             if tok in diarrhea_exclusion:
                 continue
@@ -1087,15 +1176,15 @@ def extract_symptoms(user_input: str) -> List[str]:
                 continue
             if any(_levenshtein_within(tok, target, max_dist=1) for target in stomach_targets):
                 # Check if there is a pain word nearby (including common misspelling "masaket")
-                if re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|hilab|kabag)\b", normalized_text):
+                if re.search(r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|gisakit|kasakit|pain|ache|hilab|kabag)\b", normalized_text):
                     detected.append("STOMACH_ACHE")
                     break
     # Proximity-based STOMACH_ACHE rescue: "stomach" near pain words with filler
     # Handles code-switching like "stomach ko ang sakit", "my stomach hurts"
     if "STOMACH_ACHE" not in detected and "STOMACH_ACHE" not in negated_labels:
-        if re.search(r"\b(stomach|tummy|abdomen)\b(?:\s+\w+){0,3}\s+\b(sakit|masakit|masaket|sumasakit|pain|ache|hurt|hurts)\b", normalized_text):
+        if re.search(r"\b(stomach|tummy|abdomen|tiyan|sikmura)\b(?:\s+\w+){0,3}\s+\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|gisakit|kasakit|pain|ache|hurt|hurts)\b", normalized_text):
             detected.append("STOMACH_ACHE")
-        elif re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|hurt|hurts)\b(?:\s+\w+){0,3}\s+\b(stomach|tummy|abdomen)\b", normalized_text):
+        elif re.search(r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|gisakit|kasakit|pain|ache|hurt|hurts)\b(?:\s+\w+){0,3}\s+\b(stomach|tummy|abdomen|tiyan|sikmura)\b", normalized_text):
             detected.append("STOMACH_ACHE")
 
     # Fuzzy rescue for body aches typos: e.g., "ktawan" -> BODY_ACHES
@@ -1111,7 +1200,7 @@ def extract_symptoms(user_input: str) -> List[str]:
                 # Check for pain word within 6 tokens of the body word
                 nearby_tokens = tokens[max(0, i-6):i+7]
                 nearby_text = " ".join(nearby_tokens)
-                if re.search(r"\b(sakit|masakit|masaket|sumasakit|pain|ache|ngalay)\b", nearby_text):
+                if re.search(r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|kasakit|pain|ache|ngalay)\b", nearby_text):
                     detected.append("BODY_ACHES")
                     break
 

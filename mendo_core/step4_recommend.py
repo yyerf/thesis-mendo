@@ -52,6 +52,59 @@ def _norm(s: Any) -> str:
     return str(s or "").strip().lower()
 
 
+_CONDITION_CONTRA_PATTERNS: Dict[str, Tuple[str, ...]] = {
+    "HYPERTENSION": (
+        "hypertension",
+        "high blood pressure",
+        "high blood",
+        "hbp",
+        "alta presyon",
+        "mataas na presyon",
+        "blood pressure",
+    ),
+    "PREGNANCY": (
+        "pregnan",
+        "buntis",
+        "dadalang tao",
+        "trimester",
+        "gestation",
+    ),
+}
+
+
+def _normalize_condition_label(condition: str) -> str:
+    c = _norm(condition).replace("-", " ").replace("_", " ")
+    if c in {"hypertension", "high blood", "high blood pressure", "hbp", "hypertensive"}:
+        return "HYPERTENSION"
+    if c in {"pregnancy", "pregnant", "buntis"}:
+        return "PREGNANCY"
+    return condition.strip().upper()
+
+
+def _contraindication_hits_for_conditions(
+    contraindications: Sequence[str],
+    detected_conditions: Sequence[str],
+) -> List[Dict[str, str]]:
+    hits: List[Dict[str, str]] = []
+    if not contraindications or not detected_conditions:
+        return hits
+
+    contraindication_rows = [_norm(c) for c in contraindications if _norm(c)]
+    for condition in detected_conditions:
+        canon = _normalize_condition_label(condition)
+        patterns = _CONDITION_CONTRA_PATTERNS.get(canon, tuple())
+        if not patterns:
+            continue
+        for contra in contraindication_rows:
+            if any(p in contra for p in patterns):
+                hits.append({
+                    "condition": canon,
+                    "contraindication": contra,
+                })
+                break
+    return hits
+
+
 def load_mendo_dataset(path: str) -> List[MedRow]:
     p = Path(path)
     if not p.exists():
@@ -235,6 +288,7 @@ def recommend_from_dataset(
     red_flags: Optional[List[Dict[str, str]]] = None,
     user_input: Optional[str] = None,
     context_override: Optional[str] = None,
+    detected_conditions: Optional[Sequence[str]] = None,
 ) -> Dict[str, Any]:
     """Rule-based mapping aligned to your dataset.
 
@@ -258,7 +312,7 @@ def recommend_from_dataset(
             "action": "triage",
             "triage_flags": red_flags,
             "message": (
-                "⚠️ CONSULT A DOCTOR / PHARMACIST IMMEDIATELY.\n"
+                "⚠️ CONSULT A LICENSED MEDICAL EXPERT IMMEDIATELY.\n"
                 "The following serious symptom(s) were detected:\n"
                 + "\n".join(f"  • {m}" for m in flag_msgs)
                 + "\n\nThese symptoms may indicate a condition that requires "
@@ -283,6 +337,13 @@ def recommend_from_dataset(
 
     symptoms_set = set(symptoms)
     matching_symptoms = set(symptoms)  # copy for tracking actual matches
+    normalized_conditions = sorted(
+        {
+            _normalize_condition_label(c)
+            for c in (detected_conditions or [])
+            if str(c or "").strip()
+        }
+    )
 
     # ── OLDCARTS-INSPIRED CONTEXT ASSESSMENT ──────────────────────────────
     # For symptoms where the wrong OTC drug can be harmful, detect context
@@ -406,6 +467,7 @@ def recommend_from_dataset(
                 and not _sipon_allergy
                 and not _sipon_context_answered
                 and not other_syms
+                and not normalized_conditions
             ):
                 return {
                     "action": "ask_clarify",
@@ -435,17 +497,15 @@ def recommend_from_dataset(
                     "original_symptoms": list(symptoms),
                 }
 
-    # COUGH_GENERAL: only ask clarification if cough is the ONLY symptom
+    # COUGH_GENERAL: always ask clarification if cough type is unresolved.
+    # This keeps behavior consistent whether cough appears alone or with
+    # other symptoms (e.g., cough + runny nose).
     if "COUGH_GENERAL" in symptoms_set and not ("COUGH_DRY" in symptoms_set or "COUGH_PRODUCTIVE" in symptoms_set):
-        other_symptoms = symptoms_set - {"COUGH_GENERAL"}
-        if not other_symptoms:
-            return {
-                "action": "ask_clarify",
-                "question": "Please specify: Is your cough dry (walay/walang plema) or with phlegm (naay/may plema)?",
-                "candidates": [],
-            }
-        # Multi-symptom with COUGH_GENERAL: defer cough, recommend for other symptoms
-        matching_symptoms.discard("COUGH_GENERAL")
+        return {
+            "action": "ask_clarify",
+            "question": "Please specify: Is your cough dry (walay/walang plema) or with phlegm (naay/may plema)?",
+            "candidates": [],
+        }
 
     candidates: List[Tuple[int, MedRow, List[str]]] = []
 
@@ -625,6 +685,29 @@ def recommend_from_dataset(
 
     ranked = sorted(by_brand.values(), key=lambda t: t[0], reverse=True)
 
+    blocked_recommendations: List[Dict[str, Any]] = []
+    if normalized_conditions:
+        safe_ranked: List[Tuple[int, MedRow, List[str]]] = []
+        for score, row, reasons in ranked:
+            contra_hits = _contraindication_hits_for_conditions(
+                row.contraindications,
+                normalized_conditions,
+            )
+            if contra_hits:
+                blocked_recommendations.append(
+                    {
+                        "brand": row.brand,
+                        "active_ingredients": row.generic_main_use,
+                        "drug_category": row.drug_category,
+                        "reasons": reasons,
+                        "contraindications": list(row.contraindications) if row.contraindications else [],
+                        "blocked_by": contra_hits,
+                    }
+                )
+                continue
+            safe_ranked.append((score, row, reasons))
+        ranked = safe_ranked
+
     recommendations = [
         {
             "brand": row.brand,
@@ -636,6 +719,7 @@ def recommend_from_dataset(
             "reasons": reasons,
             "source": row.indication_source,
             "warnings": list(row.warnings) if row.warnings else [],
+            "contraindications": list(row.contraindications) if row.contraindications else [],
             "max_duration_days": row.max_duration_days,
         }
         for score, row, reasons in ranked[:8]
@@ -664,6 +748,14 @@ def recommend_from_dataset(
                 "persists after eating and hydrating, the recommended pain relief "
                 "medication may then be appropriate."
             )
+
+    if blocked_recommendations:
+        blocked_brands = ", ".join(b["brand"] for b in blocked_recommendations[:4])
+        cond_text = ", ".join(normalized_conditions)
+        safety_warnings.append(
+            "⚠ Contraindication filter applied for detected condition(s): "
+            f"{cond_text}. Blocked medicine(s): {blocked_brands}."
+        )
 
     # Cough follow-up warning when cough was deferred
     if "COUGH_GENERAL" in symptoms_set and "COUGH_GENERAL" not in matching_symptoms:
@@ -696,6 +788,18 @@ def recommend_from_dataset(
             }
 
     if not recommendations:
+        if blocked_recommendations and normalized_conditions:
+            return {
+                "action": "no_match",
+                "message": (
+                    "Detected condition(s) conflict with available medicine contraindications "
+                    f"({', '.join(normalized_conditions)}). Consult Pharmacist."
+                ),
+                "recommendations": [],
+                "blocked_recommendations": blocked_recommendations,
+                "detected_conditions": normalized_conditions,
+                "safety_warnings": safety_warnings,
+            }
         return {
             "action": "no_match",
             "message": (
@@ -703,14 +807,39 @@ def recommend_from_dataset(
                 "Please rephrase your concern or consult a pharmacist."
             ),
             "recommendations": [],
+            "blocked_recommendations": blocked_recommendations,
+            "detected_conditions": normalized_conditions,
             "safety_warnings": safety_warnings,
         }
 
     return {
         "action": "recommend",
         "recommendations": recommendations,
+        "blocked_recommendations": blocked_recommendations,
+        "detected_conditions": normalized_conditions,
         "safety_warnings": safety_warnings,
     }
+
+
+def recommend_medicine(
+    symptoms: Sequence[str],
+    rows: Sequence[MedRow],
+    *,
+    red_flags: Optional[List[Dict[str, str]]] = None,
+    user_input: Optional[str] = None,
+    context_override: Optional[str] = None,
+    detected_conditions: Optional[Sequence[str]] = None,
+) -> Dict[str, Any]:
+    """Stage 5 recommendation entrypoint with condition-aware safety filtering."""
+
+    return recommend_from_dataset(
+        symptoms,
+        rows,
+        red_flags=red_flags,
+        user_input=user_input,
+        context_override=context_override,
+        detected_conditions=detected_conditions,
+    )
 
 
 def main() -> int:
@@ -729,7 +858,7 @@ def main() -> int:
         args.text,
         semantic_threshold=0.65,
         semantic_top_margin=0.08,
-        semantic_max_symptoms=3,
+        semantic_max_symptoms=2,
         enable_semantic_fallback=True,
     )
 

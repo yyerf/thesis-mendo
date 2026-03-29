@@ -513,6 +513,13 @@
       width: 100%; max-width: 700px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 16px;
       padding: 32px 24px;
+      height: auto;
+    }
+    .analysis-result:has(.cp-graph) {
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
     }
 
     .patient-badge {
@@ -580,47 +587,73 @@
       font-size: 12px; color: var(--zinc-500); margin-top: 14px; font-style: italic;
     }
 
+    .clarify-page {
+      width: 100%;
+      text-align: center;
+      padding: 8px 0 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .clarify-page-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--zinc-800);
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+      width: 100%;
+      text-align: center;
+    }
+    .clarify-page-question {
+      max-width: 560px;
+      margin: 0 auto 18px;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--zinc-700);
+      font-weight: 500;
+      width: 100%;
+      text-align: center;
+    }
     .clarify-box {
-      background: linear-gradient(135deg, #fffbf0 0%, #fff8e8 100%);
-      border: 2px solid #f6d76e;
-      border-radius: 16px; padding: 28px;
-      box-shadow: 0 2px 12px rgba(246, 215, 110, 0.15);
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      border-radius: var(--radius);
+      padding: 18px;
+      max-width: 620px;
+      margin: 0 auto;
     }
     .clarify-box .clarify-header {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px;
     }
     .clarify-box .clarify-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0;
+      display: none;
     }
     .clarify-box h3 {
-      font-size: 17px; font-weight: 800; color: #78350f; margin: 0;
+      font-size: 15px; font-weight: 700; color: var(--zinc-700); margin: 0;
     }
     .clarify-box .clarify-subtitle {
-      font-size: 13px; color: #92400e; font-weight: 500;
+      font-size: 12px; color: var(--zinc-500); font-weight: 500;
     }
     .clarify-box p {
       font-size: 14px; color: #78350f; margin-bottom: 18px;
       line-height: 1.6; display: none;
     }
-    .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .clarify-btn {
-      flex: 1; min-width: 140px; padding: 18px 16px;
-      border: 2px solid var(--zinc-200); border-radius: 14px;
+      flex: 0 1 280px; min-width: 140px; padding: 18px 16px;
+      border: 1px solid var(--zinc-200); border-radius: var(--radius);
       background: var(--white); cursor: pointer;
       text-align: center; transition: all 0.25s;
       font-family: var(--font);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      box-shadow: none;
     }
     .clarify-btn:hover {
-      border-color: var(--blue-400);
-      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
-      transform: translateY(-2px);
+      border-color: var(--zinc-400);
+      box-shadow: none;
+      transform: none;
     }
     .clarify-btn:active { transform: translateY(0); }
-    .clarify-btn .emoji { font-size: 32px; margin-bottom: 6px; }
+    .clarify-btn .emoji { display: none; }
     .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
     .clarify-btn .desc { font-size: 12px; color: var(--zinc-500); margin-top: 4px; line-height: 1.4; }
 
@@ -696,6 +729,47 @@
     }
     .rec-disclaimer strong { color: var(--zinc-600); }
 
+    .symptom-focus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .symptom-focus-card {
+      border: 1px solid var(--zinc-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--white);
+    }
+    .symptom-focus-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--zinc-500);
+      margin-bottom: 8px;
+    }
+    .symptom-focus-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .symptom-focus-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 100px;
+      background: var(--blue-50);
+      color: var(--blue-700);
+      border: 1px solid var(--blue-200);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .symptom-focus-empty {
+      font-size: 12px;
+      color: var(--zinc-500);
+    }
+
     /* Results footer buttons */
     .results-actions {
       display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;
@@ -732,12 +806,17 @@
       .section-title { font-size: 26px; }
       .pain-value-display { font-size: 56px; }
       .age-display input { font-size: 32px; width: 120px; }
+      .clarify-page-title { font-size: 24px; }
+      .clarify-page-question { font-size: 16px; }
       .kiosk-step span:not(.num) { display: none; }
       .home-cta-text { font-size: 17px; }
       .panel-content { padding: 28px 16px; }
       .analysis-result { padding: 24px 16px; }
       .clarify-buttons { flex-direction: column; }
       .results-actions { flex-direction: column; }
+      .symptom-focus-grid { grid-template-columns: 1fr; }
+      .cp-canvas { height: 440px; }
+      .cp-node { font-size: 10px; padding: 6px; }
 
       /* Topbar — hide logo, center steps */
       .kiosk-brand { display: none; }
@@ -1221,6 +1300,7 @@
       if (!res.ok) throw new Error(data.error || 'Analysis failed');
 
       analysisData = data;
+      analysisData.detected_conditions = data.detected_conditions || [];
       renderAnalysis(data);
     } catch (err) {
       showToast(err.message, 'error');
@@ -1233,7 +1313,7 @@
     const container = document.getElementById('analysisResult');
     container.classList.remove('hidden');
 
-    const symptoms = data.symptoms || [];
+    const symptoms = data.symptoms_display || data.symptoms || [];
     const rec = data.recommendation || {};
     const source = data.source || 'unknown';
     const referral = data.referral || null;
@@ -1264,14 +1344,59 @@
       container.innerHTML = `
         <div class="no-symptoms">
           <div class="icon">&#129300;</div>
-          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No symptoms detected</h3>
-          <p>We couldn't identify specific symptoms. Try describing how you feel more clearly.</p>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Input outside current scope</h3>
+          <p>It seems like the input you gave is outside the scope of Mendo-v3 right now.</p>
           <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
-            Example: "Masakit ulo ko, may ubo, tapos nilalagnat"
+            Please try a simple symptom description. Example: "Masakit ulo ko, may ubo, tapos nilalagnat"
           </p>
         </div>`;
       document.getElementById('assessAgainBtn').classList.remove('hidden');
       document.getElementById('exitBtn').classList.remove('hidden');
+      return;
+    }
+
+    if (rec.action === 'ask_clarify') {
+      const clarifyType = rec.clarify_type || 'COUGH';
+      const questionText = rec.question || 'Please answer this quick question so we can recommend the right medicine.';
+      let buttonsHtml = '';
+
+      if (rec.options && rec.options.length) {
+        const descMap = {
+          'SIPON_VIRAL_COLD': 'May kasama ring lagnat o ubo',
+          'SIPON_ALLERGY': 'Madalas bumabahing, makati ilong',
+          'SIPON_COLD_WEATHER': 'Galing sa malamig o naulan',
+          'DIARRHEA_FOOD_POISONING': 'Kumain ng panis o expired',
+          'DIARRHEA_NON_INFECTIOUS': 'Hindi naman panis ang kinain',
+          'STOMACH_ACIDIC': 'Maanghang o nasusunog sa tiyan',
+          'STOMACH_CRAMPING': 'Pulikat, kabag, o bloating',
+        };
+        buttonsHtml = rec.options.map(opt => `
+          <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
+            <div class="label">${opt.label.split(' / ')[0]}</div>
+            <div class="desc">${descMap[opt.value] || opt.label.split(' / ').slice(1).join(' / ') || ''}</div>
+          </button>`).join('');
+      } else {
+        buttonsHtml = `
+          <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
+            <div class="label">Dry Cough</div>
+            <div class="desc">Walang plema / No phlegm</div>
+          </button>
+          <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
+            <div class="label">Wet Cough</div>
+            <div class="desc">May plema / With phlegm</div>
+          </button>`;
+      }
+
+      container.innerHTML = `
+        <div class="clarify-page">
+          <div class="clarify-page-title">Quick Question</div>
+          <div class="clarify-page-question">${questionText}</div>
+          <div class="clarify-box">
+            <div class="clarify-buttons">
+              ${buttonsHtml}
+            </div>
+          </div>
+        </div>`;
       return;
     }
 
@@ -1301,73 +1426,6 @@
         </div>
       </div>`;
 
-    if (rec.action === 'ask_clarify') {
-      const clarifyType = rec.clarify_type || 'COUGH';
-      let buttonsHtml = '';
-
-      // Map clarify types to display config
-      const clarifyConfig = {
-        'DIARRHEA_CONTEXT': { icon: '🩺', title: 'Quick Question', subtitle: 'Para sa mas tamang gamot' },
-        'STOMACH_CONTEXT':  { icon: '🩺', title: 'Quick Question', subtitle: 'Para sa mas tamang gamot' },
-        'SIPON_CONTEXT':    { icon: '🤧', title: 'Quick Question', subtitle: 'Para malaman ang dahilan ng sipon' },
-        'COUGH':            { icon: '💬', title: 'Quick Question', subtitle: 'Para sa tamang cough medicine' },
-      };
-      const config = clarifyConfig[clarifyType] || { icon: '💬', title: 'Quick Question', subtitle: 'Please answer so we can recommend better' };
-
-      if (rec.options && rec.options.length) {
-        const emojiMap = {
-          'DIARRHEA_FOOD_POISONING': '🍲',
-          'DIARRHEA_NON_INFECTIOUS': '👍',
-          'STOMACH_ACIDIC':  '🔥',
-          'STOMACH_CRAMPING': '💫',
-          'SIPON_VIRAL_COLD': '🤒',
-          'SIPON_ALLERGY': '🤧',
-          'SIPON_COLD_WEATHER': '❄️',
-        };
-        const descMap = {
-          'SIPON_VIRAL_COLD': 'May kasama ring lagnat o ubo',
-          'SIPON_ALLERGY': 'Madalas bumabahing, makati ilong',
-          'SIPON_COLD_WEATHER': 'Galing sa malamig o naulan',
-          'DIARRHEA_FOOD_POISONING': 'Kumain ng panis o expired',
-          'DIARRHEA_NON_INFECTIOUS': 'Hindi naman panis ang kinain',
-          'STOMACH_ACIDIC': 'Maanghang o nasusunog sa tiyan',
-          'STOMACH_CRAMPING': 'Pulikat, kabag, o bloating',
-        };
-        buttonsHtml = rec.options.map(opt => `
-          <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
-            <div class="emoji">${emojiMap[opt.value] || '💊'}</div>
-            <div class="label">${opt.label.split(' / ')[0]}</div>
-            <div class="desc">${descMap[opt.value] || opt.label.split(' / ').slice(1).join(' / ') || ''}</div>
-          </button>`).join('');
-      } else {
-        buttonsHtml = `
-          <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
-            <div class="emoji">&#127788;&#65039;</div>
-            <div class="label">Dry Cough</div>
-            <div class="desc">Walang plema / No phlegm</div>
-          </button>
-          <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
-            <div class="emoji">&#128167;</div>
-            <div class="label">Wet Cough</div>
-            <div class="desc">May plema / With phlegm</div>
-          </button>`;
-      }
-
-      html += `
-        <div class="clarify-box">
-          <div class="clarify-header">
-            <div class="clarify-icon">${config.icon}</div>
-            <div>
-              <h3>${config.title}</h3>
-              <div class="clarify-subtitle">${config.subtitle}</div>
-            </div>
-          </div>
-          <div class="clarify-buttons">
-            ${buttonsHtml}
-          </div>
-        </div>`;
-    }
-
     container.innerHTML = html;
 
     if (rec.action === 'recommend') {
@@ -1383,6 +1441,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           original_symptoms: analysisData.symptoms,
+          original_conditions: analysisData.detected_conditions || [],
           clarification: coughType,
           age: patientAge,
         }),
@@ -1391,6 +1450,8 @@
       if (!res.ok) throw new Error(data.error || 'Clarification failed');
 
       analysisData.symptoms = data.symptoms;
+      analysisData.symptoms_display = data.symptoms_display || data.symptoms;
+      analysisData.detected_conditions = data.detected_conditions || analysisData.detected_conditions || [];
       analysisData.recommendation = data.recommendation;
       renderAnalysis(analysisData);
     } catch (err) {
@@ -1409,6 +1470,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           original_symptoms: origSymptoms,
+          original_conditions: analysisData.detected_conditions || [],
           clarify_type: clarifyType,
           clarification: value,
           age: patientAge,
@@ -1418,6 +1480,8 @@
       if (!res.ok) throw new Error(data.error || 'Clarification failed');
 
       analysisData.symptoms = data.symptoms;
+      analysisData.symptoms_display = data.symptoms_display || data.symptoms;
+      analysisData.detected_conditions = data.detected_conditions || analysisData.detected_conditions || [];
       analysisData.recommendation = data.recommendation;
       renderAnalysis(analysisData);
     } catch (err) {
@@ -1458,11 +1522,115 @@
     goToStep(2);
   };
 
+  function escHtml(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function polar(cx, cy, r, angleDeg) {
+    const rad = angleDeg * Math.PI / 180;
+    return { x: cx + Math.cos(rad) * r, y: cy + Math.sin(rad) * r };
+  }
+
+  function ringPositions(count, cx, cy, r, startDeg = -90, spanDeg = 360) {
+    if (!count) return [];
+    if (count === 1) return [polar(cx, cy, r, startDeg)];
+    const step = spanDeg / count;
+    return Array.from({ length: count }, (_, i) => polar(cx, cy, r, startDeg + i * step));
+  }
+
+  function clipLabel(label, maxLen = 28) {
+    const s = String(label || '');
+    if (s.length <= maxLen) return s;
+    return s.slice(0, maxLen - 1) + '…';
+  }
+
   function renderRecommendations(data) {
     const container = document.getElementById('analysisResult');
     const recs = (data.recommendation?.recommendations || []).slice(0, 6);
-    const symptoms = data.symptoms || [];
+    const symptoms = data.symptoms_display || data.symptoms || [];
     const referral = data.referral || null;
+
+    function reasonMatches(rec, reasonList) {
+      const reasons = rec?.reasons || [];
+      return reasonList.some(r => reasons.includes(r));
+    }
+
+    function medicineMatchesSymptom(rec, symptom) {
+      // Primary mapping: deterministic reason tags from backend ranking logic.
+      const byReason = {
+        'COUGH_GENERAL': ['general_cough_match', 'dry_cough_match', 'productive_cough_match'],
+        'COUGH_DRY': ['dry_cough_match', 'general_cough_match'],
+        'COUGH_PRODUCTIVE': ['productive_cough_match', 'general_cough_match'],
+        'RUNNY_NOSE': ['runny_nose_match', 'sipon_allergy_match', 'nasal_congestion_match'],
+        'RUNNY_NOSE_ALLERGY_CONTEXT': ['sipon_allergy_match', 'allergy_match', 'runny_nose_match'],
+        'RUNNY_NOSE_VIRAL_CONTEXT': ['runny_nose_match', 'nasal_congestion_match'],
+        'RUNNY_NOSE_COLD_WEATHER_CONTEXT': ['runny_nose_match', 'nasal_congestion_match'],
+        'NASAL_CONGESTION': ['nasal_congestion_match', 'runny_nose_match'],
+        'ALLERGIC_RHINITIS': ['allergy_match', 'sipon_allergy_match'],
+        'FEVER': ['fever_match'],
+        'HEADACHE': ['headache_primary_match', 'headache_cold_context_match'],
+        'BODY_ACHES': ['body_aches_match'],
+        'DIARRHEA': ['diarrhea_match', 'ors_hydration_support', 'ors_food_poisoning_priority', 'probiotic_food_poisoning'],
+        'DIARRHEA_INFECTIOUS_CONTEXT': ['ors_food_poisoning_priority', 'probiotic_food_poisoning', 'diarrhea_supportive'],
+        'DIARRHEA_NON_INFECTIOUS_CONTEXT': ['diarrhea_match', 'ors_hydration_support'],
+        'STOMACH_ACHE': ['stomach_ache_match', 'acidic_stomach_match', 'cramping_stomach_match'],
+        'STOMACH_ACHE_ACIDIC': ['acidic_stomach_match', 'stomach_ache_match'],
+        'STOMACH_ACHE_CRAMPING': ['cramping_stomach_match', 'stomach_ache_match'],
+        'SORE_THROAT': ['sore_throat_match'],
+        'RASHES': ['rash_match', 'allergy_match'],
+      };
+
+      if (byReason[symptom] && reasonMatches(rec, byReason[symptom])) {
+        return true;
+      }
+
+      // Secondary fallback: lexical checks when reason tags are sparse.
+      const cat = (rec.drug_category || '').toLowerCase();
+      const ps = (rec.primary_symptom || '').toLowerCase();
+      const brand = (rec.brand || '').toLowerCase();
+
+      if (symptom.startsWith('COUGH')) {
+        return cat.includes('cough') || ps.includes('cough') || cat.includes('expectorant') || cat.includes('suppressant');
+      }
+      if (symptom.startsWith('RUNNY_NOSE') || symptom === 'NASAL_CONGESTION') {
+        return cat.includes('cold') || cat.includes('allergy') || ps.includes('runny') || ps.includes('nasal') || ps.includes('sipon');
+      }
+      if (symptom === 'STOMACH_ACHE' || symptom.startsWith('STOMACH_ACHE_')) {
+        return cat.includes('antacid') || cat.includes('antispasmodic') || ps.includes('stomach') || ps.includes('abdominal');
+      }
+      if (symptom === 'DIARRHEA' || symptom.startsWith('DIARRHEA_')) {
+        return cat.includes('rehydration') || cat.includes('anti-diarrhea') || ps.includes('diarrhea') || brand.includes('hydrite');
+      }
+      return false;
+    }
+
+    function buildSymptomFocusCards(symptomList, medicineList) {
+      if (!symptomList.length || !medicineList.length) {
+        return '';
+      }
+
+      const cards = symptomList.map(sym => {
+        const matches = medicineList.filter(m => medicineMatchesSymptom(m, sym)).slice(0, 3);
+        const pills = matches.map(m => `<span class="symptom-focus-pill">${m.brand}</span>`).join('');
+        const emptyText = sym === 'COUGH_GENERAL'
+          ? 'Specify if cough is dry or with phlegm'
+          : 'See list below';
+        return `
+          <div class="symptom-focus-card">
+            <div class="symptom-focus-title">Medicine for ${formatSymptom(sym)}</div>
+            <div class="symptom-focus-pills">
+              ${pills || `<span class="symptom-focus-empty">${emptyText}</span>`}
+            </div>
+          </div>`;
+      }).join('');
+
+      return `<div class="symptom-focus-grid">${cards}</div>`;
+    }
 
     let html = `
       <div class="patient-badge">
@@ -1485,19 +1653,28 @@
       // Check if the backend sent a message (e.g., cold-weather advisory)
       const recMsg = data.recommendation?.message || '';
       if (recMsg) {
-        html += `
-          <div class="advisory-card">
-            <div class="adv-icon">💡</div>
-            <h3>Possible Cause Identified</h3>
-            <p>Based on your symptoms, your runny nose may be caused by exposure to <strong>cold weather</strong> or sudden temperature changes.</p>
-            <p style="font-size:13px;color:#0c4a6e;">❄️ When cold air enters the nose, it can trigger extra mucus production. This is common and usually not a serious illness.</p>
-            <ul class="tips-list">
-              <li>Magpahinga sa mainit na lugar (Rest in a warm place)</li>
-              <li>Uminom ng mainit na tubig o sabaw (Drink warm fluids)</li>
-              <li>Kung hindi mawala sa 2-3 araw, kumonsulta sa pharmacist</li>
-            </ul>
-            <p class="adv-note">If symptoms persist beyond 2-3 days or worsen, please consult a pharmacist or doctor.</p>
-          </div>`;
+        if (recMsg.toLowerCase().includes('malamig na panahon')) {
+          html += `
+            <div class="advisory-card">
+              <div class="adv-icon">💡</div>
+              <h3>Possible Cause Identified</h3>
+              <p>Based on your symptoms, your runny nose may be caused by exposure to <strong>cold weather</strong> or sudden temperature changes.</p>
+              <p style="font-size:13px;color:#0c4a6e;">When cold air enters the nose, it can trigger extra mucus production. This is common and usually not a serious illness.</p>
+              <ul class="tips-list">
+                <li>Magpahinga sa mainit na lugar (Rest in a warm place)</li>
+                <li>Uminom ng mainit na tubig o sabaw (Drink warm fluids)</li>
+                <li>Kung hindi mawala sa 2-3 araw, kumonsulta sa pharmacist</li>
+              </ul>
+              <p class="adv-note">If symptoms persist beyond 2-3 days or worsen, please consult a pharmacist or doctor.</p>
+            </div>`;
+        } else {
+          html += `
+            <div class="no-symptoms">
+              <div class="icon">&#128138;</div>
+              <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Consult Pharmacist</h3>
+              <p>${recMsg}</p>
+            </div>`;
+        }
       } else {
         html += `
           <div class="no-symptoms">
@@ -1516,6 +1693,7 @@
       <div class="detected-section">
         <h3>Recommended for: ${symptoms.map(s => formatSymptom(s)).join(', ')}</h3>
       </div>
+      ${buildSymptomFocusCards(symptoms, recs)}
       <div class="rec-list">
         ${recs.map((r, i) => `
           <div class="rec-card ${r.in_stock === false ? 'out-of-stock' : ''}">
@@ -1565,6 +1743,13 @@
       'RASHES': 'Skin Rash / Hives',
       'DIARRHEA': 'Diarrhea',
       'STOMACH_ACHE': 'Stomach Ache',
+      'STOMACH_ACHE_ACIDIC': 'Stomach Ache (Acidic/Burning)',
+      'STOMACH_ACHE_CRAMPING': 'Stomach Ache (Cramping/Bloating)',
+      'DIARRHEA_INFECTIOUS_CONTEXT': 'Diarrhea (Possible Food-borne)',
+      'DIARRHEA_NON_INFECTIOUS_CONTEXT': 'Diarrhea (Non-infectious Context)',
+      'RUNNY_NOSE_ALLERGY_CONTEXT': 'Runny Nose (Allergy-related)',
+      'RUNNY_NOSE_COLD_WEATHER_CONTEXT': 'Runny Nose (Cold-weather Trigger)',
+      'RUNNY_NOSE_VIRAL_CONTEXT': 'Runny Nose (Viral/Cold Context)',
     };
     return map[s] || s.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase());
   }
@@ -1638,6 +1823,14 @@
     });
   } else {
     voiceBtn.style.display = 'none';
+  }
+
+  function formatCondition(c) {
+    const map = {
+      'HYPERTENSION': 'Hypertension / High Blood',
+      'PREGNANCY': 'Pregnancy',
+    };
+    return map[c] || c.replace(/_/g, ' ').toLowerCase().replace(/(^|\s)\S/g, ch => ch.toUpperCase());
   }
 
 })();

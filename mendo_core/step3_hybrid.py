@@ -19,152 +19,816 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .step1 import extract_symptoms as extract_symptoms_dictionary
+from .step1 import extract_conditions as extract_conditions_dictionary
 
 
 # ---------------------------------------------------------------------------
-# RED-FLAG / TRIAGE LAYER
+# STAGE 0 — TRIAGE / RED-FLAG SAFETY LAYER
 # ---------------------------------------------------------------------------
-# Emergency symptoms that should NOT receive OTC recommendations.
-# The system must redirect to "Consult a doctor immediately."
-# Covers English, Tagalog, Bisaya, and Taglish.
+# Uses proximity-based co-occurrence within token windows plus explicit
+# exclusion tokens (negative constraints) to prevent over-triage.
+#
+# Architecture
+# ─────────────────────────────────────────────────────────────────────────
+# _TRIAGE_RULES    — co-occurrence rules: A-term + B-term within `window`
+#                    tokens, vetoed by `exclude_terms` in `exclude_window`
+# _detect_*        — special-case handlers for patterns that need 3-part
+#                    matching (dehydration, hyperthermia, pregnancy)
+# Direct-keyword   — single-word emergencies that fire unconditionally
+# ---------------------------------------------------------------------------
 
-RED_FLAG_PATTERNS: Dict[str, List[str]] = {
-    "chest_pain": [
-        # English
-        r"\bchest\s+pain\b",
-        r"\bchest\s+tightness\b",
-        r"\btight\s+chest\b",
-        r"\bpain\s+in\s+(my\s+)?chest\b",
-        r"\bchest\s+hurts?\b",
-        # Tagalog
-        r"\bsakit\s+(ng\s+|sa\s+)?dibdib\b",
-        r"\bmasakit\s+(ang\s+)?dibdib\b",
-        r"\bsumasakit\s+(ang\s+)?dibdib\b",
-        r"\bkirot\s+(ng\s+|sa\s+)?dibdib\b",
-        # Bisaya
-        r"\bsakit\s+(akong\s+)?dughan\b",
-    ],
-    "difficulty_breathing": [
-        # English
-        r"\bshortness\s+of\s+breath\b",
-        r"\bdifficulty\s+breathing\b",
-        r"\bcan'?t\s+breathe\b",
-        r"\bhard\s+to\s+breathe\b",
-        r"\btrouble\s+breathing\b",
-        r"\bbreathing\s+difficulty\b",
-        r"\bstruggle\s+to\s+breathe\b",
-        # Tagalog
-        r"\bhirap\s+huminga\b",
-        r"\bhindi\s+(ako\s+)?makahinga\b",
-        r"\bnahihirapan\s+huminga\b",
-        r"\bhingal\s+na\s+hingal\b",
-        r"\bdi\s+(ako\s+)?makahinga\b",
-        # Bisaya
-        r"\blis[ou]d\s+m[ou]ginhawa\b",
-        r"\blis[ou]d\s+ginhawa\b",
-        r"\bdili\s+(ko\s+)?makaginhawa\b",
-        r"\bdili\s+(ko\s+)?moginhawa\b",
-    ],
-    "blood_in_stool": [
-        r"\bblood\s+in\s+(my\s+)?(stool|poop|feces)\b",
-        r"\bbloody\s+(stool|poop|diarrhea)\b",
-        r"\bmay\s+dugo\s+(sa|ang)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
-        r"\bdugo\s+(sa|ang)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
-        r"\bmadugo\s+(ang\s+)?(dumi|tae|bawas|stool)\b",
-        r"\bnag\s+dugo\s+(ang\s+|akong\s+)?(dumi|tae|bawas|stool)\b",
-        r"\bmay\s+(blood|dugo)\s+(sa|ang)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
-        r"\b(dugo|blood)\s+(sa|ang|akong)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
-        # Bisaya: "naay dugo (gamay) sa akong tae" — allow filler words (gamay/daghan/etc.)
-        r"\bna+y\s+dugo(\s+\w+){0,3}\s+(sa|ang|akong)(\s+\w+){0,2}\s+(dumi|tae|bawas|stool)\b",
-        # Catch-all: any mention of dugo/blood near stool words with up to 4 tokens gap
-        r"\b(dugo|blood)\b(\s+\w+){0,4}\s+\b(dumi|tae|bawas|stool)\b",
-        r"\b(dumi|tae|bawas|stool)\b(\s+\w+){0,4}\s+\b(dugo|blood)\b",
-    ],
-    "blood_vomit": [
-        r"\bvomiting\s+blood\b",
-        r"\bblood\s+in\s+(my\s+)?vomit\b",
-        r"\bbloody\s+vomit\b",
-        r"\bnag(su)?suka\s+(ng|ako\s+ng?)\s+dugo\b",
-        r"\bmay\s+dugo\s+(sa|ang)\s+suka\b",
-    ],
-    "severe_allergic_reaction": [
-        r"\banaphyla(xis|ctic)\b",
-        r"\bswollen\s+(throat|tongue|lips?|face)\b",
-        r"\bface\s+swelling\b",
-        r"\bnamamaga\s+(ang\s+)?(lalamunan|dila|labi|mukha)\b",
-        r"\bhives\s+all\s+over\b",
-        r"\bcan'?t\s+swallow\b",
-        r"\bhindi\s+(ako\s+)?makalunok\b",
-    ],
-    "high_fever_prolonged": [
-        r"\bfever\s+(?:of\s+)?(?:4[0-9]|5[0-9])\b",
-        r"\b(?:4[0-9]|5[0-9])\s*(?:degrees?|deg|celsius)\b",
-        r"\blagnat\s*(?:na\s*)?(?:4[0-9]|5[0-9])\b",
-        r"\b(?:4[0-9]|5[0-9])\s*(?:degrees?|deg)\s*(?:na\s+)?lagnat\b",
-        r"\bfever\b.*\b(?:4[0-9]|5[0-9])\b",
-        r"\blagnat\b.*\b(?:4[0-9]|5[0-9])\b",
-    ],
-    "seizure": [
-        r"\bseizure\b",
-        r"\bconvulsion\b",
-        r"\bkombulsyon\b",
-        r"\bnanginginig\s+(buong|ang\s+buong)\s+katawan\b",
-    ],
-    "loss_of_consciousness": [
-        r"\bfainted\b",
-        r"\bpassed\s+out\b",
-        r"\bunconscious\b",
-        r"\bloss\s+of\s+consciousness\b",
-        r"\bnahimatay\b",
-        r"\bnawalan\s+ng\s+malay\b",
-        r"\bhinimatay\b",
-    ],
-}
-
-# Human-friendly label → message mapping
 RED_FLAG_MESSAGES: Dict[str, str] = {
-    "chest_pain": "Chest pain detected",
-    "difficulty_breathing": "Difficulty breathing detected",
-    "blood_in_stool": "Blood in stool detected",
-    "blood_vomit": "Blood in vomit detected",
-    "severe_allergic_reaction": "Severe allergic reaction signs detected",
-    "high_fever_prolonged": "Dangerously high fever detected (≥40°C)",
-    "seizure": "Seizure/convulsion reported",
-    "loss_of_consciousness": "Loss of consciousness reported",
+    # GI bleeding
+    "blood_in_stool":            "Possible GI hemorrhage — blood detected in stool",
+    "blood_vomit":               "Possible upper GI bleed — blood detected in vomit",
+    # Cardiac
+    "chest_pain":                "Possible cardiac emergency — chest pain or pressure",
+    # Respiratory
+    "difficulty_breathing":      "Respiratory emergency — difficulty or inability to breathe",
+    # Dengue / viral
+    "dengue_warning":            "Dengue / viral hemorrhagic fever risk — fever with rashes or dengue keyword",
+    # Neurological
+    "stroke_warning":            "Possible neurological event (stroke) — paralysis, numbness, or speech loss",
+    # Dehydration
+    "severe_dehydration":        "Severe dehydration risk — diarrhea with absent or reduced urine output",
+    # Pregnancy
+    "pregnancy_contraindication": "Pregnancy detected — OTC selection requires pharmacist guidance",
+    # Hyperthermia
+    "high_fever_prolonged":      "Dangerous hyperthermia — fever at or above 40 °C",
+    # Direct emergencies
+    "seizure":                   "Seizure / convulsion reported — seek emergency care immediately",
+    "loss_of_consciousness":     "Loss of consciousness reported — seek emergency care immediately",
+    # Anaphylaxis
+    "severe_allergic_reaction":  "Severe allergic reaction / anaphylaxis signs — seek emergency care",
+    # Body-part bleeding
+    "head_bleeding":             "Head or facial bleeding detected — seek emergency medical care",
+    "nose_bleeding":             "Nosebleed detected — if persistent or accompanied by fever, seek medical attention",
+    "ear_bleeding":              "Ear bleeding detected — may indicate head trauma or ruptured eardrum",
+    "hemoptysis":                "Coughing blood detected — may indicate serious lung or respiratory condition",
+    "blood_in_urine":            "Blood in urine (hematuria) detected — seek medical attention",
+    "hypertension_risk":         "Hypertension / high blood pressure reported — consult medical expert before OTC self-medication",
 }
+
+# ---------------------------------------------------------------------------
+# Co-occurrence rules
+# Each rule fires when at least one A-term AND one B-term appear within
+# `window` tokens of each other, AND no `exclude_terms` appear within
+# `exclude_window` tokens of that matched span.
+# ---------------------------------------------------------------------------
+_TRIAGE_RULES: List[Dict[str, Any]] = [
+    # ── 1. Gastrointestinal Hemorrhage (lower GI) ─────────────────────────
+    {
+        "flag":    "blood_in_stool",
+        "message": RED_FLAG_MESSAGES["blood_in_stool"],
+        "a_terms": [
+            # English
+            "blood", "bleeding", "bleed", "bloody",
+            # Tagalog / Bisaya
+            "dugo", "nagdurugo", "nadugo", "madugo", "maduguon", "gadugo",
+            "may dugo", "naay dugo",
+        ],
+        "b_terms": [
+            # English
+            "stool", "poop", "feces", "bowel", "defecate",
+            # Tagalog
+            "dumi", "tae", "bawas", "kalibang", "pagtatae",
+            # Bisaya
+            "hugaw", "libang",
+        ],
+        "window": 8,
+    },
+    # ── 2. Upper GI Bleed (blood in vomit) ───────────────────────────────
+    {
+        "flag":    "blood_vomit",
+        "message": RED_FLAG_MESSAGES["blood_vomit"],
+        "a_terms": [
+            "blood", "bleeding", "bleed", "bloody",
+            "dugo", "nagdurugo", "nadugo", "madugo", "maduguon", "gadugo",
+            "may dugo", "naay dugo",
+        ],
+        "b_terms": [
+            # English
+            "vomit", "vomiting", "vomited", "threw up",
+            # Tagalog
+            "suka", "nagsuka", "nasuka", "nagsusuka", "nagsuka", "nagsusuka",
+            "sumuka", "lusuka",
+            # Bisaya
+            "suka", "misuka", "nagsuka",
+        ],
+        "window": 7,
+    },
+    # ── 3. Cardiac Emergency ──────────────────────────────────────────────
+    {
+        "flag":    "chest_pain",
+        "message": RED_FLAG_MESSAGES["chest_pain"],
+        "a_terms": [
+            # English pain / pressure descriptors
+            "pain", "pains", "painful", "hurts", "hurt", "aching", "aches",
+            "tight", "tightness", "pressure", "pressing",
+            "squeezing", "squeezed", "crushing", "crush",
+            "heavy", "heaviness", "burning", "radiating",
+            # Tagalog
+            "masakit", "sumasakit", "kirot", "mabigat",
+            "presyon", "nagbibigat", "paninikip", "paninigas",
+            # Bisaya
+            "sakit", "gikirot", "bug at", "mabug at",
+        ],
+        "b_terms": [
+            "chest", "dibdib", "dughan", "pecho",
+            # Heart — "sumasakit ang puso ko" must triage as cardiac
+            "puso", "heart",
+        ],
+        "window": 6,
+        # Chest pain caused purely by coughing/congestion is OTC-treatable
+        "exclude_terms": [
+            "halak", "plema", "phlegm", "ubo", "cough", "coughing",
+            "congestion", "kumakalansing", "inuubo", "gi-ubo",
+        ],
+        "exclude_window": 10,
+    },
+    # ── 4. Respiratory Emergency ──────────────────────────────────────────
+    {
+        "flag":    "difficulty_breathing",
+        "message": RED_FLAG_MESSAGES["difficulty_breathing"],
+        "a_terms": [
+            # English
+            "hirap", "nahihirapan", "nahirapan", "hindi", "di",
+            "wala", "walang", "mahirap",
+            # Tagalog
+            "hirap huminga", "hirap ng paghinga",
+            # Bisaya
+            "lisod", "lisud", "dili", "walay", "mabudlay",
+        ],
+        "b_terms": [
+            # English
+            "breathing", "breathe", "breath",
+            # Tagalog
+            "hinga", "huminga", "hihinga", "paghinga",
+            "makahinga", "makapaghinga", "makaginhawa",
+            # Bisaya
+            "ginhawa", "muginhawa", "moginhawa",
+        ],
+        "window": 7,
+    },
+    # ── 5. Suspected Dengue / Viral Hemorrhagic Fever ─────────────────────
+    {
+        "flag":    "dengue_warning",
+        "message": RED_FLAG_MESSAGES["dengue_warning"],
+        "a_terms": [
+            # Fever terms (signal)
+            "fever", "lagnat", "hilanat", "nilalagnat", "nalalagnat",
+            "gihilanat", "init", "mainit",
+        ],
+        "b_terms": [
+            # Rash / spots
+            "rash", "rashes", "spots", "red spots", "petechiae",
+            "pantal", "butlig", "mantsa", "namumula",
+        ],
+        "window": 10,
+        # Bite-related hives / mild allergic reaction → OTC antihistamine okay
+        "exclude_terms": [
+            "kagat", "bite", "bitten", "insect", "lamok", "mosquito",
+            "allergy", "allergic", "alerdyi",
+        ],
+        "exclude_window": 10,
+    },
+    # ── 6. Neurological Event — Stroke ───────────────────────────────────
+    {
+        "flag":    "stroke_warning",
+        "message": RED_FLAG_MESSAGES["stroke_warning"],
+        "a_terms": [
+            # Numbness / loss of sensation
+            "numb", "numbness", "manhid", "namamanhid", "nangalay",
+            "pamamanhid", "namimighati",
+            # Weakness / paralysis
+            "weak", "weakness", "nanghina", "nanghihina", "humina",
+            "paralysis", "paralyzed", "paralysed",
+            "hindi makagalaw", "di makagalaw", "dili makalihok",
+            # Sudden speech loss (stroke sign)
+            "slurred", "paos",
+            "hindi makapagsalita", "di makapagsalita",
+            "hindi makasalita", "dili makasulti",
+        ],
+        "b_terms": [
+            # Face / head area
+            "face", "mukha", "pisngi",
+            # Half / side body
+            "half", "kalahati", "one side", "tabi", "isang tabi",
+            # Limbs
+            "arm", "kamay", "braso",
+            "leg", "binti", "paa",
+            # General body
+            "body", "katawan", "lawas",
+        ],
+        "window": 8,
+        # Dental nerve pain radiating to face → OTC analgesic okay
+        "exclude_terms": [
+            "ngipin", "tooth", "teeth", "dental", "molar",
+            "ipin", "panga", "labi",
+        ],
+        "exclude_window": 7,
+    },
+    # ── 7. Severe Allergic Reaction / Anaphylaxis ─────────────────────────
+    {
+        "flag":    "severe_allergic_reaction",
+        "message": RED_FLAG_MESSAGES["severe_allergic_reaction"],
+        "a_terms": [
+            # English
+            "swollen", "swelling", "swells", "swelled",
+            # Tagalog
+            "namamaga", "pamamaga", "nangamaga", "namaga", "lumobo",
+            # Bisaya
+            "namubong", "mubong",
+        ],
+        "b_terms": [
+            # Airways / face
+            "throat", "lalamunan", "tutunlan", "tilaok",
+            "tongue", "dila",
+            "lips", "labi",
+            "face", "mukha",
+            "airway",
+        ],
+        "window": 6,
+    },
+    # ── 8. Head / Facial Bleeding ───────────────────────────────────────────
+    {
+        "flag":    "head_bleeding",
+        "message": RED_FLAG_MESSAGES["head_bleeding"],
+        "a_terms": [
+            "blood", "bleed", "bleeding", "bled", "bloody", "hemorrhage",
+            "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+            "nadugo", "nagadugo", "naay dugo", "madugo", "maduguon", "gadugo",
+        ],
+        "b_terms": [
+            "head", "ulo", "bungo", "skull",
+            "noo", "forehead", "temple",
+            "mukha", "face", "pisngi",
+            "utak", "brain",
+        ],
+        "window": 6,
+    },
+    # ── 9. Nosebleed ────────────────────────────────────────────────────
+    {
+        "flag":    "nose_bleeding",
+        "message": RED_FLAG_MESSAGES["nose_bleeding"],
+        "a_terms": [
+            "blood", "bleed", "bleeding", "bled", "bloody",
+            "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+            "nadugo", "nagadugo", "naay dugo", "madugo", "gadugo",
+        ],
+        "b_terms": ["nose", "ilong", "nostrils", "nostril"],
+        "window": 6,
+    },
+    # ── 10. Ear Bleeding ─────────────────────────────────────────────
+    {
+        "flag":    "ear_bleeding",
+        "message": RED_FLAG_MESSAGES["ear_bleeding"],
+        "a_terms": [
+            "blood", "bleed", "bleeding", "bled", "bloody",
+            "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+            "nadugo", "nagadugo", "naay dugo", "madugo", "gadugo",
+        ],
+        "b_terms": ["ear", "ears", "tenga", "dalunggan"],
+        "window": 6,
+    },
+    # ── 11. Hemoptysis (Coughing Blood) ──────────────────────────────────────
+    {
+        "flag":    "hemoptysis",
+        "message": RED_FLAG_MESSAGES["hemoptysis"],
+        "a_terms": [
+            "blood", "bleed", "bleeding", "bled", "bloody",
+            "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+            "nadugo", "nagadugo", "naay dugo", "madugo", "gadugo",
+        ],
+        "b_terms": [
+            "cough", "coughing", "coughed", "coughs",
+            "ubo", "inuubo", "umuubo", "umubo", "inutubo",
+            "gi-ubo", "giubo", "nag-ubo", "nauubo", "mag-ubo",
+        ],
+        "window": 7,
+        # Avoid false positives when "blood" refers to BP/hypertension
+        # or when blood is explicitly denied (e.g., "walay dugo").
+        "exclude_terms": [
+            "high blood",
+            "highblood",
+            "blood pressure",
+            "hypertension",
+            "hypertensive",
+            "hbp",
+            "presyon",
+            "alta presyon",
+            "blood sugar",
+            "high sugar",
+            "diabetes",
+            "diabetic",
+            "walang dugo",
+            "wala dugo",
+            "walay dugo",
+            "no blood",
+            "without blood",
+        ],
+        "exclude_window": 8,
+    },
+    # ── 12. Hematuria (Blood in Urine) ─────────────────────────────────────
+    {
+        "flag":    "blood_in_urine",
+        "message": RED_FLAG_MESSAGES["blood_in_urine"],
+        "a_terms": [
+            "blood", "bleed", "bleeding", "bled", "bloody",
+            "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+            "nadugo", "nagadugo", "naay dugo", "madugo", "gadugo",
+        ],
+        "b_terms": [
+            "urine", "pee", "peed", "urinate", "urinating",
+            "ihi", "umiihi", "orina", "mihihi",
+        ],
+        "window": 8,
+    },
+]
+
+# ---------------------------------------------------------------------------
+# Direct single-keyword red flags (no co-occurrence required)
+# ---------------------------------------------------------------------------
+
+_PREGNANCY_TERMS = [
+    "buntis", "pregnant", "nagbubuntis", "naglilihi",
+    "pagbubuntis", "preggy", "expecting",
+]
+_PREGNANCY_EXCLUSIONS = [
+    # Proxy purchasing context: buying OTC for a pregnant relative
+    "asawa", "misis", "kapatid", "sister", "ate",
+    "wife", "girlfriend", "partner",
+    "nanay", "mama", "lola", "auntie", "tita",
+]
+
+_DIRECT_DENGUE_TERMS = [
+    # If the patient explicitly says "dengue", no co-occurrence needed.
+    "dengue",
+]
+
+_DIRECT_SEIZURE_TERMS = [
+    "seizure", "seizures", "convulsion", "convulsions",
+    "kombulsyon", "kumbulsyon", "fit", "fits",
+    "nanginginig buong katawan",
+]
+
+_DIRECT_LOSS_CONSCIOUSNESS_TERMS = [
+    "fainted", "fainting",
+    "passed out", "passing out",
+    "unconscious", "unresponsive",
+    "nahimatay", "hinimatay", "namatay sa pagod",
+    "nawalan ng malay", "nawalan ng ulirat",
+    "blackout", "blacked out",
+]
+
+_HYPERTENSION_TERMS = [
+    "high blood",
+    "highblood",
+    "blood pressure",
+    "high bp",
+    "hbp",
+    "hypertension",
+    "hypertensive",
+    "alta presyon",
+    "mataas presyon",
+    "taas presyon",
+    "presyon",
+]
+
+# OTC-target symptom cues. Used to suppress over-triage when hypertension is
+# mentioned as background/comorbidity after a contrastive boundary.
+_OTC_PRIMARY_SYMPTOM_CUES = [
+    "ubo", "cough", "sipon", "runny", "barado", "ilong",
+    "lagnat", "fever", "ulo", "headache", "tiyan", "stomach",
+    "pagtatae", "diarrhea", "rash", "pantal", "lalamunan", "throat",
+    "lawas", "katawan",
+]
+
+# Hyperthermia helpers
+_FEVER_TERMS = [
+    "fever", "lagnat", "hilanat", "hilanat",
+    "temp", "temperature", "init", "mainit",
+]
+_TEMP_EXCLUSIONS = [
+    "kilo", "kg", "pounds", "lb",
+    "edad", "years old", "years", "taon", "gulang",
+]
+
+# Severe dehydration helpers (3-part: diarrhea + negation + urine)
+# ---------------------------------------------------------------------------
+# Shared blood-term vocabulary (used by triage rules + blood-context filter)
+# ---------------------------------------------------------------------------
+_ALL_BLOOD_TERMS: List[str] = [
+    # English
+    "blood", "bleed", "bleeding", "bled", "bloody", "hemorrhage",
+    # Tagalog
+    "dugo", "nagdurugo", "nagdudugo", "dumudugo", "nagdugo",
+    "nadugo", "may dugo", "nagdididugo",
+    # Bisaya / Cebuano  ("naga dugo" tokenises as ["naga","dugo"] so "dugo" alone fires)
+    "nagadugo", "naay dugo", "madugo", "maduguon", "gadugo",
+]
+
+_DEHYDRATION_DIARRHEA_TERMS = [
+    "diarrhea", "diarrea", "diarrhoea", "diarreha",
+    "pagtatae", "nagtatae", "lbm", "kalibang",
+    "loose stool", "watery stool", "loose bowel",
+]
+_DEHYDRATION_NEGATION_TERMS = [
+    "wala", "walang", "walay", "no", "not",
+    "hindi", "di", "dili", "without",
+]
+_DEHYDRATION_URINE_TERMS = [
+    "ihi", "urine", "pee", "peeing", "urinate", "urinating",
+    "umihi", "umiihi", "makaiihi",
+]
+
+
+def _normalize_for_triage(text: str) -> str:
+    # Keep digits intact for temperature checks.
+    nt = (text or "").lower().strip()
+    nt = re.sub(r"[''']", "", nt)
+    nt = re.sub(r"[^a-z0-9ñ\s]", " ", nt)
+    nt = re.sub(r"\s+", " ", nt)
+    return nt
+
+
+def _tokenize_triage(text: str) -> List[str]:
+    return [tok for tok in text.split(" ") if tok]
+
+
+def _term_token_sequences(terms: List[str]) -> List[List[str]]:
+    out: List[List[str]] = []
+    for t in terms:
+        toks = [x for x in t.strip().split(" ") if x]
+        if toks:
+            out.append(toks)
+    return out
+
+
+def _find_term_hits(tokens: List[str], terms: List[str]) -> List[Tuple[int, int, str]]:
+    """Return (start, end, matched_text) for each term occurrence."""
+    hits: List[Tuple[int, int, str]] = []
+    seqs = _term_token_sequences(terms)
+    if not tokens or not seqs:
+        return hits
+
+    for i in range(len(tokens)):
+        for seq in seqs:
+            n = len(seq)
+            if i + n > len(tokens):
+                continue
+            if tokens[i : i + n] == seq:
+                hits.append((i, i + n - 1, " ".join(tokens[i : i + n])))
+    return hits
+
+
+def _pair_gap(a: Tuple[int, int, str], b: Tuple[int, int, str]) -> int:
+    a_start, a_end, _ = a
+    b_start, b_end, _ = b
+    if a_end < b_start:
+        return b_start - a_end - 1
+    if b_end < a_start:
+        return a_start - b_end - 1
+    return 0
+
+
+def _has_local_exclusion(
+    exclusion_hits: List[Tuple[int, int, str]],
+    left: int,
+    right: int,
+    *,
+    margin: int = 2,
+) -> bool:
+    lo = max(0, left - margin)
+    hi = right + margin
+    for s, e, _ in exclusion_hits:
+        if e >= lo and s <= hi:
+            return True
+    return False
+
+
+def _detect_by_cooccurrence(tokens: List[str], rule: Dict[str, Any]) -> Optional[str]:
+    a_hits = _find_term_hits(tokens, rule.get("a_terms", []))
+    b_hits = _find_term_hits(tokens, rule.get("b_terms", []))
+    if not a_hits or not b_hits:
+        return None
+
+    exclusion_hits = _find_term_hits(tokens, rule.get("exclude_terms", []))
+    window = int(rule.get("window", 5))
+    exclusion_margin = int(rule.get("exclude_window", 2))
+
+    for a in a_hits:
+        for b in b_hits:
+            if _pair_gap(a, b) > window:
+                continue
+            left = min(a[0], b[0])
+            right = max(a[1], b[1])
+            if exclusion_hits and _has_local_exclusion(exclusion_hits, left, right, margin=exclusion_margin):
+                continue
+            return f"{a[2]} + {b[2]}"
+    return None
+
+
+def _detect_pregnancy(tokens: List[str]) -> Optional[str]:
+    preg_hits = _find_term_hits(tokens, _PREGNANCY_TERMS)
+    if not preg_hits:
+        return None
+    excl_hits = _find_term_hits(tokens, _PREGNANCY_EXCLUSIONS)
+    for p in preg_hits:
+        if excl_hits and _has_local_exclusion(excl_hits, p[0], p[1], margin=3):
+            continue
+        return p[2]
+    return None
+
+
+def _detect_hyperthermia(tokens: List[str]) -> Optional[str]:
+    """Fever + temperature digit (40/41/42) within a token window.
+    Excludes weight/age numbers via _TEMP_EXCLUSIONS.
+    """
+    fever_hits = _find_term_hits(tokens, _FEVER_TERMS)
+    if not fever_hits:
+        return None
+
+    temp_hits: List[Tuple[int, int, str]] = []
+    for i, tok in enumerate(tokens):
+        if tok in {"40", "41", "42"}:
+            temp_hits.append((i, i, tok))
+            continue
+        # Handle fused tokens like "40c", "41deg", "42degrees"
+        m = re.match(r"^(40|41|42)(c|deg|degrees|degree|celsius)?$", tok)
+        if m:
+            temp_hits.append((i, i, m.group(1)))
+
+    if not temp_hits:
+        return None
+
+    excl_hits = _find_term_hits(tokens, _TEMP_EXCLUSIONS)
+    for fh in fever_hits:
+        for th in temp_hits:
+            if _pair_gap(fh, th) > 9:
+                continue
+            left = min(fh[0], th[0])
+            right = max(fh[1], th[1])
+            if excl_hits and _has_local_exclusion(excl_hits, left, right, margin=3):
+                continue
+            return f"{fh[2]} + {th[2]}"
+    return None
+
+
+def _detect_dehydration(tokens: List[str]) -> Optional[str]:
+    """Three-part check: diarrhea term + negation + urine term nearby.
+
+    Multi-word b_terms like 'walang ihi' fail token-sequence matching when
+    particles intervene ('walang akong ihi'). This handler implements the
+    semantics properly: negation must be within 3 tokens of a urine word,
+    and that negation-urine cluster must be within 12 tokens of a diarrhea word.
+    """
+    diarrhea_hits = _find_term_hits(tokens, _DEHYDRATION_DIARRHEA_TERMS)
+    if not diarrhea_hits:
+        return None
+    neg_hits = _find_term_hits(tokens, _DEHYDRATION_NEGATION_TERMS)
+    urine_hits = _find_term_hits(tokens, _DEHYDRATION_URINE_TERMS)
+    if not neg_hits or not urine_hits:
+        return None
+    for neg in neg_hits:
+        for urine in urine_hits:
+            if _pair_gap(neg, urine) > 3:
+                continue
+            # Confirmed negation-urine pair
+            pair_left = min(neg[0], urine[0])
+            pair_right = max(neg[1], urine[1])
+            for dh in diarrhea_hits:
+                if _pair_gap(dh, (pair_left, pair_right, "")) <= 14:
+                    return f"{dh[2]} + {neg[2]} {urine[2]}"
+    return None
+
+
+def _segment_has_any_phrase(segment: str, terms: List[str]) -> bool:
+    for term in terms:
+        t = term.strip().lower()
+        if not t:
+            continue
+        if " " in t:
+            if re.search(rf"\b{re.escape(t)}\b", segment):
+                return True
+        else:
+            if re.search(rf"\b{re.escape(t)}\b", segment):
+                return True
+    return False
+
+
+def _first_matched_phrase(segment: str, terms: List[str]) -> Optional[str]:
+    for term in terms:
+        t = term.strip().lower()
+        if not t:
+            continue
+        if " " in t:
+            if re.search(rf"\b{re.escape(t)}\b", segment):
+                return t
+        else:
+            if re.search(rf"\b{re.escape(t)}\b", segment):
+                return t
+    return None
+
+
+def _detect_hypertension_context(normalized_text: str) -> Optional[str]:
+    """Detect hypertension as a safety red-flag with context-aware suppression.
+
+    Policy:
+    - Flag primary hypertension complaints (e.g., "naa koy high blood").
+    - Do NOT over-triage incidental comorbidity mentions after contrastive
+      boundaries when another OTC symptom is the active complaint
+      (e.g., "may sipon at ubo ako, pero may high blood ako").
+    """
+    nt = normalized_text
+    if not _segment_has_any_phrase(nt, _HYPERTENSION_TERMS):
+        return None
+
+    # Respect explicit negation such as "wala koy high blood".
+    neg = r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b"
+    if re.search(rf"{neg}(?:\s+\w+){{0,2}}\s+\b(high\s+blood|highblood|blood\s+pressure|high\s+bp|hbp|hypertension|hypertensive|alta\s+presyon|mataas\s+presyon|taas\s+presyon|presyon)\b", nt):
+        return None
+
+    segments = [s.strip() for s in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt) if s.strip()]
+    if not segments:
+        return None
+
+    for idx, seg in enumerate(segments):
+        matched = _first_matched_phrase(seg, _HYPERTENSION_TERMS)
+        if not matched:
+            continue
+
+        # If hypertension appears in a later contrastive segment AND earlier
+        # segment already contains the likely OTC-target complaint, treat
+        # hypertension as background context (no triage for this rule).
+        if idx > 0:
+            if any(_segment_has_any_phrase(prev, _OTC_PRIMARY_SYMPTOM_CUES) for prev in segments[:idx]):
+                continue
+
+        return matched
+
+    return None
+
+
+
+def _apply_blood_context_filter(
+    user_input: str,
+    detected: List[str],
+) -> List[str]:
+    """Remove symptom labels that are dangerous misclassifications when blood
+    context is present near the body-part keyword that triggered the match.
+
+    Runs on BOTH dictionary and semantic results so "naga dugo akong ulo"
+    never returns HEADACHE, "nagdudugo ilong" never returns RUNNY_NOSE, etc.
+    """
+    if not detected:
+        return detected
+
+    nt = _normalize_for_triage(user_input)
+    tokens = _tokenize_triage(nt)
+
+    blood_hits = _find_term_hits(tokens, _ALL_BLOOD_TERMS)
+    if not blood_hits:
+        return detected
+
+    filtered = list(detected)
+
+    def _drop_if_near(body_terms: List[str], symptom_labels: set, window: int) -> None:
+        nonlocal filtered
+        body_hits = _find_term_hits(tokens, body_terms)
+        for bh in blood_hits:
+            for oh in body_hits:
+                if _pair_gap(bh, oh) <= window:
+                    filtered = [s for s in filtered if s not in symptom_labels]
+                    return
+
+    # Blood near head/ulo → not a headache; it is head bleeding
+    _drop_if_near(
+        ["head", "ulo", "bungo", "noo", "forehead", "utak", "brain", "mukha", "pisngi"],
+        {"HEADACHE"}, window=6,
+    )
+    # Blood near nose/ilong → not a runny nose / congestion
+    _drop_if_near(
+        ["nose", "ilong", "nostrils", "nostril"],
+        {"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"}, window=6,
+    )
+    # Blood near stool/dumi → not diarrhea; it is GI bleed
+    _drop_if_near(
+        ["stool", "poop", "feces", "bowel", "dumi", "tae", "bawas", "kalibang", "hugaw", "libang"],
+        {"DIARRHEA"}, window=8,
+    )
+    # Blood near cough/ubo → not OTC cough; it is hemoptysis
+    _drop_if_near(
+        ["cough", "coughing", "coughed", "ubo", "inuubo", "umuubo", "umubo", "gi-ubo", "giubo", "nag-ubo", "nauubo"],
+        {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}, window=7,
+    )
+    return filtered
 
 
 def detect_red_flags(user_input: str) -> List[Dict[str, str]]:
-    """Scan user input for emergency/red-flag symptoms.
+    """Stage 0 triage safety detector.
 
-    Returns a list of dicts: [{"flag": "chest_pain", "message": "...", "matched": "..."}]
-    Empty list means no red flags detected.
+    Uses lexical co-occurrence within token windows and local exclusion terms
+    to reduce both missed emergencies and false positives.
 
-    NOTE: Uses a LIGHT normalization (lowercase + collapse whitespace) instead
-    of the full de-jejemize ``_normalize()`` because the latter converts digits
-    (0→o, 4→a, 1→i) which destroys temperature values like "40 degrees".
+    Returns:
+        List of dicts: [{"flag": str, "message": str, "matched": str}]
+        Empty list means no red flags detected — safe to proceed to OTC.
     """
-    nt = user_input.lower().strip()
-    nt = re.sub(r"[''']", "", nt)           # can't → cant
-    nt = re.sub(r"\s+", " ", nt)
-    flags: List[Dict[str, str]] = []
-    seen: set = set()
+    nt = _normalize_for_triage(user_input)
+    tokens = _tokenize_triage(nt)
 
-    for flag_name, patterns in RED_FLAG_PATTERNS.items():
-        for pat in patterns:
-            m = re.search(pat, nt)
-            if m and flag_name not in seen:
-                seen.add(flag_name)
-                flags.append({
-                    "flag": flag_name,
-                    "message": RED_FLAG_MESSAGES.get(flag_name, flag_name),
-                    "matched": m.group(),
-                })
-                break  # one match per flag category is enough
-    return flags
+    flags: List[Dict[str, str]] = []
+
+    # ── Co-occurrence rules ──
+    for rule in _TRIAGE_RULES:
+        matched = _detect_by_cooccurrence(tokens, rule)
+        if not matched:
+            continue
+        flags.append({
+            "flag":    str(rule["flag"]),
+            "message": str(rule.get("message") or RED_FLAG_MESSAGES.get(str(rule["flag"]), str(rule["flag"]))),
+            "matched": matched,
+        })
+
+    # ── Pregnancy: single keyword with proxy-purchase exclusion ──
+    preg_match = _detect_pregnancy(tokens)
+    if preg_match:
+        flags.append({
+            "flag":    "pregnancy_contraindication",
+            "message": RED_FLAG_MESSAGES["pregnancy_contraindication"],
+            "matched": preg_match,
+        })
+
+    # ── Hyperthermia: fever + 40/41/42 within window ──
+    hyper_match = _detect_hyperthermia(tokens)
+    if hyper_match:
+        flags.append({
+            "flag":    "high_fever_prolonged",
+            "message": RED_FLAG_MESSAGES["high_fever_prolonged"],
+            "matched": hyper_match,
+        })
+
+    # ── Severe dehydration: 3-part diarrhea + negation + urine ──
+    dehydration_match = _detect_dehydration(tokens)
+    if dehydration_match:
+        # Deduplicate against co-occurrence rule hit (if it already fired)
+        if not any(f["flag"] == "severe_dehydration" for f in flags):
+            flags.append({
+                "flag":    "severe_dehydration",
+                "message": RED_FLAG_MESSAGES["severe_dehydration"],
+                "matched": dehydration_match,
+            })
+
+    # ── Direct dengue keyword ──
+    dengue_direct = _find_term_hits(tokens, _DIRECT_DENGUE_TERMS)
+    if dengue_direct and not any(f["flag"] == "dengue_warning" for f in flags):
+        flags.append({
+            "flag":    "dengue_warning",
+            "message": RED_FLAG_MESSAGES["dengue_warning"],
+            "matched": dengue_direct[0][2],
+        })
+
+    # ── Seizure / convulsion ──
+    seizure_hits = _find_term_hits(tokens, _DIRECT_SEIZURE_TERMS)
+    if seizure_hits:
+        flags.append({
+            "flag":    "seizure",
+            "message": RED_FLAG_MESSAGES["seizure"],
+            "matched": seizure_hits[0][2],
+        })
+
+    # ── Loss of consciousness / fainting ──
+    loc_hits = _find_term_hits(tokens, _DIRECT_LOSS_CONSCIOUSNESS_TERMS)
+    if loc_hits:
+        flags.append({
+            "flag":    "loss_of_consciousness",
+            "message": RED_FLAG_MESSAGES["loss_of_consciousness"],
+            "matched": loc_hits[0][2],
+        })
+
+    # ── Hypertension context (primary complaint only) ──
+    hypertension_match = _detect_hypertension_context(nt)
+    if hypertension_match:
+        flags.append({
+            "flag":    "hypertension_risk",
+            "message": RED_FLAG_MESSAGES["hypertension_risk"],
+            "matched": hypertension_match,
+        })
+
+    # De-duplicate while preserving first-hit order
+    deduped: List[Dict[str, str]] = []
+    seen: set[str] = set()
+    for row in flags:
+        name = row.get("flag", "")
+        if name in seen:
+            continue
+        seen.add(name)
+        deduped.append(row)
+    return deduped
 
 
 def _normalize(text: str) -> str:
@@ -326,14 +990,21 @@ def _apply_semantic_safety_filters(
     if _explicitly_negates_allergy(user_input, _nt=nt):
         _drop({"ALLERGIC_RHINITIS"})
 
-    # Safety guard: nose bleeding / blood on the nose should not be interpreted
-    # as runny nose or nasal congestion by the semantic fallback.
-    if re.search(r"\b(blood|dugo|bleed|bleeding)\b", nt) and re.search(r"\b(nose|ilong)\b", nt):
-        _drop({"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"})
+    # Blood-context safety filter — shared with dictionary path.
+    blood_filtered = _apply_blood_context_filter(user_input, filtered)
+    removed_by_blood = set(filtered) - set(blood_filtered)
+    if removed_by_blood:
+        _drop(removed_by_blood)
 
     red_flag_names = {row.get("flag") for row in (red_flags or detect_red_flags(user_input))}
     if "blood_in_stool" in red_flag_names:
         _drop({"DIARRHEA"})
+    if "hemoptysis" in red_flag_names:
+        _drop({"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"})
+    if "head_bleeding" in red_flag_names:
+        _drop({"HEADACHE"})
+    if "nose_bleeding" in red_flag_names:
+        _drop({"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"})
     if "severe_allergic_reaction" in red_flag_names:
         _drop({"SORE_THROAT"})
 
@@ -694,6 +1365,10 @@ def extract_symptoms_hybrid(
     if _explicitly_negates_cough(user_input):
         detected = [s for s in detected if s not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}]
 
+    # Blood-context safety filter: runs on dictionary results so that
+    # e.g. "naga dugo akong ulo" never surfaces HEADACHE.
+    detected = _apply_blood_context_filter(user_input, detected)
+
     if detected or not enable_semantic_fallback:
         return detected
 
@@ -745,7 +1420,7 @@ def extract_symptoms_hybrid_report(
     report: dict = {
         "input": user_input,
         "stages": [],
-        "final": {"symptoms": []},
+        "final": {"symptoms": [], "conditions": []},
     }
 
     # ── RED-FLAG / TRIAGE CHECK (runs before everything else) ──
@@ -758,6 +1433,7 @@ def extract_symptoms_hybrid_report(
         # to suppress OTC recommendations and show a "consult a doctor" alert.
 
     dict_symptoms = extract_symptoms_dictionary(user_input)
+    dict_conditions = extract_conditions_dictionary(user_input)
 
     # Global negation override for cough at dictionary stage.
     if _explicitly_negates_cough(user_input):
@@ -770,12 +1446,14 @@ def extract_symptoms_hybrid_report(
             "stage": "dictionary",
             "used": True,
             "detected": dict_symptoms,
+            "detected_conditions": dict_conditions,
             "details": dict_details,
         }
     )
 
     if dict_symptoms or not enable_semantic_fallback:
         report["final"]["symptoms"] = dict_symptoms
+        report["final"]["conditions"] = dict_conditions
         report["final"]["source"] = "dictionary" if dict_symptoms else "dictionary_only"
         return report
 
@@ -812,6 +1490,7 @@ def extract_symptoms_hybrid_report(
             }
         )
         report["final"]["symptoms"] = []
+        report["final"]["conditions"] = dict_conditions
         report["final"]["source"] = "none"
         return report
 
@@ -834,6 +1513,7 @@ def extract_symptoms_hybrid_report(
     )
 
     report["final"]["symptoms"] = selected
+    report["final"]["conditions"] = dict_conditions
     report["final"]["source"] = "semantic_fallback" if selected else "none"
     return report
 
