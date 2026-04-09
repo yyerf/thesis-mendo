@@ -71,6 +71,23 @@ _CONDITION_CONTRA_PATTERNS: Dict[str, Tuple[str, ...]] = {
     ),
 }
 
+_DECONGESTANT_RISK_KEYWORDS: Tuple[str, ...] = (
+    "phenylephrine",
+    "pseudoephedrine",
+    "decongestant",
+    "sympathomimetic",
+)
+
+_PLAIN_ANTIHISTAMINE_KEYWORDS: Tuple[str, ...] = (
+    "cetirizine",
+    "loratadine",
+    "levocetirizine",
+    "fexofenadine",
+    "chlorphenamine",
+    "chlorpheniramine",
+    "diphenhydramine",
+)
+
 
 def _normalize_condition_label(condition: str) -> str:
     c = _norm(condition).replace("-", " ").replace("_", " ")
@@ -102,6 +119,59 @@ def _contraindication_hits_for_conditions(
                     "contraindication": contra,
                 })
                 break
+    return hits
+
+
+def _row_text_blob(row: MedRow) -> str:
+    """Build a lowercase searchable text blob for safety-rule matching."""
+    return " ".join(
+        [
+            _norm(row.brand),
+            _norm(row.generic_main_use),
+            _norm(row.primary_symptom),
+            _norm(row.typical_symptoms),
+            _norm(row.drug_category),
+            " ".join(_norm(x) for x in row.contraindications),
+            " ".join(_norm(x) for x in row.warnings),
+        ]
+    )
+
+
+def _is_plain_antihistamine_row(row: MedRow) -> bool:
+    """Return True for antihistamines without systemic decongestants."""
+    blob = _row_text_blob(row)
+    has_antihistamine = any(k in blob for k in _PLAIN_ANTIHISTAMINE_KEYWORDS) or ("allergy" in _norm(row.drug_category))
+    has_decongestant = any(k in blob for k in _DECONGESTANT_RISK_KEYWORDS)
+    return has_antihistamine and not has_decongestant
+
+
+def _condition_safety_hits_for_row(
+    row: MedRow,
+    normalized_conditions: Sequence[str],
+) -> List[Dict[str, str]]:
+    """Hard safety filters beyond dataset contraindication text.
+
+    Some medicines lack explicit condition mentions in their contraindication
+    fields. This rule layer blocks known risky ingredient classes per condition.
+    """
+    hits: List[Dict[str, str]] = []
+    if not normalized_conditions:
+        return hits
+
+    blob = _row_text_blob(row)
+
+    if "HYPERTENSION" in normalized_conditions:
+        if any(k in blob for k in _DECONGESTANT_RISK_KEYWORDS):
+            hits.append(
+                {
+                    "condition": "HYPERTENSION",
+                    "contraindication": (
+                        "contains systemic decongestant/sympathomimetic ingredients "
+                        "(e.g., phenylephrine/pseudoephedrine)"
+                    ),
+                }
+            )
+
     return hits
 
 
@@ -586,6 +656,7 @@ def recommend_from_dataset(
     _sipon_cold_weather = False
     _sipon_allergy = False
     _sipon_context_answered = False
+    _prefer_plain_antihistamine = False
 
     if context_override == "DIARRHEA_FOOD_POISONING":
         _diarrhea_food_poisoning = True
@@ -724,6 +795,11 @@ def recommend_from_dataset(
                     "original_symptoms": list(symptoms),
                 }
 
+    if "HYPERTENSION" in normalized_conditions:
+        nasal_syms = {"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"}
+        if symptoms_set & nasal_syms:
+            _prefer_plain_antihistamine = True
+
     # COUGH_GENERAL: always ask clarification if cough type is unresolved.
     # This keeps behavior consistent whether cough appears alone or with
     # other symptoms (e.g., cough + runny nose).
@@ -834,6 +910,11 @@ def recommend_from_dataset(
         if "ALLERGIC_RHINITIS" in matching_symptoms and ("allergy" in row.drug_category or "allergy" in row.typical_symptoms):
             add_candidate(row, "allergy_match", 3)
 
+        # Hypertension profile: when nasal symptoms are present, prioritize plain
+        # antihistamines over cold-combo products with decongestants.
+        if _prefer_plain_antihistamine and _is_plain_antihistamine_row(row):
+            add_candidate(row, "hypertension_safe_antihistamine_preferred", 6)
+
         # Rashes / allergic skin reaction -> treat as allergy/antihistamine bucket
         if "RASHES" in matching_symptoms:
             combined = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category} {_norm(row.brand)}"
@@ -920,7 +1001,12 @@ def recommend_from_dataset(
                 row.contraindications,
                 normalized_conditions,
             )
-            if contra_hits:
+            condition_safety_hits = _condition_safety_hits_for_row(
+                row,
+                normalized_conditions,
+            )
+            blocked_hits = contra_hits + condition_safety_hits
+            if blocked_hits:
                 blocked_recommendations.append(
                     {
                         "brand": row.brand,
@@ -928,7 +1014,7 @@ def recommend_from_dataset(
                         "drug_category": row.drug_category,
                         "reasons": reasons,
                         "contraindications": list(row.contraindications) if row.contraindications else [],
-                        "blocked_by": contra_hits,
+                        "blocked_by": blocked_hits,
                     }
                 )
                 continue
@@ -980,7 +1066,7 @@ def recommend_from_dataset(
         blocked_brands = ", ".join(b["brand"] for b in blocked_recommendations[:4])
         cond_text = ", ".join(normalized_conditions)
         safety_warnings.append(
-            "⚠ Contraindication filter applied for detected condition(s): "
+            "⚠ Condition safety filter applied for detected condition(s): "
             f"{cond_text}. Blocked medicine(s): {blocked_brands}."
         )
 

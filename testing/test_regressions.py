@@ -304,6 +304,54 @@ class RegressionTests(unittest.TestCase):
         self.assertNotIn("Decolgen", brands)
         self.assertNotIn("Decolgen Forte", brands)
 
+    def test_hypertension_filters_decongestant_cold_combos(self):
+        text = "May sipon at tuyong ubo ako, pero may high blood ako"
+        rec = recommend_from_dataset(
+            ["RUNNY_NOSE", "COUGH_DRY"],
+            self.rows,
+            user_input=text,
+            detected_conditions=["HYPERTENSION"],
+        )
+        self.assertEqual(rec.get("action"), "recommend")
+
+        brands = [row["brand"] for row in rec.get("recommendations", [])]
+        blocked_brands = [row.get("brand", "") for row in rec.get("blocked_recommendations", [])]
+        joined_blocked = " ".join(blocked_brands).lower()
+
+        self.assertNotIn("Bioflu", brands)
+        self.assertNotIn("Decolgen", brands)
+        self.assertNotIn("Decolgen Forte", brands)
+        self.assertFalse(any("Neozep" in b for b in brands))
+        self.assertIn("decolgen", joined_blocked)
+        self.assertTrue("bioflu" in joined_blocked or "neozep" in joined_blocked)
+
+        # Ensure no decongestant ingredient survives recommendation list.
+        rec_ingredients = " ".join(
+            (row.get("active_ingredients") or "")
+            for row in rec.get("recommendations", [])
+        ).lower()
+        self.assertNotIn("phenylephrine", rec_ingredients)
+        self.assertNotIn("pseudoephedrine", rec_ingredients)
+
+    def test_hypertension_runny_nose_prefers_plain_antihistamine(self):
+        rec = recommend_from_dataset(
+            ["RUNNY_NOSE"],
+            self.rows,
+            user_input="may sipon ako at may high blood",
+            context_override="SIPON_ALLERGY",
+            detected_conditions=["HYPERTENSION"],
+        )
+        self.assertEqual(rec.get("action"), "recommend")
+
+        brands = [row["brand"] for row in rec.get("recommendations", [])]
+        self.assertIn("Cetirizine", brands)
+
+        # Explicitly ensure common decongestant cold combos are filtered out.
+        self.assertNotIn("Bioflu", brands)
+        self.assertNotIn("Decolgen", brands)
+        self.assertNotIn("Decolgen Forte", brands)
+        self.assertFalse(any("Neozep" in b for b in brands))
+
     def test_empty_symptom_list_returns_no_match(self):
         rec = recommend_from_dataset([], self.rows, user_input="asdasd")
         self.assertEqual(rec.get("action"), "no_match")

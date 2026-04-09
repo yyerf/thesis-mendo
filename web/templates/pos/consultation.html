@@ -761,6 +761,22 @@
       justify-content: center;
       min-height: 100%;
     }
+    .analysis-result.warning-fullscreen {
+      width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 48px 28px;
+      border-radius: 0;
+      background: linear-gradient(160deg, #b91c1c 0%, #991b1b 55%, #7f1d1d 100%);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
     .language-chip {
       display: inline-flex;
       align-items: center;
@@ -913,7 +929,7 @@
       border-left: 4px solid #dc2626;
       border-radius: 12px;
       padding: 20px 24px;
-      text-align: left;
+      text-align: center;
     }
     .referral-banner h3 {
       font-size: 17px; font-weight: 700; color: #991b1b; margin-bottom: 6px;
@@ -926,6 +942,11 @@
     }
     .referral-note {
       font-size: 12px; color: var(--zinc-400); margin-top: 10px;
+    }
+    .referral-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
     }
     .referral-cta {
       margin-top: 18px;
@@ -940,15 +961,14 @@
 
     .triage-banner {
       width: 100%;
-      max-width: 700px;
-      background: #fff5f5;
-      border: 1px solid #fecaca;
-      border-left: 6px solid #dc2626;
-      border-radius: 16px;
-      padding: 24px 20px;
+      max-width: 900px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       text-align: center;
       box-shadow: none;
-      margin: auto 0;
+      margin: 0;
     }
     .triage-banner .icon {
       width: 56px;
@@ -958,39 +978,48 @@
       align-items: center;
       justify-content: center;
       font-size: 30px;
-      color: #dc2626;
-      background: #fee2e2;
-      border: 1px solid #fecaca;
+      color: var(--white);
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
       border-radius: 50%;
     }
-    .triage-banner h3 { font-size: 28px; font-weight: 800; color: #991b1b; margin-bottom: 10px; }
-    .triage-banner p { font-size: 15px; color: #7f1d1d; line-height: 1.75; }
+    .triage-banner h3 { font-size: 42px; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+    .triage-banner p { font-size: 20px; color: rgba(255,255,255,0.96); line-height: 1.6; }
     .triage-banner .flag-list {
-      list-style: none; padding: 0; margin: 16px auto; max-width: 400px; text-align: left;
+      list-style: none; padding: 0; margin: 16px auto; max-width: 640px; text-align: center;
     }
     .triage-banner .flag-list li {
       padding: 6px 0;
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 700;
-      color: #991b1b;
+      color: var(--white);
     }
     .triage-banner .triage-note {
-      font-size: 13px; color: #7f1d1d; margin-top: 14px;
+      font-size: 17px; color: rgba(255,255,255,0.9); margin-top: 18px;
+    }
+    .triage-banner .referral-cta {
+      margin-top: 14px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--white);
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.3;
     }
 
     /* ── Duration Safeguard — doctor referral banner ── */
     .duration-referral-banner {
       width: 100%;
-      max-width: 700px;
-      background: #fff5f5;
-      border: 1px solid #fecaca;
-      border-left: 6px solid #dc2626;
-      border-radius: 16px;
-      padding: 24px 20px;
+      max-width: 900px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       text-align: center;
       box-shadow: none;
-      color: #7f1d1d;
-      margin: auto 0;
+      color: var(--white);
+      margin: 0;
     }
     .duration-referral-banner .icon {
       width: 56px;
@@ -1000,30 +1029,30 @@
       align-items: center;
       justify-content: center;
       font-size: 30px;
-      color: #dc2626;
-      background: #fee2e2;
-      border: 1px solid #fecaca;
+      color: var(--white);
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
       border-radius: 50%;
     }
     .duration-referral-banner h3 {
-      font-size: 28px; font-weight: 800; color: #991b1b; margin-bottom: 10px;
+      font-size: 42px; font-weight: 800; color: var(--white); margin-bottom: 12px;
     }
     .duration-referral-banner .duration-detail {
-      font-size: 16px; color: #7f1d1d; line-height: 1.75; margin-bottom: 8px;
+      font-size: 22px; color: rgba(255,255,255,0.96); line-height: 1.6; margin-bottom: 12px;
     }
     .duration-referral-banner .referral-action {
-      font-size: 15px;
-      font-weight: 700;
-      color: #991b1b;
-      line-height: 1.7;
-      margin-top: 14px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: #fee2e2;
-      border: 1px solid #fecaca;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.35;
+      margin-top: 16px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
     }
     .duration-referral-banner .referral-note {
-      font-size: 13px; color: #7f1d1d; margin-top: 14px;
+      font-size: 17px; color: rgba(255,255,255,0.9); margin-top: 18px;
     }
 
     /* ── Duration question — progress indicator ── */
@@ -3001,6 +3030,7 @@
     document.getElementById('analysisLoading').classList.add('hidden');
     const container = document.getElementById('analysisResult');
     container.classList.remove('hidden');
+    container.classList.remove('warning-fullscreen');
     setTapReadyState(false);
 
     const symptoms = data.symptoms || [];
@@ -3013,6 +3043,7 @@
     // Triage
     if (rec.action === 'triage') {
       container.classList.add('center-stage');
+      container.classList.add('warning-fullscreen');
       const flags = rec.triage_flags || [];
       const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
       container.innerHTML = `
@@ -3232,6 +3263,7 @@
 
   function renderDurationQuestion(symptom) {
     const container = document.getElementById('analysisResult');
+    container.classList.remove('warning-fullscreen');
     const total = (analysisData.symptoms || []).filter(s => DURATION_SYMPTOMS.includes(s)).length;
     const answered = durationCompleted.length;
 
@@ -3441,6 +3473,7 @@
   function renderDurationReferral(data) {
     const container = document.getElementById('analysisResult');
     container.classList.add('center-stage');
+    container.classList.add('warning-fullscreen');
     const referral = data.referral || {};
     const days = data.reported_days || '?';
     const symptomKey = data.symptom || '';
@@ -3502,10 +3535,10 @@
   }
 
   // ── Recommendations ──
-  window.showRecommendations = function() {
+  window.showRecommendations = function(forceViewList = false) {
     showingRecs = true;
     setTapReadyState(false);
-    renderRecommendations(analysisData);
+    renderRecommendations(analysisData, { forceViewList: !!forceViewList });
     document.getElementById('viewRecsBtn').classList.add('hidden');
     document.getElementById('assessAgainBtn').classList.remove('hidden');
     document.getElementById('exitBtn').classList.remove('hidden');
@@ -3571,13 +3604,16 @@
     return s.slice(0, maxLen - 1) + '…';
   }
 
-  function renderRecommendations(data) {
+  function renderRecommendations(data, options = {}) {
     const container = document.getElementById('analysisResult');
     const recs = (data.recommendation?.recommendations || []).slice(0, 6);
     const symptoms = data.symptoms_display || data.symptoms || [];
     const referral = data.referral || null;
+    const forceViewList = options.forceViewList === true;
 
     setTapReadyState(false);
+    container.classList.remove('warning-fullscreen');
+    container.classList.remove('center-stage');
 
     function reasonMatches(rec, reasonList) {
       const reasons = rec?.reasons || [];
@@ -3683,29 +3719,19 @@
       return `<div class="rec-columns">${columns}</div>`;
     }
 
-    // Build per-symptom severity chips for the mini-strip
-    const sMap = (data.severity_map || analysisData?.severity_map || severityMap || {});
-    let painChipContent = `${severity}/10`;
-    if (Object.keys(sMap).length > 0) {
-      painChipContent = Object.entries(sMap).map(([sym, val]) =>
-        `${getSymptomLabel(sym)}: ${val}/10`
-      ).join(', ');
-    }
+    let html = ``;
 
-    let html = `
-      <div class="results-mini-strip">
-        <div class="results-mini-chip"><span class="label">${t('age')}</span> ${patientAge}</div>
-        <div class="results-mini-chip"><span class="label">${t('pain')}</span> ${painChipContent}</div>
-        <div class="results-mini-chip"><span class="label">${t('detectedSymptoms')}</span> ${symptoms.map(s => getSymptomLabel(s)).join(', ')}</div>
-      </div>`;
-
-    if (referral && referral.level === 'high') {
+    if (referral && referral.level === 'high' && !forceViewList) {
+      container.classList.add('center-stage');
       html += `
         <div class="referral-banner" style="margin-bottom:12px;">
           <h3>${t('professionalHelpTitle')}</h3>
           <p>${t('professionalHelpSub')}</p>
           <div class="severity-badge">${t('pain')}: ${referral.severity}/10</div>
           <p class="referral-note">${t('professionalHelpNote')}</p>
+          <div class="referral-actions">
+            <button class="btn btn--primary" onclick="showRecommendations(true)">${t('viewRecommendations')}</button>
+          </div>
         </div>`;
 
       container.innerHTML = html;
