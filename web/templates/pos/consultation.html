@@ -1686,7 +1686,7 @@
     <!-- ═══ STEP 1: Age ═══ -->
     <div class="kiosk-panel active" id="panel1">
       <div class="panel-content">
-        <div class="section-title">How old are you?</div>
+        <div class="section-title" id="ageTitleText">How old are you?</div>
         <div style="height: 24px;"></div>
 
         <div class="age-input-area">
@@ -1869,6 +1869,7 @@
   const UI_COPY = {
     en: {
       homeTap: 'Tap anywhere to begin',
+      ageTitle: 'How old are you?',
       symptomTitle: 'What are you feeling?',
       symptomSub: 'Describe your symptoms in your own words.',
       languageLabel: 'Choose your language',
@@ -1931,6 +1932,7 @@
     },
     tl: {
       homeTap: 'Pindot kahit saan para magsimula',
+      ageTitle: 'Ilang taon ka na?',
       symptomTitle: 'Ano ang nararamdaman mo?',
       symptomSub: 'Ilarawan ang iyong nararamdaman sa sariling salita.',
       languageLabel: 'Piliin ang wika',
@@ -1993,6 +1995,7 @@
     },
     ceb: {
       homeTap: 'Pindota miskan asa aron magsugod',
+      ageTitle: 'Pila na imong edad?',
       symptomTitle: 'Unsa imong gibati?',
       symptomSub: 'Isulti ang imong gibati gamit ang imong kaugalingong pulong.',
       languageLabel: 'Pilia ang pinulongan',
@@ -2237,6 +2240,10 @@
 
   function updateStaticCopy() {
     document.getElementById('homeCtaText').textContent = t('homeTap');
+    const ageTitleText = document.getElementById('ageTitleText');
+    if (ageTitleText) {
+      ageTitleText.textContent = t('ageTitle');
+    }
     if (symptomTypewriterText) {
       symptomTypewriterText.textContent = t('symptomTitle');
     }
