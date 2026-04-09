@@ -1180,8 +1180,8 @@ def extract_symptoms(user_input: str) -> List[str]:
     # Handles cases like "barado na rin ilong", "barado pa yung ilong", "barado na ilong"
     if "NASAL_CONGESTION" not in detected and "NASAL_CONGESTION" not in negated_labels:
         congestion_match = (
-            re.search(r"\b(barado|bara|stuffy|blocked|clogged)\b(?:\s+\w+){0,3}\s+\b(ilong|nose)\b", normalized_text)
-            or re.search(r"\b(ilong|nose)\b(?:\s+\w+){0,3}\s+\b(barado|bara|stuffy|blocked|clogged)\b", normalized_text)
+            re.search(r"\b(barado|bara|stuffy|blocked|clogged)\b(?:\s+\w+){0,3}\s+\b(ilong|nose|nostrils?)\b", normalized_text)
+            or re.search(r"\b(ilong|nose|nostrils?)\b(?:\s+\w+){0,3}\s+\b(barado|bara|stuffy|blocked|clogged)\b", normalized_text)
         )
         if congestion_match:
             # Check negation: "walang barado", "wala akong barado"
@@ -1262,7 +1262,7 @@ def extract_symptoms(user_input: str) -> List[str]:
     # Exclusion: "kaninang" contains "kanina" which is close to "kalibang".
     if "DIARRHEA" not in detected and "DIARRHEA" not in negated_labels:
         tokens = normalized_text.split()
-        diarrhea_exclusion = {"kaninang", "kanina", "kaninag"}
+        diarrhea_exclusion = {"kaninang", "kanina", "kaninag", "pagmata", "pagmamata"}
         diarrhea_targets = [
             "pagtatae",
             "nagtatae",
