@@ -167,6 +167,233 @@ def _check_opposing_mechanisms(recs: List[Dict[str, Any]]) -> List[str]:
 
 
 # ---------------------------------------------------------------------------
+# OLDCARTS DURATION SAFEGUARD MATRIX
+# ---------------------------------------------------------------------------
+# Universal safety layer based on the Duration component of the OLDCARTS
+# clinical framework.  Each symptom has a clinically-defined threshold
+# (in days).  If the patient reports symptom duration exceeding the
+# threshold, OTC recommendations are blocked and the patient is referred
+# to a licensed medical professional.
+#
+# Thresholds are calibrated for Philippine endemic conditions per DOH
+# protocols and domain-expert pharmacist guidance.
+# ---------------------------------------------------------------------------
+
+DURATION_THRESHOLDS: Dict[str, Dict[str, Any]] = {
+    "FEVER": {
+        "days": 3,
+    },
+    "DIARRHEA": {
+        "days": 2,
+    },
+    "SORE_THROAT": {
+        "days": 5,
+    },
+    "STOMACH_ACHE": {
+        "days": 7,
+    },
+    "HEADACHE": {
+        "days": 7,
+    },
+    "BODY_ACHES": {
+        "days": 7,
+    },
+    "RASHES": {
+        "days": 7,
+    },
+    "ALLERGIC_RHINITIS": {
+        "days": 7,
+    },
+    "NASAL_CONGESTION": {
+        "days": 10,
+    },
+    "RUNNY_NOSE": {
+        "days": 10,
+    },
+    "COUGH_GENERAL": {
+        "days": 14,
+    },
+    "COUGH_DRY": {
+        "days": 14,
+    },
+    "COUGH_PRODUCTIVE": {
+        "days": 14,
+    },
+}
+
+# Button options for the duration question (multiple choice)
+_DURATION_OPTIONS: Dict[str, list] = {
+    "FEVER": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–2 days", "value": "1-2"},
+        {"label": "3 days", "value": "3"},
+        {"label": "More than 3 days", "value": "4+"},
+    ],
+    "DIARRHEA": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "About a day", "value": "1"},
+        {"label": "2 days", "value": "2"},
+        {"label": "More than 2 days", "value": "3+"},
+    ],
+    "SORE_THROAT": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–5 days", "value": "4-5"},
+        {"label": "More than 5 days", "value": "6+"},
+    ],
+    "STOMACH_ACHE": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
+    ],
+    "HEADACHE": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
+    ],
+    "BODY_ACHES": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
+    ],
+    "RASHES": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
+    ],
+    "ALLERGIC_RHINITIS": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
+    ],
+    "NASAL_CONGESTION": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–5 days", "value": "1-5"},
+        {"label": "6–10 days", "value": "6-10"},
+        {"label": "More than 10 days", "value": "11+"},
+    ],
+    "RUNNY_NOSE": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–5 days", "value": "1-5"},
+        {"label": "6–10 days", "value": "6-10"},
+        {"label": "More than 10 days", "value": "11+"},
+    ],
+    "COUGH_GENERAL": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–7 days", "value": "1-7"},
+        {"label": "8–14 days", "value": "8-14"},
+        {"label": "More than 2 weeks", "value": "15+"},
+    ],
+    "COUGH_DRY": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–7 days", "value": "1-7"},
+        {"label": "8–14 days", "value": "8-14"},
+        {"label": "More than 2 weeks", "value": "15+"},
+    ],
+    "COUGH_PRODUCTIVE": [
+        {"label": "Less than a day", "value": "0"},
+        {"label": "1–7 days", "value": "1-7"},
+        {"label": "8–14 days", "value": "8-14"},
+        {"label": "More than 2 weeks", "value": "15+"},
+    ],
+}
+
+# Friendly Tagalog/English symptom name for duration questions
+_SYMPTOM_DISPLAY_NAMES: Dict[str, str] = {
+    "FEVER": "lagnat (fever)",
+    "DIARRHEA": "pagtatae (diarrhea)",
+    "SORE_THROAT": "pananakit ng lalamunan (sore throat)",
+    "STOMACH_ACHE": "sakit ng tiyan (stomach ache)",
+    "HEADACHE": "sakit ng ulo (headache)",
+    "BODY_ACHES": "pananakit ng katawan (body aches)",
+    "RASHES": "pantal o singaw sa balat (rashes)",
+    "ALLERGIC_RHINITIS": "allergy (allergic rhinitis)",
+    "NASAL_CONGESTION": "baradong ilong (nasal congestion)",
+    "RUNNY_NOSE": "sipon (runny nose)",
+    "COUGH_GENERAL": "ubo (cough)",
+    "COUGH_DRY": "tuyong ubo (dry cough)",
+    "COUGH_PRODUCTIVE": "ubo na may plema (wet cough)",
+}
+
+
+def get_duration_question(symptom: str) -> Optional[Dict[str, Any]]:
+    """Build a duration question payload for a given symptom label.
+
+    Returns None if the symptom has no duration threshold defined.
+    """
+    threshold = DURATION_THRESHOLDS.get(symptom)
+    if not threshold:
+        return None
+    options = _DURATION_OPTIONS.get(symptom)
+    if not options:
+        return None
+    display = _SYMPTOM_DISPLAY_NAMES.get(symptom, symptom.lower().replace("_", " "))
+    return {
+        "action": "ask_duration",
+        "symptom": symptom,
+        "threshold_days": threshold["days"],
+        "question": (
+            f"Gaano na katagal ang iyong {display}?\n"
+            f"(How long have you had this {display.split('(')[-1].rstrip(')')}?)"
+        ),
+        "options": options,
+    }
+
+
+def check_duration_safety(symptom: str, reported_days: int) -> Dict[str, Any]:
+    """Check whether a reported symptom duration exceeds the safe threshold.
+
+    Returns a dict with 'safe' (bool) and, if unsafe, 'referral' details.
+    """
+    threshold = DURATION_THRESHOLDS.get(symptom)
+    if not threshold:
+        return {"safe": True}
+
+    if reported_days > threshold["days"]:
+        display = _SYMPTOM_DISPLAY_NAMES.get(symptom, symptom.lower().replace("_", " "))
+        eng_name = display.split('(')[-1].rstrip(')') if '(' in display else display
+        return {
+            "safe": False,
+            "symptom": symptom,
+            "reported_days": reported_days,
+            "threshold_days": threshold["days"],
+            "referral": {
+                "action": "duration_referral",
+                "symptom_display": display,
+                "symptom_eng": eng_name,
+            },
+        }
+
+    return {"safe": True, "symptom": symptom, "reported_days": reported_days}
+
+
+def parse_duration_days(value: str) -> int:
+    """Parse a duration button value into an integer day count.
+
+    Handles formats like '1-2', '3', '4+', '15+', etc.
+    For ranges, returns the midpoint. For N+, returns N.
+    """
+    v = value.strip().replace(" ", "")
+    if v.endswith("+"):
+        return int(v[:-1])
+    if "-" in v:
+        parts = v.split("-")
+        try:
+            return (int(parts[0]) + int(parts[1])) // 2
+        except (ValueError, IndexError):
+            return 1
+    try:
+        return int(v)
+    except ValueError:
+        return 1
+
+
+# ---------------------------------------------------------------------------
 # OLDCARTS-INSPIRED CONTEXT DETECTION
 # ---------------------------------------------------------------------------
 # Clinically-informed targeted assessment for symptoms where the wrong OTC

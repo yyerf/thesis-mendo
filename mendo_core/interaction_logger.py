@@ -39,6 +39,9 @@ log = logging.getLogger("mendo.logger")
 _LOG_DIR = Path(__file__).resolve().parents[1] / "logs"
 _LOG_FILE = _LOG_DIR / "interactions.jsonl"
 
+# When True, log_interaction() silently skips writing.  Set by test fixtures.
+_disabled = False
+
 
 def _ensure_log_dir():
     """Create the logs directory if it doesn't exist."""
@@ -70,6 +73,9 @@ def log_interaction(
 
     Returns the generated interaction_id.
     """
+    if _disabled:
+        return "disabled"
+
     _ensure_log_dir()
 
     interaction_id = uuid.uuid4().hex[:12]

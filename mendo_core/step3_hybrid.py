@@ -1063,6 +1063,9 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "dumi",
         "pabalik balik",
         "loose bowel",
+        "tinatae",
+        "nagpapataes",
+        "gikalibang",
     ]
 
     nasal_keywords = [
@@ -1075,12 +1078,15 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "bara",
         "tumutulo",
         "nagatulo",
+        "kasimhot",
+        "simhot",
     ]
 
     fever_keywords = [
         "fever",
         "temperature",
         "hot",
+        "warm",
         "feverish",
         "lagnat",
         "nilalagnat",
@@ -1089,6 +1095,16 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "init akong lawas",
         "mainit ang katawan",
         "mainit katawan",
+        # Standalone Bisaya/Tagalog heat words
+        "init",
+        "mainit",
+        "noo",
+        "sinusunog",
+        "nasusunog",
+        "nanginginig",
+        "binat",
+        "ginahilanat",
+        "nililagnat",
     ]
 
     headache_keywords = [
@@ -1120,6 +1136,8 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "body ache",
         "body aches",
         "aches",
+        "aching",
+        "sore",
         "nanakit ang katawan",
         "masakit katawan",
         "sakit katawan",
@@ -1144,6 +1162,17 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "bug at",
         "tibuok lawas",
         "heavy body",
+        # Fatigue / weakness
+        "nanghihina",
+        "nanghina",
+        "pagod",
+        "luya",
+        "kapoy",
+        "nahihilo",
+        "dizzy",
+        "hilo",
+        "bigat",
+        "mabigat",
     ]
 
     stomach_keywords = [
@@ -1170,6 +1199,14 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "heartburn",
         "maasim",
         "cramping",
+        # Nausea / vomiting
+        "nauseous",
+        "nausea",
+        "nasusuka",
+        "nagsusuka",
+        "suka",
+        "magsuka",
+        "gastric",
     ]
 
     rhinitis_keywords = [

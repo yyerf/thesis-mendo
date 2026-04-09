@@ -1,21 +1,9 @@
 Total: 288
-Exact: 276
+Exact: 288
 Partial: 0
-Failed: 12
+Failed: 0
 Precision: 0.0000
 Recall: 0.0000
 F1: 0.0000
 
---- 12 non-exact results ---
-  #26 [failed] exp=NONE det=NASAL_CONGESTION,ALLERGIC_RHINITIS,RUNNY_NOSE input=walang sipon
-  #203 [failed] exp=NONE det=SORE_THROAT input=hindi masakit ang lalamunan ko
-  #204 [failed] exp=NONE det=DIARRHEA input=walang pagtatae
-  #205 [failed] exp=NONE det=ALLERGIC_RHINITIS input=wala akong allergy
-  #206 [failed] exp=NONE det=NASAL_CONGESTION input=walang barado ang ilong ko
-  #212 [failed] exp=NONE det=COUGH_GENERAL,COUGH_DRY input=ang ubod ng init ngayon
-  #222 [failed] exp=NONE det=SORE_THROAT input=walang sore throat
-  #230 [failed] exp=NONE det=NASAL_CONGESTION,ALLERGIC_RHINITIS input=walang lagnat walang ubo walang sipon
-  #273 [failed] exp=NONE det=DIARRHEA input=may dugo sa dumi ko
-  #274 [failed] exp=NONE det=DIARRHEA input=bloody stool
-  #282 [failed] exp=NONE det=SORE_THROAT input=swollen throat
-  #283 [failed] exp=NONE det=SORE_THROAT input=namamaga ang lalamunan
+All tests EXACT match!

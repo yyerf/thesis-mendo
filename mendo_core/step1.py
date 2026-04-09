@@ -58,6 +58,11 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "labad akong ulo",
         "sakit akong ulo",
         "sakit ako'g ulo",
+        # Common Bisaya typo/shorthand: uwo = ulo, labd = labad
+        "labad akong uwo",
+        "labd akong ulo",
+        "labd akong uwo",
+        "sakit akong uwo",
         "gasakit akong ulo",
         "ga sakit akong ulo",
         "murag gasakit akong ulo",
@@ -143,12 +148,21 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "nag ubo",
         "nag-ubo",
         "may ubo",
+        "umuubo",
+        "umuubo ako",
         # Bisaya
         "gi ubo",
         "gi-ubo",
         "g-ubo",
         "gubo",
         "ubo ko",
+        "giubo",
+        "ga ubo",
+        "ga-ubo",
+        "naubo",
+        "nag-ubo ko",
+        "kakaubo",
+        "kakaubo ko",
         # Common shorthand
         "sige ubo",
         "cge ubo",
@@ -203,6 +217,26 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Alternative phrasings
         "ang init ng katawan",
         "ang init ng katawan ko",
+        # Forehead-based fever description
+        "init ng noo",
+        "init ang noo",
+        "init ang noo ko",
+        "mainit ang noo",
+        "mainit ang noo ko",
+        "mainit noo",
+        "ang init ng noo",
+        "ang init ng noo ko",
+        # "Feel hot" English phrasing
+        "feel hot",
+        "feeling hot",
+        "i feel hot",
+        "feverish",
+        "i feel feverish",
+        # Bisaya: general heat phrasing
+        "nag init",
+        "nag-init",
+        "ga init",
+        "ga-init",
     ],
     "BODY_ACHES": [
         # English
@@ -211,6 +245,8 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "body pain",
         "body hurts",
         "my body hurts",
+        "my body is aching",
+        "body is aching",
         "muscle pain",
         "muscle aches",
         "joint pain",
@@ -218,6 +254,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "nilalamig",
         "nilalamig ako",
         "nilalamig ngayon",
+        "aching all over",
+        "whole body aches",
+        "entire body aches",
         # Tagalog
         "masakit katawan",
         "sakit katawan",
@@ -231,6 +270,12 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "parang binugbog",
         "binugbog yung katawan",
         "binugbog ang katawan",
+        "masakit ang katawan",
+        "sakit ng katawan",
+        "lahat ng katawan",
+        "lahat ng katawan ko masakit",
+        "buong katawan",
+        "buong katawan ko masakit",
         # Bisaya
         "sakit lawas",
         "gasakit akong lawas",
@@ -242,12 +287,28 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "tibuok lawas bug at",
         "luya",
         "kapoy kaayo",
+        "sakit tibuok lawas",
+        "tibuok lawas sakit",
         # Alternative phrasings
         "parang pinukpok",
-        "masakit ang katawan",
-        "sakit ng katawan",
         "nanlalamig",
         "giniginaw",
+        "feel very warm",
+        # Fatigue / weakness phrasing
+        "nanghihina",
+        "nanghihina ako",
+        "nanghina",
+        "mahina ang katawan",
+        "pagod",
+        "pagod na pagod",
+        "pagod na pagod ako",
+        "pagod kaayo",
+        # Dizziness as body symptom
+        "nahihilo",
+        "nahihilo ako",
+        "nahilo",
+        "dizzy",
+        "hilo",
     ],
     "NASAL_CONGESTION": [
         # English
@@ -277,7 +338,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sumasakit ang lalamunan",
         "sumasakit lalamunan",
         "masakit ang tutunlan",
-        "masakit tutunlan",  # common Bisaya word for throat
+        "masakit tutunlan",
         "sakit ng lalamunan",
         "sakit sa lalamunan",
         "sakit ng tutunlan",
@@ -294,25 +355,44 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "garas akong tilaok",
         "garas ang tilaok",
         "tilaok",
+        # Additional
+        "swollen throat",
+        "sakit sa liog",
+        "pangangati ng lalamunan",
+        "makati sa lalamunan",
         # Alternative phrasings
         "paos",
         "mahapdi ang lalamunan",
         "mahapdi lalamunan",
         "my throat hurts",
         "throat hurts",
+        # Creative/metaphorical
+        "parang may bola sa lalamunan",
+        "parang may tinik sa lalamunan",
     ],
     "RUNNY_NOSE": [
         "runny nose",
         "sipon",
         "may sipon",
+        "may sipon ako",
         "sisipon",
         "sinisipon",
         "sinasipon",
         "tumutulo ilong",
         "nagatulo ilong",
+        "nag sipon",
+        "nag-sipon",
+        "nag sipon ako",
         # Bisaya
-        "gatusok ang sipon", 
+        "gatusok ang sipon",
         "nagatulo akong ilong",
+        "nag tulo akong ilong",
+        "ga tulo akong ilong",
+        "tulo akong ilong",
+        "kasimhot",
+        "simhot",
+        "nagsisimhot",
+        "ga simhot",
     ],
     "ALLERGIC_RHINITIS": [
         # English
@@ -387,6 +467,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "stomach hurts",
         "my stomach hurts",
         "stomach cramps",
+        "indigestion",
+        "bloated",
+        "bloating",
+        "my stomach is bloated",
         # Tagalog
         "sakit tiyan",
         "sakit ng tiyan",
@@ -394,6 +478,8 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "masakit tiyan",
         "masakit ang tiyan",
         "masakit ang tiyan ko",
+        "sumasakit ang tiyan",
+        "sumasakit ang tiyan ko",
         "sakit stomach",
         "sakit sa stomach",
         "masakit stomach",
@@ -420,6 +506,36 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "kumukulo",
         "kumukulo ang tiyan",
         "hyperacidity",
+        # Nausea / vomiting expressions
+        "nauseous",
+        "nausea",
+        "nasusuka",
+        "nasusuka ako",
+        "gustong magsuka",
+        "gusto ko magsuka",
+        "gusto kong magsuka",
+        "parang gusto ko magsuka",
+        "nagsusuka",
+        "nagsusuka ako",
+        # Lower abdomen
+        "sakit puson",
+        "sakit sa puson",
+        "masakit puson",
+        "masakit ang puson",
+        "masakit ang puson ko",
+        "sakit akong puson",
+        # Acidic/gastric
+        "acidic",
+        "maasim",
+        "maasim ang tiyan",
+        "gastric",
+        "heartburn",
+        # Creative/metaphorical
+        "kinakain ang tiyan",
+        "kinakain ang tiyan ko",
+        "parang kinakain ang tiyan",
+        "kumukurot sa tiyan",
+        "kinukurot ang tiyan",
     ],
     "DIARRHEA": [
         # English
@@ -430,6 +546,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Tagalog
         "pagtatae",
         "nagtatae",
+        "tinatae",
+        "tinatae ako",
+        "nagpapataes",
+        "nagtatae ako",
         "lbm",
         "malambot na dumi",
         # Bisaya
@@ -439,6 +559,9 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "kalibanga",
         "nag loose ko",
         "laway ang tae",
+        "gi kalibang",
+        "gi-kalibang",
+        "gikalibang",
         # Alternative phrasings
         "matubig ang dumi",
         "sige cr",
@@ -482,9 +605,11 @@ CONDITION_LABELS: Dict[str, List[str]] = {
 _INTERVENING_SYMPTOM_WORDS = {
     "ubo", "cough", "lagnat", "fever", "sipon", "ulo", "headache",
     "tiyan", "stomach", "katawan", "diarrhea", "pagtatae", "nagtatae",
+    "tinatae", "kalibang",
     "rashes", "pantal", "lalamunan", "throat", "balat", "ilong",
-    "hilanat", "umuubo", "inuubo", "nilalagnat", "nililagnat",
+    "hilanat", "umuubo", "inuubo", "kakaubo", "nilalagnat", "nililagnat",
     "tutunlan", "butlig", "ngalay", "lawas",
+    "nauseous", "nausea", "nasusuka", "nahihilo", "kasimhot", "simhot",
 }
 
 
@@ -576,6 +701,10 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
                 "umuubo",
                 "gi ubo",
                 "gi-ubo",
+                "kakaubo",
+                "naubo",
+                "ga ubo",
+                "ga-ubo",
             )
         )
     if not cough_present:
@@ -990,7 +1119,7 @@ def extract_symptoms(user_input: str) -> List[str]:
                             if t not in {"ubo", "ubi", "uno", "uso"}:  # exclude cough and other common words
                                 head_positions.append(i)
                     if i not in [p for p in pain_positions]:
-                        if _levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "masakit", 1):
+                        if _levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "masakit", 1) or _levenshtein_within(t, "labad", 2):
                             pain_positions.append(i)
             
             if head_positions and pain_positions:
@@ -1119,7 +1248,7 @@ def extract_symptoms(user_input: str) -> List[str]:
     cough_labels_present = {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
     if not (cough_labels_present & set(detected)):
         tokens = normalized_text.split()
-        ulo_exclusion = {"ulo", "ulu", "ole", "olo", "tubo", "ubos", "ubi", "ube", "tuba", "ubod"}
+        ulo_exclusion = {"ulo", "ulu", "ole", "olo", "tubo", "ubos", "ubi", "ube", "tuba", "ubod", "uwo", "uwu"}
         for tok in tokens:
             if tok in ulo_exclusion:
                 continue

@@ -5,16 +5,30 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from mendo_core.step3_hybrid import detect_red_flags, extract_symptoms_hybrid_report
-from mendo_core.step4_recommend import DATASET_DEFAULT, load_mendo_dataset, recommend_from_dataset
+from mendo_core.step4_recommend import (
+    DATASET_DEFAULT,
+    DURATION_THRESHOLDS,
+    check_duration_safety,
+    get_duration_question,
+    load_mendo_dataset,
+    parse_duration_days,
+    recommend_from_dataset,
+)
 from mendo_core.step1 import extract_conditions
 from web.app import app
+import mendo_core.interaction_logger as _ilog
 
 
 class RegressionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        _ilog._disabled = True          # don't pollute production log during tests
         cls.rows = load_mendo_dataset(DATASET_DEFAULT)
         cls.client = app.test_client()
+
+    @classmethod
+    def tearDownClass(cls):
+        _ilog._disabled = False
 
     def test_diarrhea_plain_input_asks_for_context(self):
         report = extract_symptoms_hybrid_report(
@@ -343,39 +357,44 @@ class RegressionTests(unittest.TestCase):
         """Logger output must include interaction_type, context_override, step numbers."""
         import json
         from mendo_core.interaction_logger import log_interaction
+        import mendo_core.interaction_logger as _ilog2
 
-        iid = log_interaction(
-            user_input="unit test input",
-            extracted_symptoms=["HEADACHE"],
-            extraction_source="dictionary",
-            pipeline_stages=[
-                {"stage": "dictionary", "used": True, "detected": ["HEADACHE"], "details": []},
-                {"stage": "semantic", "used": True, "available": True, "detected_raw": [], "detected_selected": []},
-            ],
-            recommendation={"action": "recommend", "recommendations": [{"brand": "Biogesic", "active_ingredients": "Paracetamol"}]},
-            red_flags=[],
-            interaction_type="initial_analysis",
-            context_override=None,
-            severity=5,
-            age=25,
-            session_id="unit_test",
-        )
-        # Read back last line
-        with open("logs/interactions.jsonl") as f:
-            last = json.loads(f.readlines()[-1])
+        _ilog2._disabled = False  # temporarily enable for this test
+        try:
+            iid = log_interaction(
+                user_input="unit test input",
+                extracted_symptoms=["HEADACHE"],
+                extraction_source="dictionary",
+                pipeline_stages=[
+                    {"stage": "dictionary", "used": True, "detected": ["HEADACHE"], "details": []},
+                    {"stage": "semantic", "used": True, "available": True, "detected_raw": [], "detected_selected": []},
+                ],
+                recommendation={"action": "recommend", "recommendations": [{"brand": "Biogesic", "active_ingredients": "Paracetamol"}]},
+                red_flags=[],
+                interaction_type="initial_analysis",
+                context_override=None,
+                severity=5,
+                age=25,
+                session_id="unit_test",
+            )
+            # Read back last line
+            with open("logs/interactions.jsonl") as f:
+                last = json.loads(f.readlines()[-1])
 
-        self.assertEqual(last["interaction_type"], "initial_analysis")
-        self.assertIsNone(last["context_override"])
-        self.assertEqual(last["session_id"], "unit_test")
-        self.assertEqual(last["pipeline_stages"][0]["step"], 1)
-        self.assertEqual(last["pipeline_stages"][1]["step"], 2)
-        self.assertEqual(last["severity"], 5)
+            self.assertEqual(last["interaction_type"], "initial_analysis")
+            self.assertIsNone(last["context_override"])
+            self.assertEqual(last["session_id"], "unit_test")
+            self.assertEqual(last["pipeline_stages"][0]["step"], 1)
+            self.assertEqual(last["pipeline_stages"][1]["step"], 2)
+            self.assertEqual(last["severity"], 5)
 
-        # Cleanup: remove test entry
-        with open("logs/interactions.jsonl") as f:
-            lines = f.readlines()
-        with open("logs/interactions.jsonl", "w") as f:
-            f.writelines(lines[:-1])
+            # Cleanup: remove test entry
+            with open("logs/interactions.jsonl") as f:
+                lines = f.readlines()
+            with open("logs/interactions.jsonl", "w") as f:
+                f.writelines(lines[:-1])
+        finally:
+            _ilog2._disabled = True
 
     def test_stomach_ache_detects_bisaya_gasakit_variant(self):
         report = extract_symptoms_hybrid_report(
@@ -501,6 +520,211 @@ class RegressionTests(unittest.TestCase):
         blocked_brands = [r["brand"] for r in rec.get("blocked_recommendations", [])]
         self.assertNotIn("Neozep / Neozep Z+", recommended_brands)
         self.assertIn("Neozep / Neozep Z+", blocked_brands)
+
+
+# ===================================================================
+# DURATION SAFEGUARD MATRIX — REGRESSION TESTS
+# ===================================================================
+
+class DurationSafeguardTests(unittest.TestCase):
+    """Tests for the OLDCARTS Duration Safeguard Matrix."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows = load_mendo_dataset(DATASET_DEFAULT)
+        cls.client = app.test_client()
+
+    # -- parse_duration_days --
+
+    def test_parse_duration_single(self):
+        self.assertEqual(parse_duration_days("3"), 3)
+
+    def test_parse_duration_range(self):
+        self.assertEqual(parse_duration_days("1-3"), 2)
+
+    def test_parse_duration_plus(self):
+        self.assertEqual(parse_duration_days("4+"), 4)
+
+    def test_parse_duration_plus_high(self):
+        self.assertEqual(parse_duration_days("15+"), 15)
+
+    # -- get_duration_question --
+
+    def test_duration_question_exists_for_all_thresholds(self):
+        for symptom in DURATION_THRESHOLDS:
+            q = get_duration_question(symptom)
+            self.assertIsNotNone(q, f"No question for {symptom}")
+            self.assertEqual(q["action"], "ask_duration")
+            self.assertEqual(q["symptom"], symptom)
+            self.assertTrue(len(q["options"]) >= 2, f"<2 options for {symptom}")
+
+    # -- check_duration_safety: SAFE cases --
+
+    def test_fever_2_days_safe(self):
+        result = check_duration_safety("FEVER", 2)
+        self.assertTrue(result["safe"])
+
+    def test_diarrhea_1_day_safe(self):
+        result = check_duration_safety("DIARRHEA", 1)
+        self.assertTrue(result["safe"])
+
+    def test_cough_7_days_safe(self):
+        result = check_duration_safety("COUGH_DRY", 7)
+        self.assertTrue(result["safe"])
+
+    def test_headache_3_days_safe(self):
+        result = check_duration_safety("HEADACHE", 3)
+        self.assertTrue(result["safe"])
+
+    def test_runny_nose_5_days_safe(self):
+        result = check_duration_safety("RUNNY_NOSE", 5)
+        self.assertTrue(result["safe"])
+
+    # -- check_duration_safety: BLOCKED (exceeds threshold) --
+
+    def test_fever_4_days_blocked(self):
+        result = check_duration_safety("FEVER", 4)
+        self.assertFalse(result["safe"])
+        self.assertIn("referral", result)
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_diarrhea_3_days_blocked(self):
+        result = check_duration_safety("DIARRHEA", 3)
+        self.assertFalse(result["safe"])
+        self.assertIn("referral", result)
+
+    def test_sore_throat_6_days_blocked(self):
+        result = check_duration_safety("SORE_THROAT", 6)
+        self.assertFalse(result["safe"])
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_stomach_8_days_blocked(self):
+        result = check_duration_safety("STOMACH_ACHE", 8)
+        self.assertFalse(result["safe"])
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_headache_8_days_blocked(self):
+        result = check_duration_safety("HEADACHE", 8)
+        self.assertFalse(result["safe"])
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_body_aches_8_days_blocked(self):
+        result = check_duration_safety("BODY_ACHES", 8)
+        self.assertFalse(result["safe"])
+
+    def test_rashes_8_days_blocked(self):
+        result = check_duration_safety("RASHES", 8)
+        self.assertFalse(result["safe"])
+
+    def test_nasal_congestion_11_days_blocked(self):
+        result = check_duration_safety("NASAL_CONGESTION", 11)
+        self.assertFalse(result["safe"])
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_runny_nose_11_days_blocked(self):
+        result = check_duration_safety("RUNNY_NOSE", 11)
+        self.assertFalse(result["safe"])
+
+    def test_cough_15_days_blocked(self):
+        result = check_duration_safety("COUGH_GENERAL", 15)
+        self.assertFalse(result["safe"])
+        self.assertEqual(result["referral"]["action"], "duration_referral")
+
+    def test_cough_dry_15_days_blocked(self):
+        result = check_duration_safety("COUGH_DRY", 15)
+        self.assertFalse(result["safe"])
+
+    def test_cough_productive_15_days_blocked(self):
+        result = check_duration_safety("COUGH_PRODUCTIVE", 15)
+        self.assertFalse(result["safe"])
+
+    # -- Edge cases: exactly at threshold (should be SAFE) --
+
+    def test_fever_exactly_3_days_safe(self):
+        result = check_duration_safety("FEVER", 3)
+        self.assertTrue(result["safe"])
+
+    def test_diarrhea_exactly_2_days_safe(self):
+        result = check_duration_safety("DIARRHEA", 2)
+        self.assertTrue(result["safe"])
+
+    def test_cough_exactly_14_days_safe(self):
+        result = check_duration_safety("COUGH_GENERAL", 14)
+        self.assertTrue(result["safe"])
+
+    def test_runny_nose_exactly_10_days_safe(self):
+        result = check_duration_safety("RUNNY_NOSE", 10)
+        self.assertTrue(result["safe"])
+
+    # -- API endpoint tests --
+
+    def test_duration_check_api_safe(self):
+        response = self.client.post(
+            "/consult/api/duration-check",
+            json={
+                "symptom": "FEVER",
+                "duration_value": "1-2",
+                "original_symptoms": ["FEVER"],
+                "original_conditions": [],
+                "pending_durations": [],
+                "age": 25,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.get_json()
+        self.assertTrue(data["safe"])
+        self.assertTrue(data["proceed"])
+        self.assertIn("recommendation", data)
+
+    def test_duration_check_api_blocked(self):
+        response = self.client.post(
+            "/consult/api/duration-check",
+            json={
+                "symptom": "FEVER",
+                "duration_value": "4+",
+                "original_symptoms": ["FEVER"],
+                "original_conditions": [],
+                "pending_durations": [],
+                "age": 25,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.get_json()
+        self.assertFalse(data["safe"])
+        self.assertIn("referral", data)
+
+    def test_duration_check_api_chains_to_next_symptom(self):
+        response = self.client.post(
+            "/consult/api/duration-check",
+            json={
+                "symptom": "FEVER",
+                "duration_value": "1-2",
+                "original_symptoms": ["FEVER", "HEADACHE"],
+                "original_conditions": [],
+                "pending_durations": ["HEADACHE"],
+                "age": 25,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.get_json()
+        self.assertTrue(data["safe"])
+        self.assertFalse(data["proceed"])
+        self.assertIn("next_duration", data)
+        self.assertEqual(data["next_duration"]["symptom"], "HEADACHE")
+
+    def test_duration_check_api_missing_params(self):
+        response = self.client.post(
+            "/consult/api/duration-check",
+            json={"symptom": "FEVER"},
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_duration_thresholds_count(self):
+        """Verify all 9 symptom categories are covered (some with multiple labels)."""
+        # At minimum: FEVER, DIARRHEA, SORE_THROAT, STOMACH_ACHE, HEADACHE,
+        # BODY_ACHES, RASHES, ALLERGIC_RHINITIS, NASAL_CONGESTION,
+        # RUNNY_NOSE, COUGH_GENERAL, COUGH_DRY, COUGH_PRODUCTIVE
+        self.assertGreaterEqual(len(DURATION_THRESHOLDS), 13)
 
 
 if __name__ == "__main__":

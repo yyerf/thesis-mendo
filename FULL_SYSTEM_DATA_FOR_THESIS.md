@@ -32,12 +32,12 @@ There is NO training loop, NO loss function, NO fine-tuning anywhere in the code
 **ACTUAL:** The system uses a hand-crafted dictionary of ~260+ phrases across 13 symptom labels (in `step1.py`). The benchmark test set is 288 CSV rows (in `testing/benchmark/testing.csv`). There is no 1,039-entry annotated corpus in the codebase. The pharmacist annotation tool (mendo.diapana.dev) was planned but the domain expert did not complete the annotation — this is why the project adopted the ASG (Authoritative-Source-Grounded) framework using package inserts and MIMS Philippines instead.
 
 ### 4. WRONG: "522 curated phrases across 15 symptom labels"
-**ACTUAL:** ~260+ phrases across 13 symptom labels. The number should match the actual `SYMPTOM_DICTIONARY` in `step1.py`.
+**ACTUAL:** 331 phrases across 13 symptom labels (verified from `SYMPTOM_DICTIONARY` in `step1.py`).
 
 ### 5. WRONG: "26 OTC drugs"
 **Docx says:** "knowledge graph for 26 drugs" and "up to 26 OTC drugs"
 
-**ACTUAL:** 23 medicine entries (18 unique brands) in `data/Mendo-Datasets.json`. Not 26.
+**ACTUAL:** 24 medicine entries (19 unique brands) in `data/Mendo-Datasets.json`. Not 26.
 
 ### 6. WRONG: "Threshold sweep on 2,170-entry corpus"
 **Docx says:** "threshold sweep analysis (0.40 to 0.85) was conducted on a 2,170-entry symptom evaluation corpus"
@@ -47,7 +47,7 @@ There is NO training loop, NO loss function, NO fine-tuning anywhere in the code
 ### 7. WRONG: "Knowledge graph"
 **Docx says:** "OTC medication knowledge graph" and "knowledge graph constraints"
 
-**ACTUAL:** The system uses a flat JSON dataset (`Mendo-Datasets.json`) with 16 fields per medicine entry. It is NOT a graph database (no nodes, edges, or graph traversal). It is a rule-based lookup table. Call it a "structured medicine dataset" or "rule-based lookup table," not a "knowledge graph."
+**ACTUAL:** The system uses a flat JSON dataset (`Mendo-Datasets.json`) with 15 fields per medicine entry. It is NOT a graph database (no nodes, edges, or graph traversal). It is a rule-based lookup table. Call it a "structured medicine dataset" or "rule-based lookup table," not a "knowledge graph."
 
 ### 8. WRONG: "4-stage pipeline"
 **Docx says:** four-stage cascaded pipeline
@@ -79,19 +79,19 @@ There is NO training loop, NO loss function, NO fine-tuning anywhere in the code
 ```
 mendo_core/
 ├── __init__.py          (2 lines — package marker)
-├── step1.py             (1,229 lines — Dictionary-based extraction)
-├── step2.py             (321 lines — Semantic fallback)
-├── step3_hybrid.py      (932 lines — Hybrid merge + triage + safety)
-├── step4_recommend.py   (398 lines — Recommendation engine)
-└── symptom_models.py    (178 lines — Benchmark protocol)
+├── step1.py             (1,343 lines — Dictionary-based extraction)
+├── step2.py             (320 lines — Semantic fallback)
+├── step3_hybrid.py      (1,636 lines — Hybrid merge + triage + safety)
+├── step4_recommend.py   (936 lines — Recommendation engine)
+└── symptom_models.py    (207 lines — Benchmark protocol)
 
 data/
-└── Mendo-Datasets.json  (23 medicine entries, 16 fields each)
+└── Mendo-Datasets.json  (24 medicine entries, 15 fields each)
 
 testing/
-├── test_algorithm.py    (720 lines — Benchmark runner)
+├── test_algorithm.py    (719 lines — Benchmark runner)
 └── benchmark/
-    └── testing.csv      (288 test cases, 59 categories)
+    └── testing.csv      (288 test cases, 60 categories)
 
 web/
 ├── app.py               (Flask app factory)
@@ -113,18 +113,28 @@ pos/
 
 **Purpose:** Detect medical emergencies BEFORE symptom extraction. If a red flag is found, the system responds with "CONSULT A DOCTOR" instead of recommending OTC medicine.
 
-**8 Red-Flag Categories with multilingual regex patterns:**
+**18 unique Red-Flag Types across 19 triage rules with multilingual co-occurrence patterns:**
 
 | # | Category | Example Triggers | Medical Reason |
 |---|----------|-----------------|----------------|
-| 1 | `chest_pain` | "masakit ang dibdib", "chest pain", "sakit sa dughan" | Possible cardiac event |
-| 2 | `difficulty_breathing` | "hirap huminga", "shortness of breath", "lisod ginhawa" | Respiratory emergency |
-| 3 | `blood_in_stool` | "may dugo sa dumi", "bloody stool" | GI hemorrhage |
-| 4 | `blood_vomit` | "nagsusuka ng dugo", "vomiting blood" | Upper GI bleed |
-| 5 | `severe_allergic_reaction` | "namamaga ang lalamunan", "swollen throat" | Anaphylaxis risk |
-| 6 | `high_fever_prolonged` | "lagnat na 41 degrees", "fever of 40 degrees" | Temperature ≥40°C |
-| 7 | `seizure` | "seizure", "kombulsyon", "atake" | Neurological emergency |
-| 8 | `loss_of_consciousness` | "nahimatay", "fainted", "nawalan ng malay" | Requires medical evaluation |
+| 1 | `blood_in_stool` | "may dugo sa dumi", "bloody stool" | GI hemorrhage |
+| 2 | `blood_vomit` | "nagsusuka ng dugo", "vomiting blood" | Upper GI bleed |
+| 3 | `chest_pain` | "masakit ang dibdib", "chest pain", "sakit sa dughan" | Possible cardiac event |
+| 4 | `difficulty_breathing` | "hirap huminga", "shortness of breath", "lisod ginhawa" | Respiratory emergency |
+| 5 | `dengue_warning` | "lagnat at pantal", "fever with rashes" | Dengue / viral hemorrhagic risk |
+| 6 | `stroke_warning` | "manhid ang mukha", "paralysis", "speech loss" | Neurological event |
+| 7 | `severe_dehydration` | "nagtatae walang ihi", "diarrhea no urine" | Acute kidney injury risk |
+| 8 | `pregnancy_contraindication` | "buntis", "pregnant", "naglilihi" | Fetal harm risk from OTCs |
+| 9 | `high_fever_prolonged` | "lagnat na 41 degrees", "fever of 40 degrees" | Temperature ≥40°C |
+| 10 | `seizure` | "seizure", "kombulsyon", "atake" | Neurological emergency |
+| 11 | `loss_of_consciousness` | "nahimatay", "fainted", "nawalan ng malay" | Requires medical evaluation |
+| 12 | `severe_allergic_reaction` | "namamaga ang lalamunan", "swollen throat" | Anaphylaxis risk |
+| 13 | `head_bleeding` | "nagdurugo ang ulo", "head bleeding" | Head trauma |
+| 14 | `nose_bleeding` | "nagdurugo ang ilong", "nosebleed" | May indicate serious condition |
+| 15 | `ear_bleeding` | "nagdurugo ang tenga", "ear bleeding" | Ruptured eardrum / head trauma |
+| 16 | `hemoptysis` | "nagdudugo ang ubo", "coughing blood" | Serious lung condition |
+| 17 | `blood_in_urine` | "may dugo sa ihi", "blood in urine" | Hematuria |
+| 18 | `hypertension_risk` | "high blood", "hypertension" | Consult before OTC self-medication |
 
 **Key design decision:** Uses LIGHT normalization (lowercase + whitespace only) instead of full de-jejemize normalization because `_normalize()` converts digits (0→o, 4→a) which would destroy temperature values like "40 degrees" → "ao degrees".
 
@@ -134,26 +144,26 @@ pos/
 
 ## STAGE 1: DICTIONARY-BASED EXTRACTION
 
-**File:** `mendo_core/step1.py` (1,229 lines)
+**File:** `mendo_core/step1.py` (1,343 lines)
 
 ### 1.1 Symptom Dictionary
-13 symptom labels with ~260+ multilingual phrases:
+13 symptom labels with 331 multilingual phrases:
 
 | Label | Phrase Count | Languages | Key Examples |
 |-------|-------------|-----------|--------------|
-| HEADACHE | 35 | Tag/Bis/Eng | "masakit ang ulo", "labad akong ulo", "headache", "bumbunan ko" |
-| COUGH_PRODUCTIVE | 22 | Tag/Bis/Eng | "may plema", "basang ubo", "halak", "kumakalansing sa dibdib" |
-| COUGH_DRY | 16 | Tag/Bis/Eng | "walang plema", "tuyong ubo", "dry cough" |
-| COUGH_GENERAL | 14 | Tag/Bis/Eng | "ubo", "cough", "inuubo", "gi-ubo" |
-| FEVER | 28 | Tag/Bis/Eng | "lagnat", "nilalagnat", "hilanat", "init akong lawas" |
-| BODY_ACHES | 24 | Tag/Bis/Eng | "masakit katawan", "binugbog", "bug at akong lawas" |
-| NASAL_CONGESTION | 12 | Tag/Bis/Eng | "barado ilong", "stuffy nose", "blocked nose" |
-| SORE_THROAT | 22+ | Tag/Bis/Eng | "masakit lalamunan", "sore throat", "garas akong tilaok", "paos" |
+| HEADACHE | 42 | Tag/Bis/Eng | "masakit ang ulo", "labad akong ulo", "headache", "bumbunan ko" |
+| FEVER | 43 | Tag/Bis/Eng | "lagnat", "nilalagnat", "hilanat", "init akong lawas" |
+| BODY_ACHES | 39 | Tag/Bis/Eng | "masakit katawan", "binugbog", "bug at akong lawas" |
+| STOMACH_ACHE | 38 | Tag/Bis/Eng | "sakit tiyan", "kabag", "hyperacidity", "buhol buhol" |
+| RASHES | 32 | Tag/Bis/Eng | "pantal", "rash", "makati ang balat", "namumula ang balat" |
+| SORE_THROAT | 31 | Tag/Bis/Eng | "masakit lalamunan", "sore throat", "garas akong tilaok", "paos" |
+| COUGH_PRODUCTIVE | 20 | Tag/Bis/Eng | "may plema", "basang ubo", "halak", "kumakalansing sa dibdib" |
+| ALLERGIC_RHINITIS | 17 | Tag/Bis/Eng | "allergy", "bahing", "alerdyi", "makati ilong" |
+| DIARRHEA | 17 | Tag/Bis/Eng | "pagtatae", "diarrhea", "lbm", "loose bowel" |
+| COUGH_GENERAL | 16 | Tag/Bis/Eng | "ubo", "cough", "inuubo", "gi-ubo" |
+| COUGH_DRY | 15 | Tag/Bis/Eng | "walang plema", "tuyong ubo", "dry cough" |
+| NASAL_CONGESTION | 11 | Tag/Bis/Eng | "barado ilong", "stuffy nose", "blocked nose" |
 | RUNNY_NOSE | 10 | Tag/Bis/Eng | "sipon", "runny nose", "tumutulo ilong" |
-| ALLERGIC_RHINITIS | 14 | Tag/Bis/Eng | "allergy", "bahing", "alerdyi", "makati ilong" |
-| RASHES | 28 | Tag/Bis/Eng | "pantal", "rash", "makati ang balat", "namumula ang balat" |
-| STOMACH_ACHE | 22 | Tag/Bis/Eng | "sakit tiyan", "kabag", "hyperacidity", "buhol buhol" |
-| DIARRHEA | 14 | Tag/Bis/Eng | "pagtatae", "diarrhea", "lbm", "loose bowel" |
 
 ### 1.2 Normalization (`_normalize()` function)
 Deterministic text preprocessing:
@@ -269,7 +279,7 @@ Contrastive-boundary-aware negation for: FEVER, COUGH, HEADACHE, RUNNY_NOSE, BOD
 - **Device:** CPU by default (configurable via `MENDO_SEMANTIC_DEVICE` env var)
 
 ### Anchor Sentences
-8–12 gold-standard example sentences per symptom label (13 labels × ~10 anchors = ~130 anchor sentences total). These are pre-encoded once at initialization.
+5–12 gold-standard example sentences per symptom label (118 anchor sentences total across 13 labels). These are pre-encoded once at initialization.
 
 ### How It Works
 1. Pre-encode all anchor sentences into 384-dimensional vectors at startup
@@ -286,7 +296,7 @@ Contrastive-boundary-aware negation for: FEVER, COUGH, HEADACHE, RUNNY_NOSE, BOD
 
 ## STAGE 3: HYBRID MERGE + LEXICAL GUARDS + SAFETY FILTERS
 
-**File:** `mendo_core/step3_hybrid.py` (932 lines)
+**File:** `mendo_core/step3_hybrid.py` (1,636 lines)
 
 ### Pipeline Flow
 ```
@@ -338,26 +348,26 @@ Applies all 7 negation functions plus:
 
 ## STAGE 4: ASG RECOMMENDATION ENGINE
 
-**File:** `mendo_core/step4_recommend.py` (398 lines)
+**File:** `mendo_core/step4_recommend.py` (936 lines)
 
-### MedRow Dataclass (16 fields)
+### MedRow Dataclass (15 fields)
 | Field | Type | Source |
 |-------|------|--------|
-| brand | str | Brand name |
-| generic_main_use | str | Active ingredients |
-| primary_symptom | str | Primary symptom label |
-| typical_symptoms | str | Comma-separated symptoms treated |
-| drug_category | str | Drug classification |
-| min_age | str | Minimum age |
-| dosage_form | str | Tablet/Syrup/Capsule/Oral Suspension |
-| notes | str | Usage notes |
-| approved_indications | tuple[str] | ASG: approved uses |
-| indication_source | str | ASG: "Package Insert / MIMS Philippines" |
-| contraindications | tuple[str] | ASG: contraindications |
-| warnings | tuple[str] | ASG: warnings |
-| drug_interactions | tuple[str] | ASG: interactions |
-| max_duration_days | int | ASG: max safe duration |
-| contraindication_source | str | ASG: source for contraindications |
+| Brand | str | Product label |
+| Generic/Main Use | str | Package insert |
+| Drug Category | str | MIMS classification |
+| Primary Symptom | str | Clinical mapping |
+| Typical Symptoms Treated | str (comma-sep) | Package insert |
+| Dosage Form | str | Product label |
+| Minimum Age | str | Package insert |
+| Notes | str | Clinical notes |
+| Approved_Indications | tuple[str] | Package Insert / MIMS |
+| Indication_Source | str | ASG attribution |
+| Contraindications | tuple[str] | Package Insert / MIMS |
+| Warnings | tuple[str] | Package Insert |
+| Drug_Interactions | tuple[str] | Package Insert / MIMS |
+| Max_Duration_Days | int | Package Insert |
+| Contraindication_Source | str | ASG attribution |
 
 ### Recommendation Logic
 1. **Triage gate:** If red_flags non-empty → return "CONSULT A DOCTOR" + suppress all OTC
@@ -369,7 +379,39 @@ Applies all 7 negation functions plus:
    - Opposing mechanism warning (expectorant + cough suppressant)
    - Cough follow-up informational warning
 
-### 23 Medicine Entries (18 unique brands)
+### OLDCARTS Duration Safeguard Matrix
+
+The Duration component of the OLDCARTS (Onset, Location, Duration, Character, Aggravating, Relieving, Timing, Severity) clinical assessment framework is implemented as a universal safety layer across all 9 symptom categories. After the existing OLDCARTS-inspired clarification flow (Character, Onset, Aggravating, Timing), the system asks the patient how long each detected symptom has persisted. If the reported duration exceeds a clinically-defined threshold, OTC recommendations are blocked entirely and the patient is referred to a licensed medical professional.
+
+This makes the OLDCARTS implementation cover 5 components: **Character** (cough type), **Onset** (diarrhea food poisoning context, headache hunger/dehydration detection), **Aggravating** (sipon allergy vs cold weather), **Timing** (sipon context), and **Duration** (universal symptom duration safety check).
+
+**Flow:** Existing clarifications (cough type → diarrhea context → stomach context → sipon context) complete first, then duration is asked for each detected symptom sequentially via multiple-choice buttons.
+
+| # | Symptom Label | Threshold (Days) | Action if Exceeded | Clinical Rationale |
+|---|--------------|-------------------|--------------------|-----------|
+| 1 | FEVER | > 3 | Block OTC / Refer | Dengue, Typhoid, Malaria indicator (endemic PH) |
+| 2 | DIARRHEA | > 2 | Block OTC / Refer | Dehydration risk, bacterial/parasitic infection |
+| 3 | SORE_THROAT | > 5 | Block OTC / Refer | Streptococcal infection, rheumatic fever risk |
+| 4 | STOMACH_ACHE | > 7 | Block OTC / Refer | PUD, gallstones, appendicitis |
+| 5 | HEADACHE | > 7 | Block OTC / Refer | Hypertension, neurological issues, rebound headaches |
+| 6 | BODY_ACHES | > 7 | Block OTC / Refer | Inflammatory arthritis, nerve damage, post-viral sequelae |
+| 7 | RASHES | > 7 | Block OTC / Refer | Fungal infection, scabies, chronic immune condition |
+| 8 | ALLERGIC_RHINITIS | > 7 | Block OTC / Refer | Chronic immune issue requiring prescription treatment |
+| 9 | NASAL_CONGESTION | > 10 | Block OTC / Refer | Bacterial Sinusitis |
+| 10 | RUNNY_NOSE | > 10 | Block OTC / Refer | Bacterial sinus infection |
+| 11 | COUGH_GENERAL | > 14 | Block OTC / Refer | TB screening (DOH protocol, endemic PH) |
+| 12 | COUGH_DRY | > 14 | Block OTC / Refer | TB screening (DOH protocol) |
+| 13 | COUGH_PRODUCTIVE | > 14 | Block OTC / Refer | TB screening (DOH protocol) |
+
+**Implementation details:**
+- **Question format:** Multiple-choice buttons (e.g., "1-2 days", "3 days", "More than 3 days")
+- **Per-symptom:** Duration is asked separately for each detected symptom
+- **Threshold logic:** Duration > threshold → block; Duration ≤ threshold → safe to proceed
+- **Bilingual prompts:** All questions displayed in Tagalog and English
+- **API endpoint:** `POST /consult/api/duration-check`
+- **File:** `mendo_core/step4_recommend.py` — `DURATION_THRESHOLDS`, `check_duration_safety()`, `get_duration_question()`, `parse_duration_days()`
+
+### 24 Medicine Entries (19 unique brands)
 | # | Brand | Active Ingredient | Category | Primary Symptom | Form |
 |---|-------|-------------------|----------|----------------|------|
 | 1 | Bioflu | Paracetamol + Phenylephrine + Chlorphenamine | Cold & Flu | Fever | Tablet |
@@ -393,8 +435,9 @@ Applies all 7 negation functions plus:
 | 19 | Cetirizine (Tablet) | Cetirizine HCl | Allergy | Allergic Rhinitis | Tablet |
 | 20 | Loperamide (Diatabs) | Loperamide HCl | Anti-diarrhea | Diarrhea | Tablet |
 | 21 | Erceflora | Bacillus clausii | GI / Probiotic | Diarrhea | Oral Suspension |
-| 22 | Kremil-S | Aluminum hydroxide + Magnesium hydroxide + Simethicone | Antacid | Hyperacidity | Tablet |
-| 23 | Buscopan | Hyoscine butylbromide | Antispasmodic | Stomach Cramps | Tablet |
+| 22 | Hydrite (ORS) | Oral Rehydration Salts (Sodium, Potassium, Glucose, Citrate) | Rehydration | Diarrhea | Powder for Solution |
+| 23 | Kremil-S | Aluminum hydroxide + Magnesium hydroxide + Simethicone | Antacid | Hyperacidity | Tablet |
+| 24 | Buscopan | Hyoscine butylbromide | Antispasmodic | Stomach Cramps | Tablet |
 
 All ASG data sourced from: Package Inserts, MIMS Philippines, DOH Philippines.
 
@@ -418,6 +461,18 @@ All ASG data sourced from: Package Inserts, MIMS Philippines, DOH Philippines.
 - Handles cough type clarification (dry/productive)
 - Re-runs recommendation with specified cough type
 
+**POST `/consult/api/context-clarify`**
+- Handles OLDCARTS-style context clarification (diarrhea, stomach ache, runny nose)
+- Accepts clarify_type + clarification value
+- Re-runs recommendation with context override
+
+**POST `/consult/api/duration-check`**
+- OLDCARTS Duration Safeguard — checks symptom duration against clinically-safe thresholds
+- Input: `{"symptom": "FEVER", "duration_value": "4+", "original_symptoms": [...], "pending_durations": [...]}`
+- If duration exceeds threshold → returns referral (OTC blocked)
+- If safe and more symptoms pending → returns next duration question
+- If all safe → returns final recommendation with POS stock cross-reference
+
 ### POS System (Point of Sale)
 - SQLite database for inventory management
 - Admin dashboard for stock management
@@ -433,7 +488,7 @@ All ASG data sourced from: Package Inserts, MIMS Philippines, DOH Philippines.
 - **Format:** CSV with columns: test_id, input_text, age, cough_type, expected_symptoms, test_category, notes
 - **Runner:** `testing/test_algorithm.py` — AlgorithmTester class
 
-### 59 Test Categories across 4 Tiers:
+### 60 Test Categories across 4 Tiers:
 
 **Tier 1 — Core Functional (100 tests):**
 Simple Single (10), Multiple Symptoms (10), Negation (6), Partial Negation (4), Noisy Input (10), Misspelling (10), Alternative Phrasing (10), English (5), Code-Switching (5), Third Person (5), Temporal (5), Age Context (5), Severe Intensity (5), Mild Intensity (5), Question Form (5)
@@ -446,6 +501,9 @@ Universal negation (7), False positive traps (10), Sore throat (3+2), Contrastiv
 
 **Tier 4 — Triage Safety (24 tests):**
 Chest pain (4), Breathing (4), Blood (4), Consciousness (3), Seizure (2), Allergic severe (2), High fever (2), Mixed (3)
+
+**Tier 5 — Duration Safeguard (31 tests):**
+Parse duration values (4), Duration question coverage (1), Safe duration cases (5), Blocked duration cases (11), Edge cases at threshold (4), API endpoint tests (4), Threshold count verification (1), Duration chain to next symptom (1)
 
 ### Results
 | Benchmark | Result |
@@ -476,7 +534,7 @@ Chest pain (4), Breathing (4), Blood (4), Consciousness (3), Seizure (2), Allerg
 9. **SORE_THROAT Proximity Detection** — reversed word order handling
 10. **False Positive Exclusion Sets** — "tubo" ≠ COUGH, "pantalon" ≠ RASHES
 11. **Adversarial Testing Methodology** — 64 tests across 19 categories
-12. **Triage/Red-Flag Safety Layer** — 8 emergency categories, multilingual
+12. **Triage/Red-Flag Safety Layer** — 18 emergency flag types via 19 triage rules, multilingual
 13. **External AI Audit Validation** — 6/7 Gemini suggestions already implemented
 14. **No Fine-Tuning by Design** — pre-trained inference only, safety-first
 15. **Precision-First Switching Logic** — semantic fires only when dictionary returns zero
@@ -484,6 +542,7 @@ Chest pain (4), Breathing (4), Blood (4), Consciousness (3), Seizure (2), Allerg
 17. **Allergen-Trigger Heuristic** — RASHES + allergen word → also ALLERGIC_RHINITIS
 18. **Centralized Semantic Safety Filters** — 7 negation + red-flag suppression in one function
 19. **19 bugs discovered and fixed** through systematic adversarial probing
+20. **OLDCARTS Duration Safeguard Matrix** — universal duration safety across all 9 symptom categories with clinically-calibrated thresholds for Philippine endemic conditions (Dengue >3d fever, TB >14d cough per DOH protocol)
 
 ---
 
@@ -516,18 +575,19 @@ Chest pain (4), Breathing (4), Blood (4), Consciousness (3), Seizure (2), Allerg
 - Iterative design science methodology with 3 cycles
 - **Iteration 1:** Baseline v2.0 analysis, 13-label symptom taxonomy, pipeline architecture design
 - **Iteration 2:** Dictionary expansion to ~260+ phrases, negation handling, fuzzy rescue, contrastive boundary logic, benchmark creation (288 test cases)
-- **Iteration 3:** Semantic fallback integration, adversarial testing (64 cases), triage layer, safety filters, error-driven refinement (19 bugs fixed), deployment optimization
+- **Iteration 3:** Semantic fallback integration, adversarial testing (64 cases), triage layer, safety filters, OLDCARTS Duration Safeguard Matrix (13 symptom-duration thresholds), error-driven refinement (19 bugs fixed), deployment optimization
 
 ### Theoretical Framework
 - **Rule-Based NLP:** Deterministic dictionaries, regex, negation windows (Step 1)
 - **Distributional Semantics:** Pre-trained multilingual sentence embeddings for paraphrase handling (Step 2, inference-only, NO fine-tuning)
 - **Knowledge-Based Systems:** Structured medicine dataset with safety constraints (Step 4)
 - **Hybrid justification:** Rules for safety+speed, embeddings for linguistic coverage, structured data for medical grounding
+- **OLDCARTS Clinical Framework:** 5 components implemented — Character (cough type clarification), Onset (diarrhea food-poisoning context, headache hunger/dehydration detection), Aggravating (sipon allergy vs cold weather), Timing (sipon context), Duration (universal symptom-duration safety check with DOH-aligned thresholds)
 
 ### Data
-- **Symptom dictionary:** ~260+ phrases across 13 labels, 5 language variants
-- **Medicine dataset:** 23 OTC entries × 16 fields, sourced from Package Inserts/MIMS/DOH
-- **Test benchmark:** 288 cases × 59 categories × 4 tiers
+- **Symptom dictionary:** 331 phrases across 13 labels, 5 language variants
+- **Medicine dataset:** 24 OTC entries × 15 fields, sourced from Package Inserts/MIMS/DOH
+- **Test benchmark:** 288 cases × 60 categories × 4 tiers
 - **Additional validation:** 9 semantic stress cases + 80 real-user simulation cases
 - **NO 1,039-entry corpus.** NO pharmacist annotation. The project uses ASG (Authoritative-Source-Grounded) framework because the domain expert could not complete annotation within timeline.
 - **NO fine-tuning.** The MiniLM model is used pre-trained with inference only.

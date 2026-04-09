@@ -163,6 +163,96 @@
 
     @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
+    .idle-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1400;
+      background:
+        radial-gradient(circle at top, rgba(14, 165, 233, 0.18), transparent 35%),
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(240,249,255,0.98) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      animation: fadeIn 0.2s ease;
+    }
+    .idle-overlay.hidden { display: none !important; }
+    .idle-shell {
+      width: min(100%, 760px);
+      border-radius: 36px;
+      padding: 40px 34px;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(125, 211, 252, 0.55);
+      box-shadow: 0 32px 80px rgba(14, 165, 233, 0.18);
+      text-align: center;
+    }
+    .idle-brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .idle-title {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--zinc-900);
+      margin-bottom: 12px;
+    }
+    .idle-copy {
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--zinc-600);
+    }
+    .idle-countdown {
+      margin: 28px auto 20px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 24px 50px rgba(2, 132, 199, 0.28);
+    }
+    .idle-countdown strong {
+      font-size: 54px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .idle-countdown span {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.84;
+      margin-top: 8px;
+    }
+    .idle-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .idle-tap-note {
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--zinc-500);
+    }
+
     /* ── Disclaimer ticker ── */
     .disclaimer-ticker {
       position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
@@ -415,13 +505,31 @@
     }
 
     .lang-row {
-      display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;
+      display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap;
       align-items: center;
+      justify-content: flex-end;
     }
-    .lang-tag {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.5px; padding: 4px 10px; border-radius: 6px;
-      background: var(--zinc-100); color: var(--zinc-500);
+    .typewriter-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.3em;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .typewriter-title::after {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 0.95em;
+      margin-left: 6px;
+      border-radius: 999px;
+      background: var(--blue-500);
+      animation: blink-caret 0.9s step-end infinite;
+    }
+    @keyframes blink-caret {
+      0%, 48% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
     .lang-info-btn {
       width: 22px; height: 22px; border-radius: 50%;
@@ -508,12 +616,27 @@
       margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-progress {
+      margin: 16px auto 0; max-width: 220px;
+    }
+    .loading-progress-bar {
+      height: 4px; border-radius: 4px; background: var(--zinc-200); overflow: hidden;
+    }
+    .loading-progress-fill {
+      height: 100%; border-radius: 4px; background: var(--blue-500);
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+    .loading-percent {
+      font-size: 13px; font-weight: 700; color: var(--zinc-400); margin-top: 8px;
+    }
 
     .analysis-result {
       width: 100%; max-width: 700px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 16px;
       padding: 32px 24px;
       height: auto;
+      align-items: center;
     }
     .analysis-result:has(.cp-graph) {
       max-width: 100%;
@@ -533,8 +656,16 @@
     .detected-section h3 {
       font-size: 13px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.5px; color: var(--zinc-500); margin-bottom: 10px;
+      text-align: center;
     }
-    .symptom-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .detected-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .symptom-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .symptom-pill {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 8px 16px; border-radius: 100px;
@@ -542,6 +673,138 @@
       background: var(--blue-100); color: var(--blue-700);
     }
     .symptom-pill::before { content: '\2713'; font-size: 11px; }
+
+    .analysis-result.center-stage {
+      justify-content: center;
+      min-height: 100%;
+    }
+    .language-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(125, 211, 252, 0.65);
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 auto;
+      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.08);
+    }
+    .summary-card {
+      width: 100%;
+      max-width: 640px;
+      padding: 28px 24px;
+      border-radius: 28px;
+      background: linear-gradient(160deg, #ffffff 0%, #f8fcff 100%);
+      border: 1px solid rgba(125, 211, 252, 0.5);
+      box-shadow: 0 26px 60px rgba(14, 165, 233, 0.12);
+      text-align: center;
+    }
+    .summary-card.summary-card--compact {
+      max-width: 560px;
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      box-shadow: 0 18px 38px rgba(14, 165, 233, 0.08);
+    }
+    .summary-card h2 {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--zinc-900);
+      margin-bottom: 10px;
+    }
+    .summary-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--zinc-600);
+      margin-bottom: 20px;
+    }
+    .summary-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .summary-metric {
+      padding: 18px;
+      border-radius: 18px;
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    }
+    .summary-metric .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--zinc-500);
+      margin-bottom: 8px;
+    }
+    .summary-metric .value {
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--zinc-900);
+    }
+    .summary-card .detected-section {
+      margin-top: 6px;
+    }
+    .summary-card.summary-card--compact h2 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .summary-card.summary-card--compact p {
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .summary-card.summary-card--compact .summary-metrics {
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .summary-card.summary-card--compact .summary-metric {
+      padding: 14px;
+      border-radius: 14px;
+    }
+    .summary-card.summary-card--compact .summary-metric .value {
+      font-size: 22px;
+    }
+    .tap-anywhere-cta {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white);
+      box-shadow: 0 18px 42px rgba(2, 132, 199, 0.28);
+    }
+    .tap-anywhere-cta .cta-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .tap-anywhere-cta .cta-sub {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 6px;
+      color: rgba(255,255,255,0.84);
+    }
+    .analysis-result.tap-ready {
+      cursor: pointer;
+    }
+    .results-stage.tap-ready-stage {
+      cursor: pointer;
+    }
+    .analysis-result.tap-ready .summary-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .analysis-result.tap-ready:hover .summary-card {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 30px 72px rgba(14, 165, 233, 0.18);
+    }
 
     .pipeline-info {
       font-size: 12px; color: var(--zinc-400);
@@ -551,40 +814,111 @@
 
     .no-symptoms {
       text-align: center; padding: 40px 20px; color: var(--zinc-500);
+      width: 100%; max-width: 640px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--zinc-200);
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.06);
     }
     .no-symptoms .icon { font-size: 40px; margin-bottom: 12px; }
 
     .referral-banner {
-      background: var(--danger-light); border: 1px solid #fca5a5;
-      border-radius: var(--radius); padding: 24px; text-align: center;
+      width: 100%;
+      max-width: 640px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #dc2626;
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: left;
     }
-    .referral-banner .icon { font-size: 40px; margin-bottom: 8px; }
     .referral-banner h3 {
-      font-size: 17px; font-weight: 800; color: #991b1b; margin-bottom: 8px;
+      font-size: 17px; font-weight: 700; color: #991b1b; margin-bottom: 6px;
     }
-    .referral-banner p { font-size: 14px; color: #b91c1c; line-height: 1.6; }
+    .referral-banner p { font-size: 14px; color: #6b7280; line-height: 1.6; margin: 0; }
     .referral-banner .severity-badge {
       display: inline-flex; padding: 4px 12px; border-radius: 100px;
       font-size: 12px; font-weight: 700;
       background: #fee2e2; color: #dc2626; margin-top: 12px;
     }
     .referral-note {
-      font-size: 12px; color: var(--zinc-500); margin-top: 12px; font-style: italic;
+      font-size: 12px; color: var(--zinc-400); margin-top: 10px;
+    }
+    .referral-cta {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(220, 38, 38, 0.07);
+      color: #991b1b;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.7;
     }
 
     .triage-banner {
-      background: var(--danger-light); border: 1px solid #ef4444;
-      border-radius: var(--radius); padding: 28px 24px; text-align: center;
+      width: 100%;
+      max-width: 660px;
+      background: linear-gradient(160deg, #fff1f2 0%, #fff 100%);
+      border: 1px solid #ef4444;
+      border-radius: 28px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 24px 52px rgba(239, 68, 68, 0.16);
     }
-    .triage-banner .icon { font-size: 48px; margin-bottom: 12px; }
-    .triage-banner h3 { font-size: 18px; font-weight: 800; color: #991b1b; margin-bottom: 10px; }
-    .triage-banner p { font-size: 14px; color: #b91c1c; line-height: 1.7; }
+    .triage-banner .icon { font-size: 54px; margin-bottom: 14px; }
+    .triage-banner h3 { font-size: 26px; font-weight: 900; color: #991b1b; margin-bottom: 10px; }
+    .triage-banner p { font-size: 15px; color: #b91c1c; line-height: 1.8; }
     .triage-banner .flag-list {
       list-style: none; padding: 0; margin: 16px auto; max-width: 400px; text-align: left;
     }
-    .triage-banner .flag-list li { padding: 4px 0; font-size: 14px; font-weight: 600; color: #dc2626; }
+    .triage-banner .flag-list li { padding: 6px 0; font-size: 14px; font-weight: 700; color: #dc2626; }
     .triage-banner .triage-note {
-      font-size: 12px; color: var(--zinc-500); margin-top: 14px; font-style: italic;
+      font-size: 13px; color: var(--zinc-500); margin-top: 16px; font-style: italic;
+    }
+
+    /* ── Duration Safeguard — doctor referral banner ── */
+    .duration-referral-banner {
+      width: 100%;
+      max-width: 660px;
+      background: linear-gradient(165deg, #fff7ed 0%, #fff 100%);
+      border: 1px solid #fb923c;
+      border-radius: 28px;
+      padding: 34px 26px;
+      text-align: center;
+      box-shadow: 0 24px 52px rgba(251, 146, 60, 0.18);
+    }
+    .duration-referral-banner .icon { font-size: 56px; margin-bottom: 16px; }
+    .duration-referral-banner h3 {
+      font-size: 28px; font-weight: 900; color: #9a3412; margin-bottom: 12px;
+    }
+    .duration-referral-banner .duration-detail {
+      font-size: 16px; color: #c2410c; line-height: 1.8; margin-bottom: 8px;
+    }
+    .duration-referral-banner .referral-action {
+      font-size: 16px; font-weight: 800; color: #9a3412;
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(251, 146, 60, 0.12);
+    }
+    .duration-referral-banner .referral-note {
+      font-size: 13px; color: var(--zinc-500); margin-top: 18px; font-style: italic;
+    }
+
+    /* ── Duration question — progress indicator ── */
+    .duration-progress {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-bottom: 16px;
+    }
+    .duration-progress .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--zinc-200);
+    }
+    .duration-progress .dot.active {
+      background: var(--blue-500); width: 10px; height: 10px;
+    }
+    .duration-progress .dot.done {
+      background: var(--success);
     }
 
     .clarify-page {
@@ -594,6 +928,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
     .clarify-page-title {
       font-size: 28px;
@@ -614,13 +949,59 @@
       width: 100%;
       text-align: center;
     }
-    .clarify-box {
-      background: var(--white);
+    .clarify-language-bar {
+      width: 100%;
+      max-width: 420px;
+      margin: 18px auto 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .clarify-language-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--zinc-500);
+      flex-shrink: 0;
+    }
+    .clarify-language-select {
+      width: 180px;
       border: 1px solid var(--zinc-200);
-      border-radius: var(--radius);
-      padding: 18px;
-      max-width: 620px;
+      border-radius: 12px;
+      background: var(--white);
+      padding: 10px 38px 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--zinc-800);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--zinc-500) 50%), linear-gradient(135deg, var(--zinc-500) 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .clarify-language-select:focus {
+      border-color: var(--blue-400);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+    }
+    .clarify-box {
+      background: linear-gradient(160deg, #ffffff 0%, #f8fcff 100%);
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      border-radius: 24px;
+      padding: 22px;
+      max-width: 640px;
       margin: 0 auto;
+      box-shadow: 0 22px 56px rgba(15, 23, 42, 0.08);
     }
     .clarify-box .clarify-header {
       display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px;
@@ -640,22 +1021,22 @@
     }
     .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .clarify-btn {
-      flex: 0 1 280px; min-width: 140px; padding: 18px 16px;
-      border: 1px solid var(--zinc-200); border-radius: var(--radius);
+      flex: 0 1 340px; min-width: 220px; min-height: 112px; padding: 24px 22px;
+      border: 1px solid var(--zinc-200); border-radius: 22px;
       background: var(--white); cursor: pointer;
       text-align: center; transition: all 0.25s;
       font-family: var(--font);
-      box-shadow: none;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
     }
     .clarify-btn:hover {
-      border-color: var(--zinc-400);
-      box-shadow: none;
-      transform: none;
+      border-color: var(--blue-300);
+      box-shadow: 0 18px 38px rgba(14, 165, 233, 0.12);
+      transform: translateY(-2px);
     }
     .clarify-btn:active { transform: translateY(0); }
     .clarify-btn .emoji { display: none; }
-    .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
-    .clarify-btn .desc { font-size: 12px; color: var(--zinc-500); margin-top: 4px; line-height: 1.4; }
+    .clarify-btn .label { font-size: 19px; font-weight: 800; color: var(--zinc-800); }
+    .clarify-btn .desc { font-size: 14px; color: var(--zinc-500); margin-top: 8px; line-height: 1.55; }
 
     /* Cold-weather / no-medicine advisory card */
     .advisory-card {
@@ -693,6 +1074,10 @@
 
     /* Recommendations */
     .rec-list { display: flex; flex-direction: column; gap: 10px; }
+    .rec-list, .symptom-focus-grid, .rec-disclaimer {
+      width: 100%;
+      max-width: 760px;
+    }
     .rec-card {
       border: 1px solid var(--zinc-200); border-radius: var(--radius);
       padding: 18px; display: flex; gap: 14px;
@@ -733,7 +1118,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 12px;
+      margin: 4px 0 12px;
     }
     .symptom-focus-card {
       border: 1px solid var(--zinc-200);
@@ -770,11 +1155,46 @@
       color: var(--zinc-500);
     }
 
+    .results-mini-strip {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .results-mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      color: var(--zinc-700);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .results-mini-chip .label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-400);
+    }
+
     /* Results footer buttons */
     .results-actions {
       display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;
     }
     .results-actions .btn { flex: 1; min-width: 140px; }
+
+    .results-actions.results-actions--center {
+      width: 100%;
+      justify-content: center;
+    }
 
     /* ── Toast ── */
     .toast-container {
@@ -806,8 +1226,22 @@
       .section-title { font-size: 26px; }
       .pain-value-display { font-size: 56px; }
       .age-display input { font-size: 32px; width: 120px; }
+      .idle-shell { padding: 32px 20px; border-radius: 28px; }
+      .idle-title { font-size: 32px; }
+      .idle-copy { font-size: 15px; }
+      .idle-countdown { width: 126px; height: 126px; }
+      .idle-countdown strong { font-size: 44px; }
       .clarify-page-title { font-size: 24px; }
       .clarify-page-question { font-size: 16px; }
+      .summary-card h2 { font-size: 28px; }
+      .summary-card.summary-card--compact h2 { font-size: 20px; }
+      .summary-metrics { grid-template-columns: 1fr; }
+      .typewriter-title { white-space: normal; }
+      .clarify-language-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .clarify-language-select { width: 100%; }
       .kiosk-step span:not(.num) { display: none; }
       .home-cta-text { font-size: 17px; }
       .panel-content { padding: 28px 16px; }
@@ -872,7 +1306,7 @@
       <path d="M2.5 5.5a13 13 0 0 1 2.46-1.6"/>
       <path d="M14 3.46a13 13 0 0 1 3.54 1.59"/>
     </svg>
-    <span class="home-cta-text">Tap anywhere to begin</span>
+    <span class="home-cta-text" id="homeCtaText">Tap anywhere to begin</span>
   </div>
 </div>
 
@@ -939,6 +1373,22 @@
   </div>
 </div>
 
+<div class="idle-overlay hidden" id="idleModal" onclick="resumeFromIdle(event)">
+  <div class="idle-shell" onclick="event.stopPropagation()">
+    <div class="idle-brand">Mendo Session</div>
+    <div class="idle-title">Are you still there?</div>
+    <p class="idle-copy">Your consultation is about to return to the welcome screen because there has been no activity.</p>
+    <div class="idle-countdown">
+      <strong id="idleCountdown">10</strong>
+      <span>Seconds Left</span>
+    </div>
+    <div class="idle-actions">
+      <button class="btn btn--primary btn--lg" onclick="resumeFromIdle(event)">Continue Session</button>
+    </div>
+    <div class="idle-tap-note">Tap anywhere to keep using Mendo</div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════
      KIOSK — Main Flow
 ═══════════════════════════════ -->
@@ -998,8 +1448,8 @@
     <!-- ═══ STEP 2: Symptoms ═══ -->
     <div class="kiosk-panel" id="panel2">
       <div class="panel-content">
-        <div class="section-title">What are you feeling?</div>
-        <div class="section-sub">Describe your symptoms in your own words.</div>
+        <div class="section-title"><span class="typewriter-title" id="symptomTypewriterText">What are you feeling?</span></div>
+        <div style="height: 28px;"></div>
 
         <div class="symptom-input-area">
           <div class="symptom-input-wrap">
@@ -1016,54 +1466,45 @@
           </div>
 
           <div class="lang-row">
-            <span class="lang-tag">English</span>
-            <span class="lang-tag">Tagalog</span>
-            <span class="lang-tag">Bisaya</span>
-            <span class="lang-tag">Taglish</span>
             <button class="lang-info-btn" onclick="openModal('langModal', event)" title="Supported languages">?</button>
           </div>
         </div>
       </div>
       <div class="panel-footer">
         <button class="btn" onclick="goToStep(1)">Back</button>
-        <button class="btn btn--primary btn--lg" id="toStep3Btn" disabled onclick="goToStep(3)">
+        <button class="btn btn--primary btn--lg" id="toStep3Btn" disabled onclick="triggerPreDetect()">
           Continue
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- ═══ STEP 3: Pain Scale ═══ -->
+    <!-- ═══ STEP 3: Pain Scale (per-symptom) ═══ -->
     <div class="kiosk-panel" id="panel3">
       <div class="panel-content">
-        <div class="section-title">On a scale of 1 to 10,<br>how would you rate your pain?</div>
-        <div style="height: 24px;"></div>
-
-        <div class="pain-scale-area">
-          <div class="pain-value-display" id="painValue">3</div>
-          <div class="pain-label" id="painLabel">Mild discomfort</div>
-
-          <div class="pain-slider-wrap">
-            <input type="range" class="pain-slider" id="painSlider" min="1" max="10" value="3" step="1">
-            <div class="pain-labels">
-              <span>1 Mild</span>
-              <span>5 Moderate</span>
-              <span>10 Severe</span>
-            </div>
+        <!-- Pre-detect loading spinner (shown while detecting symptoms) -->
+        <div id="preDetectLoading" class="analysis-loading hidden">
+          <div class="spinner"></div>
+          <p>Detecting symptoms...</p>
+          <div class="loading-progress">
+            <div class="loading-progress-bar"><div class="loading-progress-fill" id="preDetectProgressFill"></div></div>
+            <div class="loading-percent" id="preDetectPercent">0%</div>
           </div>
+        </div>
 
-          <div class="severity-warning hidden" id="severityWarning">
-            <p>High severity detected</p>
-            <p class="sub-msg">
-              At this level, we recommend consulting a licensed pharmacist or
-              healthcare professional. You may still proceed.
-            </p>
-          </div>
+        <!-- Per-symptom severity container (dynamically rendered) -->
+        <div id="perSymptomSeverity"></div>
+
+        <!-- Fallback: no symptoms detected -->
+        <div id="noSymptomsStep3" class="hidden" style="text-align:center;padding:40px 20px;">
+          <div style="font-size:48px;margin-bottom:12px;">&#129300;</div>
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">No symptoms detected</h3>
+          <p style="color:var(--zinc-500);font-size:14px;">Please go back and try describing your symptoms differently.</p>
         </div>
       </div>
       <div class="panel-footer">
         <button class="btn" onclick="goToStep(2)">Back</button>
-        <button class="btn btn--primary btn--lg" id="analyzeBtn" onclick="runAnalysis()">
+        <button class="btn btn--primary btn--lg hidden" id="analyzeBtn" onclick="runAnalysis()">
           Analyze Symptoms
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
@@ -1078,6 +1519,10 @@
           <div class="spinner"></div>
           <p style="font-weight:600;">Analyzing your symptoms...</p>
           <p style="font-size:13px;color:var(--zinc-400);">Running hybrid NLP pipeline</p>
+          <div class="loading-progress">
+            <div class="loading-progress-bar"><div class="loading-progress-fill" id="analysisProgressFill"></div></div>
+            <div class="loading-percent" id="analysisPercent">0%</div>
+          </div>
         </div>
 
         <!-- Results -->
@@ -1107,8 +1552,26 @@
   let currentStep = 0;
   let patientAge = null;
   let severity = 3;
+  let severityMap = {};            // per-symptom severity { "HEADACHE": 8, ... }
+  let preDetectedSymptoms = [];    // symptoms from pre-detect API
+  let severityHints = {};          // intensity-derived hints from backend
+  let severityQueue = [];          // symptoms still needing severity rating
+  let severityCompleted = [];      // symptoms already rated
   let analysisData = null;
   let showingRecs = false;
+  let selectedLanguage = 'en';
+  let symptomTypewriterTimer = null;
+  let symptomTypewriterRunId = 0;
+  let idleWarningTimer = null;
+  let idleResetTimer = null;
+  let idleCountdownTimer = null;
+  let idleSecondsRemaining = 10;
+
+  // ── Duration Safeguard state ──
+  let durationQueue = [];          // symptoms still needing duration check
+  let durationCompleted = [];      // symptoms already checked (safe)
+  let durationContextOverride = null;
+  let durationClarificationData = {};
 
   // ── DOM ──
   const screenHome = document.getElementById('screenHome');
@@ -1122,6 +1585,533 @@
   const painValue = document.getElementById('painValue');
   const painLabel = document.getElementById('painLabel');
   const severityWarning = document.getElementById('severityWarning');
+  const symptomTypewriterText = document.getElementById('symptomTypewriterText');
+  const idleModal = document.getElementById('idleModal');
+  const idleCountdown = document.getElementById('idleCountdown');
+
+  const UI_COPY = {
+    en: {
+      homeTap: 'Tap anywhere to begin',
+      symptomSub: 'Describe your symptoms in your own words.',
+      languageLabel: 'Choose your language',
+      languageHelper: 'The AI can understand your symptoms even if you mix languages.',
+      symptomPlaceholder: 'Example: I have a headache and dry cough...',
+      painMild: 'Mild discomfort',
+      painModerate: 'Moderate pain',
+      painSevere: 'Severe pain',
+      highSeverityTitle: 'High severity detected',
+      highSeveritySub: 'At this level, we recommend consulting a licensed pharmacist or healthcare professional. You may still proceed.',
+      quickQuestion: 'Quick Question',
+      quickQuestionSub: 'Choose the answer that best matches what you feel.',
+      patientSummaryTitle: 'Detected for your profile',
+      patientSummarySub: 'Your age, pain level, and detected symptoms are ready for review.',
+      age: 'Age',
+      pain: 'Pain',
+      detectedSymptoms: 'Detected Symptoms',
+      touchAnywhereTitle: 'Touch anywhere to view recommendations',
+      touchAnywhereSub: 'Your medicine suggestions are ready. Tap this screen to continue.',
+      professionalHelpTitle: 'Seek professional help',
+      professionalHelpSub: 'Your pain level is high, so please prioritize a pharmacist or doctor before self-medicating.',
+      professionalHelpNote: 'You can still continue to view the medicine list if needed.',
+      emergencyTitle: 'Emergency signs detected',
+      emergencySub: 'Self-medication is not recommended. Please seek medical attention right away.',
+      emergencyNote: 'This is not a diagnosis. The system detected terms that may require urgent care.',
+      durationTitle: 'See a doctor or pharmacist',
+      durationBlocked: 'OTC recommendations are blocked for safety.',
+      durationNote: 'This reminder is for safety only and is not a diagnosis.',
+      noScopeTitle: 'Input outside current scope',
+      noScopeSub: 'Please try a short symptom description so the vending machine can assist you.',
+      noMedicineTitle: 'No suitable medicines found',
+      noMedicineSub: 'No matching OTC medicines were found for your age and symptoms.',
+      consultPharmacist: 'Please consult a pharmacist.',
+      recommendationFor: 'Recommended for',
+      recommendationTap: 'Touch again to review medicine options',
+      durationCheckTitle: 'Duration Safety Check',
+      durationQuestion: 'How long have you had this symptom?',
+      assessAgain: 'Assess Again',
+      exit: 'Exit',
+      viewRecommendations: 'View Recommendations',
+      nextSymptomBtn: 'Next',
+      analyzeBtn: 'Continue',
+    },
+    tl: {
+      homeTap: 'Pindot kahit saan para magsimula',
+      symptomSub: 'Ilarawan ang iyong nararamdaman sa sariling salita.',
+      languageLabel: 'Piliin ang wika',
+      languageHelper: 'Naiintindihan ng AI kahit halo-halong wika ang gamitin mo.',
+      symptomPlaceholder: 'Halimbawa: Masakit ang ulo ko at may tuyong ubo...',
+      nextSymptomBtn: 'Susunod',
+      analyzeBtn: 'Magpatuloy',
+      painMild: 'Banayad na kirot',
+      painModerate: 'Katamtamang sakit',
+      painSevere: 'Matinding sakit',
+      highSeverityTitle: 'Mataas ang antas ng sakit',
+      highSeveritySub: 'Sa antas na ito, mas mabuting kumonsulta muna sa lisensyadong pharmacist o doktor. Maaari ka pa ring magpatuloy.',
+      quickQuestion: 'Mabilis na Tanong',
+      quickQuestionSub: 'Piliin ang sagot na pinakaangkop sa iyong nararamdaman.',
+      patientSummaryTitle: 'Nadetect para sa iyong profile',
+      patientSummarySub: 'Handa nang suriin ang iyong edad, pain level, at mga nadetect na sintomas.',
+      age: 'Edad',
+      pain: 'Sakit',
+      detectedSymptoms: 'Mga Nadetect na Sintomas',
+      touchAnywhereTitle: 'Pindot kahit saan para makita ang rekomendasyon',
+      touchAnywhereSub: 'Handa na ang mga mungkahing gamot. Pindutin ang screen para magpatuloy.',
+      professionalHelpTitle: 'Humingi ng propesyonal na tulong',
+      professionalHelpSub: 'Mataas ang pain level mo kaya unahin muna ang pharmacist o doktor bago mag-self-medicate.',
+      professionalHelpNote: 'Pwede mo pa ring tingnan ang listahan ng gamot kung kailangan.',
+      emergencyTitle: 'May nadetect na emergency signs',
+      emergencySub: 'Hindi inirerekomenda ang self-medication. Magpatingin agad sa doktor o ospital.',
+      emergencyNote: 'Hindi ito diagnosis. May mga nadetect na salitang maaaring nangangailangan ng agarang atensyon.',
+      durationTitle: 'Magpatingin sa doktor o pharmacist',
+      durationBlocked: 'Naka-block ang OTC recommendation para sa iyong kaligtasan.',
+      durationNote: 'Paalala lang ito para sa kaligtasan at hindi diagnosis.',
+      noScopeTitle: 'Wala pa sa saklaw ang input',
+      noScopeSub: 'Subukan ang maikling paglalarawan ng sintomas para makatulong ang vending machine.',
+      noMedicineTitle: 'Walang angkop na gamot na nakita',
+      noMedicineSub: 'Walang OTC medicine na tugma sa iyong edad at sintomas.',
+      consultPharmacist: 'Kumonsulta sa pharmacist.',
+      recommendationFor: 'Inirerekomenda para sa',
+      recommendationTap: 'Pindot muli para makita ang mga gamot',
+      durationCheckTitle: 'Tagal ng Sintomas',
+      durationQuestion: 'Gaano na katagal ang sintomas na ito?',
+      assessAgain: 'Ulitin ang Assessment',
+      exit: 'Lumabas',
+      viewRecommendations: 'Tingnan ang Rekomendasyon',
+    },
+    ceb: {
+      homeTap: 'Hikapa bisan asa aron magsugod',
+      symptomSub: 'Isulti ang imong gibati gamit ang imong kaugalingong pulong.',
+      languageLabel: 'Pilia ang pinulongan',
+      languageHelper: 'Masabtan sa AI bisan sagol-sagol ang imong pinulongan.',
+      symptomPlaceholder: 'Pananglitan: Sakit akong ulo ug naay uga nga ubo...',
+      nextSymptomBtn: 'Sunod',
+      analyzeBtn: 'Padayon',
+      painMild: 'Hinay nga kasakit',
+      painModerate: 'Tunga-tungang kasakit',
+      painSevere: 'Grabe nga kasakit',
+      highSeverityTitle: 'Taas ang lebel sa kasakit',
+      highSeveritySub: 'Sa ing-ani nga lebel, mas maayo nga mokonsulta una sa pharmacist o doktor. Pwede gihapon ka mopadayon.',
+      quickQuestion: 'Paspas nga Pangutana',
+      quickQuestionSub: 'Pilia ang tubag nga labing duol sa imong gibati.',
+      patientSummaryTitle: 'Nadetect para sa imong profile',
+      patientSummarySub: 'Andam na tan-awon ang imong edad, pain level, ug mga nadetect nga sintomas.',
+      age: 'Edad',
+      pain: 'Kasakit',
+      detectedSymptoms: 'Nadetect nga mga Sintomas',
+      touchAnywhereTitle: 'Hikapa bisan asa aron makita ang rekomendasyon',
+      touchAnywhereSub: 'Andam na ang mga tambag nga tambal. Hikapa ang screen aron mopadayon.',
+      professionalHelpTitle: 'Pagpangayo og propesyonal nga tabang',
+      professionalHelpSub: 'Taas ang imong pain level busa unaha ang pharmacist o doktor sa dili pa mag-self-medicate.',
+      professionalHelpNote: 'Pwede gihapon nimo tan-awon ang listahan sa tambal kung kinahanglan.',
+      emergencyTitle: 'Naay nadetect nga delikadong timailhan',
+      emergencySub: 'Dili girekomenda ang self-medication. Palihug adto dayon sa doktor o ospital.',
+      emergencyNote: 'Dili kini diagnosis. Nakadetect ang system og mga pulong nga basin nanginahanglan og dali nga pag-atiman.',
+      durationTitle: 'Pakigkita sa doktor o pharmacist',
+      durationBlocked: 'Gi-block ang OTC recommendation para sa imong kaluwasan.',
+      durationNote: 'Pahimangno lang kini para sa kaluwasan ug dili diagnosis.',
+      noScopeTitle: 'Wala pa sa sakop ang input',
+      noScopeSub: 'Sulayi og mubo nga hulagway sa sintomas aron makatabang ang vending machine.',
+      noMedicineTitle: 'Walay angay nga tambal nga nakita',
+      noMedicineSub: 'Walay OTC medicine nga mohaom sa imong edad ug sintomas.',
+      consultPharmacist: 'Pakigkonsulta sa pharmacist.',
+      recommendationFor: 'Girekomenda para sa',
+      recommendationTap: 'Hikapa pag-usab aron makita ang mga tambal',
+      durationCheckTitle: 'Pagsusi sa Kadugayon',
+      durationQuestion: 'Unsa na kadugay nimo ni nga sintomas?',
+      assessAgain: 'Usba ang Assessment',
+      exit: 'Gawas',
+      viewRecommendations: 'Tan-awa ang Rekomendasyon',
+    },
+  };
+
+  const LANG_LABELS = {
+    en: 'English',
+    tl: 'Tagalog',
+    ceb: 'Bisaya',
+  };
+
+  const ROTATING_SYMPTOM_TITLES = [
+    'What are you feeling?',
+    'Ano ba nararamdaman mo?',
+    'Unsa imong gi-bati?',
+  ];
+
+  const SYMPTOM_NAMES = {
+    STOMACH_ACHE: { en: 'Stomach Ache', tl: 'Sakit ng Tiyan', ceb: 'Sakit sa Tiyan' },
+    STOMACH_ACHE_ACIDIC: { en: 'Acidic Stomach', tl: 'Hyperacidity', ceb: 'Aslom nga Tiyan' },
+    STOMACH_ACHE_CRAMPING: { en: 'Stomach Cramping', tl: 'Pananakit ng Tiyan', ceb: 'Pagpulikat sa Tiyan' },
+    HEADACHE: { en: 'Headache', tl: 'Sakit ng Ulo', ceb: 'Sakit sa Ulo' },
+    BODY_ACHES: { en: 'Body Aches', tl: 'Pananakit ng Katawan', ceb: 'Sakit sa Lawas' },
+    FEVER: { en: 'Fever', tl: 'Lagnat', ceb: 'Hilanat' },
+    DIARRHEA: { en: 'Diarrhea', tl: 'Pagtatae', ceb: 'Kalibanga' },
+    DIARRHEA_INFECTIOUS_CONTEXT: { en: 'Diarrhea', tl: 'Pagtatae', ceb: 'Kalibanga' },
+    DIARRHEA_NON_INFECTIOUS_CONTEXT: { en: 'Diarrhea', tl: 'Pagtatae', ceb: 'Kalibanga' },
+    COUGH_GENERAL: { en: 'Cough', tl: 'Ubo', ceb: 'Ubo' },
+    COUGH_DRY: { en: 'Dry Cough', tl: 'Tuyong Ubo', ceb: 'Uga nga Ubo' },
+    COUGH_PRODUCTIVE: { en: 'Wet Cough', tl: 'Ubong may Plema', ceb: 'Ubo nga naay Plema' },
+    RUNNY_NOSE: { en: 'Runny Nose', tl: 'Sipon', ceb: 'Sip-on' },
+    RUNNY_NOSE_ALLERGY_CONTEXT: { en: 'Allergy Runny Nose', tl: 'Sipon dahil sa Allergy', ceb: 'Sip-on tungod sa Allergy' },
+    RUNNY_NOSE_VIRAL_CONTEXT: { en: 'Cold-related Runny Nose', tl: 'Sipon dahil sa Sipon', ceb: 'Sip-on tungod sa Sip-on' },
+    RUNNY_NOSE_COLD_WEATHER_CONTEXT: { en: 'Cold-weather Runny Nose', tl: 'Sipon dahil sa Lamig', ceb: 'Sip-on tungod sa Katugnaw' },
+    NASAL_CONGESTION: { en: 'Nasal Congestion', tl: 'Baradong Ilong', ceb: 'Barado nga Ilong' },
+    SORE_THROAT: { en: 'Sore Throat', tl: 'Masakit na Lalamunan', ceb: 'Sakit nga Tutunlan' },
+    RASHES: { en: 'Rashes', tl: 'Pantal', ceb: 'Pantal' },
+    ALLERGIC_RHINITIS: { en: 'Allergy', tl: 'Allergy', ceb: 'Allergy' },
+  };
+
+  const CONTEXT_OPTION_COPY = {
+    SIPON_VIRAL_COLD: {
+      en: { label: 'With fever or cough', desc: 'Feels like a common cold.' },
+      tl: { label: 'May lagnat o ubo', desc: 'Parang karaniwang sipon.' },
+      ceb: { label: 'Naay hilanat o ubo', desc: 'Murag ordinaryong sip-on.' },
+    },
+    SIPON_ALLERGY: {
+      en: { label: 'Sneezing or itchy nose', desc: 'Feels like an allergy trigger.' },
+      tl: { label: 'Madalas bumahing o makati ilong', desc: 'Mukhang allergy trigger.' },
+      ceb: { label: 'Sige og bahing o kati ang ilong', desc: 'Murag allergy trigger.' },
+    },
+    SIPON_COLD_WEATHER: {
+      en: { label: 'After cold weather', desc: 'Triggered by cold air or rain.' },
+      tl: { label: 'Pagkatapos ng malamig na panahon', desc: 'Na-trigger ng lamig o ulan.' },
+      ceb: { label: 'Human sa katugnaw', desc: 'Na-trigger sa tugnaw o ulan.' },
+    },
+    DIARRHEA_FOOD_POISONING: {
+      en: { label: 'After spoiled food', desc: 'You think the food was bad.' },
+      tl: { label: 'Pagkatapos kumain ng panis', desc: 'Sa tingin mo sira ang nakain.' },
+      ceb: { label: 'Human mokaon og daot', desc: 'Murag daot ang pagkaon.' },
+    },
+    DIARRHEA_NON_INFECTIOUS: {
+      en: { label: 'Not from spoiled food', desc: 'No sign of food poisoning.' },
+      tl: { label: 'Hindi dahil sa panis na pagkain', desc: 'Walang palatandaan ng food poisoning.' },
+      ceb: { label: 'Dili gikan sa daot nga pagkaon', desc: 'Walay timailhan sa food poisoning.' },
+    },
+    STOMACH_ACIDIC: {
+      en: { label: 'Burning or acidic', desc: 'Feels like acid or stomach irritation.' },
+      tl: { label: 'Mahapdi o acidic', desc: 'Parang may asim o iritasyon sa tiyan.' },
+      ceb: { label: 'Hapdos o aslom sa tiyan', desc: 'Murag aslom o nalagot ang tiyan.' },
+    },
+    STOMACH_CRAMPING: {
+      en: { label: 'Cramping or bloated', desc: 'Feels like pulsing cramps or gas.' },
+      tl: { label: 'Parang pinupulikat o kabag', desc: 'May pulikat o bloating.' },
+      ceb: { label: 'Murag pulikat o kabag', desc: 'Naay pulikat o kabag sa tiyan.' },
+    },
+    COUGH_DRY: {
+      en: { label: 'Dry cough', desc: 'No phlegm.' },
+      tl: { label: 'Tuyong ubo', desc: 'Walang plema.' },
+      ceb: { label: 'Uga nga ubo', desc: 'Walay plema.' },
+    },
+    COUGH_PRODUCTIVE: {
+      en: { label: 'Wet cough', desc: 'With phlegm.' },
+      tl: { label: 'Ubong may plema', desc: 'May plema.' },
+      ceb: { label: 'Ubo nga naay plema', desc: 'Naay plema.' },
+    },
+  };
+
+  function t(key) {
+    const copy = UI_COPY[selectedLanguage] || UI_COPY.en;
+    return copy[key] || UI_COPY.en[key] || key;
+  }
+
+  function getSymptomLabel(symptom) {
+    const translated = SYMPTOM_NAMES[symptom];
+    if (translated && translated[selectedLanguage]) {
+      return translated[selectedLanguage];
+    }
+    return formatSymptom(symptom);
+  }
+
+  function getContextOptionLabel(value, fallbackLabel) {
+    const translated = CONTEXT_OPTION_COPY[value]?.[selectedLanguage];
+    if (translated?.label) return translated.label;
+    return fallbackLabel.split(' / ')[0];
+  }
+
+  function getContextOptionDesc(value, fallbackLabel) {
+    const translated = CONTEXT_OPTION_COPY[value]?.[selectedLanguage];
+    if (translated?.desc) return translated.desc;
+    return fallbackLabel.split(' / ').slice(1).join(' / ');
+  }
+
+  function detectLanguageFromText(text) {
+    const input = String(text || '').toLowerCase();
+    if (!input.trim()) return selectedLanguage || 'en';
+
+    const bisayaHints = [
+      'akong', 'naay', 'unsa', 'gi-bati', 'gibati', 'puson', 'hilanat', 'sip-on',
+      'kabag', 'hapdos', 'aslom', 'sakit akong', 'tiyan nako', 'wala koy', 'ug',
+    ];
+    const tagalogHints = [
+      'masakit', 'nararamdaman', 'nilalagnat', 'ubo ko', 'may', 'wala akong',
+      'tiyan ko', 'sipon', 'lalamunan', 'nahihilo', 'mahapdi', 'kabag', 'puson ko',
+    ];
+
+    const score = (terms) => terms.reduce((total, term) => total + (input.includes(term) ? 1 : 0), 0);
+    const cebScore = score(bisayaHints);
+    const tlScore = score(tagalogHints);
+
+    if (cebScore > tlScore && cebScore > 0) return 'ceb';
+    if (tlScore > cebScore && tlScore > 0) return 'tl';
+    return 'en';
+  }
+
+  function getClarifyQuestionText(clarifyType, backendQuestion) {
+    const prompts = {
+      COUGH: {
+        en: 'To recommend the right medicine, what kind of cough do you have?',
+        tl: 'Para mas tama ang mairekomenda, anong uri ng ubo ang nararamdaman mo?',
+        ceb: 'Aron mas tukma ang ma-recommend, unsa nga klase sa ubo ang imong gibati?',
+      },
+      RUNNY_NOSE: {
+        en: 'To narrow the recommendation, which best describes your runny nose?',
+        tl: 'Para mas tama ang recommendation, alin ang pinakaakma sa sipon mo?',
+        ceb: 'Aron mas tukma ang recommendation, hain niini ang pinakaduol sa imong sip-on?',
+      },
+      DIARRHEA: {
+        en: 'To recommend the right medicine, which best describes your diarrhea?',
+        tl: 'Para makapili ng tamang gamot, alin ang pinakaakma sa iyong pagtatae?',
+        ceb: 'Aron makapili og hustong tambal, hain niini ang pinakaduol sa imong kalibanga?',
+      },
+      STOMACH: {
+        en: 'To recommend the right medicine, which best describes your stomach pain?',
+        tl: 'Para mas tama ang mairekomenda, alin ang pinakaakma sa sakit ng tiyan mo?',
+        ceb: 'Aron mas tukma ang ma-recommend, unsa ang labing duol sa sakit sa imong tiyan?',
+      },
+    };
+
+    if (prompts[clarifyType]?.[selectedLanguage]) {
+      return prompts[clarifyType][selectedLanguage];
+    }
+    return backendQuestion || 'Please answer this quick question so we can recommend the right medicine.';
+  }
+
+  function updateStaticCopy() {
+    document.getElementById('homeCtaText').textContent = t('homeTap');
+    symptomInput.placeholder = t('symptomPlaceholder');
+    document.getElementById('assessAgainBtn').textContent = t('assessAgain');
+    document.getElementById('exitBtn').textContent = t('exit');
+    document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
+    document.querySelectorAll('[data-language-select]').forEach(select => {
+      select.value = selectedLanguage;
+    });
+    updatePain();
+  }
+
+  function renderLanguageSelectControl() {
+    return `
+      <div class="clarify-language-bar">
+        <div class="clarify-language-label">${t('languageLabel')}</div>
+        <select class="clarify-language-select" data-language-select onchange="handleLanguageSelectChange(this.value)">
+          <option value="en" ${selectedLanguage === 'en' ? 'selected' : ''}>English</option>
+          <option value="tl" ${selectedLanguage === 'tl' ? 'selected' : ''}>Tagalog</option>
+          <option value="ceb" ${selectedLanguage === 'ceb' ? 'selected' : ''}>Bisaya</option>
+        </select>
+      </div>`;
+  }
+
+  function startSymptomTitleRotation() {
+    if (!symptomTypewriterText) return;
+
+    symptomTypewriterRunId += 1;
+    const runId = symptomTypewriterRunId;
+    if (symptomTypewriterTimer) {
+      clearTimeout(symptomTypewriterTimer);
+      symptomTypewriterTimer = null;
+    }
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    function schedule(nextTick, delay) {
+      symptomTypewriterTimer = setTimeout(() => {
+        if (runId !== symptomTypewriterRunId) return;
+        nextTick();
+      }, delay);
+    }
+
+    function tick() {
+      if (runId !== symptomTypewriterRunId) return;
+      const fullText = ROTATING_SYMPTOM_TITLES[phraseIndex];
+
+      if (!deleting) {
+        charIndex += 1;
+        symptomTypewriterText.textContent = fullText.slice(0, charIndex);
+        if (charIndex === fullText.length) {
+          deleting = true;
+          schedule(tick, 5000);
+          return;
+        }
+        schedule(tick, 65);
+        return;
+      }
+
+      charIndex -= 1;
+      symptomTypewriterText.textContent = fullText.slice(0, Math.max(charIndex, 0));
+      if (charIndex === 0) {
+        deleting = false;
+        phraseIndex = (phraseIndex + 1) % ROTATING_SYMPTOM_TITLES.length;
+        schedule(tick, 65);
+        return;
+      }
+      schedule(tick, 35);
+    }
+
+    symptomTypewriterText.textContent = '';
+    tick();
+  }
+
+  function clearIdleTimers() {
+    if (idleWarningTimer) clearTimeout(idleWarningTimer);
+    if (idleResetTimer) clearTimeout(idleResetTimer);
+    if (idleCountdownTimer) clearInterval(idleCountdownTimer);
+    idleWarningTimer = null;
+    idleResetTimer = null;
+    idleCountdownTimer = null;
+  }
+
+  function hideIdlePrompt() {
+    clearIdleTimers();
+    idleModal.classList.add('hidden');
+  }
+
+  function showIdlePrompt() {
+    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    idleSecondsRemaining = 10;
+    idleCountdown.textContent = String(idleSecondsRemaining);
+    idleModal.classList.remove('hidden');
+    idleCountdownTimer = setInterval(() => {
+      idleSecondsRemaining -= 1;
+      if (idleSecondsRemaining >= 0) {
+        idleCountdown.textContent = String(idleSecondsRemaining);
+      }
+    }, 1000);
+    idleResetTimer = setTimeout(() => {
+      hideIdlePrompt();
+      resetAll();
+    }, 10000);
+  }
+
+  function startIdleTracking() {
+    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    clearIdleTimers();
+    idleWarningTimer = setTimeout(showIdlePrompt, 30000);
+  }
+
+  function registerActivity() {
+    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    if (!idleModal.classList.contains('hidden')) {
+      idleModal.classList.add('hidden');
+    }
+    startIdleTracking();
+  }
+
+  function setTapReadyState(enabled) {
+    const container = document.getElementById('analysisResult');
+    const resultsStage = document.querySelector('#panel4 .kiosk-body');
+    container.classList.toggle('tap-ready', enabled);
+    container.classList.toggle('center-stage', enabled);
+    container.onclick = null;
+    if (resultsStage) {
+      resultsStage.classList.toggle('tap-ready-stage', enabled);
+      resultsStage.onclick = enabled ? () => showRecommendations() : null;
+    }
+  }
+
+  function renderSummaryCard(symptoms, options = {}) {
+    const introTitle = options.title || t('patientSummaryTitle');
+    const introSub = options.subtitle || t('patientSummarySub');
+    const extras = options.extras || '';
+    const compact = options.compact === true ? ' summary-card--compact' : '';
+    const cta = options.cta === false ? '' : `
+      <div class="tap-anywhere-cta">
+        <div class="cta-title">${t('touchAnywhereTitle')}</div>
+        <div class="cta-sub">${t('touchAnywhereSub')}</div>
+      </div>`;
+
+    // Build per-symptom severity display
+    const sMap = (analysisData && analysisData.severity_map) || severityMap || {};
+    let severityHtml = '';
+    if (Object.keys(sMap).length > 0) {
+      // Show per-symptom severity pills
+      let pillsHtml = '';
+      for (const [sym, val] of Object.entries(sMap)) {
+        const name = getSeveritySymptomName(sym);
+        pillsHtml += `<div style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;background:var(--zinc-100);margin:2px;">
+          <span style="font-size:12px;font-weight:600;color:var(--zinc-600);">${name}</span>
+          <span style="font-size:13px;font-weight:800;color:var(--zinc-800);">${val}/10</span>
+        </div>`;
+      }
+      severityHtml = `
+        <div class="summary-metric" style="flex-direction:column;gap:4px;">
+          <span class="label">${t('pain')}</span>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">${pillsHtml}</div>
+        </div>`;
+    } else {
+      severityHtml = `
+        <div class="summary-metric">
+          <span class="label">${t('pain')}</span>
+          <span class="value">${severity}/10</span>
+        </div>`;
+    }
+
+    // High severity inline warning for the summary card
+    const maxSev = Object.keys(sMap).length > 0
+      ? Math.max(...Object.values(sMap))
+      : severity;
+    const highSevWarning = maxSev >= 8 ? `
+      <div style="margin-top:12px;padding:10px 14px;border-left:3px solid #dc2626;background:#fef2f2;border-radius:6px;text-align:left;">
+        <p style="font-size:13px;font-weight:600;color:#991b1b;margin:0;">${t('highSeverityTitle')}</p>
+        <p style="font-size:12px;color:#6b7280;margin:4px 0 0;">${t('highSeveritySub')}</p>
+      </div>` : '';
+
+    return `
+      <div class="summary-card${compact}">
+        <h2>${introTitle}</h2>
+        <p>${introSub}</p>
+        <div class="summary-metrics">
+          <div class="summary-metric">
+            <span class="label">${t('age')}</span>
+            <span class="value">${patientAge}</span>
+          </div>
+          ${severityHtml}
+        </div>
+        <div class="detected-section">
+          <h3>${t('detectedSymptoms')}</h3>
+          <div class="symptom-pills">
+            ${symptoms.map(s => `<span class="symptom-pill">${getSymptomLabel(s)}</span>`).join('')}
+          </div>
+        </div>
+        ${highSevWarning}
+        ${extras}
+        ${cta}
+      </div>`;
+  }
+
+  window.setLanguage = function(lang, event) {
+    if (event) event.stopPropagation();
+    selectedLanguage = lang;
+    document.querySelectorAll('[data-language-select]').forEach(select => {
+      select.value = lang;
+    });
+    updateStaticCopy();
+    if (analysisData && currentStep === 4) {
+      if (showingRecs) {
+        renderRecommendations(analysisData);
+      } else {
+        renderAnalysis(analysisData);
+      }
+    }
+  };
+
+  window.handleLanguageSelectChange = function(lang) {
+    setLanguage(lang);
+  };
+
+  window.resumeFromIdle = function(event) {
+    if (event) event.stopPropagation();
+    hideIdlePrompt();
+    startIdleTracking();
+  };
 
   // ── Toast ──
   function showToast(msg, type = 'info') {
@@ -1154,6 +2144,7 @@
     kioskMain.classList.remove('hidden');
     document.body.style.overflow = '';
     goToStep(1);
+    startIdleTracking();
   };
 
   window.backToHome = function() {
@@ -1184,6 +2175,12 @@
       document.getElementById('assessAgainBtn').classList.add('hidden');
       document.getElementById('exitBtn').classList.add('hidden');
     }
+
+    if (n === 2) {
+      startSymptomTitleRotation();
+    }
+
+    startIdleTracking();
   };
 
   // ══════════════════════════════
@@ -1250,30 +2247,282 @@
   symptomInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey && symptomInput.value.trim()) {
       e.preventDefault();
-      goToStep(3);
+      triggerPreDetect();
     }
   });
 
   // ══════════════════════════════
-  //  STEP 3: PAIN SCALE
+  //  STEP 2→3: PRE-DETECT SYMPTOMS
   // ══════════════════════════════
-  function updatePain() {
-    severity = parseInt(painSlider.value);
-    painValue.textContent = severity;
 
-    if (severity <= 3) {
-      painLabel.textContent = 'Mild discomfort';
-    } else if (severity <= 7) {
-      painLabel.textContent = 'Moderate pain';
-    } else {
-      painLabel.textContent = 'Severe pain';
-    }
+  // Symptom display names for the severity flow (same map used in duration)
+  const SEVERITY_NAME_MAP = {
+    'FEVER':            {en: 'Fever',            tl: 'Lagnat',                   ceb: 'Hilanat'},
+    'DIARRHEA':         {en: 'Diarrhea',         tl: 'Pagtatae',                 ceb: 'Pagkalibang'},
+    'SORE_THROAT':      {en: 'Sore Throat',      tl: 'Pananakit ng Lalamunan',   ceb: 'Sakit sa Tutunlan'},
+    'STOMACH_ACHE':     {en: 'Stomach Ache',     tl: 'Sakit ng Tiyan',           ceb: 'Sakit sa Tiyan'},
+    'HEADACHE':         {en: 'Headache',         tl: 'Sakit ng Ulo',             ceb: 'Sakit sa Ulo'},
+    'BODY_ACHES':       {en: 'Body Aches',       tl: 'Pananakit ng Katawan',     ceb: 'Kasakit sa Lawas'},
+    'RASHES':           {en: 'Rashes',           tl: 'Pantal',                   ceb: 'Hubag-hubag'},
+    'ALLERGIC_RHINITIS':{en: 'Allergy',          tl: 'Allergy',                  ceb: 'Allergy'},
+    'NASAL_CONGESTION': {en: 'Nasal Congestion', tl: 'Baradong Ilong',           ceb: 'Barado nga Ilong'},
+    'RUNNY_NOSE':       {en: 'Runny Nose',       tl: 'Sipon',                    ceb: 'Sip-on'},
+    'COUGH_GENERAL':    {en: 'Cough',            tl: 'Ubo',                      ceb: 'Ubo'},
+    'COUGH_DRY':        {en: 'Dry Cough',        tl: 'Tuyong Ubo',               ceb: 'Uga nga Ubo'},
+    'COUGH_PRODUCTIVE': {en: 'Wet Cough',        tl: 'Ubo na may Plema',         ceb: 'Ubo nga may Plema'},
+  };
 
-    severityWarning.classList.toggle('hidden', severity < 8);
+  function getSeveritySymptomName(symptom) {
+    const lang = selectedLanguage || 'en';
+    const names = SEVERITY_NAME_MAP[symptom] || {};
+    return names[lang] || names.en || symptom;
   }
 
-  painSlider.addEventListener('input', updatePain);
-  updatePain();
+  // ── Loading-progress simulation ──
+  let _progressTimers = {};
+  function startLoadingProgress(prefix) {
+    const fill = document.getElementById(prefix + 'ProgressFill');
+    const pct  = document.getElementById(prefix + 'Percent');
+    if (!fill || !pct) return;
+    let value = 0;
+    fill.style.width = '0%';
+    pct.textContent = '0%';
+    _progressTimers[prefix] = setInterval(() => {
+      const remaining = 90 - value;
+      value += Math.max(0.5, remaining * 0.06);
+      if (value > 90) value = 90;
+      fill.style.width = Math.round(value) + '%';
+      pct.textContent = Math.round(value) + '%';
+    }, 120);
+  }
+  function completeLoadingProgress(prefix) {
+    if (_progressTimers[prefix]) { clearInterval(_progressTimers[prefix]); delete _progressTimers[prefix]; }
+    const fill = document.getElementById(prefix + 'ProgressFill');
+    const pct  = document.getElementById(prefix + 'Percent');
+    if (fill) fill.style.width = '100%';
+    if (pct) pct.textContent = '100%';
+  }
+
+  // Override Step 2 Continue button to call pre-detect first
+  window.triggerPreDetect = async function() {
+    const text = symptomInput.value.trim();
+    if (!text) return;
+
+    selectedLanguage = detectLanguageFromText(text);
+    updateStaticCopy();
+
+    // Navigate to step 3, show loading
+    goToStep(3);
+    document.getElementById('preDetectLoading').classList.remove('hidden');
+    startLoadingProgress('preDetect');
+    document.getElementById('perSymptomSeverity').innerHTML = '';
+    document.getElementById('noSymptomsStep3').classList.add('hidden');
+    document.getElementById('analyzeBtn').classList.add('hidden');
+
+    try {
+      const res = await fetch('/consult/api/pre-detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Detection failed');
+
+      completeLoadingProgress('preDetect');
+      document.getElementById('preDetectLoading').classList.add('hidden');
+
+      preDetectedSymptoms = data.symptoms || [];
+      severityHints = data.severity_hints || {};
+
+      if (preDetectedSymptoms.length === 0) {
+        document.getElementById('noSymptomsStep3').classList.remove('hidden');
+        return;
+      }
+
+      // Initialize per-symptom severity flow
+      severityMap = {};
+      severityQueue = [...preDetectedSymptoms];
+      severityCompleted = [];
+      askNextSeverity();
+
+    } catch (err) {
+      completeLoadingProgress('preDetect');
+      showToast(err.message, 'error');
+      goToStep(2);
+    }
+  };
+
+  // ══════════════════════════════
+  //  STEP 3: PER-SYMPTOM SEVERITY
+  // ══════════════════════════════
+  function askNextSeverity() {
+    if (severityQueue.length === 0) {
+      // All symptoms rated — compute overall severity and show analyze button
+      const vals = Object.values(severityMap);
+      severity = vals.length ? Math.max(...vals) : 3;
+      document.getElementById('analyzeBtn').classList.remove('hidden');
+
+      // Show summary of all ratings
+      renderSeveritySummary();
+      return;
+    }
+
+    const symptom = severityQueue[0];
+    const hint = severityHints[symptom] || 5;
+    renderSeveritySlider(symptom, hint);
+  }
+
+  function renderSeveritySlider(symptom, initialValue) {
+    const container = document.getElementById('perSymptomSeverity');
+    const total = preDetectedSymptoms.length;
+    const answered = severityCompleted.length;
+    const displayName = getSeveritySymptomName(symptom);
+
+    // Intensity hint label
+    let hintNote = '';
+    if (severityHints[symptom] >= 7) {
+      const hintText = {
+        en: 'Based on your description, this seems intense.',
+        tl: 'Batay sa iyong paglalarawan, mukhang matindi ito.',
+        ceb: 'Base sa imong giingon, murag grabe ni.',
+      };
+      hintNote = `<div style="font-size:13px;color:var(--amber-600);margin-bottom:12px;font-weight:500;">${hintText[selectedLanguage] || hintText.en}</div>`;
+    } else if (severityHints[symptom] <= 3) {
+      const hintText = {
+        en: 'Based on your description, this seems mild.',
+        tl: 'Batay sa iyong paglalarawan, mukhang banayad ito.',
+        ceb: 'Base sa imong giingon, murag gamay ra ni.',
+      };
+      hintNote = `<div style="font-size:13px;color:var(--green-600);margin-bottom:12px;font-weight:500;">${hintText[selectedLanguage] || hintText.en}</div>`;
+    }
+
+    // Progress dots
+    let dotsHtml = '';
+    if (total > 1) {
+      for (let i = 0; i < total; i++) {
+        if (i < answered) dotsHtml += '<span class="dot done"></span>';
+        else if (i === answered) dotsHtml += '<span class="dot active"></span>';
+        else dotsHtml += '<span class="dot"></span>';
+      }
+      dotsHtml = `<div class="duration-progress">${dotsHtml}</div>`;
+    }
+
+    const questionText = {
+      en: `How severe is your <strong>${displayName}</strong>?`,
+      tl: `Gaano katindi ang iyong <strong>${displayName}</strong>?`,
+      ceb: `Unsa ka grabe ang imong <strong>${displayName}</strong>?`,
+    };
+    const lang = selectedLanguage || 'en';
+
+    function getPainLabelText(val) {
+      if (val <= 3) return t('painMild');
+      if (val <= 7) return t('painModerate');
+      return t('painSevere');
+    }
+
+    container.innerHTML = `
+      <div class="clarify-page">
+        ${dotsHtml}
+        <div class="section-title" style="margin-bottom:8px;">${questionText[lang] || questionText.en}</div>
+        ${hintNote}
+        <div style="height:12px;"></div>
+        <div class="pain-scale-area">
+          <div class="pain-value-display" id="painValueDyn">${initialValue}</div>
+          <div class="pain-label" id="painLabelDyn">${getPainLabelText(initialValue)}</div>
+
+          <div class="pain-slider-wrap">
+            <input type="range" class="pain-slider" id="painSliderDyn"
+                   min="1" max="10" value="${initialValue}" step="1">
+            <div class="pain-labels">
+              <span>1 ${t('painMild').split(' ')[0] || 'Mild'}</span>
+              <span>5 ${t('painModerate').split(' ')[0] || 'Moderate'}</span>
+              <span>10 ${t('painSevere').split(' ')[0] || 'Severe'}</span>
+            </div>
+          </div>
+
+          <div class="severity-warning hidden" id="severityWarningDyn">
+            <p>${t('highSeverityTitle')}</p>
+            <p class="sub-msg">${t('highSeveritySub')}</p>
+          </div>
+        </div>
+
+        <div style="height:24px;"></div>
+        <button class="btn btn--primary btn--lg" style="width:100%;" onclick="confirmSeverity('${symptom}')">
+          ${severityQueue.length > 1 ? (t('nextSymptomBtn') || 'Next') : (t('analyzeBtn') || 'Continue')}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>`;
+
+    // Attach live slider listener
+    const slider = document.getElementById('painSliderDyn');
+    const valDisplay = document.getElementById('painValueDyn');
+    const labelDisplay = document.getElementById('painLabelDyn');
+    const warnDisplay = document.getElementById('severityWarningDyn');
+
+    slider.addEventListener('input', () => {
+      const val = parseInt(slider.value);
+      valDisplay.textContent = val;
+      labelDisplay.textContent = getPainLabelText(val);
+      warnDisplay.classList.toggle('hidden', val < 8);
+    });
+
+    // Trigger warning visibility based on initial value
+    warnDisplay.classList.toggle('hidden', initialValue < 8);
+
+    document.getElementById('analyzeBtn').classList.add('hidden');
+  }
+
+  window.confirmSeverity = function(symptom) {
+    const slider = document.getElementById('painSliderDyn');
+    const val = parseInt(slider.value);
+    severityMap[symptom] = val;
+    severityCompleted.push(symptom);
+    severityQueue.shift();
+    askNextSeverity();
+  };
+
+  function renderSeveritySummary() {
+    const container = document.getElementById('perSymptomSeverity');
+    const lang = selectedLanguage || 'en';
+
+    const summaryTitle = {
+      en: 'Severity Summary',
+      tl: 'Buod ng Antas',
+      ceb: 'Summary sa Kabug-aton',
+    };
+
+    let pillsHtml = '';
+    for (const [sym, val] of Object.entries(severityMap)) {
+      const name = getSeveritySymptomName(sym);
+      let color = 'var(--green-100)';
+      let textColor = 'var(--green-700)';
+      if (val >= 8) { color = 'var(--danger-light)'; textColor = '#991b1b'; }
+      else if (val >= 4) { color = 'var(--amber-50, #fffbeb)'; textColor = 'var(--amber-700, #b45309)'; }
+      pillsHtml += `<div style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;background:${color};margin:4px;">
+        <span style="font-weight:600;color:${textColor};font-size:14px;">${name}</span>
+        <span style="font-weight:800;color:${textColor};font-size:16px;">${val}/10</span>
+      </div>`;
+    }
+
+    container.innerHTML = `
+      <div style="text-align:center;padding:20px 0;">
+        <div class="section-title" style="margin-bottom:16px;">${summaryTitle[lang] || summaryTitle.en}</div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;">
+          ${pillsHtml}
+        </div>
+        <div style="height:8px;"></div>
+        <p style="font-size:13px;color:var(--zinc-400);">
+          ${lang === 'ceb' ? 'I-press ang Analyze para magpadayon.' :
+            lang === 'tl' ? 'Pindutin ang Analyze para magpatuloy.' :
+            'Press Analyze to continue.'}
+        </p>
+      </div>`;
+  }
+
+  // Legacy updatePain — kept for reset functions that reference painSlider
+  function updatePain() {
+    // No-op: per-symptom severity is now handled dynamically
+  }
 
   // ══════════════════════════════
   //  STEP 4: ANALYSIS
@@ -1282,8 +2531,12 @@
     const text = symptomInput.value.trim();
     if (!text) return;
 
+    selectedLanguage = detectLanguageFromText(text);
+    updateStaticCopy();
+
     goToStep(4);
     document.getElementById('analysisLoading').classList.remove('hidden');
+    startLoadingProgress('analysis');
     document.getElementById('analysisResult').classList.add('hidden');
     document.getElementById('viewRecsBtn').classList.add('hidden');
     document.getElementById('assessAgainBtn').classList.add('hidden');
@@ -1291,31 +2544,43 @@
     document.getElementById('backFromResults').classList.add('hidden');
 
     try {
+      const payload = { text, age: patientAge };
+      // Send per-symptom severity map if available, otherwise legacy single value
+      if (Object.keys(severityMap).length > 0) {
+        payload.severity_map = severityMap;
+        payload.severity = severity; // max value for backward compat
+      } else {
+        payload.severity = severity;
+      }
+
       const res = await fetch('/consult/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, age: patientAge, severity }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Analysis failed');
 
       analysisData = data;
       analysisData.detected_conditions = data.detected_conditions || [];
+      analysisData.severity_map = severityMap; // carry forward for display
       renderAnalysis(data);
     } catch (err) {
+      completeLoadingProgress('analysis');
       showToast(err.message, 'error');
       goToStep(3);
     }
   };
 
   function renderAnalysis(data) {
+    completeLoadingProgress('analysis');
     document.getElementById('analysisLoading').classList.add('hidden');
     const container = document.getElementById('analysisResult');
     container.classList.remove('hidden');
+    setTapReadyState(false);
 
     const symptoms = data.symptoms_display || data.symptoms || [];
     const rec = data.recommendation || {};
-    const source = data.source || 'unknown';
     const referral = data.referral || null;
 
     // Show back button
@@ -1327,12 +2592,11 @@
       const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
       container.innerHTML = `
         <div class="triage-banner">
-          <div class="icon">&#127973;</div>
-          <h3>Emergency Detected — Please Consult a Doctor</h3>
-          <p>The following serious condition(s) were detected:</p>
+          <h3>${t('emergencyTitle')}</h3>
+          <p>${t('emergencySub')}</p>
           <ul class="flag-list">${flagItems}</ul>
-          <p>Self-medication is <strong>not recommended</strong>. Please seek professional help.</p>
-          <p class="triage-note">This is not a diagnosis. The system detected keywords that may indicate urgent care is needed.</p>
+          <div class="referral-cta">${t('professionalHelpTitle')}</div>
+          <p class="triage-note">${t('emergencyNote')}</p>
         </div>`;
       document.getElementById('assessAgainBtn').classList.remove('hidden');
       document.getElementById('exitBtn').classList.remove('hidden');
@@ -1344,8 +2608,8 @@
       container.innerHTML = `
         <div class="no-symptoms">
           <div class="icon">&#129300;</div>
-          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Input outside current scope</h3>
-          <p>It seems like the input you gave is outside the scope of Mendo-v3 right now.</p>
+          <h3 style="font-size:22px;font-weight:800;margin:12px 0 8px;">${t('noScopeTitle')}</h3>
+          <p>${t('noScopeSub')}</p>
           <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
             Please try a simple symptom description. Example: "Masakit ulo ko, may ubo, tapos nilalagnat"
           </p>
@@ -1357,79 +2621,72 @@
 
     if (rec.action === 'ask_clarify') {
       const clarifyType = rec.clarify_type || 'COUGH';
-      const questionText = rec.question || 'Please answer this quick question so we can recommend the right medicine.';
+      const questionText = getClarifyQuestionText(clarifyType, rec.question);
       let buttonsHtml = '';
 
       if (rec.options && rec.options.length) {
-        const descMap = {
-          'SIPON_VIRAL_COLD': 'May kasama ring lagnat o ubo',
-          'SIPON_ALLERGY': 'Madalas bumabahing, makati ilong',
-          'SIPON_COLD_WEATHER': 'Galing sa malamig o naulan',
-          'DIARRHEA_FOOD_POISONING': 'Kumain ng panis o expired',
-          'DIARRHEA_NON_INFECTIOUS': 'Hindi naman panis ang kinain',
-          'STOMACH_ACIDIC': 'Maanghang o nasusunog sa tiyan',
-          'STOMACH_CRAMPING': 'Pulikat, kabag, o bloating',
-        };
         buttonsHtml = rec.options.map(opt => `
           <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
-            <div class="label">${opt.label.split(' / ')[0]}</div>
-            <div class="desc">${descMap[opt.value] || opt.label.split(' / ').slice(1).join(' / ') || ''}</div>
+            <div class="label">${getContextOptionLabel(opt.value, opt.label)}</div>
+            <div class="desc">${getContextOptionDesc(opt.value, opt.label) || ''}</div>
           </button>`).join('');
       } else {
         buttonsHtml = `
           <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
-            <div class="label">Dry Cough</div>
-            <div class="desc">Walang plema / No phlegm</div>
+            <div class="label">${getContextOptionLabel('COUGH_DRY', 'Dry Cough / No phlegm')}</div>
+            <div class="desc">${getContextOptionDesc('COUGH_DRY', 'Dry Cough / No phlegm')}</div>
           </button>
           <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
-            <div class="label">Wet Cough</div>
-            <div class="desc">May plema / With phlegm</div>
+            <div class="label">${getContextOptionLabel('COUGH_PRODUCTIVE', 'Wet Cough / With phlegm')}</div>
+            <div class="desc">${getContextOptionDesc('COUGH_PRODUCTIVE', 'Wet Cough / With phlegm')}</div>
           </button>`;
       }
 
       container.innerHTML = `
         <div class="clarify-page">
-          <div class="clarify-page-title">Quick Question</div>
+          <div class="clarify-page-title">${t('quickQuestion')}</div>
+          <div class="section-sub" style="margin-bottom:12px;">${t('quickQuestionSub')}</div>
+          ${renderSummaryCard(symptoms, {
+            title: t('patientSummaryTitle'),
+            subtitle: t('patientSummarySub'),
+            cta: false,
+            compact: true,
+          })}
           <div class="clarify-page-question">${questionText}</div>
           <div class="clarify-box">
             <div class="clarify-buttons">
               ${buttonsHtml}
             </div>
           </div>
+          ${renderLanguageSelectControl()}
         </div>`;
       return;
     }
 
-    let html = `
-      <div class="patient-badge">
-        Age: <strong>${patientAge}</strong>
-        <span class="sep">|</span>
-        Pain: <strong>${severity}/10</strong>
-      </div>`;
+    const referralActive = referral && referral.level === 'high';
 
-    if (referral && referral.level === 'high') {
-      html += `
-        <div class="referral-banner">
-          <div class="icon">&#127973;</div>
-          <h3>Professional Consultation Recommended</h3>
-          <p>${referral.message}</p>
-          <div class="severity-badge">Severity: ${referral.severity}/10</div>
-          <p class="referral-note">You may still view recommendations, but please prioritize professional advice.</p>
-        </div>`;
-    }
-
-    html += `
-      <div class="detected-section">
-        <h3>Detected Symptoms</h3>
-        <div class="symptom-pills">
-          ${symptoms.map(s => `<span class="symptom-pill">${formatSymptom(s)}</span>`).join('')}
-        </div>
-      </div>`;
+    let html = renderSummaryCard(symptoms, referralActive ? { cta: false } : {});
 
     container.innerHTML = html;
 
     if (rec.action === 'recommend') {
-      document.getElementById('viewRecsBtn').classList.remove('hidden');
+      // ── Duration Safeguard: check if we need to ask duration questions ──
+      // Skip duration flow if we already went through it (durationCompleted populated
+      // means we returned from the duration API with proceed=true).
+      const skipDuration = analysisData._durationDone;
+      if (!skipDuration) {
+        startDurationFlow();
+        return;
+      }
+
+      if (referralActive) {
+        // High severity — skip medicine display, show referral-only view
+        renderRecommendations(analysisData);
+        return;
+      }
+
+      setTapReadyState(true);
+      document.getElementById('viewRecsBtn').classList.add('hidden');
     }
   }
 
@@ -1489,9 +2746,330 @@
     }
   };
 
+  // ══════════════════════════════
+  //  DURATION SAFEGUARD FLOW
+  // ══════════════════════════════
+
+  // Known duration thresholds (mirrors backend DURATION_THRESHOLDS keys)
+  const DURATION_SYMPTOMS = [
+    'FEVER', 'DIARRHEA', 'SORE_THROAT', 'STOMACH_ACHE', 'HEADACHE',
+    'BODY_ACHES', 'RASHES', 'ALLERGIC_RHINITIS', 'NASAL_CONGESTION',
+    'RUNNY_NOSE', 'COUGH_GENERAL', 'COUGH_DRY', 'COUGH_PRODUCTIVE',
+  ];
+
+  function startDurationFlow() {
+    // Build queue of symptoms that need duration checking
+    const symptoms = analysisData.symptoms || [];
+    durationQueue = symptoms.filter(s => DURATION_SYMPTOMS.includes(s));
+    durationCompleted = [];
+    durationContextOverride = null;
+    durationClarificationData = {};
+
+    // Capture context override from the recommendation flow if any
+    const rec = analysisData.recommendation || {};
+    if (rec._context_override) {
+      durationContextOverride = rec._context_override;
+    }
+
+    if (durationQueue.length === 0) {
+      // No symptoms need duration check — proceed directly
+      analysisData._durationDone = true;
+      renderAnalysis(analysisData);
+      return;
+    }
+
+    // Ask duration for the first symptom
+    askNextDuration();
+  }
+
+  function askNextDuration() {
+    if (durationQueue.length === 0) {
+      // All durations checked and safe — proceed to recommendations
+      analysisData._durationDone = true;
+      renderAnalysis(analysisData);
+      return;
+    }
+
+    const symptom = durationQueue[0];
+    const container = document.getElementById('analysisResult');
+    container.classList.remove('hidden');
+    document.getElementById('analysisLoading').classList.add('hidden');
+
+    // Fetch the duration question from the backend
+    renderDurationQuestion(symptom);
+  }
+
+  function renderDurationQuestion(symptom) {
+    const container = document.getElementById('analysisResult');
+    const total = (analysisData.symptoms || []).filter(s => DURATION_SYMPTOMS.includes(s)).length;
+    const answered = durationCompleted.length;
+
+    // Symptom display names per language
+    const nameMap = {
+      'FEVER':            {en: 'Fever',            tl: 'Lagnat',                              ceb: 'Hilanat'},
+      'DIARRHEA':         {en: 'Diarrhea',         tl: 'Pagtatae',                            ceb: 'Pagkalibang'},
+      'SORE_THROAT':      {en: 'Sore Throat',      tl: 'Pananakit ng Lalamunan',              ceb: 'Sakit sa Tutunlan'},
+      'STOMACH_ACHE':     {en: 'Stomach Ache',     tl: 'Sakit ng Tiyan',                      ceb: 'Sakit sa Tiyan'},
+      'HEADACHE':         {en: 'Headache',         tl: 'Sakit ng Ulo',                        ceb: 'Sakit sa Ulo'},
+      'BODY_ACHES':       {en: 'Body Aches',       tl: 'Pananakit ng Katawan',                ceb: 'Kasakit sa Lawas'},
+      'RASHES':           {en: 'Rashes',           tl: 'Pantal',                              ceb: 'Hubag-hubag'},
+      'ALLERGIC_RHINITIS':{en: 'Allergy',          tl: 'Allergy',                             ceb: 'Allergy'},
+      'NASAL_CONGESTION': {en: 'Nasal Congestion', tl: 'Baradong Ilong',                      ceb: 'Barado nga Ilong'},
+      'RUNNY_NOSE':       {en: 'Runny Nose',       tl: 'Sipon',                               ceb: 'Sip-on'},
+      'COUGH_GENERAL':    {en: 'Cough',            tl: 'Ubo',                                 ceb: 'Ubo'},
+      'COUGH_DRY':        {en: 'Dry Cough',        tl: 'Tuyong Ubo',                          ceb: 'Uga nga Ubo'},
+      'COUGH_PRODUCTIVE': {en: 'Wet Cough',        tl: 'Ubo na may Plema',                    ceb: 'Ubo nga may Plema'},
+    };
+
+    // Duration options per symptom — language-aware
+    const LESS_THAN_DAY = {en: 'Less than a day', tl: 'Wala pang isang araw', ceb: 'Wala pay usa ka adlaw'};
+    const optionsMap = {
+      'FEVER': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–2 days',            tl: '1–2 araw',            ceb: '1–2 ka adlaw',           value: '1-2'},
+        {en: '3 days',              tl: '3 araw',              ceb: '3 ka adlaw',             value: '3'},
+        {en: 'More than 3 days',    tl: 'Higit sa 3 araw',     ceb: 'Labaw sa 3 ka adlaw',    value: '4+'},
+      ],
+      'DIARRHEA': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: 'About a day',         tl: 'Mga isang araw',      ceb: 'Mga usa ka adlaw',       value: '1'},
+        {en: '2 days',              tl: '2 araw',              ceb: '2 ka adlaw',             value: '2'},
+        {en: 'More than 2 days',    tl: 'Higit sa 2 araw',     ceb: 'Labaw sa 2 ka adlaw',    value: '3+'},
+      ],
+      'SORE_THROAT': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–5 days',            tl: '4–5 araw',            ceb: '4–5 ka adlaw',           value: '4-5'},
+        {en: 'More than 5 days',    tl: 'Higit sa 5 araw',     ceb: 'Labaw sa 5 ka adlaw',    value: '6+'},
+      ],
+      'STOMACH_ACHE': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+      ],
+      'HEADACHE': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+      ],
+      'BODY_ACHES': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+      ],
+      'RASHES': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+      ],
+      'ALLERGIC_RHINITIS': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+      ],
+      'NASAL_CONGESTION': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
+        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
+        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
+      ],
+      'RUNNY_NOSE': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
+        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
+        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
+      ],
+      'COUGH_GENERAL': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–7 days',            tl: '1–7 araw',            ceb: '1–7 ka adlaw',           value: '1-7'},
+        {en: '8–14 days',           tl: '8–14 araw',           ceb: '8–14 ka adlaw',          value: '8-14'},
+        {en: 'More than 2 weeks',   tl: 'Higit sa 2 linggo',   ceb: 'Labaw sa 2 ka semana',   value: '15+'},
+      ],
+      'COUGH_DRY': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–7 days',            tl: '1–7 araw',            ceb: '1–7 ka adlaw',           value: '1-7'},
+        {en: '8–14 days',           tl: '8–14 araw',           ceb: '8–14 ka adlaw',          value: '8-14'},
+        {en: 'More than 2 weeks',   tl: 'Higit sa 2 linggo',   ceb: 'Labaw sa 2 ka semana',   value: '15+'},
+      ],
+      'COUGH_PRODUCTIVE': [
+        {...LESS_THAN_DAY, value: '0'},
+        {en: '1–7 days',            tl: '1–7 araw',            ceb: '1–7 ka adlaw',           value: '1-7'},
+        {en: '8–14 days',           tl: '8–14 araw',           ceb: '8–14 ka adlaw',          value: '8-14'},
+        {en: 'More than 2 weeks',   tl: 'Higit sa 2 linggo',   ceb: 'Labaw sa 2 ka semana',   value: '15+'},
+      ],
+    };
+
+    const lang = selectedLanguage || 'en';
+    const names = nameMap[symptom] || {};
+    const displayName = names[lang] || names.en || symptom;
+    const options = optionsMap[symptom] || [];
+
+    // Question text per language
+    const questionText = {
+      en: `How long have you had <strong>${displayName}</strong>?`,
+      tl: `Gaano na katagal ang iyong <strong>${displayName}</strong>?`,
+      ceb: `Unsa na kadugay ang imong <strong>${displayName}</strong>?`,
+    };
+
+    // Progress dots
+    let dotsHtml = '';
+    for (let i = 0; i < total; i++) {
+      if (i < answered) dotsHtml += '<span class="dot done"></span>';
+      else if (i === answered) dotsHtml += '<span class="dot active"></span>';
+      else dotsHtml += '<span class="dot"></span>';
+    }
+
+    const buttonsHtml = options.map(opt => `
+      <button class="clarify-btn" onclick="handleDurationAnswer('${symptom}', '${opt.value}')">
+        ${opt[lang] || opt.en}
+      </button>`).join('');
+
+    container.innerHTML = `
+      <div class="clarify-page">
+        <div class="clarify-page-title">&#9202; ${t('durationCheckTitle')}</div>
+        ${total > 1 ? `<div class="duration-progress">${dotsHtml}</div>` : ''}
+        <div class="clarify-page-question">
+          ${questionText[lang] || questionText.en}
+        </div>
+        <div class="clarify-box">
+          <div class="clarify-buttons">
+            ${buttonsHtml}
+          </div>
+        </div>
+        ${renderLanguageSelectControl()}
+      </div>`;
+
+    document.getElementById('backFromResults').classList.remove('hidden');
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.add('hidden');
+    document.getElementById('exitBtn').classList.add('hidden');
+  }
+
+  window.handleDurationAnswer = async function(symptom, value) {
+    try {
+      const remaining = durationQueue.slice(1);
+
+      const res = await fetch('/consult/api/duration-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symptom: symptom,
+          duration_value: value,
+          original_symptoms: analysisData.symptoms,
+          original_conditions: analysisData.detected_conditions || [],
+          pending_durations: remaining,
+          age: patientAge,
+          severity: severity,
+          severity_map: severityMap,
+          context_override: durationContextOverride,
+          clarification_data: durationClarificationData,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Duration check failed');
+
+      if (!data.safe) {
+        // Duration exceeded — show referral banner
+        renderDurationReferral(data);
+        return;
+      }
+
+      // Safe — move to next symptom
+      durationCompleted.push(symptom);
+      durationQueue = remaining;
+
+      if (data.proceed) {
+        // All durations checked — update analysisData with final recommendation
+        analysisData.symptoms = data.symptoms;
+        analysisData.symptoms_display = data.symptoms_display || data.symptoms;
+        analysisData.detected_conditions = data.detected_conditions || analysisData.detected_conditions || [];
+        analysisData.recommendation = data.recommendation;
+        analysisData._durationDone = true;
+        renderAnalysis(analysisData);
+      } else if (data.next_duration) {
+        // More durations to ask — render next question
+        durationQueue = [data.next_duration.symptom, ...(data.next_duration.pending_durations || [])];
+        askNextDuration();
+      } else {
+        // Fallback: ask next from our local queue
+        askNextDuration();
+      }
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  function renderDurationReferral(data) {
+    const container = document.getElementById('analysisResult');
+    const referral = data.referral || {};
+    const days = data.reported_days || '?';
+    const symptomKey = data.symptom || '';
+
+    // Use the same language-aware name map
+    const nameMap = {
+      'FEVER':            {en: 'Fever',            tl: 'Lagnat',                   ceb: 'Hilanat'},
+      'DIARRHEA':         {en: 'Diarrhea',         tl: 'Pagtatae',                 ceb: 'Pagkalibang'},
+      'SORE_THROAT':      {en: 'Sore Throat',      tl: 'Pananakit ng Lalamunan',   ceb: 'Sakit sa Tutunlan'},
+      'STOMACH_ACHE':     {en: 'Stomach Ache',     tl: 'Sakit ng Tiyan',           ceb: 'Sakit sa Tiyan'},
+      'HEADACHE':         {en: 'Headache',         tl: 'Sakit ng Ulo',             ceb: 'Sakit sa Ulo'},
+      'BODY_ACHES':       {en: 'Body Aches',       tl: 'Pananakit ng Katawan',     ceb: 'Kasakit sa Lawas'},
+      'RASHES':           {en: 'Rashes',           tl: 'Pantal',                   ceb: 'Hubag-hubag'},
+      'ALLERGIC_RHINITIS':{en: 'Allergy',          tl: 'Allergy',                  ceb: 'Allergy'},
+      'NASAL_CONGESTION': {en: 'Nasal Congestion', tl: 'Baradong Ilong',           ceb: 'Barado nga Ilong'},
+      'RUNNY_NOSE':       {en: 'Runny Nose',       tl: 'Sipon',                    ceb: 'Sip-on'},
+      'COUGH_GENERAL':    {en: 'Cough',            tl: 'Ubo',                      ceb: 'Ubo'},
+      'COUGH_DRY':        {en: 'Dry Cough',        tl: 'Tuyong Ubo',               ceb: 'Uga nga Ubo'},
+      'COUGH_PRODUCTIVE': {en: 'Wet Cough',        tl: 'Ubo na may Plema',         ceb: 'Ubo nga may Plema'},
+    };
+
+    const lang = selectedLanguage || 'en';
+    const names = nameMap[symptomKey] || {};
+    const displayName = names[lang] || names.en || symptomKey;
+    const dayWord = {en: days === 1 ? 'day' : 'days', tl: 'araw', ceb: 'ka adlaw'};
+    const durationText = {
+      en: `Your <strong>${displayName}</strong> has lasted <strong>${days} ${dayWord.en}</strong>.`,
+      tl: `Ang iyong <strong>${displayName}</strong> ay <strong>${days} ${dayWord.tl}</strong> na.`,
+      ceb: `Ang imong <strong>${displayName}</strong> <strong>${days} ${dayWord.ceb}</strong> na.`,
+    };
+    const consultText = {
+      en: 'Please consult a doctor or pharmacist.',
+      tl: 'Kumonsulta sa doktor o pharmacist.',
+      ceb: 'Pakigkita sa doktor o pharmacist.',
+    };
+
+    container.innerHTML = `
+      <div class="duration-referral-banner">
+        <div class="icon">&#9202;</div>
+        <h3>${t('durationTitle')}</h3>
+        <p class="duration-detail">
+          ${durationText[lang] || durationText.en}
+        </p>
+        <p class="referral-action">
+          &#10060; ${t('durationBlocked')}<br>
+          &#9989; ${consultText[lang] || consultText.en}
+        </p>
+        <p class="referral-note">
+          ${t('durationNote')}
+        </p>
+      </div>`;
+
+    setTapReadyState(false);
+
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.remove('hidden');
+    document.getElementById('exitBtn').classList.remove('hidden');
+    document.getElementById('backFromResults').classList.remove('hidden');
+  }
+
   // ── Recommendations ──
   window.showRecommendations = function() {
     showingRecs = true;
+    setTapReadyState(false);
     renderRecommendations(analysisData);
     document.getElementById('viewRecsBtn').classList.add('hidden');
     document.getElementById('assessAgainBtn').classList.remove('hidden');
@@ -1515,10 +3093,18 @@
     symptomInput.value = '';
     toStep3Btn.disabled = true;
     severity = 3;
-    painSlider.value = 3;
+    severityMap = {};
+    preDetectedSymptoms = [];
+    severityHints = {};
+    severityQueue = [];
+    severityCompleted = [];
     updatePain();
     analysisData = null;
     showingRecs = false;
+    durationQueue = [];
+    durationCompleted = [];
+    durationContextOverride = null;
+    durationClarificationData = {};
     goToStep(2);
   };
 
@@ -1554,6 +3140,8 @@
     const recs = (data.recommendation?.recommendations || []).slice(0, 6);
     const symptoms = data.symptoms_display || data.symptoms || [];
     const referral = data.referral || null;
+
+    setTapReadyState(false);
 
     function reasonMatches(rec, reasonList) {
       const reasons = rec?.reasons || [];
@@ -1622,7 +3210,7 @@
           : 'See list below';
         return `
           <div class="symptom-focus-card">
-            <div class="symptom-focus-title">Medicine for ${formatSymptom(sym)}</div>
+            <div class="symptom-focus-title">${t('recommendationFor')} ${getSymptomLabel(sym)}</div>
             <div class="symptom-focus-pills">
               ${pills || `<span class="symptom-focus-empty">${emptyText}</span>`}
             </div>
@@ -1632,21 +3220,36 @@
       return `<div class="symptom-focus-grid">${cards}</div>`;
     }
 
+    // Build per-symptom severity chips for the mini-strip
+    const sMap = (data.severity_map || analysisData?.severity_map || severityMap || {});
+    let painChipContent = `${severity}/10`;
+    if (Object.keys(sMap).length > 0) {
+      painChipContent = Object.entries(sMap).map(([sym, val]) =>
+        `${getSymptomLabel(sym)}: ${val}/10`
+      ).join(', ');
+    }
+
     let html = `
-      <div class="patient-badge">
-        Age: <strong>${patientAge}</strong>
-        <span class="sep">|</span>
-        Pain: <strong>${severity}/10</strong>
+      <div class="results-mini-strip">
+        <div class="results-mini-chip"><span class="label">${t('age')}</span> ${patientAge}</div>
+        <div class="results-mini-chip"><span class="label">${t('pain')}</span> ${painChipContent}</div>
+        <div class="results-mini-chip"><span class="label">${t('detectedSymptoms')}</span> ${symptoms.map(s => getSymptomLabel(s)).join(', ')}</div>
       </div>`;
 
     if (referral && referral.level === 'high') {
       html += `
         <div class="referral-banner" style="margin-bottom:12px;">
-          <div class="icon">&#127973;</div>
-          <h3>Consult a Pharmacist First</h3>
-          <p>Due to your high severity rating (${referral.severity}/10), please speak with a healthcare professional before self-medicating.</p>
-          <div class="severity-badge">Severity: ${referral.severity}/10</div>
+          <h3>${t('professionalHelpTitle')}</h3>
+          <p>${t('professionalHelpSub')}</p>
+          <div class="severity-badge">${t('pain')}: ${referral.severity}/10</div>
+          <p class="referral-note">${t('professionalHelpNote')}</p>
         </div>`;
+
+      container.innerHTML = html;
+      document.getElementById('assessAgainBtn').classList.remove('hidden');
+      document.getElementById('exitBtn').classList.remove('hidden');
+      document.getElementById('backFromResults').classList.remove('hidden');
+      return;
     }
 
     if (!recs.length) {
@@ -1671,7 +3274,7 @@
           html += `
             <div class="no-symptoms">
               <div class="icon">&#128138;</div>
-              <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Consult Pharmacist</h3>
+              <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">${t('professionalHelpTitle')}</h3>
               <p>${recMsg}</p>
             </div>`;
         }
@@ -1679,8 +3282,8 @@
         html += `
           <div class="no-symptoms">
             <div class="icon">&#128138;</div>
-            <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">No suitable medicines found</h3>
-            <p>No matching OTC medicines for age ${patientAge} and detected symptoms. Please consult a pharmacist.</p>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">${t('noMedicineTitle')}</h3>
+            <p>${t('noMedicineSub')} ${t('consultPharmacist')}</p>
           </div>`;
       }
       container.innerHTML = html;
@@ -1691,7 +3294,7 @@
 
     html += `
       <div class="detected-section">
-        <h3>Recommended for: ${symptoms.map(s => formatSymptom(s)).join(', ')}</h3>
+        <h3>${t('recommendationFor')}: ${symptoms.map(s => getSymptomLabel(s)).join(', ')}</h3>
       </div>
       ${buildSymptomFocusCards(symptoms, recs)}
       <div class="rec-list">
@@ -1751,6 +3354,7 @@
       'RUNNY_NOSE_COLD_WEATHER_CONTEXT': 'Runny Nose (Cold-weather Trigger)',
       'RUNNY_NOSE_VIRAL_CONTEXT': 'Runny Nose (Viral/Cold Context)',
     };
+
     return map[s] || s.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase());
   }
 
@@ -1758,6 +3362,7 @@
   //  RESET
   // ══════════════════════════════
   window.resetAll = function() {
+    hideIdlePrompt();
     symptomInput.value = '';
     ageInput.value = '';
     ageSlider.value = 1;
@@ -1765,16 +3370,28 @@
     toStep3Btn.disabled = true;
     patientAge = null;
     severity = 3;
-    painSlider.value = 3;
+    severityMap = {};
+    preDetectedSymptoms = [];
+    severityHints = {};
+    severityQueue = [];
+    severityCompleted = [];
     updatePain();
     analysisData = null;
     showingRecs = false;
+    durationQueue = [];
+    durationCompleted = [];
+    durationContextOverride = null;
+    durationClarificationData = {};
 
     kioskMain.classList.add('hidden');
     screenHome.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentStep = 0;
   };
+
+  ['pointerdown', 'keydown', 'input', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, registerActivity, true);
+  });
 
   // ══════════════════════════════
   //  VOICE INPUT
@@ -1832,6 +3449,9 @@
     };
     return map[c] || c.replace(/_/g, ' ').toLowerCase().replace(/(^|\s)\S/g, ch => ch.toUpperCase());
   }
+
+  updateStaticCopy();
+  startSymptomTitleRotation();
 
 })();
 
