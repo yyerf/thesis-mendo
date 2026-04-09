@@ -1476,6 +1476,280 @@
       to { opacity: 1; transform: translateX(0); }
     }
 
+    /* ═══════════════════════════════
+       CHECKOUT FLOW
+    ═══════════════════════════════ */
+    .rec-buy-btn {
+      margin-top: 8px;
+      padding: 7px 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .rec-buy-btn:hover { background: linear-gradient(135deg, var(--blue-600), var(--blue-700)); transform: translateY(-1px); }
+    .rec-buy-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .rec-buy-btn i { font-size: 11px; }
+
+    .checkout-fab {
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      z-index: 900;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(2, 132, 199, 0.35);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+    }
+    .checkout-fab:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(2, 132, 199, 0.45); }
+    .checkout-fab .badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--white); color: var(--blue-600);
+      font-size: 12px; font-weight: 800;
+    }
+
+    /* Checkout Modal */
+    .checkout-overlay {
+      position: fixed; inset: 0; z-index: 1500;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .checkout-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .checkout-modal {
+      width: 95%; max-width: 520px;
+      max-height: 90vh;
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 32px 72px rgba(0,0,0,0.2);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+    .checkout-overlay.active .checkout-modal { transform: translateY(0); }
+
+    .checkout-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--zinc-200);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .checkout-header h3 {
+      font-size: 18px; font-weight: 800; color: var(--zinc-800);
+    }
+    .checkout-close {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--zinc-200); background: var(--white);
+      font-size: 18px; color: var(--zinc-500);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .checkout-close:hover { background: var(--zinc-100); color: var(--zinc-800); }
+
+    .checkout-body {
+      flex: 1; overflow-y: auto; padding: 20px 24px;
+    }
+
+    .checkout-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--zinc-200);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* Steps indicator */
+    .checkout-steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-bottom: 20px;
+    }
+    .checkout-step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--zinc-200);
+      transition: all 0.2s;
+    }
+    .checkout-step-dot.active { background: var(--blue-500); width: 12px; height: 12px; }
+    .checkout-step-dot.done { background: var(--success); }
+    .checkout-step-line {
+      width: 24px; height: 2px; background: var(--zinc-200); border-radius: 2px;
+    }
+
+    /* Cart items in checkout */
+    .checkout-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border: 1px solid var(--zinc-200);
+      border-radius: 12px; margin-bottom: 8px;
+      background: var(--white);
+    }
+    .checkout-item-info { flex: 1; min-width: 0; }
+    .checkout-item-brand { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
+    .checkout-item-generic { font-size: 11px; color: var(--zinc-500); }
+    .checkout-item-price { font-size: 13px; font-weight: 600; color: var(--blue-600); margin-top: 2px; }
+    .checkout-item-qty {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .checkout-qty-btn {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: 1px solid var(--zinc-200); background: var(--white);
+      font-size: 16px; font-weight: 700; color: var(--zinc-600);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .checkout-qty-btn:hover { background: var(--zinc-100); }
+    .checkout-qty-val {
+      width: 28px; text-align: center; font-size: 14px; font-weight: 700; color: var(--zinc-800);
+    }
+    .checkout-item-remove {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: none; background: var(--danger-light);
+      color: var(--danger); font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .checkout-item-remove:hover { background: var(--danger); color: var(--white); }
+
+    .checkout-total {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-radius: 12px;
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      margin-top: 12px;
+    }
+    .checkout-total .label { font-size: 14px; font-weight: 700; color: var(--zinc-600); }
+    .checkout-total .amount { font-size: 20px; font-weight: 900; color: var(--blue-600); }
+
+    .checkout-limit-note {
+      font-size: 11px; color: var(--zinc-400); margin-top: 8px; text-align: center;
+    }
+
+    /* Fingerprint auth */
+    .auth-section { text-align: center; padding: 20px 0; }
+    .auth-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--blue-50); border: 2px solid var(--blue-200);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 36px; color: var(--blue-500);
+      transition: all 0.3s;
+    }
+    .auth-icon.authenticated {
+      background: var(--success-light); border-color: var(--success);
+      color: var(--success);
+    }
+    .auth-title { font-size: 20px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
+    .auth-subtitle { font-size: 14px; color: var(--zinc-500); margin-bottom: 20px; line-height: 1.6; }
+    .auth-btn {
+      padding: 14px 28px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white); font-family: var(--font);
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .auth-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(2,132,199,0.3); }
+    .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .auth-btn.success {
+      background: linear-gradient(135deg, var(--success), #16a34a);
+    }
+    .auth-status {
+      margin-top: 14px; font-size: 14px; font-weight: 600;
+      display: none;
+    }
+    .auth-status.show { display: block; }
+    .auth-status.ok { color: var(--success); }
+    .auth-status.fail { color: var(--danger); }
+
+    /* Payment method */
+    .payment-section { padding: 10px 0; }
+    .payment-title { font-size: 18px; font-weight: 800; color: var(--zinc-800); text-align: center; margin-bottom: 16px; }
+    .payment-options { display: flex; flex-direction: column; gap: 10px; }
+    .payment-option {
+      padding: 18px; border: 2px solid var(--zinc-200);
+      border-radius: 14px; background: var(--white);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 14px;
+      position: relative;
+    }
+    .payment-option:hover { border-color: var(--blue-300); }
+    .payment-option.selected { border-color: var(--blue-500); background: var(--blue-50); }
+    .payment-option.disabled {
+      opacity: 0.45; cursor: not-allowed;
+      pointer-events: none;
+    }
+    .payment-option .po-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .payment-option .po-icon.cashless { background: var(--blue-100); color: var(--blue-600); }
+    .payment-option .po-icon.cash { background: var(--zinc-100); color: var(--zinc-500); }
+    .payment-option .po-info { flex: 1; }
+    .payment-option .po-label { font-size: 15px; font-weight: 700; color: var(--zinc-800); }
+    .payment-option .po-desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .payment-option .coming-soon-badge {
+      position: absolute; top: 10px; right: 10px;
+      padding: 3px 10px; border-radius: 999px;
+      background: var(--warning-light); color: var(--warning);
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Processing */
+    .processing-section { text-align: center; padding: 40px 0; }
+    .processing-spinner {
+      width: 56px; height: 56px; margin: 0 auto 16px;
+      border: 4px solid var(--zinc-200); border-top-color: var(--blue-500);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    .processing-text { font-size: 16px; font-weight: 700; color: var(--zinc-700); }
+    .processing-sub { font-size: 13px; color: var(--zinc-400); margin-top: 6px; }
+
+    /* Success */
+    .success-section { text-align: center; padding: 20px 0; }
+    .success-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--success-light); border: 2px solid var(--success);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 32px; color: var(--success);
+    }
+    .success-title { font-size: 22px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
+    .success-ref { font-size: 14px; color: var(--zinc-500); margin-bottom: 16px; }
+    .success-items {
+      background: var(--zinc-50); border: 1px solid var(--zinc-200);
+      border-radius: 12px; padding: 14px; text-align: left;
+      margin-bottom: 16px;
+    }
+    .success-item-row {
+      display: flex; justify-content: space-between;
+      padding: 6px 0; font-size: 13px; color: var(--zinc-700);
+    }
+    .success-item-row .brand { font-weight: 600; }
+    .success-total-row {
+      display: flex; justify-content: space-between;
+      padding: 10px 0 0; margin-top: 8px;
+      border-top: 1px solid var(--zinc-200);
+      font-size: 15px; font-weight: 800; color: var(--zinc-800);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       .section-title { font-size: 26px; }
@@ -1849,6 +2123,29 @@
   </div>
 </div>
 
+<!-- ═══ Checkout FAB ═══ -->
+<button class="checkout-fab" id="checkoutFab" onclick="openCheckoutModal()">
+  <i class="fa-solid fa-bag-shopping"></i>
+  Checkout
+  <span class="badge" id="fabBadge">0</span>
+</button>
+
+<!-- ═══ Checkout Modal ═══ -->
+<div class="checkout-overlay" id="checkoutOverlay" onclick="closeCheckoutModal(event)">
+  <div class="checkout-modal" onclick="event.stopPropagation()">
+    <div class="checkout-header">
+      <h3 id="checkoutTitle">Your Cart</h3>
+      <button class="checkout-close" onclick="closeCheckoutModal()">&times;</button>
+    </div>
+    <div class="checkout-body" id="checkoutBody">
+      <!-- Dynamically rendered -->
+    </div>
+    <div class="checkout-footer" id="checkoutFooter">
+      <!-- Dynamically rendered -->
+    </div>
+  </div>
+</div>
+
 <div id="toastContainer" class="toast-container"></div>
 
 <script>
@@ -1867,6 +2164,7 @@
   let selectedLanguage = 'en';
   let symptomTypewriterTimer = null;
   let symptomTypewriterRunId = 0;
+  let symptomTypewriterLastText = '';
   let idleWarningTimer = null;
   let idleResetTimer = null;
   let idleCountdownTimer = null;
@@ -2273,7 +2571,7 @@
     if (ageTitleText) {
       ageTitleText.textContent = t('ageTitle');
     }
-    if (symptomTypewriterText) {
+    if (symptomTypewriterText && currentStep !== 2) {
       symptomTypewriterText.textContent = t('symptomTitle');
     }
     symptomInput.placeholder = t('symptomPlaceholder');
@@ -2297,8 +2595,9 @@
     }
 
     const fullText = t('symptomTitle');
+    symptomTypewriterLastText = fullText;
+
     let charIndex = 0;
-    let deleting = false;
 
     function schedule(nextTick, delay) {
       symptomTypewriterTimer = setTimeout(() => {
@@ -2310,26 +2609,14 @@
     function tick() {
       if (runId !== symptomTypewriterRunId) return;
 
-      if (!deleting) {
-        charIndex += 1;
-        symptomTypewriterText.textContent = fullText.slice(0, charIndex);
-        if (charIndex === fullText.length) {
-          deleting = true;
-          schedule(tick, 5000);
-          return;
-        }
-        schedule(tick, 65);
+      charIndex += 1;
+      symptomTypewriterText.textContent = fullText.slice(0, charIndex);
+      if (charIndex < fullText.length) {
+        schedule(tick, 67);
         return;
       }
 
-      charIndex -= 1;
-      symptomTypewriterText.textContent = fullText.slice(0, Math.max(charIndex, 0));
-      if (charIndex === 0) {
-        deleting = false;
-        schedule(tick, 65);
-        return;
-      }
-      schedule(tick, 35);
+      symptomTypewriterTimer = null;
     }
 
     symptomTypewriterText.textContent = '';
@@ -2530,6 +2817,9 @@
       recognition.lang = getSpeechRecognitionLocale(lang);
     }
     updateStaticCopy();
+    if (currentStep === 2 && symptomTypewriterLastText !== t('symptomTitle')) {
+      startSymptomTitleRotation();
+    }
     if (analysisData && currentStep === 4) {
       if (showingRecs) {
         renderRecommendations(analysisData);
@@ -3670,6 +3960,7 @@
     }
 
     function renderRecommendationCard(rec, rank) {
+      const canBuy = rec.in_stock === true && rec.stock_quantity > 0;
       return `
         <div class="rec-card ${rec.in_stock === false ? 'out-of-stock' : ''}">
           <div class="rec-rank">${rank}</div>
@@ -3689,6 +3980,7 @@
               : rec.in_stock === false
                 ? `<div class="avail out">\u2717 Out of Stock</div>`
                 : ''}
+            ${canBuy ? `<button class="rec-buy-btn" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> Buy</button>` : ''}
           </div>
         </div>`;
     }
@@ -3815,9 +4107,16 @@
         <strong>${t('disclaimerTitle')}</strong> ${t('disclaimerBody')}
         ${t('disclaimerAge')} ${patientAge}.
         ${severity >= 8 ? `<br><strong style="color:var(--danger);">${t('disclaimerHighSev')}</strong>` : ''}
+      </div>
+      <div class="results-actions results-actions--center" style="margin-top:14px;">
+        <button class="btn btn--primary btn--lg" onclick="openCheckoutModal()" id="proceedCheckoutBtn" style="display:none;">
+          <i class="fa-solid fa-bag-shopping"></i>&nbsp; Proceed to Checkout
+          <span id="checkoutBtnCount" style="margin-left:6px;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:999px;font-size:12px;">0</span>
+        </button>
       </div>`;
 
     container.innerHTML = html;
+    updateCheckoutFab();
   }
 
   function formatSymptom(s) {
@@ -3945,8 +4244,485 @@
     return map[c] || c.replace(/_/g, ' ').toLowerCase().replace(/(^|\s)\S/g, ch => ch.toUpperCase());
   }
 
+  // ══════════════════════════════
+  //  CHECKOUT FLOW
+  // ══════════════════════════════
+  let kioskCart = [];           // [{brand, quantity, inventory_id, unit_price, generic_name}]
+  let checkoutStep = 1;        // 1=Cart, 2=Auth, 3=Payment, 4=Processing, 5=Success
+  let kioskAuthenticated = false;
+  let currentInvoiceId = null;
+  let paymentCheckInterval = null;
+  let paymentPollFailures = 0;
+  const KIOSK_MAX_QTY = 3;
+  const KIOSK_MAX_ITEMS = 5;
+
+  // ── Add to kiosk cart (from buy button on rec card) ──
+  window.addToKioskCart = async function(brand, evt) {
+    if (evt) { evt.stopPropagation(); evt.preventDefault(); }
+    try {
+      const res = await fetch('/checkout/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ brand, quantity: 1 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Failed to add', 'error');
+        return;
+      }
+      showToast(data.message, 'success');
+      await refreshKioskCart();
+    } catch (err) {
+      showToast('Failed to add to cart', 'error');
+    }
+  };
+
+  async function refreshKioskCart() {
+    try {
+      const res = await fetch('/checkout/api/cart');
+      const data = await res.json();
+      kioskCart = data.items || [];
+      updateCheckoutFab();
+    } catch (err) { /* ignore */ }
+  }
+
+  function updateCheckoutFab() {
+    const fab = document.getElementById('checkoutFab');
+    const badge = document.getElementById('fabBadge');
+    const proceedBtn = document.getElementById('proceedCheckoutBtn');
+    const btnCount = document.getElementById('checkoutBtnCount');
+    const count = kioskCart.reduce((s, c) => s + c.quantity, 0);
+    if (count > 0) {
+      fab.style.display = 'inline-flex';
+      badge.textContent = count;
+      if (proceedBtn) { proceedBtn.style.display = 'inline-flex'; btnCount.textContent = count; }
+    } else {
+      fab.style.display = 'none';
+      if (proceedBtn) { proceedBtn.style.display = 'none'; }
+    }
+  }
+
+  // ── Checkout Modal ──
+  window.openCheckoutModal = async function() {
+    checkoutStep = 1;
+    kioskAuthenticated = false;
+    currentInvoiceId = null;
+    paymentPollFailures = 0;
+    await refreshKioskCart();
+    renderCheckoutStep();
+    document.getElementById('checkoutOverlay').classList.add('active');
+  };
+
+  window.closeCheckoutModal = function(evt) {
+    if (evt && evt.target !== document.getElementById('checkoutOverlay')) return;
+    if (paymentCheckInterval) { clearInterval(paymentCheckInterval); paymentCheckInterval = null; }
+    document.getElementById('checkoutOverlay').classList.remove('active');
+    if (checkoutStep === 5) {
+      refreshKioskCart();
+    }
+  };
+
+  function renderCheckoutStep() {
+    const body = document.getElementById('checkoutBody');
+    const footer = document.getElementById('checkoutFooter');
+    const title = document.getElementById('checkoutTitle');
+
+    const stepsHtml = `
+      <div class="checkout-steps">
+        <div class="checkout-step-dot ${checkoutStep >= 1 ? (checkoutStep > 1 ? 'done' : 'active') : ''}"></div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step-dot ${checkoutStep >= 2 ? (checkoutStep > 2 ? 'done' : 'active') : ''}"></div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step-dot ${checkoutStep >= 3 ? (checkoutStep > 3 ? 'done' : 'active') : ''}"></div>
+      </div>`;
+
+    if (checkoutStep === 1) {
+      title.textContent = 'Your Cart';
+      const total = kioskCart.reduce((s, c) => s + c.subtotal, 0);
+      let itemsHtml = '';
+      if (!kioskCart.length) {
+        itemsHtml = '<p style="text-align:center;color:var(--zinc-400);padding:30px 0;">Your cart is empty. Tap <strong>Buy</strong> on a medicine to add it.</p>';
+      } else {
+        kioskCart.forEach(ci => {
+          itemsHtml += `
+            <div class="checkout-item">
+              <div class="checkout-item-info">
+                <div class="checkout-item-brand">${escHtml(ci.brand)}</div>
+                <div class="checkout-item-generic">${escHtml(ci.generic_name)}</div>
+                <div class="checkout-item-price">\u20B1${ci.unit_price.toFixed(2)} \u00D7 ${ci.quantity} = \u20B1${ci.subtotal.toFixed(2)}</div>
+              </div>
+              <div class="checkout-item-qty">
+                <button class="checkout-qty-btn" onclick="updateKioskQty(${ci.inventory_id}, ${ci.quantity - 1})" ${ci.quantity <= 1 ? 'disabled' : ''}>&#8722;</button>
+                <span class="checkout-qty-val">${ci.quantity}</span>
+                <button class="checkout-qty-btn" onclick="updateKioskQty(${ci.inventory_id}, ${ci.quantity + 1})" ${ci.quantity >= KIOSK_MAX_QTY ? 'disabled' : ''}>+</button>
+              </div>
+              <button class="checkout-item-remove" onclick="removeKioskItem(${ci.inventory_id})" title="Remove">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>`;
+        });
+      }
+
+      body.innerHTML = `
+        ${stepsHtml}
+        ${itemsHtml}
+        ${kioskCart.length ? `
+          <div class="checkout-total">
+            <span class="label">Total</span>
+            <span class="amount">\u20B1${total.toFixed(2)}</span>
+          </div>
+          <div class="checkout-limit-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Max ${KIOSK_MAX_QTY} units per medicine &middot; Max ${KIOSK_MAX_ITEMS} different medicines
+          </div>` : ''}`;
+
+      footer.innerHTML = kioskCart.length ? `
+        <button class="btn" onclick="closeCheckoutModal()">Continue Shopping</button>
+        <button class="btn btn--primary" onclick="goToCheckoutStep(2)">
+          Authenticate <i class="fa-solid fa-arrow-right"></i>
+        </button>` : `
+        <button class="btn" onclick="closeCheckoutModal()">Close</button>`;
+
+    } else if (checkoutStep === 2) {
+      title.textContent = 'Identity Verification';
+      body.innerHTML = `
+        ${stepsHtml}
+        <div class="auth-section">
+          <div class="auth-icon" id="authIcon">
+            <i class="fa-solid fa-fingerprint"></i>
+          </div>
+          <div class="auth-title">Fingerprint Scan</div>
+          <div class="auth-subtitle">
+            Please place your finger on the AS608 sensor to verify your identity,<br>
+            or tap the button below to authenticate.
+          </div>
+          <button class="auth-btn" id="authBtn" onclick="doFingerprintAuth()">
+            <i class="fa-solid fa-fingerprint"></i> Authenticate
+          </button>
+          <div class="auth-status" id="authStatus"></div>
+        </div>`;
+
+      footer.innerHTML = `
+        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn--primary" id="toPaymentBtn" onclick="goToCheckoutStep(3)" disabled>
+          Choose Payment <i class="fa-solid fa-arrow-right"></i>
+        </button>`;
+
+    } else if (checkoutStep === 3) {
+      title.textContent = 'Payment Method';
+      const total = kioskCart.reduce((s, c) => s + c.subtotal, 0);
+      body.innerHTML = `
+        ${stepsHtml}
+        <div class="payment-section">
+          <div class="checkout-total" style="margin-bottom:16px;">
+            <span class="label">Amount to Pay</span>
+            <span class="amount">\u20B1${total.toFixed(2)}</span>
+          </div>
+          <div class="payment-title">Select Payment Method</div>
+          <div class="payment-options">
+            <div class="payment-option selected" id="payOptCashless" onclick="selectPayment('cashless')">
+              <div class="po-icon cashless"><i class="fa-solid fa-qrcode"></i></div>
+              <div class="po-info">
+                <div class="po-label">Cashless Payment</div>
+                <div class="po-desc">Pay via GCash, Maya, bank transfer &amp; more (powered by Xendit)</div>
+              </div>
+            </div>
+            <div class="payment-option disabled" id="payOptCash">
+              <div class="po-icon cash"><i class="fa-solid fa-money-bill-wave"></i></div>
+              <div class="po-info">
+                <div class="po-label">Cash</div>
+                <div class="po-desc">Insert cash into the machine</div>
+              </div>
+              <div class="coming-soon-badge">Coming Soon</div>
+            </div>
+          </div>
+        </div>`;
+
+      footer.innerHTML = `
+        <button class="btn" onclick="goToCheckoutStep(2)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn--primary" onclick="processPayment()">
+          <i class="fa-solid fa-lock"></i> Pay Now
+        </button>`;
+
+    } else if (checkoutStep === 4) {
+      title.textContent = 'Processing Payment';
+      body.innerHTML = `
+        <div class="processing-section">
+          <div class="processing-spinner"></div>
+          <div class="processing-text">Redirecting to payment...</div>
+          <div class="processing-sub" id="paymentProcessingSub">Complete your payment in the Xendit window.<br>This page will update automatically.</div>
+        </div>`;
+      footer.innerHTML = `
+        <button class="btn" onclick="cancelPayment()">Cancel</button>
+        <button class="btn btn--primary" onclick="verifyCurrentPayment(true)">I Already Paid</button>`;
+
+    } else if (checkoutStep === 5) {
+      title.textContent = 'Purchase Complete!';
+      const orderData = window._lastOrderResult || {};
+      const items = orderData.items || [];
+      let itemRows = items.map(it => `
+        <div class="success-item-row">
+          <span class="brand">${escHtml(it.brand)} \u00D7 ${it.quantity}</span>
+          <span>\u20B1${it.subtotal.toFixed(2)}</span>
+        </div>`).join('');
+
+      body.innerHTML = `
+        <div class="success-section">
+          <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="success-title">Payment Successful!</div>
+          <div class="success-ref">Ref: ${escHtml(orderData.transaction_ref || '')}</div>
+          <div class="success-items">
+            ${itemRows}
+            <div class="success-total-row">
+              <span>Total</span>
+              <span>\u20B1${(orderData.total_amount || 0).toFixed(2)}</span>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--zinc-500);">Your medicine will be dispensed shortly. Thank you!</p>
+        </div>`;
+      footer.innerHTML = `
+        <button class="btn btn--primary btn--lg" onclick="closeCheckoutAndReset()" style="width:100%;">
+          <i class="fa-solid fa-house"></i> Done
+        </button>`;
+    }
+  }
+
+  window.goToCheckoutStep = function(step) {
+    checkoutStep = step;
+    renderCheckoutStep();
+  };
+
+  window.selectPayment = function(type) {
+    if (type === 'cashless') {
+      document.getElementById('payOptCashless').classList.add('selected');
+    }
+  };
+
+  window.updateKioskQty = async function(invId, newQty) {
+    if (newQty <= 0) {
+      await removeKioskItem(invId);
+      return;
+    }
+    try {
+      await fetch('/checkout/api/cart/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ inventory_id: invId }),
+      });
+      const cartItem = kioskCart.find(c => c.inventory_id === invId);
+      if (cartItem) {
+        const res = await fetch('/checkout/api/cart/add', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ brand: cartItem.brand, quantity: newQty }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Update failed', 'error');
+          await fetch('/checkout/api/cart/add', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ brand: cartItem.brand, quantity: cartItem.quantity }),
+          });
+        }
+      }
+      await refreshKioskCart();
+      renderCheckoutStep();
+    } catch (err) {
+      showToast('Update failed', 'error');
+    }
+  };
+
+  window.removeKioskItem = async function(invId) {
+    try {
+      await fetch('/checkout/api/cart/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ inventory_id: invId }),
+      });
+      await refreshKioskCart();
+      renderCheckoutStep();
+    } catch (err) {
+      showToast('Remove failed', 'error');
+    }
+  };
+
+  window.doFingerprintAuth = async function() {
+    const btn = document.getElementById('authBtn');
+    const icon = document.getElementById('authIcon');
+    const status = document.getElementById('authStatus');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
+
+    try {
+      await new Promise(r => setTimeout(r, 1200));
+
+      const res = await fetch('/checkout/api/auth/fingerprint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        kioskAuthenticated = true;
+        icon.classList.add('authenticated');
+        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        btn.classList.add('success');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified';
+        status.className = 'auth-status show ok';
+        status.textContent = 'Identity verified successfully!';
+        document.getElementById('toPaymentBtn').disabled = false;
+        setTimeout(() => goToCheckoutStep(3), 800);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+        status.className = 'auth-status show fail';
+        status.textContent = 'Verification failed. Please try again.';
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+      status.className = 'auth-status show fail';
+      status.textContent = 'Error: ' + err.message;
+    }
+  };
+
+  window.processPayment = async function() {
+    goToCheckoutStep(4);
+    paymentPollFailures = 0;
+
+    try {
+      const res = await fetch('/checkout/api/pay/xendit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        showToast(data.error || 'Payment creation failed', 'error');
+        goToCheckoutStep(3);
+        return;
+      }
+
+      currentInvoiceId = data.invoice_id;
+
+      const payWindow = window.open(data.invoice_url, '_blank', 'width=480,height=700,scrollbars=yes');
+      if (!payWindow) {
+        showToast('Popup blocked. Please allow popups and try again.', 'error');
+        goToCheckoutStep(3);
+        return;
+      }
+
+      paymentCheckInterval = setInterval(() => {
+        verifyCurrentPayment(false, payWindow);
+      }, 3000);
+
+    } catch (err) {
+      showToast('Payment failed: ' + err.message, 'error');
+      goToCheckoutStep(3);
+    }
+  };
+
+  window.verifyCurrentPayment = async function(showPendingToast = false, payWindow = null) {
+    if (!currentInvoiceId) {
+      showToast('No active payment to verify.', 'warning');
+      return;
+    }
+
+    try {
+      const vRes = await fetch('/checkout/api/pay/verify', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ invoice_id: currentInvoiceId }),
+      });
+      const vData = await vRes.json();
+
+      if (!vRes.ok) {
+        paymentPollFailures += 1;
+        const sub = document.getElementById('paymentProcessingSub');
+        if (sub) {
+          sub.innerHTML = 'We could not confirm the payment yet.<br>Please tap <strong>I Already Paid</strong> or wait a moment.';
+        }
+        if (showPendingToast || paymentPollFailures >= 2) {
+          showToast(vData.error || 'Could not verify payment yet.', 'warning');
+        }
+        return;
+      }
+
+      if (vData.success && vData.status === 'PAID') {
+        if (paymentCheckInterval) {
+          clearInterval(paymentCheckInterval);
+          paymentCheckInterval = null;
+        }
+        paymentPollFailures = 0;
+        window._lastOrderResult = vData;
+        if (payWindow && !payWindow.closed) {
+          try { payWindow.close(); } catch (err) {}
+        }
+        goToCheckoutStep(5);
+        return;
+      }
+
+      if (showPendingToast) {
+        showToast(vData.message || 'Payment is still pending.', 'info');
+      }
+    } catch (err) {
+      paymentPollFailures += 1;
+      if (showPendingToast || paymentPollFailures >= 2) {
+        showToast('Verification failed: ' + err.message, 'warning');
+      }
+    }
+  };
+
+  window.cancelPayment = function() {
+    if (paymentCheckInterval) { clearInterval(paymentCheckInterval); paymentCheckInterval = null; }
+    currentInvoiceId = null;
+    goToCheckoutStep(3);
+  };
+
+  window.closeCheckoutAndReset = function() {
+    document.getElementById('checkoutOverlay').classList.remove('active');
+    refreshKioskCart();
+    setTimeout(() => resetAll(), 300);
+  };
+
+  window.addEventListener('message', (event) => {
+    if (event.origin !== window.location.origin) return;
+    const data = event.data || {};
+    if (data.source !== 'mendo-xendit') return;
+    if (data.invoiceId) {
+      currentInvoiceId = data.invoiceId;
+    }
+    if (data.result === 'success') {
+      verifyCurrentPayment(true);
+    } else if (data.result === 'failure') {
+      if (paymentCheckInterval) {
+        clearInterval(paymentCheckInterval);
+        paymentCheckInterval = null;
+      }
+      showToast('Payment was not completed.', 'warning');
+      goToCheckoutStep(3);
+    }
+  });
+
+  window.addEventListener('focus', () => {
+    if (checkoutStep === 4 && currentInvoiceId) {
+      verifyCurrentPayment(false);
+    }
+  });
+
+  // Clear kiosk cart on full reset
+  const _origResetAll = window.resetAll;
+  window.resetAll = function() {
+    fetch('/checkout/api/cart/clear', { method: 'POST' }).catch(() => {});
+    kioskCart = [];
+    kioskAuthenticated = false;
+    updateCheckoutFab();
+    _origResetAll();
+  };
+
   updateStaticCopy();
-  startSymptomTitleRotation();
 
 })();
 </script>

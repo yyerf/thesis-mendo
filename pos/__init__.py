@@ -12,6 +12,7 @@ from .db import init_db, close_db
 from .routes_admin import admin_bp
 from .routes_shop import shop_bp
 from .routes_consultation import consultation_bp
+from .routes_checkout import checkout_bp
 
 __all__ = ["init_pos"]
 
@@ -26,3 +27,4 @@ def init_pos(app: Flask) -> None:
     app.register_blueprint(admin_bp)
     app.register_blueprint(shop_bp)
     app.register_blueprint(consultation_bp)
+    app.register_blueprint(checkout_bp)

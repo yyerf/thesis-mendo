@@ -259,12 +259,13 @@ def get_inventory_by_brand(brand: str) -> Optional[Dict[str, Any]]:
     return dict(row) if row else None
 
 
-def update_stock(item_id: int, new_qty: int, change_type: str, reference: str = "", performed_by: int = 0) -> None:
+def update_stock(item_id: int, new_qty: int, change_type: str, reference: str = "", performed_by: Optional[int] = None) -> None:
     db = get_db()
     item = get_inventory_item(item_id)
     if not item:
         raise ValueError("Item not found")
     old_qty = item["stock_quantity"]
+    actor_id = performed_by if performed_by and performed_by > 0 else None
     db.execute(
         "UPDATE inventory SET stock_quantity=?, updated_at=? WHERE id=?",
         (new_qty, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), item_id),
@@ -273,7 +274,7 @@ def update_stock(item_id: int, new_qty: int, change_type: str, reference: str = 
         """INSERT INTO stock_logs
            (inventory_id, brand, change_type, quantity_change, quantity_before, quantity_after, reference, performed_by)
            VALUES (?,?,?,?,?,?,?,?)""",
-        (item_id, item["brand"], change_type, new_qty - old_qty, old_qty, new_qty, reference, performed_by),
+          (item_id, item["brand"], change_type, new_qty - old_qty, old_qty, new_qty, reference, actor_id),
     )
     db.commit()
 
@@ -321,12 +322,13 @@ def create_transaction(
     items: List[Dict[str, Any]],
     payment_method: str = "cash",
     amount_tendered: float = 0.0,
-    cashier_id: int = 0,
+    cashier_id: Optional[int] = None,
     customer_age: Optional[int] = None,
     customer_note: str = "",
 ) -> Dict[str, Any]:
     db = get_db()
     ref = _next_txn_ref()
+    actor_id = cashier_id if cashier_id and cashier_id > 0 else None
     total = 0.0
     item_count = 0
     line_items: List[Dict[str, Any]] = []
@@ -360,7 +362,7 @@ def create_transaction(
             item_count, status, cashier_id, customer_age, customer_note)
            VALUES (?,?,?,?,?,?,?,?,?,?)""",
         (ref, total, payment_method, amount_tendered, change, item_count, "completed",
-         cashier_id, customer_age, customer_note),
+            actor_id, customer_age, customer_note),
     )
     txn_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
 
@@ -379,7 +381,7 @@ def create_transaction(
                (inventory_id, brand, change_type, quantity_change, quantity_before, quantity_after, reference, performed_by)
                VALUES (?,?,?,?,?,?,?,?)""",
             (li["inventory_id"], li["brand"], "sale", -li["quantity"],
-             new_qty + li["quantity"], new_qty, ref, cashier_id),
+                 new_qty + li["quantity"], new_qty, ref, actor_id),
         )
 
     db.commit()
@@ -394,9 +396,10 @@ def create_transaction(
     }
 
 
-def void_transaction(txn_id: int, performed_by: int = 0) -> None:
+def void_transaction(txn_id: int, performed_by: Optional[int] = None) -> None:
     """Void a transaction — restore stock and mark voided."""
     db = get_db()
+    actor_id = performed_by if performed_by and performed_by > 0 else None
     txn = db.execute("SELECT * FROM transactions WHERE id=?", (txn_id,)).fetchone()
     if not txn:
         raise ValueError("Transaction not found")
@@ -415,7 +418,7 @@ def void_transaction(txn_id: int, performed_by: int = 0) -> None:
                    (inventory_id, brand, change_type, quantity_change, quantity_before, quantity_after, reference, performed_by)
                    VALUES (?,?,?,?,?,?,?,?)""",
                 (it["inventory_id"], it["brand"], "void_return", it["quantity"],
-                 inv["stock_quantity"], new_qty, txn["transaction_ref"], performed_by),
+                      inv["stock_quantity"], new_qty, txn["transaction_ref"], actor_id),
             )
     db.execute("UPDATE transactions SET status='voided' WHERE id=?", (txn_id,))
     db.commit()

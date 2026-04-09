@@ -6,6 +6,9 @@ Professional Point-of-Sale system for OTC medicine vending.
 import os
 import logging
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, redirect, url_for
 
 # ── Logging ──
