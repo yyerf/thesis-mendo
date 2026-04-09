@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
   <style>
     :root {
       --white: #ffffff;
@@ -63,24 +64,21 @@
     .home-bg {
       flex: 1; position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
+      background: url("{{ url_for('static', filename='images/banner.png') }}") center / cover no-repeat;
     }
-    .home-logo-wrap {
-      position: relative; z-index: 2; text-align: center;
+    .home-center-stack {
+      position: absolute;
+      left: 50%;
+      bottom: 34px;
+      transform: translateX(-50%);
+      z-index: 606;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
     }
-    .home-logo-wrap img {
-      width: 320px; height: auto;
-      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4));
-    }
-    /* Carousel */
-    .carousel-slide {
-      position: absolute; inset: 0;
-      opacity: 0; transition: opacity 1.2s ease;
-    }
-    .carousel-slide.active { opacity: 1; }
-    .carousel-slide img {
-      width: 100%; height: 100%;
-      object-fit: cover; filter: brightness(0.45);
-    }
+    /* Static home background */
     /* Admin link */
     .admin-link {
       position: fixed; top: 46px; left: 20px; z-index: 600;
@@ -93,9 +91,19 @@
     }
     .admin-link:hover { background: rgba(255,255,255,0.25); color: #fff; }
 
+    .home-top-right {
+      position: fixed;
+      top: 46px;
+      right: 20px;
+      z-index: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     /* Help button — single instance on home screen */
     .help-btn-home {
-      position: fixed; top: 46px; right: 20px; z-index: 600;
+      position: static;
       width: 44px; height: 44px; border-radius: 50%;
       background: var(--white); border: 2px solid var(--zinc-200);
       font-size: 20px; font-weight: 700; color: var(--zinc-500);
@@ -116,9 +124,43 @@
 
     /* CTA Footer */
     .home-cta {
-      background: var(--blue-500); color: var(--white);
-      padding: 28px 24px; text-align: center;
-      display: flex; align-items: center; justify-content: center; gap: 12px;
+      position: static;
+      background: transparent; color: var(--blue-600);
+      padding: 8px 10px; text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .home-lang-switch {
+      position: static;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .home-lang-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 54px;
+    }
+    .home-lang-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+    .home-lang-btn.active {
+      background: rgba(255,255,255,0.92);
+      color: var(--zinc-700);
     }
     .home-cta-icon {
       width: 36px; height: 36px;
@@ -160,6 +202,41 @@
       color: var(--zinc-400); cursor: pointer;
     }
     .modal-box .close-btn:hover { color: var(--zinc-700); }
+
+    .legal-notice-box {
+      max-width: 520px;
+    }
+    .legal-notice-box h3 {
+      margin-bottom: 10px;
+    }
+    .legal-note-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--zinc-600);
+      background: var(--zinc-100);
+      border: 1px solid var(--zinc-200);
+      margin-bottom: 12px;
+    }
+    .legal-note-list {
+      margin: 10px 0 6px 18px;
+      color: var(--zinc-600);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .legal-note-list li {
+      margin-bottom: 6px;
+    }
+    .legal-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
 
     @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
@@ -255,9 +332,9 @@
 
     /* ── Disclaimer ticker ── */
     .disclaimer-ticker {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 700;
       height: 26px; overflow: hidden;
-      background: var(--white); border-bottom: 1px solid var(--zinc-200);
+      background: rgba(255,255,255,0.86); border-bottom: 1px solid var(--zinc-200);
       display: flex; align-items: center;
     }
     .disclaimer-track {
@@ -638,6 +715,12 @@
       height: auto;
       align-items: center;
     }
+    .analysis-result:has(.clarify-page) {
+      max-width: 700px;
+      padding: 20px 24px 8px;
+      justify-content: center;
+      min-height: 100%;
+    }
     .analysis-result:has(.cp-graph) {
       max-width: 100%;
       padding: 0;
@@ -857,52 +940,90 @@
 
     .triage-banner {
       width: 100%;
-      max-width: 660px;
-      background: linear-gradient(160deg, #fff1f2 0%, #fff 100%);
-      border: 1px solid #ef4444;
-      border-radius: 28px;
-      padding: 34px 28px;
+      max-width: 700px;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-left: 6px solid #dc2626;
+      border-radius: 16px;
+      padding: 24px 20px;
       text-align: center;
-      box-shadow: 0 24px 52px rgba(239, 68, 68, 0.16);
+      box-shadow: none;
+      margin: auto 0;
     }
-    .triage-banner .icon { font-size: 54px; margin-bottom: 14px; }
-    .triage-banner h3 { font-size: 26px; font-weight: 900; color: #991b1b; margin-bottom: 10px; }
-    .triage-banner p { font-size: 15px; color: #b91c1c; line-height: 1.8; }
+    .triage-banner .icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: #dc2626;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 50%;
+    }
+    .triage-banner h3 { font-size: 28px; font-weight: 800; color: #991b1b; margin-bottom: 10px; }
+    .triage-banner p { font-size: 15px; color: #7f1d1d; line-height: 1.75; }
     .triage-banner .flag-list {
       list-style: none; padding: 0; margin: 16px auto; max-width: 400px; text-align: left;
     }
-    .triage-banner .flag-list li { padding: 6px 0; font-size: 14px; font-weight: 700; color: #dc2626; }
+    .triage-banner .flag-list li {
+      padding: 6px 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: #991b1b;
+    }
     .triage-banner .triage-note {
-      font-size: 13px; color: var(--zinc-500); margin-top: 16px; font-style: italic;
+      font-size: 13px; color: #7f1d1d; margin-top: 14px;
     }
 
     /* ── Duration Safeguard — doctor referral banner ── */
     .duration-referral-banner {
       width: 100%;
-      max-width: 660px;
-      background: linear-gradient(165deg, #fff7ed 0%, #fff 100%);
-      border: 1px solid #fb923c;
-      border-radius: 28px;
-      padding: 34px 26px;
+      max-width: 700px;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-left: 6px solid #dc2626;
+      border-radius: 16px;
+      padding: 24px 20px;
       text-align: center;
-      box-shadow: 0 24px 52px rgba(251, 146, 60, 0.18);
+      box-shadow: none;
+      color: #7f1d1d;
+      margin: auto 0;
     }
-    .duration-referral-banner .icon { font-size: 56px; margin-bottom: 16px; }
+    .duration-referral-banner .icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: #dc2626;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 50%;
+    }
     .duration-referral-banner h3 {
-      font-size: 28px; font-weight: 900; color: #9a3412; margin-bottom: 12px;
+      font-size: 28px; font-weight: 800; color: #991b1b; margin-bottom: 10px;
     }
     .duration-referral-banner .duration-detail {
-      font-size: 16px; color: #c2410c; line-height: 1.8; margin-bottom: 8px;
+      font-size: 16px; color: #7f1d1d; line-height: 1.75; margin-bottom: 8px;
     }
     .duration-referral-banner .referral-action {
-      font-size: 16px; font-weight: 800; color: #9a3412;
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: rgba(251, 146, 60, 0.12);
+      font-size: 15px;
+      font-weight: 700;
+      color: #991b1b;
+      line-height: 1.7;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
     }
     .duration-referral-banner .referral-note {
-      font-size: 13px; color: var(--zinc-500); margin-top: 18px; font-style: italic;
+      font-size: 13px; color: #7f1d1d; margin-top: 14px;
     }
 
     /* ── Duration question — progress indicator ── */
@@ -918,17 +1039,19 @@
       background: var(--blue-500); width: 10px; height: 10px;
     }
     .duration-progress .dot.done {
-      background: var(--success);
+      background: var(--blue-300);
     }
 
     .clarify-page {
       width: 100%;
+      max-width: 700px;
       text-align: center;
       padding: 8px 0 2px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      min-height: 100%;
     }
     .clarify-page-title {
       font-size: 28px;
@@ -940,14 +1063,35 @@
       text-align: center;
     }
     .clarify-page-question {
-      max-width: 560px;
-      margin: 0 auto 18px;
-      font-size: 18px;
-      line-height: 1.45;
+      max-width: 700px;
+      margin: 0 auto 12px;
+      font-size: 17px;
+      line-height: 1.6;
       color: var(--zinc-700);
       font-weight: 500;
       width: 100%;
       text-align: center;
+    }
+    .followup-profile {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto 12px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--zinc-600);
+      text-align: center;
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .followup-profile strong {
+      color: var(--zinc-800);
+      font-weight: 700;
     }
     .clarify-language-bar {
       width: 100%;
@@ -1019,24 +1163,101 @@
       font-size: 14px; color: #78350f; margin-bottom: 18px;
       line-height: 1.6; display: none;
     }
-    .clarify-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .clarify-buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+      gap: 10px;
+      justify-content: center;
+      overflow-x: visible;
+      overflow-y: hidden;
+    }
+    .clarify-buttons--compact {
+      width: 100%;
+      max-width: 700px;
+      margin: 6px auto 0;
+      position: static;
+      padding-top: 10px;
+    }
     .clarify-btn {
-      flex: 0 1 340px; min-width: 220px; min-height: 112px; padding: 24px 22px;
-      border: 1px solid var(--zinc-200); border-radius: 22px;
+      flex: 0 1 210px;
+      width: 210px;
+      min-width: 0;
+      min-height: 128px;
+      padding: 10px 8px;
+      border: 1px solid var(--zinc-200); border-radius: 14px;
       background: var(--white); cursor: pointer;
       text-align: center; transition: all 0.25s;
       font-family: var(--font);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     .clarify-btn:hover {
       border-color: var(--blue-300);
-      box-shadow: 0 18px 38px rgba(14, 165, 233, 0.12);
-      transform: translateY(-2px);
+      background: var(--blue-50);
+      transform: none;
     }
     .clarify-btn:active { transform: translateY(0); }
-    .clarify-btn .emoji { display: none; }
-    .clarify-btn .label { font-size: 19px; font-weight: 800; color: var(--zinc-800); }
-    .clarify-btn .desc { font-size: 14px; color: var(--zinc-500); margin-top: 8px; line-height: 1.55; }
+    .clarify-btn .icon {
+      font-size: 22px;
+      color: var(--blue-600);
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+    .clarify-btn .label { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
+    .clarify-btn .desc { font-size: 11px; color: var(--zinc-500); margin-top: 4px; line-height: 1.4; }
+
+    .summary-simple {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--zinc-600);
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      border-radius: 16px;
+      padding: 16px 18px;
+    }
+    .summary-profile-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .summary-person-icon,
+    .profile-person-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      color: var(--zinc-500);
+      background: transparent;
+      font-size: 26px;
+    }
+    .summary-simple .title {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--zinc-800);
+      margin-bottom: 10px;
+    }
+    .summary-simple .digest {
+      font-size: 18px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .summary-simple .continue-note {
+      font-size: 14px;
+      color: var(--zinc-500);
+    }
 
     /* Cold-weather / no-medicine advisory card */
     .advisory-card {
@@ -1074,7 +1295,7 @@
 
     /* Recommendations */
     .rec-list { display: flex; flex-direction: column; gap: 10px; }
-    .rec-list, .symptom-focus-grid, .rec-disclaimer {
+    .rec-list, .rec-columns, .rec-disclaimer {
       width: 100%;
       max-width: 760px;
     }
@@ -1114,45 +1335,40 @@
     }
     .rec-disclaimer strong { color: var(--zinc-600); }
 
-    .symptom-focus-grid {
+    .rec-columns {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
       margin: 4px 0 12px;
+      align-items: start;
     }
-    .symptom-focus-card {
+    .rec-column {
       border: 1px solid var(--zinc-200);
       border-radius: var(--radius);
-      padding: 14px;
       background: var(--white);
+      overflow: hidden;
     }
-    .symptom-focus-title {
+    .rec-column-title {
+      padding: 12px 14px;
+      background: var(--zinc-100);
+      border-bottom: 1px solid var(--zinc-200);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      color: var(--zinc-500);
-      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+      color: var(--zinc-600);
     }
-    .symptom-focus-pills {
+    .rec-column-list {
+      padding: 10px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      flex-direction: column;
+      gap: 10px;
     }
-    .symptom-focus-pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 10px;
-      border-radius: 100px;
-      background: var(--blue-50);
-      color: var(--blue-700);
-      border: 1px solid var(--blue-200);
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .symptom-focus-empty {
+    .rec-column-empty {
       font-size: 12px;
       color: var(--zinc-500);
+      font-weight: 500;
+      padding: 10px;
     }
 
     .results-mini-strip {
@@ -1232,7 +1448,17 @@
       .idle-countdown { width: 126px; height: 126px; }
       .idle-countdown strong { font-size: 44px; }
       .clarify-page-title { font-size: 24px; }
-      .clarify-page-question { font-size: 16px; }
+      .clarify-page-question { font-size: 15px; }
+      .clarify-buttons {
+        gap: 8px;
+      }
+      .clarify-btn {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        min-height: 96px;
+        padding: 8px 6px;
+      }
       .summary-card h2 { font-size: 28px; }
       .summary-card.summary-card--compact h2 { font-size: 20px; }
       .summary-metrics { grid-template-columns: 1fr; }
@@ -1244,11 +1470,25 @@
       .clarify-language-select { width: 100%; }
       .kiosk-step span:not(.num) { display: none; }
       .home-cta-text { font-size: 17px; }
+      .home-center-stack {
+        gap: 8px;
+        bottom: 22px;
+      }
+      .home-lang-btn {
+        font-size: 10px;
+        min-width: 48px;
+        padding: 6px 9px;
+      }
+      .home-top-right {
+        top: 46px;
+        right: 12px;
+        gap: 8px;
+      }
       .panel-content { padding: 28px 16px; }
       .analysis-result { padding: 24px 16px; }
-      .clarify-buttons { flex-direction: column; }
+      .clarify-buttons { flex-direction: row; }
       .results-actions { flex-direction: column; }
-      .symptom-focus-grid { grid-template-columns: 1fr; }
+      .rec-columns { grid-template-columns: 1fr; }
       .cp-canvas { height: 440px; }
       .cp-node { font-size: 10px; padding: 6px; }
 
@@ -1280,33 +1520,30 @@
 ═══════════════════════════════ -->
 <div class="screen-home" id="screenHome">
   <a href="{{ url_for('admin.dashboard') }}" class="admin-link">Admin Panel</a>
-  <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
-
-  <div class="home-bg" onclick="startKiosk()">
-    <div class="carousel-slide active">
-      <img src="{{ url_for('static', filename='images/banner1.jpg') }}" alt="">
+  <div class="home-top-right">
+    <div class="home-lang-switch" onclick="event.stopPropagation()">
+      <button class="home-lang-btn" data-home-lang="en" onclick="setLanguage('en', event)">EN</button>
+      <button class="home-lang-btn" data-home-lang="ceb" onclick="setLanguage('ceb', event)">BSYA/CBU</button>
+      <button class="home-lang-btn" data-home-lang="tl" onclick="setLanguage('tl', event)">TGL</button>
     </div>
-    <div class="carousel-slide">
-      <img src="{{ url_for('static', filename='images/banner2.jpg') }}" alt="">
-    </div>
-    <div class="carousel-slide">
-      <img src="{{ url_for('static', filename='images/banner3.jpg') }}" alt="">
-    </div>
-    <div class="home-logo-wrap">
-      <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
-    </div>
+    <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
   </div>
 
-  <div class="home-cta" onclick="startKiosk()">
-    <svg class="home-cta-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v4.5"/>
-      <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/>
-      <path d="M14 10.5a1.5 1.5 0 0 1 3 0v2.5"/>
-      <path d="M17 11.5a1.5 1.5 0 0 1 3 0v5.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5.012-2.7l-3.286-5.728a1.5 1.5 0 0 1 .536-2.022 1.867 1.867 0 0 1 2.28.28l1.47 1.47"/>
-      <path d="M2.5 5.5a13 13 0 0 1 2.46-1.6"/>
-      <path d="M14 3.46a13 13 0 0 1 3.54 1.59"/>
-    </svg>
-    <span class="home-cta-text" id="homeCtaText">Tap anywhere to begin</span>
+  <div class="home-bg" onclick="startKiosk()">
+  </div>
+
+  <div class="home-center-stack">
+    <div class="home-cta" onclick="startKiosk()">
+      <svg class="home-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v4.5"/>
+        <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/>
+        <path d="M14 10.5a1.5 1.5 0 0 1 3 0v2.5"/>
+        <path d="M17 11.5a1.5 1.5 0 0 1 3 0v5.5a6 6 0 0 1-6 6h-2a6 6 0 0 1-5.012-2.7l-3.286-5.728a1.5 1.5 0 0 1 .536-2.022 1.867 1.867 0 0 1 2.28.28l1.47 1.47"/>
+        <path d="M2.5 5.5a13 13 0 0 1 2.46-1.6"/>
+        <path d="M14 3.46a13 13 0 0 1 3.54 1.59"/>
+      </svg>
+      <span class="home-cta-text" id="homeCtaText">Tap anywhere to begin</span>
+    </div>
   </div>
 </div>
 
@@ -1370,6 +1607,29 @@
       Voice input also supports these languages. Just tap the microphone
       and speak naturally.
     </p>
+  </div>
+</div>
+
+<!-- Legal Notice Modal (shown before entering kiosk flow) -->
+<div class="modal-overlay hidden" id="legalNoticeModal" onclick="closeModal('legalNoticeModal', event)">
+  <div class="modal-box legal-notice-box" onclick="event.stopPropagation()">
+    <h3>Legal Notice & Warning</h3>
+    <div class="legal-note-tag">Philippines</div>
+    <p>
+      In compliance with the <strong>Price Act (RA 7581, as amended)</strong>,
+      hoarding and illegal stockpiling of medicines are prohibited.
+    </p>
+    <ul class="legal-note-list">
+      <li>Please purchase medicines responsibly and only as needed.</li>
+      <li>Do not hoard medicines for resale, panic-buying, or artificial shortage creation.</li>
+      <li>Suspicious or abusive purchasing behavior may be flagged for review.</li>
+    </ul>
+    <p style="font-size:12px;color:var(--zinc-400);margin-bottom:0;">
+      By continuing, you acknowledge this advisory and agree to comply with applicable Philippine laws.
+    </p>
+    <div class="legal-actions">
+      <button class="btn btn--primary" onclick="confirmLegalNotice(event)">I Understand, Continue</button>
+    </div>
   </div>
 </div>
 
@@ -1497,9 +1757,15 @@
 
         <!-- Fallback: no symptoms detected -->
         <div id="noSymptomsStep3" class="hidden" style="text-align:center;padding:40px 20px;">
-          <div style="font-size:48px;margin-bottom:12px;">&#129300;</div>
-          <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">No symptoms detected</h3>
-          <p style="color:var(--zinc-500);font-size:14px;">Please go back and try describing your symptoms differently.</p>
+          <div style="margin-bottom:12px;color:var(--zinc-400);display:flex;justify-content:center;">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <circle cx="12" cy="16" r="0.7" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </div>
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">Input not recognized</h3>
+          <p style="color:var(--zinc-500);font-size:14px;">Your description may be outside the symptom scope supported by this system. Please go back and enter a short, common symptom description.</p>
         </div>
       </div>
       <div class="panel-footer">
@@ -1572,6 +1838,7 @@
   let durationCompleted = [];      // symptoms already checked (safe)
   let durationContextOverride = null;
   let durationClarificationData = {};
+  let durationBySymptom = {};
 
   // ── DOM ──
   const screenHome = document.getElementById('screenHome');
@@ -1592,6 +1859,7 @@
   const UI_COPY = {
     en: {
       homeTap: 'Tap anywhere to begin',
+      symptomTitle: 'What are you feeling?',
       symptomSub: 'Describe your symptoms in your own words.',
       languageLabel: 'Choose your language',
       languageHelper: 'The AI can understand your symptoms even if you mix languages.',
@@ -1620,11 +1888,13 @@
       durationBlocked: 'OTC recommendations are blocked for safety.',
       durationNote: 'This reminder is for safety only and is not a diagnosis.',
       noScopeTitle: 'Input outside current scope',
-      noScopeSub: 'Please try a short symptom description so the vending machine can assist you.',
+      noScopeSub: 'Your input may be outside the symptom scope supported by this system. Please try a short and common symptom description.',
       noMedicineTitle: 'No suitable medicines found',
       noMedicineSub: 'No matching OTC medicines were found for your age and symptoms.',
       consultPharmacist: 'Please consult a pharmacist.',
       recommendationFor: 'Recommended for',
+      symptomsColumn: 'Symptoms Identified',
+      medicinesColumn: 'Medicines Recommended',
       recommendationTap: 'Touch again to review medicine options',
       durationCheckTitle: 'Duration Safety Check',
       durationQuestion: 'How long have you had this symptom?',
@@ -1633,9 +1903,11 @@
       viewRecommendations: 'View Recommendations',
       nextSymptomBtn: 'Next',
       analyzeBtn: 'Continue',
+      continueToRecs: 'Press Continue to view recommended medicines.',
     },
     tl: {
       homeTap: 'Pindot kahit saan para magsimula',
+      symptomTitle: 'Ano ang nararamdaman mo?',
       symptomSub: 'Ilarawan ang iyong nararamdaman sa sariling salita.',
       languageLabel: 'Piliin ang wika',
       languageHelper: 'Naiintindihan ng AI kahit halo-halong wika ang gamitin mo.',
@@ -1666,20 +1938,24 @@
       durationBlocked: 'Naka-block ang OTC recommendation para sa iyong kaligtasan.',
       durationNote: 'Paalala lang ito para sa kaligtasan at hindi diagnosis.',
       noScopeTitle: 'Wala pa sa saklaw ang input',
-      noScopeSub: 'Subukan ang maikling paglalarawan ng sintomas para makatulong ang vending machine.',
+      noScopeSub: 'Maaaring wala sa saklaw ng sinusuportahang sintomas ng system ang iyong input. Subukan ang maikli at karaniwang paglalarawan ng sintomas.',
       noMedicineTitle: 'Walang angkop na gamot na nakita',
       noMedicineSub: 'Walang OTC medicine na tugma sa iyong edad at sintomas.',
       consultPharmacist: 'Kumonsulta sa pharmacist.',
       recommendationFor: 'Inirerekomenda para sa',
+      symptomsColumn: 'Mga Nadetect na Sintomas',
+      medicinesColumn: 'Mga Inirerekomendang Gamot',
       recommendationTap: 'Pindot muli para makita ang mga gamot',
       durationCheckTitle: 'Tagal ng Sintomas',
       durationQuestion: 'Gaano na katagal ang sintomas na ito?',
       assessAgain: 'Ulitin ang Assessment',
       exit: 'Lumabas',
       viewRecommendations: 'Tingnan ang Rekomendasyon',
+      continueToRecs: 'Pindutin ang Continue para makita ang inirekomendang gamot.',
     },
     ceb: {
-      homeTap: 'Hikapa bisan asa aron magsugod',
+      homeTap: 'Pindota miskan asa aron magsugod',
+      symptomTitle: 'Unsa imong gibati?',
       symptomSub: 'Isulti ang imong gibati gamit ang imong kaugalingong pulong.',
       languageLabel: 'Pilia ang pinulongan',
       languageHelper: 'Masabtan sa AI bisan sagol-sagol ang imong pinulongan.',
@@ -1710,17 +1986,20 @@
       durationBlocked: 'Gi-block ang OTC recommendation para sa imong kaluwasan.',
       durationNote: 'Pahimangno lang kini para sa kaluwasan ug dili diagnosis.',
       noScopeTitle: 'Wala pa sa sakop ang input',
-      noScopeSub: 'Sulayi og mubo nga hulagway sa sintomas aron makatabang ang vending machine.',
+      noScopeSub: 'Posible nga gawas sa sakop sa suportadong sintomas sa system ang imong input. Sulayi ang mubo ug kasagarang hulagway sa sintomas.',
       noMedicineTitle: 'Walay angay nga tambal nga nakita',
       noMedicineSub: 'Walay OTC medicine nga mohaom sa imong edad ug sintomas.',
       consultPharmacist: 'Pakigkonsulta sa pharmacist.',
       recommendationFor: 'Girekomenda para sa',
+      symptomsColumn: 'Nadetect nga mga Sintomas',
+      medicinesColumn: 'Girekomendang mga Tambal',
       recommendationTap: 'Hikapa pag-usab aron makita ang mga tambal',
       durationCheckTitle: 'Pagsusi sa Kadugayon',
       durationQuestion: 'Unsa na kadugay nimo ni nga sintomas?',
       assessAgain: 'Usba ang Assessment',
       exit: 'Gawas',
       viewRecommendations: 'Tan-awa ang Rekomendasyon',
+      continueToRecs: 'I-press ang Continue aron makita ang girekomendang tambal.',
     },
   };
 
@@ -1729,12 +2008,6 @@
     tl: 'Tagalog',
     ceb: 'Bisaya',
   };
-
-  const ROTATING_SYMPTOM_TITLES = [
-    'What are you feeling?',
-    'Ano ba nararamdaman mo?',
-    'Unsa imong gi-bati?',
-  ];
 
   const SYMPTOM_NAMES = {
     STOMACH_ACHE: { en: 'Stomach Ache', tl: 'Sakit ng Tiyan', ceb: 'Sakit sa Tiyan' },
@@ -1837,7 +2110,7 @@
     if (!input.trim()) return selectedLanguage || 'en';
 
     const bisayaHints = [
-      'akong', 'naay', 'unsa', 'gi-bati', 'gibati', 'puson', 'hilanat', 'sip-on',
+      'akong', 'naay', 'unsa', 'gibati', 'puson', 'hilanat', 'sip-on',
       'kabag', 'hapdos', 'aslom', 'sakit akong', 'tiyan nako', 'wala koy', 'ug',
     ];
     const tagalogHints = [
@@ -1851,7 +2124,7 @@
 
     if (cebScore > tlScore && cebScore > 0) return 'ceb';
     if (tlScore > cebScore && tlScore > 0) return 'tl';
-    return 'en';
+    return selectedLanguage || 'en';
   }
 
   function getClarifyQuestionText(clarifyType, backendQuestion) {
@@ -1886,26 +2159,17 @@
 
   function updateStaticCopy() {
     document.getElementById('homeCtaText').textContent = t('homeTap');
+    if (symptomTypewriterText) {
+      symptomTypewriterText.textContent = t('symptomTitle');
+    }
     symptomInput.placeholder = t('symptomPlaceholder');
+    document.querySelectorAll('[data-home-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.homeLang === selectedLanguage);
+    });
     document.getElementById('assessAgainBtn').textContent = t('assessAgain');
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
-    document.querySelectorAll('[data-language-select]').forEach(select => {
-      select.value = selectedLanguage;
-    });
     updatePain();
-  }
-
-  function renderLanguageSelectControl() {
-    return `
-      <div class="clarify-language-bar">
-        <div class="clarify-language-label">${t('languageLabel')}</div>
-        <select class="clarify-language-select" data-language-select onchange="handleLanguageSelectChange(this.value)">
-          <option value="en" ${selectedLanguage === 'en' ? 'selected' : ''}>English</option>
-          <option value="tl" ${selectedLanguage === 'tl' ? 'selected' : ''}>Tagalog</option>
-          <option value="ceb" ${selectedLanguage === 'ceb' ? 'selected' : ''}>Bisaya</option>
-        </select>
-      </div>`;
   }
 
   function startSymptomTitleRotation() {
@@ -1918,7 +2182,7 @@
       symptomTypewriterTimer = null;
     }
 
-    let phraseIndex = 0;
+    const fullText = t('symptomTitle');
     let charIndex = 0;
     let deleting = false;
 
@@ -1931,7 +2195,6 @@
 
     function tick() {
       if (runId !== symptomTypewriterRunId) return;
-      const fullText = ROTATING_SYMPTOM_TITLES[phraseIndex];
 
       if (!deleting) {
         charIndex += 1;
@@ -1949,7 +2212,6 @@
       symptomTypewriterText.textContent = fullText.slice(0, Math.max(charIndex, 0));
       if (charIndex === 0) {
         deleting = false;
-        phraseIndex = (phraseIndex + 1) % ROTATING_SYMPTOM_TITLES.length;
         schedule(tick, 65);
         return;
       }
@@ -2018,43 +2280,14 @@
   }
 
   function renderSummaryCard(symptoms, options = {}) {
-    const introTitle = options.title || t('patientSummaryTitle');
-    const introSub = options.subtitle || t('patientSummarySub');
+    const introTitle = options.title || '';
+    const introSub = options.subtitle || buildDetectedProfileDigest(symptoms);
     const extras = options.extras || '';
     const compact = options.compact === true ? ' summary-card--compact' : '';
-    const cta = options.cta === false ? '' : `
-      <div class="tap-anywhere-cta">
-        <div class="cta-title">${t('touchAnywhereTitle')}</div>
-        <div class="cta-sub">${t('touchAnywhereSub')}</div>
-      </div>`;
-
-    // Build per-symptom severity display
-    const sMap = (analysisData && analysisData.severity_map) || severityMap || {};
-    let severityHtml = '';
-    if (Object.keys(sMap).length > 0) {
-      // Show per-symptom severity pills
-      let pillsHtml = '';
-      for (const [sym, val] of Object.entries(sMap)) {
-        const name = getSeveritySymptomName(sym);
-        pillsHtml += `<div style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;background:var(--zinc-100);margin:2px;">
-          <span style="font-size:12px;font-weight:600;color:var(--zinc-600);">${name}</span>
-          <span style="font-size:13px;font-weight:800;color:var(--zinc-800);">${val}/10</span>
-        </div>`;
-      }
-      severityHtml = `
-        <div class="summary-metric" style="flex-direction:column;gap:4px;">
-          <span class="label">${t('pain')}</span>
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">${pillsHtml}</div>
-        </div>`;
-    } else {
-      severityHtml = `
-        <div class="summary-metric">
-          <span class="label">${t('pain')}</span>
-          <span class="value">${severity}/10</span>
-        </div>`;
-    }
+    const cta = '';
 
     // High severity inline warning for the summary card
+    const sMap = (analysisData && analysisData.severity_map) || severityMap || {};
     const maxSev = Object.keys(sMap).length > 0
       ? Math.max(...Object.values(sMap))
       : severity;
@@ -2065,34 +2298,124 @@
       </div>` : '';
 
     return `
-      <div class="summary-card${compact}">
-        <h2>${introTitle}</h2>
-        <p>${introSub}</p>
-        <div class="summary-metrics">
-          <div class="summary-metric">
-            <span class="label">${t('age')}</span>
-            <span class="value">${patientAge}</span>
-          </div>
-          ${severityHtml}
+      <div class="summary-simple${compact}">
+        <div class="summary-profile-row">
+          <div class="summary-person-icon"><i class="fa-solid fa-user"></i></div>
+          <div class="digest">${introSub}</div>
         </div>
-        <div class="detected-section">
-          <h3>${t('detectedSymptoms')}</h3>
-          <div class="symptom-pills">
-            ${symptoms.map(s => `<span class="symptom-pill">${getSymptomLabel(s)}</span>`).join('')}
-          </div>
-        </div>
+        ${introTitle ? `<div class="title">${introTitle}</div>` : ''}
         ${highSevWarning}
         ${extras}
         ${cta}
       </div>`;
   }
 
+  function getSeverityWord(value) {
+    const lang = selectedLanguage || 'en';
+    const v = Number(value || 5);
+    if (v <= 3) {
+      return lang === 'tl' ? 'banayad' : (lang === 'ceb' ? 'hinay' : 'mild');
+    }
+    if (v <= 7) {
+      return lang === 'tl' ? 'katamtaman' : (lang === 'ceb' ? 'tunga-tunga' : 'moderate');
+    }
+    return lang === 'tl' ? 'matindi' : (lang === 'ceb' ? 'grabe' : 'severe');
+  }
+
+  function joinReadableList(items, conj) {
+    if (!items.length) return '';
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return `${items[0]} ${conj} ${items[1]}`;
+    return `${items.slice(0, -1).join(', ')}, ${conj} ${items[items.length - 1]}`;
+  }
+
+  function formatDurationPhrase(value, lang) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+
+    if (raw === '0') {
+      if (lang === 'tl') return 'nang wala pang isang araw';
+      if (lang === 'ceb') return 'nga wala pay usa ka adlaw';
+      return 'for less than a day';
+    }
+
+    if (raw.endsWith('+')) {
+      const n = raw.replace('+', '');
+      if (lang === 'tl') return `nang higit sa ${n} araw`;
+      if (lang === 'ceb') return `nga kapin sa ${n} ka adlaw`;
+      return `for more than ${n} days`;
+    }
+
+    if (raw.includes('-')) {
+      if (lang === 'tl') return `nang ${raw} araw`;
+      if (lang === 'ceb') return `nga sulod sa ${raw} ka adlaw`;
+      return `for ${raw} days`;
+    }
+
+    const n = Number(raw);
+    if (Number.isFinite(n)) {
+      if (lang === 'tl') return `nang ${n} araw`;
+      if (lang === 'ceb') return `nga ${n} ka adlaw`;
+      return `for ${n} day${n === 1 ? '' : 's'}`;
+    }
+
+    if (lang === 'tl') return `nang ${raw}`;
+    if (lang === 'ceb') return `nga ${raw}`;
+    return `for ${raw}`;
+  }
+
+  function getOptionIconClass(value, clarifyType = '') {
+    const key = String(value || '').toUpperCase();
+    if (key.includes('COUGH_DRY')) return 'fa-solid fa-wind';
+    if (key.includes('COUGH_PRODUCTIVE')) return 'fa-solid fa-lungs';
+    if (key.includes('SIPON_ALLERGY')) return 'fa-solid fa-leaf';
+    if (key.includes('SIPON_COLD_WEATHER')) return 'fa-solid fa-snowflake';
+    if (key.includes('SIPON_VIRAL_COLD')) return 'fa-solid fa-head-side-cough';
+    if (key.includes('DIARRHEA_FOOD_POISONING')) return 'fa-solid fa-utensils';
+    if (key.includes('DIARRHEA_NON_INFECTIOUS')) return 'fa-solid fa-droplet';
+    if (key.includes('STOMACH_ACIDIC')) return 'fa-solid fa-fire';
+    if (key.includes('STOMACH_CRAMPING')) return 'fa-solid fa-wave-square';
+    if (key.includes('15+') || key.includes('11+') || key.includes('8+') || key.includes('4+')) return 'fa-solid fa-hourglass-end';
+    if (key.includes('1-') || key.includes('2') || key.includes('3') || key.includes('4-') || key.includes('6-') || key.includes('8-')) return 'fa-regular fa-clock';
+    if (String(clarifyType).toUpperCase().includes('DURATION')) return 'fa-regular fa-clock';
+    return 'fa-solid fa-circle-info';
+  }
+
+  function buildDetectedProfileDigest(symptoms) {
+    const lang = selectedLanguage || 'en';
+    const ageText = patientAge != null ? patientAge : '?';
+    const sMap = (analysisData && analysisData.severity_map) || severityMap || {};
+    const parts = (symptoms || []).map(sym => {
+      const sevVal = Number(sMap[sym] || 5);
+      const durationPhrase = formatDurationPhrase(durationBySymptom[sym], lang);
+      const base = `${getSeverityWord(sevVal)} ${getSymptomLabel(sym)}`;
+      return durationPhrase ? `${base} ${durationPhrase}` : base;
+    });
+
+    const andWord = lang === 'tl' ? 'at' : (lang === 'ceb' ? 'ug' : 'and');
+    const listText = joinReadableList(parts, andWord);
+
+    if (lang === 'tl') {
+      return `Ikaw ay <strong>${ageText}</strong> taong gulang at kasalukuyang nakakaranas ng <strong>${listText}</strong>.`;
+    }
+    if (lang === 'ceb') {
+      return `Ikaw kay <strong>${ageText}</strong> anyos ug karon nakasinati og <strong>${listText}</strong>.`;
+    }
+    return `You are <strong>${ageText}</strong> years old and currently experiencing <strong>${listText}</strong>.`;
+  }
+
+  function getSpeechRecognitionLocale(lang) {
+    if (lang === 'tl') return 'fil-PH';
+    if (lang === 'ceb') return 'ceb-PH';
+    return 'en-PH';
+  }
+
   window.setLanguage = function(lang, event) {
     if (event) event.stopPropagation();
     selectedLanguage = lang;
-    document.querySelectorAll('[data-language-select]').forEach(select => {
-      select.value = lang;
-    });
+    if (recognition) {
+      recognition.lang = getSpeechRecognitionLocale(lang);
+    }
     updateStaticCopy();
     if (analysisData && currentStep === 4) {
       if (showingRecs) {
@@ -2139,12 +2462,22 @@
   // ══════════════════════════════
   //  HOME SCREEN
   // ══════════════════════════════
-  window.startKiosk = function() {
+  function enterKioskFlow() {
     screenHome.classList.add('hidden');
     kioskMain.classList.remove('hidden');
     document.body.style.overflow = '';
     goToStep(1);
     startIdleTracking();
+  }
+
+  window.startKiosk = function() {
+    openModal('legalNoticeModal');
+  };
+
+  window.confirmLegalNotice = function(event) {
+    if (event) event.stopPropagation();
+    document.getElementById('legalNoticeModal').classList.add('hidden');
+    enterKioskFlow();
   };
 
   window.backToHome = function() {
@@ -2242,6 +2575,10 @@
   // ══════════════════════════════
   symptomInput.addEventListener('input', () => {
     toStep3Btn.disabled = !symptomInput.value.trim();
+    const detected = detectLanguageFromText(symptomInput.value);
+    if (detected && detected !== selectedLanguage) {
+      setLanguage(detected);
+    }
   });
 
   symptomInput.addEventListener('keydown', (e) => {
@@ -2307,9 +2644,7 @@
   window.triggerPreDetect = async function() {
     const text = symptomInput.value.trim();
     if (!text) return;
-
-    selectedLanguage = detectLanguageFromText(text);
-    updateStaticCopy();
+    durationBySymptom = {};
 
     // Navigate to step 3, show loading
     goToStep(3);
@@ -2333,6 +2668,15 @@
 
       preDetectedSymptoms = data.symptoms || [];
       severityHints = data.severity_hints || {};
+      const preDetectRedFlags = data.red_flags || [];
+
+      // If triage red flags are already detected in pre-detect, do not stop at
+      // the severity screen (which depends on symptom labels). Jump to full
+      // analysis so the triage page is shown immediately.
+      if (preDetectRedFlags.length > 0) {
+        runAnalysis();
+        return;
+      }
 
       if (preDetectedSymptoms.length === 0) {
         document.getElementById('noSymptomsStep3').classList.remove('hidden');
@@ -2356,19 +2700,30 @@
   //  STEP 3: PER-SYMPTOM SEVERITY
   // ══════════════════════════════
   function askNextSeverity() {
+    const actionBtn = document.getElementById('analyzeBtn');
+
+    function setStep3Action(label, handler) {
+      actionBtn.innerHTML = `${label}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+      actionBtn.onclick = handler;
+      actionBtn.classList.remove('hidden');
+    }
+
     if (severityQueue.length === 0) {
-      // All symptoms rated — compute overall severity and show analyze button
+      // All symptoms rated — compute overall severity and proceed without showing summary page
       const vals = Object.values(severityMap);
       severity = vals.length ? Math.max(...vals) : 3;
-      document.getElementById('analyzeBtn').classList.remove('hidden');
 
-      // Show summary of all ratings
-      renderSeveritySummary();
+      setStep3Action((t('analyzeBtn') || 'Continue'), runAnalysis);
       return;
     }
 
     const symptom = severityQueue[0];
     const hint = severityHints[symptom] || 5;
+    const nextLabel = severityQueue.length > 1
+      ? (t('nextSymptomBtn') || 'Next')
+      : (t('analyzeBtn') || 'Continue');
+    setStep3Action(nextLabel, () => confirmSeverity(symptom));
     renderSeveritySlider(symptom, hint);
   }
 
@@ -2434,42 +2789,24 @@
             <input type="range" class="pain-slider" id="painSliderDyn"
                    min="1" max="10" value="${initialValue}" step="1">
             <div class="pain-labels">
-              <span>1 ${t('painMild').split(' ')[0] || 'Mild'}</span>
-              <span>5 ${t('painModerate').split(' ')[0] || 'Moderate'}</span>
-              <span>10 ${t('painSevere').split(' ')[0] || 'Severe'}</span>
+              <span>${t('painMild').split(' ')[0] || 'Mild'}</span>
+              <span>${t('painModerate').split(' ')[0] || 'Moderate'}</span>
+              <span>${t('painSevere').split(' ')[0] || 'Severe'}</span>
             </div>
           </div>
-
-          <div class="severity-warning hidden" id="severityWarningDyn">
-            <p>${t('highSeverityTitle')}</p>
-            <p class="sub-msg">${t('highSeveritySub')}</p>
-          </div>
         </div>
-
-        <div style="height:24px;"></div>
-        <button class="btn btn--primary btn--lg" style="width:100%;" onclick="confirmSeverity('${symptom}')">
-          ${severityQueue.length > 1 ? (t('nextSymptomBtn') || 'Next') : (t('analyzeBtn') || 'Continue')}
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
       </div>`;
 
     // Attach live slider listener
     const slider = document.getElementById('painSliderDyn');
     const valDisplay = document.getElementById('painValueDyn');
     const labelDisplay = document.getElementById('painLabelDyn');
-    const warnDisplay = document.getElementById('severityWarningDyn');
 
     slider.addEventListener('input', () => {
       const val = parseInt(slider.value);
       valDisplay.textContent = val;
       labelDisplay.textContent = getPainLabelText(val);
-      warnDisplay.classList.toggle('hidden', val < 8);
     });
-
-    // Trigger warning visibility based on initial value
-    warnDisplay.classList.toggle('hidden', initialValue < 8);
-
-    document.getElementById('analyzeBtn').classList.add('hidden');
   }
 
   window.confirmSeverity = function(symptom) {
@@ -2510,12 +2847,6 @@
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;">
           ${pillsHtml}
         </div>
-        <div style="height:8px;"></div>
-        <p style="font-size:13px;color:var(--zinc-400);">
-          ${lang === 'ceb' ? 'I-press ang Analyze para magpadayon.' :
-            lang === 'tl' ? 'Pindutin ang Analyze para magpatuloy.' :
-            'Press Analyze to continue.'}
-        </p>
       </div>`;
   }
 
@@ -2530,9 +2861,6 @@
   window.runAnalysis = async function() {
     const text = symptomInput.value.trim();
     if (!text) return;
-
-    selectedLanguage = detectLanguageFromText(text);
-    updateStaticCopy();
 
     goToStep(4);
     document.getElementById('analysisLoading').classList.remove('hidden');
@@ -2579,7 +2907,7 @@
     container.classList.remove('hidden');
     setTapReadyState(false);
 
-    const symptoms = data.symptoms_display || data.symptoms || [];
+    const symptoms = data.symptoms || [];
     const rec = data.recommendation || {};
     const referral = data.referral || null;
 
@@ -2588,10 +2916,12 @@
 
     // Triage
     if (rec.action === 'triage') {
+      container.classList.add('center-stage');
       const flags = rec.triage_flags || [];
       const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
       container.innerHTML = `
         <div class="triage-banner">
+          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <h3>${t('emergencyTitle')}</h3>
           <p>${t('emergencySub')}</p>
           <ul class="flag-list">${flagItems}</ul>
@@ -2607,11 +2937,17 @@
     if (!symptoms.length) {
       container.innerHTML = `
         <div class="no-symptoms">
-          <div class="icon">&#129300;</div>
+          <div class="icon" style="display:flex;justify-content:center;color:var(--zinc-400);">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <circle cx="12" cy="16" r="0.7" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </div>
           <h3 style="font-size:22px;font-weight:800;margin:12px 0 8px;">${t('noScopeTitle')}</h3>
           <p>${t('noScopeSub')}</p>
           <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
-            Please try a simple symptom description. Example: "Masakit ulo ko, may ubo, tapos nilalagnat"
+            Example: "Headache and cough" or "Masakit ulo ko at may ubo"
           </p>
         </div>`;
       document.getElementById('assessAgainBtn').classList.remove('hidden');
@@ -2622,21 +2958,25 @@
     if (rec.action === 'ask_clarify') {
       const clarifyType = rec.clarify_type || 'COUGH';
       const questionText = getClarifyQuestionText(clarifyType, rec.question);
+      const profileDigest = buildDetectedProfileDigest(symptoms);
       let buttonsHtml = '';
 
       if (rec.options && rec.options.length) {
         buttonsHtml = rec.options.map(opt => `
           <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
+            <div class="icon"><i class="${getOptionIconClass(opt.value, clarifyType)}"></i></div>
             <div class="label">${getContextOptionLabel(opt.value, opt.label)}</div>
             <div class="desc">${getContextOptionDesc(opt.value, opt.label) || ''}</div>
           </button>`).join('');
       } else {
         buttonsHtml = `
           <button class="clarify-btn" onclick="handleClarify('COUGH_DRY')">
+            <div class="icon"><i class="${getOptionIconClass('COUGH_DRY', clarifyType)}"></i></div>
             <div class="label">${getContextOptionLabel('COUGH_DRY', 'Dry Cough / No phlegm')}</div>
             <div class="desc">${getContextOptionDesc('COUGH_DRY', 'Dry Cough / No phlegm')}</div>
           </button>
           <button class="clarify-btn" onclick="handleClarify('COUGH_PRODUCTIVE')">
+            <div class="icon"><i class="${getOptionIconClass('COUGH_PRODUCTIVE', clarifyType)}"></i></div>
             <div class="label">${getContextOptionLabel('COUGH_PRODUCTIVE', 'Wet Cough / With phlegm')}</div>
             <div class="desc">${getContextOptionDesc('COUGH_PRODUCTIVE', 'Wet Cough / With phlegm')}</div>
           </button>`;
@@ -2644,21 +2984,14 @@
 
       container.innerHTML = `
         <div class="clarify-page">
-          <div class="clarify-page-title">${t('quickQuestion')}</div>
-          <div class="section-sub" style="margin-bottom:12px;">${t('quickQuestionSub')}</div>
-          ${renderSummaryCard(symptoms, {
-            title: t('patientSummaryTitle'),
-            subtitle: t('patientSummarySub'),
-            cta: false,
-            compact: true,
-          })}
-          <div class="clarify-page-question">${questionText}</div>
-          <div class="clarify-box">
-            <div class="clarify-buttons">
-              ${buttonsHtml}
-            </div>
+          <div class="followup-profile">
+            <div class="profile-person-icon"><i class="fa-solid fa-user"></i></div>
+            <div>${profileDigest}</div>
           </div>
-          ${renderLanguageSelectControl()}
+          <div class="clarify-page-question">${questionText}</div>
+          <div class="clarify-buttons clarify-buttons--compact">
+            ${buttonsHtml}
+          </div>
         </div>`;
       return;
     }
@@ -2685,8 +3018,10 @@
         return;
       }
 
-      setTapReadyState(true);
-      document.getElementById('viewRecsBtn').classList.add('hidden');
+      setTapReadyState(false);
+      const viewBtn = document.getElementById('viewRecsBtn');
+      viewBtn.childNodes[0].textContent = `${t('analyzeBtn')} `;
+      viewBtn.classList.remove('hidden');
     }
   }
 
@@ -2764,6 +3099,7 @@
     durationCompleted = [];
     durationContextOverride = null;
     durationClarificationData = {};
+    durationBySymptom = {};
 
     // Capture context override from the recommendation flow if any
     const rec = analysisData.recommendation || {};
@@ -2803,6 +3139,7 @@
     const container = document.getElementById('analysisResult');
     const total = (analysisData.symptoms || []).filter(s => DURATION_SYMPTOMS.includes(s)).length;
     const answered = durationCompleted.length;
+    const profileDigest = buildDetectedProfileDigest(analysisData.symptoms || []);
 
     // Symptom display names per language
     const nameMap = {
@@ -2911,9 +3248,9 @@
 
     // Question text per language
     const questionText = {
-      en: `How long have you had <strong>${displayName}</strong>?`,
-      tl: `Gaano na katagal ang iyong <strong>${displayName}</strong>?`,
-      ceb: `Unsa na kadugay ang imong <strong>${displayName}</strong>?`,
+      en: `Can you tell me how long you have had <strong>${displayName}</strong>?`,
+      tl: `Pwede mo bang sabihin kung gaano na katagal ang iyong <strong>${displayName}</strong>?`,
+      ceb: `Pwede ba nimo isulti kung unsa na kadugay ang imong <strong>${displayName}</strong>?`,
     };
 
     // Progress dots
@@ -2924,24 +3261,30 @@
       else dotsHtml += '<span class="dot"></span>';
     }
 
-    const buttonsHtml = options.map(opt => `
+    const buttonsHtml = options.map(opt => {
+      const optionLabel = opt[lang] || opt.en;
+      const durationPrefix = lang === 'tl' ? 'Tagal' : (lang === 'ceb' ? 'Kadugayon' : 'Duration');
+      return `
       <button class="clarify-btn" onclick="handleDurationAnswer('${symptom}', '${opt.value}')">
-        ${opt[lang] || opt.en}
-      </button>`).join('');
+        <div class="icon"><i class="${getOptionIconClass(opt.value, 'DURATION')}"></i></div>
+        <div class="label">${optionLabel}</div>
+        <div class="desc">${durationPrefix}</div>
+      </button>`;
+    }).join('');
 
     container.innerHTML = `
       <div class="clarify-page">
-        <div class="clarify-page-title">&#9202; ${t('durationCheckTitle')}</div>
+        <div class="followup-profile">
+          <div class="profile-person-icon"><i class="fa-solid fa-user"></i></div>
+          <div>${profileDigest}</div>
+        </div>
         ${total > 1 ? `<div class="duration-progress">${dotsHtml}</div>` : ''}
         <div class="clarify-page-question">
           ${questionText[lang] || questionText.en}
         </div>
-        <div class="clarify-box">
-          <div class="clarify-buttons">
-            ${buttonsHtml}
-          </div>
+        <div class="clarify-buttons clarify-buttons--compact">
+          ${buttonsHtml}
         </div>
-        ${renderLanguageSelectControl()}
       </div>`;
 
     document.getElementById('backFromResults').classList.remove('hidden');
@@ -2952,6 +3295,7 @@
 
   window.handleDurationAnswer = async function(symptom, value) {
     try {
+      durationBySymptom[symptom] = value;
       const remaining = durationQueue.slice(1);
 
       const res = await fetch('/consult/api/duration-check', {
@@ -3006,6 +3350,7 @@
 
   function renderDurationReferral(data) {
     const container = document.getElementById('analysisResult');
+    container.classList.add('center-stage');
     const referral = data.referral || {};
     const days = data.reported_days || '?';
     const symptomKey = data.symptom || '';
@@ -3044,14 +3389,14 @@
 
     container.innerHTML = `
       <div class="duration-referral-banner">
-        <div class="icon">&#9202;</div>
+        <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <h3>${t('durationTitle')}</h3>
         <p class="duration-detail">
           ${durationText[lang] || durationText.en}
         </p>
         <p class="referral-action">
-          &#10060; ${t('durationBlocked')}<br>
-          &#9989; ${consultText[lang] || consultText.en}
+          ${t('durationBlocked')}<br>
+          ${consultText[lang] || consultText.en}
         </p>
         <p class="referral-note">
           ${t('durationNote')}
@@ -3105,6 +3450,7 @@
     durationCompleted = [];
     durationContextOverride = null;
     durationClarificationData = {};
+    durationBySymptom = {};
     goToStep(2);
   };
 
@@ -3197,27 +3543,54 @@
       return false;
     }
 
-    function buildSymptomFocusCards(symptomList, medicineList) {
+    function renderRecommendationCard(rec, rank) {
+      return `
+        <div class="rec-card ${rec.in_stock === false ? 'out-of-stock' : ''}">
+          <div class="rec-rank">${rank}</div>
+          <div class="rec-info">
+            <div class="rec-brand">${escHtml(rec.brand)}</div>
+            <div class="rec-generic">${escHtml(rec.active_ingredients || '')}</div>
+            <div class="rec-meta">
+              ${rec.drug_category ? `<span class="rec-tag">${escHtml(rec.drug_category)}</span>` : ''}
+              ${rec.dosage_form ? `<span class="rec-tag">${escHtml(rec.dosage_form)}</span>` : ''}
+              ${rec.min_age ? `<span class="rec-tag">Age ${escHtml(rec.min_age)}+</span>` : ''}
+            </div>
+          </div>
+          <div class="rec-stock">
+            ${rec.pos_price != null ? `<div class="price">${fmt(rec.pos_price)}</div>` : ''}
+            ${rec.in_stock === true
+              ? `<div class="avail in">\u2713 In Stock (${rec.stock_quantity})</div>`
+              : rec.in_stock === false
+                ? `<div class="avail out">\u2717 Out of Stock</div>`
+                : ''}
+          </div>
+        </div>`;
+    }
+
+    function buildSymptomRecommendationColumns(symptomList, medicineList) {
       if (!symptomList.length || !medicineList.length) {
         return '';
       }
 
-      const cards = symptomList.map(sym => {
-        const matches = medicineList.filter(m => medicineMatchesSymptom(m, sym)).slice(0, 3);
-        const pills = matches.map(m => `<span class="symptom-focus-pill">${m.brand}</span>`).join('');
-        const emptyText = sym === 'COUGH_GENERAL'
-          ? 'Specify if cough is dry or with phlegm'
-          : 'See list below';
+      const columns = symptomList.map(sym => {
+        let matches = medicineList.filter(m => medicineMatchesSymptom(m, sym)).slice(0, 4);
+        if (!matches.length) {
+          // Keep each symptom column populated even when reason tags are sparse.
+          matches = medicineList.slice(0, 2);
+        }
+        const cards = matches
+          .map((m, idx) => renderRecommendationCard(m, idx + 1))
+          .join('');
         return `
-          <div class="symptom-focus-card">
-            <div class="symptom-focus-title">${t('recommendationFor')} ${getSymptomLabel(sym)}</div>
-            <div class="symptom-focus-pills">
-              ${pills || `<span class="symptom-focus-empty">${emptyText}</span>`}
+          <div class="rec-column">
+            <div class="rec-column-title">${t('recommendationFor')} ${escHtml(getSymptomLabel(sym))}</div>
+            <div class="rec-column-list">
+              ${cards || `<div class="rec-column-empty">See list below</div>`}
             </div>
           </div>`;
       }).join('');
 
-      return `<div class="symptom-focus-grid">${cards}</div>`;
+      return `<div class="rec-columns">${columns}</div>`;
     }
 
     // Build per-symptom severity chips for the mini-strip
@@ -3296,31 +3669,7 @@
       <div class="detected-section">
         <h3>${t('recommendationFor')}: ${symptoms.map(s => getSymptomLabel(s)).join(', ')}</h3>
       </div>
-      ${buildSymptomFocusCards(symptoms, recs)}
-      <div class="rec-list">
-        ${recs.map((r, i) => `
-          <div class="rec-card ${r.in_stock === false ? 'out-of-stock' : ''}">
-            <div class="rec-rank">${i + 1}</div>
-            <div class="rec-info">
-              <div class="rec-brand">${r.brand}</div>
-              <div class="rec-generic">${r.active_ingredients || ''}</div>
-              <div class="rec-meta">
-                ${r.drug_category ? `<span class="rec-tag">${r.drug_category}</span>` : ''}
-                ${r.dosage_form ? `<span class="rec-tag">${r.dosage_form}</span>` : ''}
-                ${r.min_age ? `<span class="rec-tag">Age ${r.min_age}+</span>` : ''}
-              </div>
-            </div>
-            <div class="rec-stock">
-              ${r.pos_price != null ? `<div class="price">${fmt(r.pos_price)}</div>` : ''}
-              ${r.in_stock === true
-                ? `<div class="avail in">\u2713 In Stock (${r.stock_quantity})</div>`
-                : r.in_stock === false
-                  ? `<div class="avail out">\u2717 Out of Stock</div>`
-                  : ''}
-            </div>
-          </div>
-        `).join('')}
-      </div>
+      ${buildSymptomRecommendationColumns(symptoms, recs)}
       <div class="rec-disclaimer">
         <strong>Disclaimer:</strong> These recommendations are AI-generated based on symptom matching.
         This is <strong>not</strong> a medical diagnosis. Consult a healthcare professional for serious
@@ -3382,6 +3731,7 @@
     durationCompleted = [];
     durationContextOverride = null;
     durationClarificationData = {};
+    durationBySymptom = {};
 
     kioskMain.classList.add('hidden');
     screenHome.classList.remove('hidden');
@@ -3405,7 +3755,7 @@
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = true;
-    recognition.lang = 'en-PH';
+    recognition.lang = getSpeechRecognitionLocale(selectedLanguage);
 
     recognition.onresult = (e) => {
       let transcript = '';
@@ -3414,6 +3764,10 @@
       }
       symptomInput.value = transcript;
       toStep3Btn.disabled = !transcript.trim();
+      const detected = detectLanguageFromText(transcript);
+      if (detected && detected !== selectedLanguage) {
+        setLanguage(detected);
+      }
     };
 
     recognition.onend = () => {
@@ -3435,6 +3789,7 @@
       } else {
         isRecording = true;
         voiceBtn.classList.add('recording');
+        recognition.lang = getSpeechRecognitionLocale(selectedLanguage);
         recognition.start();
       }
     });
@@ -3453,18 +3808,6 @@
   updateStaticCopy();
   startSymptomTitleRotation();
 
-})();
-
-// ── Carousel auto-play ──────────────────────────────────────────────────
-(function () {
-  var slides = document.querySelectorAll('.carousel-slide');
-  var cur    = 0;
-
-  setInterval(function () {
-    slides[cur].classList.remove('active');
-    cur = (cur + 1) % slides.length;
-    slides[cur].classList.add('active');
-  }, 4000);
 })();
 </script>
 </body>
