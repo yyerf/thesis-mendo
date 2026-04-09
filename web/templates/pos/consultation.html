@@ -1064,11 +1064,12 @@
     }
     .clarify-page-question {
       max-width: 700px;
-      margin: 0 auto 12px;
-      font-size: 17px;
-      line-height: 1.6;
-      color: var(--zinc-700);
-      font-weight: 500;
+      margin: 0 auto 16px;
+      font-size: 32px;
+      line-height: 1.35;
+      color: var(--zinc-800);
+      font-weight: 800;
+      letter-spacing: -0.4px;
       width: 100%;
       text-align: center;
     }
@@ -1215,17 +1216,16 @@
       max-width: 920px;
       margin: 0 auto;
       text-align: center;
-      color: var(--zinc-600);
-      background: var(--white);
-      border: 1px solid var(--zinc-200);
-      border-radius: 16px;
-      padding: 16px 18px;
+      color: var(--zinc-900);
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
     }
     .summary-profile-row {
-      display: inline-flex;
+      display: block;
       align-items: center;
       justify-content: center;
-      gap: 12px;
       width: 100%;
     }
     .summary-person-icon,
@@ -1251,8 +1251,18 @@
     .summary-simple .digest {
       font-size: 18px;
       line-height: 1.75;
-      margin-bottom: 14px;
+      margin-bottom: 0;
       text-align: center;
+      color: var(--zinc-900);
+      font-weight: 600;
+    }
+    .summary-simple .digest .age-highlight {
+      color: var(--zinc-900);
+      font-weight: 800;
+    }
+    .summary-simple .digest .condition-highlight {
+      color: var(--blue-600);
+      font-weight: 800;
     }
     .summary-simple .continue-note {
       font-size: 14px;
@@ -1448,7 +1458,7 @@
       .idle-countdown { width: 126px; height: 126px; }
       .idle-countdown strong { font-size: 44px; }
       .clarify-page-title { font-size: 24px; }
-      .clarify-page-question { font-size: 15px; }
+      .clarify-page-question { font-size: 26px; line-height: 1.35; }
       .clarify-buttons {
         gap: 8px;
       }
@@ -1888,7 +1898,8 @@
       durationBlocked: 'OTC recommendations are blocked for safety.',
       durationNote: 'This reminder is for safety only and is not a diagnosis.',
       noScopeTitle: 'Input outside current scope',
-      noScopeSub: 'Your input may be outside the symptom scope supported by this system. Please try a short and common symptom description.',
+      noScopeSub: 'Please try a short symptom description so the vending machine can assist you.',
+      noScopeHint: 'Try: "Masakit ulo ko, may ubo, tapos nilalagnat"',
       noMedicineTitle: 'No suitable medicines found',
       noMedicineSub: 'No matching OTC medicines were found for your age and symptoms.',
       consultPharmacist: 'Please consult a pharmacist.',
@@ -1904,6 +1915,19 @@
       nextSymptomBtn: 'Next',
       analyzeBtn: 'Continue',
       continueToRecs: 'Press Continue to view recommended medicines.',
+      coldWeatherTitle: 'Possible Cause Identified',
+      coldWeatherBody: 'Based on your symptoms, your runny nose may be caused by exposure to <strong>cold weather</strong> or sudden temperature changes.',
+      coldWeatherExplain: 'When cold air enters the nose, it can trigger extra mucus production. This is common and usually not a serious illness.',
+      coldWeatherTip1: 'Rest in a warm place',
+      coldWeatherTip2: 'Drink warm water or soup',
+      coldWeatherTip3: 'If it persists beyond 2\u20133 days, consult a pharmacist',
+      coldWeatherNote: 'If symptoms persist beyond 2\u20133 days or worsen, please consult a pharmacist or doctor.',
+      disclaimerTitle: 'Disclaimer:',
+      disclaimerBody: 'These recommendations are AI-generated based on symptom matching. This is <strong>not</strong> a medical diagnosis. Consult a healthcare professional for serious or persistent symptoms.',
+      disclaimerAge: 'Medicines shown are filtered for age',
+      disclaimerHighSev: 'Given your high severity, please prioritize professional medical advice.',
+      coughSpecify: 'Specify if cough is dry or with phlegm',
+      seeListBelow: 'See list below',
     },
     tl: {
       homeTap: 'Pindot kahit saan para magsimula',
@@ -1938,7 +1962,8 @@
       durationBlocked: 'Naka-block ang OTC recommendation para sa iyong kaligtasan.',
       durationNote: 'Paalala lang ito para sa kaligtasan at hindi diagnosis.',
       noScopeTitle: 'Wala pa sa saklaw ang input',
-      noScopeSub: 'Maaaring wala sa saklaw ng sinusuportahang sintomas ng system ang iyong input. Subukan ang maikli at karaniwang paglalarawan ng sintomas.',
+      noScopeSub: 'Subukan ang maikling paglalarawan ng sintomas para makatulong ang vending machine.',
+      noScopeHint: 'Subukan: "Masakit ulo ko, may ubo, tapos nilalagnat"',
       noMedicineTitle: 'Walang angkop na gamot na nakita',
       noMedicineSub: 'Walang OTC medicine na tugma sa iyong edad at sintomas.',
       consultPharmacist: 'Kumonsulta sa pharmacist.',
@@ -1952,6 +1977,19 @@
       exit: 'Lumabas',
       viewRecommendations: 'Tingnan ang Rekomendasyon',
       continueToRecs: 'Pindutin ang Continue para makita ang inirekomendang gamot.',
+      coldWeatherTitle: 'Posibleng Sanhi ang Natukoy',
+      coldWeatherBody: 'Ayon sa iyong mga sintomas, ang sipon mo ay maaaring dulot ng <strong>malamig na panahon</strong> o biglaang pagbabago ng temperatura.',
+      coldWeatherExplain: 'Kapag pumasok ang malamig na hangin sa ilong, maaaring lumabas ang sobrang uhog. Karaniwan lang ito at hindi malubha.',
+      coldWeatherTip1: 'Magpahinga sa mainit na lugar',
+      coldWeatherTip2: 'Uminom ng mainit na tubig o sabaw',
+      coldWeatherTip3: 'Kung hindi mawala sa 2\u20133 araw, kumonsulta sa pharmacist',
+      coldWeatherNote: 'Kung magpatuloy o lumala ang sintomas sa loob ng 2\u20133 araw, kumonsulta sa pharmacist o doktor.',
+      disclaimerTitle: 'Paalala:',
+      disclaimerBody: 'Ang mga rekomendasyong ito ay gawa ng AI batay sa symptom matching. <strong>Hindi</strong> ito medikal na diagnosis. Kumonsulta sa propesyonal para sa malulubha o tuloy-tuloy na sintomas.',
+      disclaimerAge: 'Mga gamot na ipinakita ay na-filter para sa edad',
+      disclaimerHighSev: 'Dahil sa mataas na severity, unahin ang propesyonal na medikal na payo.',
+      coughSpecify: 'Tukuyin kung tuyong ubo o may plema',
+      seeListBelow: 'Tingnan sa ibaba',
     },
     ceb: {
       homeTap: 'Pindota miskan asa aron magsugod',
@@ -1986,7 +2024,8 @@
       durationBlocked: 'Gi-block ang OTC recommendation para sa imong kaluwasan.',
       durationNote: 'Pahimangno lang kini para sa kaluwasan ug dili diagnosis.',
       noScopeTitle: 'Wala pa sa sakop ang input',
-      noScopeSub: 'Posible nga gawas sa sakop sa suportadong sintomas sa system ang imong input. Sulayi ang mubo ug kasagarang hulagway sa sintomas.',
+      noScopeSub: 'Sulayi og mubo nga hulagway sa sintomas aron makatabang ang vending machine.',
+      noScopeHint: 'Sulayi: "Sakit akong ulo, naay ubo, ug hilanat"',
       noMedicineTitle: 'Walay angay nga tambal nga nakita',
       noMedicineSub: 'Walay OTC medicine nga mohaom sa imong edad ug sintomas.',
       consultPharmacist: 'Pakigkonsulta sa pharmacist.',
@@ -2000,6 +2039,19 @@
       exit: 'Gawas',
       viewRecommendations: 'Tan-awa ang Rekomendasyon',
       continueToRecs: 'I-press ang Continue aron makita ang girekomendang tambal.',
+      coldWeatherTitle: 'Posibleng Hinungdan ang Nakit-an',
+      coldWeatherBody: 'Base sa imong mga sintomas, ang imong sip-on posibleng tungod sa <strong>katugnaw sa panahon</strong> o kalit nga pag-usab sa temperatura.',
+      coldWeatherExplain: 'Kung mosulod ang tugnaw nga hangin sa ilong, mahimong mogawas ang sobrang sip-on. Kasagaran kini ug dili delikado.',
+      coldWeatherTip1: 'Pagpahulay sa init nga lugar',
+      coldWeatherTip2: 'Pag-inom og init nga tubig o sabaw',
+      coldWeatherTip3: 'Kung dili maayo sulod sa 2\u20133 ka adlaw, pakigkita sa pharmacist',
+      coldWeatherNote: 'Kung mopadayon o mograbe ang sintomas sulod sa 2\u20133 ka adlaw, pakigkonsulta sa pharmacist o doktor.',
+      disclaimerTitle: 'Pasidaan:',
+      disclaimerBody: 'Kini nga mga rekomendasyon AI-generated base sa symptom matching. <strong>Dili</strong> kini medikal nga diagnosis. Pakigkonsulta sa propesyonal para sa grabe o padayon nga sintomas.',
+      disclaimerAge: 'Mga tambal gi-filter para sa edad',
+      disclaimerHighSev: 'Tungod sa taas nga severity, unaha ang propesyonal nga medikal nga tambag.',
+      coughSpecify: 'Tukuya kung uga nga ubo o naay plema',
+      seeListBelow: 'Tan-awa sa ubos',
     },
   };
 
@@ -2111,16 +2163,27 @@
 
     const bisayaHints = [
       'akong', 'naay', 'unsa', 'gibati', 'puson', 'hilanat', 'sip-on',
-      'kabag', 'hapdos', 'aslom', 'sakit akong', 'tiyan nako', 'wala koy', 'ug',
+      'kabag', 'hapdos', 'aslom', 'sakit akong', 'tiyan nako', 'wala koy',
+      'labad', 'garas', 'tilaok', 'kalibang', 'tutunlan', 'dughan',
+      'lawas', 'imong', 'dili', 'sakit sa', 'nako',
     ];
+    // 'ug' checked separately with word boundary to avoid matching inside 'cough'
+    const ugRegex = /\bug\b/;
+    const cebUgBonus = ugRegex.test(input) ? 1 : 0;
     const tagalogHints = [
       'masakit', 'nararamdaman', 'nilalagnat', 'ubo ko', 'may', 'wala akong',
       'tiyan ko', 'sipon', 'lalamunan', 'nahihilo', 'mahapdi', 'kabag', 'puson ko',
+      'lagnat', 'sumasakit', 'pagtatae', 'tumutulo', 'katawan', 'bahing',
+      'hindi', 'sakit ng', 'ang ulo', 'ang tiyan', 'balat', 'pantal',
+      'barado', 'plema',
     ];
+    // Shared Filipino words — boost both scores so either Filipino language wins over English
+    const sharedFilipino = ['ubo', 'sakit', 'ilong', 'tiyan', 'ulo', 'barado', 'pantal'];
 
     const score = (terms) => terms.reduce((total, term) => total + (input.includes(term) ? 1 : 0), 0);
-    const cebScore = score(bisayaHints);
-    const tlScore = score(tagalogHints);
+    const sharedScore = score(sharedFilipino);
+    const cebScore = score(bisayaHints) + sharedScore + cebUgBonus;
+    const tlScore = score(tagalogHints) + sharedScore;
 
     if (cebScore > tlScore && cebScore > 0) return 'ceb';
     if (tlScore > cebScore && tlScore > 0) return 'tl';
@@ -2130,31 +2193,46 @@
   function getClarifyQuestionText(clarifyType, backendQuestion) {
     const prompts = {
       COUGH: {
-        en: 'To recommend the right medicine, what kind of cough do you have?',
-        tl: 'Para mas tama ang mairekomenda, anong uri ng ubo ang nararamdaman mo?',
-        ceb: 'Aron mas tukma ang ma-recommend, unsa nga klase sa ubo ang imong gibati?',
+        en: 'Select your cough type.',
+        tl: 'Piliin ang uri ng ubo.',
+        ceb: 'Pilia ang klase sa ubo.',
       },
       RUNNY_NOSE: {
-        en: 'To narrow the recommendation, which best describes your runny nose?',
-        tl: 'Para mas tama ang recommendation, alin ang pinakaakma sa sipon mo?',
-        ceb: 'Aron mas tukma ang recommendation, hain niini ang pinakaduol sa imong sip-on?',
+        en: 'Select what matches your runny nose.',
+        tl: 'Piliin ang pinakaakma sa sipon mo.',
+        ceb: 'Pilia ang pinakaduol sa imong sip-on.',
+      },
+      SIPON_CONTEXT: {
+        en: 'Select what matches your runny nose.',
+        tl: 'Piliin ang pinakaakma sa sipon mo.',
+        ceb: 'Pilia ang pinakaduol sa imong sip-on.',
       },
       DIARRHEA: {
-        en: 'To recommend the right medicine, which best describes your diarrhea?',
-        tl: 'Para makapili ng tamang gamot, alin ang pinakaakma sa iyong pagtatae?',
-        ceb: 'Aron makapili og hustong tambal, hain niini ang pinakaduol sa imong kalibanga?',
+        en: 'Select what matches your diarrhea.',
+        tl: 'Piliin ang pinakaakma sa pagtatae mo.',
+        ceb: 'Pilia ang pinakaduol sa imong kalibanga.',
+      },
+      DIARRHEA_CONTEXT: {
+        en: 'Select what matches your diarrhea.',
+        tl: 'Piliin ang pinakaakma sa pagtatae mo.',
+        ceb: 'Pilia ang pinakaduol sa imong kalibanga.',
       },
       STOMACH: {
-        en: 'To recommend the right medicine, which best describes your stomach pain?',
-        tl: 'Para mas tama ang mairekomenda, alin ang pinakaakma sa sakit ng tiyan mo?',
-        ceb: 'Aron mas tukma ang ma-recommend, unsa ang labing duol sa sakit sa imong tiyan?',
+        en: 'Select what matches your stomach pain.',
+        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
+        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
+      },
+      STOMACH_CONTEXT: {
+        en: 'Select what matches your stomach pain.',
+        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
+        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
       },
     };
 
     if (prompts[clarifyType]?.[selectedLanguage]) {
       return prompts[clarifyType][selectedLanguage];
     }
-    return backendQuestion || 'Please answer this quick question so we can recommend the right medicine.';
+    return backendQuestion || 'Select the best match.';
   }
 
   function updateStaticCopy() {
@@ -2300,7 +2378,6 @@
     return `
       <div class="summary-simple${compact}">
         <div class="summary-profile-row">
-          <div class="summary-person-icon"><i class="fa-solid fa-user"></i></div>
           <div class="digest">${introSub}</div>
         </div>
         ${introTitle ? `<div class="title">${introTitle}</div>` : ''}
@@ -2396,12 +2473,12 @@
     const listText = joinReadableList(parts, andWord);
 
     if (lang === 'tl') {
-      return `Ikaw ay <strong>${ageText}</strong> taong gulang at kasalukuyang nakakaranas ng <strong>${listText}</strong>.`;
+      return `Ikaw ay <span class="age-highlight">${ageText}</span> taong gulang at kasalukuyang nakakaranas ng <span class="condition-highlight">${listText}</span>.`;
     }
     if (lang === 'ceb') {
-      return `Ikaw kay <strong>${ageText}</strong> anyos ug karon nakasinati og <strong>${listText}</strong>.`;
+      return `Ikaw kay <span class="age-highlight">${ageText}</span> anyos ug karon nakasinati og <span class="condition-highlight">${listText}</span>.`;
     }
-    return `You are <strong>${ageText}</strong> years old and currently experiencing <strong>${listText}</strong>.`;
+    return `You are <span class="age-highlight">${ageText}</span> years old and currently experiencing <span class="condition-highlight">${listText}</span>.`;
   }
 
   function getSpeechRecognitionLocale(lang) {
@@ -2420,6 +2497,9 @@
     if (analysisData && currentStep === 4) {
       if (showingRecs) {
         renderRecommendations(analysisData);
+      } else if (durationQueue.length > 0 && !analysisData._durationDone) {
+        // Re-render current duration question with new language without resetting progress
+        renderDurationQuestion(durationQueue[0]);
       } else {
         renderAnalysis(analysisData);
       }
@@ -2665,6 +2745,15 @@
 
       completeLoadingProgress('preDetect');
       document.getElementById('preDetectLoading').classList.add('hidden');
+
+      // ── Red-flag intercept: skip severity and go straight to analysis ──
+      const preRedFlags = data.red_flags || [];
+      if (preRedFlags.length > 0) {
+        // Jump directly to Step 4 (analysis) — the /api/analyze endpoint
+        // will detect the same red flags and return action:"triage".
+        runAnalysis();
+        return;
+      }
 
       preDetectedSymptoms = data.symptoms || [];
       severityHints = data.severity_hints || {};
@@ -2947,7 +3036,7 @@
           <h3 style="font-size:22px;font-weight:800;margin:12px 0 8px;">${t('noScopeTitle')}</h3>
           <p>${t('noScopeSub')}</p>
           <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
-            Example: "Headache and cough" or "Masakit ulo ko at may ubo"
+            ${t('noScopeHint')}
           </p>
         </div>`;
       document.getElementById('assessAgainBtn').classList.remove('hidden');
@@ -2958,7 +3047,6 @@
     if (rec.action === 'ask_clarify') {
       const clarifyType = rec.clarify_type || 'COUGH';
       const questionText = getClarifyQuestionText(clarifyType, rec.question);
-      const profileDigest = buildDetectedProfileDigest(symptoms);
       let buttonsHtml = '';
 
       if (rec.options && rec.options.length) {
@@ -2984,15 +3072,14 @@
 
       container.innerHTML = `
         <div class="clarify-page">
-          <div class="followup-profile">
-            <div class="profile-person-icon"><i class="fa-solid fa-user"></i></div>
-            <div>${profileDigest}</div>
-          </div>
           <div class="clarify-page-question">${questionText}</div>
           <div class="clarify-buttons clarify-buttons--compact">
             ${buttonsHtml}
           </div>
         </div>`;
+      document.getElementById('backFromResults').classList.remove('hidden');
+      document.getElementById('assessAgainBtn').classList.remove('hidden');
+      document.getElementById('exitBtn').classList.remove('hidden');
       return;
     }
 
@@ -3019,6 +3106,7 @@
       }
 
       setTapReadyState(false);
+      container.classList.add('center-stage');
       const viewBtn = document.getElementById('viewRecsBtn');
       viewBtn.childNodes[0].textContent = `${t('analyzeBtn')} `;
       viewBtn.classList.remove('hidden');
@@ -3139,7 +3227,6 @@
     const container = document.getElementById('analysisResult');
     const total = (analysisData.symptoms || []).filter(s => DURATION_SYMPTOMS.includes(s)).length;
     const answered = durationCompleted.length;
-    const profileDigest = buildDetectedProfileDigest(analysisData.symptoms || []);
 
     // Symptom display names per language
     const nameMap = {
@@ -3248,9 +3335,9 @@
 
     // Question text per language
     const questionText = {
-      en: `Can you tell me how long you have had <strong>${displayName}</strong>?`,
-      tl: `Pwede mo bang sabihin kung gaano na katagal ang iyong <strong>${displayName}</strong>?`,
-      ceb: `Pwede ba nimo isulti kung unsa na kadugay ang imong <strong>${displayName}</strong>?`,
+      en: `How long have you had <strong>${displayName}</strong>?`,
+      tl: `Gaano na katagal ang <strong>${displayName}</strong>?`,
+      ceb: `Unsa na kadugay ang <strong>${displayName}</strong>?`,
     };
 
     // Progress dots
@@ -3274,10 +3361,6 @@
 
     container.innerHTML = `
       <div class="clarify-page">
-        <div class="followup-profile">
-          <div class="profile-person-icon"><i class="fa-solid fa-user"></i></div>
-          <div>${profileDigest}</div>
-        </div>
         ${total > 1 ? `<div class="duration-progress">${dotsHtml}</div>` : ''}
         <div class="clarify-page-question">
           ${questionText[lang] || questionText.en}
@@ -3585,7 +3668,7 @@
           <div class="rec-column">
             <div class="rec-column-title">${t('recommendationFor')} ${escHtml(getSymptomLabel(sym))}</div>
             <div class="rec-column-list">
-              ${cards || `<div class="rec-column-empty">See list below</div>`}
+              ${cards || `<div class="rec-column-empty">${t('seeListBelow')}</div>`}
             </div>
           </div>`;
       }).join('');
@@ -3628,20 +3711,29 @@
     if (!recs.length) {
       // Check if the backend sent a message (e.g., cold-weather advisory)
       const recMsg = data.recommendation?.message || '';
+      const recMsgLower = recMsg.toLowerCase();
+      const hasColdWeatherSignal =
+        recMsgLower.includes('malamig na panahon') ||
+        recMsgLower.includes('cold weather') ||
+        recMsgLower.includes('katugnaw');
+      const hasColdWeatherSymptom = symptoms.includes('RUNNY_NOSE_COLD_WEATHER_CONTEXT');
+      const hasColdWeatherContext = (data.recommendation?._context_override || '') === 'SIPON_COLD_WEATHER';
+      const isColdWeatherAdvisory = hasColdWeatherSignal || hasColdWeatherSymptom || hasColdWeatherContext;
+
       if (recMsg) {
-        if (recMsg.toLowerCase().includes('malamig na panahon')) {
+        if (isColdWeatherAdvisory) {
           html += `
             <div class="advisory-card">
               <div class="adv-icon">💡</div>
-              <h3>Possible Cause Identified</h3>
-              <p>Based on your symptoms, your runny nose may be caused by exposure to <strong>cold weather</strong> or sudden temperature changes.</p>
-              <p style="font-size:13px;color:#0c4a6e;">When cold air enters the nose, it can trigger extra mucus production. This is common and usually not a serious illness.</p>
+              <h3>${t('coldWeatherTitle')}</h3>
+              <p>${t('coldWeatherBody')}</p>
+              <p style="font-size:13px;color:#0c4a6e;">${t('coldWeatherExplain')}</p>
               <ul class="tips-list">
-                <li>Magpahinga sa mainit na lugar (Rest in a warm place)</li>
-                <li>Uminom ng mainit na tubig o sabaw (Drink warm fluids)</li>
-                <li>Kung hindi mawala sa 2-3 araw, kumonsulta sa pharmacist</li>
+                <li>${t('coldWeatherTip1')}</li>
+                <li>${t('coldWeatherTip2')}</li>
+                <li>${t('coldWeatherTip3')}</li>
               </ul>
-              <p class="adv-note">If symptoms persist beyond 2-3 days or worsen, please consult a pharmacist or doctor.</p>
+              <p class="adv-note">${t('coldWeatherNote')}</p>
             </div>`;
         } else {
           html += `
@@ -3652,12 +3744,28 @@
             </div>`;
         }
       } else {
-        html += `
-          <div class="no-symptoms">
-            <div class="icon">&#128138;</div>
-            <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">${t('noMedicineTitle')}</h3>
-            <p>${t('noMedicineSub')} ${t('consultPharmacist')}</p>
-          </div>`;
+        if (isColdWeatherAdvisory) {
+          html += `
+            <div class="advisory-card">
+              <div class="adv-icon">💡</div>
+              <h3>${t('coldWeatherTitle')}</h3>
+              <p>${t('coldWeatherBody')}</p>
+              <p style="font-size:13px;color:#0c4a6e;">${t('coldWeatherExplain')}</p>
+              <ul class="tips-list">
+                <li>${t('coldWeatherTip1')}</li>
+                <li>${t('coldWeatherTip2')}</li>
+                <li>${t('coldWeatherTip3')}</li>
+              </ul>
+              <p class="adv-note">${t('coldWeatherNote')}</p>
+            </div>`;
+        } else {
+          html += `
+            <div class="no-symptoms">
+              <div class="icon">&#128138;</div>
+              <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">${t('noMedicineTitle')}</h3>
+              <p>${t('noMedicineSub')} ${t('consultPharmacist')}</p>
+            </div>`;
+        }
       }
       container.innerHTML = html;
       return;
@@ -3671,10 +3779,9 @@
       </div>
       ${buildSymptomRecommendationColumns(symptoms, recs)}
       <div class="rec-disclaimer">
-        <strong>Disclaimer:</strong> These recommendations are AI-generated based on symptom matching.
-        This is <strong>not</strong> a medical diagnosis. Consult a healthcare professional for serious
-        or persistent symptoms. Medicines shown are filtered for age ${patientAge}.
-        ${severity >= 8 ? '<br><strong style="color:var(--danger);">Given your high severity, please prioritize professional medical advice.</strong>' : ''}
+        <strong>${t('disclaimerTitle')}</strong> ${t('disclaimerBody')}
+        ${t('disclaimerAge')} ${patientAge}.
+        ${severity >= 8 ? `<br><strong style="color:var(--danger);">${t('disclaimerHighSev')}</strong>` : ''}
       </div>`;
 
     container.innerHTML = html;
