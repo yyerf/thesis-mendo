@@ -113,6 +113,28 @@ CREATE TABLE IF NOT EXISTS stock_logs (
     FOREIGN KEY (inventory_id) REFERENCES inventory(id),
     FOREIGN KEY (performed_by) REFERENCES admin_users(id)
 );
+
+CREATE TABLE IF NOT EXISTS interaction_logs (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    interaction_id      TEXT    UNIQUE NOT NULL,
+    timestamp           TEXT    NOT NULL,
+    session_id          TEXT,
+    interaction_type    TEXT    NOT NULL,
+    user_input          TEXT,
+    extracted_symptoms  TEXT    DEFAULT '[]',
+    extraction_source   TEXT,
+    red_flags           TEXT    DEFAULT '[]',
+    pipeline_stages     TEXT    DEFAULT '[]',
+    action              TEXT,
+    recommendations     TEXT    DEFAULT '[]',
+    clarification       TEXT,
+    context_override    TEXT,
+    severity            INTEGER,
+    age                 INTEGER,
+    pipeline_detail     TEXT    DEFAULT '{}',
+    recommendation_detail TEXT  DEFAULT '{}',
+    created_at          TEXT    DEFAULT (datetime('now','localtime'))
+);
 """
 
 # Default prices (PHP) for common PH OTC medicines

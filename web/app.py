@@ -5,6 +5,8 @@ Professional Point-of-Sale system for OTC medicine vending.
 
 import os
 import logging
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -16,6 +18,21 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
+
+_log_dir = Path(__file__).resolve().parents[1] / "logs"
+_log_dir.mkdir(parents=True, exist_ok=True)
+_file_handler = RotatingFileHandler(
+    str(_log_dir / "mendo.log"),
+    maxBytes=5 * 1024 * 1024,
+    backupCount=3,
+    encoding="utf-8",
+)
+_file_handler.setLevel(logging.INFO)
+_file_handler.setFormatter(logging.Formatter(
+    "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+))
+logging.getLogger().addHandler(_file_handler)
+
 log = logging.getLogger("mendo")
 
 # ── Flask app ──
