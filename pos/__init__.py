@@ -23,6 +23,13 @@ def init_pos(app: Flask) -> None:
     with app.app_context():
         init_db()
 
+    # Migrate legacy JSONL logs to SQLite
+    try:
+        from mendo_core.interaction_logger import migrate_jsonl_to_sqlite
+        migrate_jsonl_to_sqlite()
+    except Exception:
+        pass
+
     app.register_blueprint(admin_bp)
     app.register_blueprint(shop_bp)
     app.register_blueprint(consultation_bp)

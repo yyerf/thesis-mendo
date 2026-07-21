@@ -1,0 +1,32 @@
+{
+  "lightweight_default": [
+    "dictionary",
+    "tfidf_word",
+    "tfidf_char",
+    "tfidf_hybrid"
+  ],
+  "current_system": [
+    "dictionary",
+    "current_hybrid"
+  ],
+  "modern_optional": [
+    "minilm",
+    "qwen3_embedding_0_6b",
+    "bge_m3",
+    "jina_v3",
+    "minilm_qwen3_rerank"
+  ],
+  "notes": {
+    "dictionary": "Production deterministic rules without semantic fallback.",
+    "current_hybrid": "Production dictionary plus current MiniLM fallback. May load sentence-transformers.",
+    "tfidf_word": "Classical TF-IDF cosine over symptom candidate documents using word n-grams.",
+    "tfidf_char": "Classical TF-IDF cosine over symptom candidate documents using character n-grams for typo tolerance.",
+    "tfidf_hybrid": "Max score from word and character TF-IDF retrievers.",
+    "minilm": "Current multilingual MiniLM embedding baseline.",
+    "qwen3_embedding_0_6b": "Optional modern embedding experiment. Heavy on CPU.",
+    "bge_m3": "Optional BGE-M3 embedding experiment. Heavy on CPU.",
+    "jina_v3": "Optional Jina Embeddings v3 experiment. Heavy on CPU.",
+    "minilm_qwen3_rerank": "Optional retrieval plus reranking experiment. Likely slow on CPU."
+  }
+}
+

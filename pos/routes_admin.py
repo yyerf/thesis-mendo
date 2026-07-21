@@ -17,6 +17,16 @@ from .db import (
     toggle_user_active,
 )
 
+from mendo_core.interaction_logger import (
+    get_interaction_logs,
+    count_interaction_logs,
+    count_logs_today,
+    get_most_common_symptom,
+    export_logs_as_csv as export_logs_csv,
+    export_logs_as_json as export_logs_json,
+    export_logs_as_pdf as export_logs_pdf,
+)
+
 admin_bp = Blueprint(
     "admin",
     __name__,
@@ -233,3 +243,62 @@ def api_toggle_user(uid, current_user=None):
         return jsonify({"success": True, "is_active": new_status})
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
+
+# ─────────── Interaction Logs Dashboard ───────────
+
+@admin_bp.route("/logs")
+@login_required
+def logs_dashboard(current_user=None):
+    """Render the interaction logs dashboard page."""
+    total = count_interaction_logs()
+    today = count_logs_today()
+    top_symptom = get_most_common_symptom()
+    return render_template("pos/logs.html", user=current_user,
+                           total_logs=total, today_logs=today,
+                           top_symptom=top_symptom)
+
+
+@admin_bp.route("/api/logs", methods=["GET"])
+@login_required
+def api_logs(current_user=None):
+    """Return interaction logs as paginated JSON (for frontend table)."""
+    limit = int(request.args.get("limit", 100))
+    offset = int(request.args.get("offset", 0))
+    search = request.args.get("search", "").strip()
+    logs = get_interaction_logs(limit=limit, offset=offset, search=search)
+    total = count_interaction_logs(search=search)
+    return jsonify({"logs": logs, "total": total})
+
+
+@admin_bp.route("/api/logs/export/json")
+@login_required
+def api_export_logs_json(current_user=None):
+    data = export_logs_json()
+    if not data or data == "[]":
+        return jsonify({"error": "No logs found"}), 404
+    from flask import Response
+    return Response(data, mimetype="application/json",
+                    headers={"Content-Disposition": "attachment; filename=interaction_logs.json"})
+
+
+@admin_bp.route("/api/logs/export/csv")
+@login_required
+def api_export_logs_csv(current_user=None):
+    data = export_logs_csv()
+    if not data:
+        return jsonify({"error": "No logs found"}), 404
+    from flask import Response
+    return Response(data, mimetype="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=interaction_logs.csv"})
+
+
+@admin_bp.route("/api/logs/export/pdf")
+@login_required
+def api_export_logs_pdf(current_user=None):
+    data = export_logs_pdf()
+    if not data:
+        return jsonify({"error": "No logs found"}), 404
+    from flask import Response
+    return Response(data, mimetype="application/pdf",
+                    headers={"Content-Disposition": "attachment; filename=interaction_logs.pdf"})

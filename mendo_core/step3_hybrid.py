@@ -1441,6 +1441,9 @@ def extract_symptoms_hybrid(
 
     # Distinct merge (dictionary first)
     merged = list(dict.fromkeys(detected + selected))
+    # Normalize: NASAL_CONGESTION and RUNNY_NOSE are the same thing (sipon)
+    merged = ["RUNNY_NOSE" if s == "NASAL_CONGESTION" else s for s in merged]
+    merged = list(dict.fromkeys(merged))
     return merged
 
 
@@ -1488,12 +1491,8 @@ def extract_symptoms_hybrid_report(
         }
     )
 
-    if dict_symptoms or not enable_semantic_fallback:
-        report["final"]["symptoms"] = dict_symptoms
-        report["final"]["conditions"] = dict_conditions
-        report["final"]["source"] = "dictionary" if dict_symptoms else "dictionary_only"
-        return report
-
+    # Always try semantic model — even when dictionary has results — so the
+    # transformer can correct dictionary false positives (e.g. "ngipon" → RUNNY_NOSE).
     try:
         extractor = _get_semantic_extractor()
         semantic_detected, diag = extractor.analyze(user_input, threshold=semantic_threshold)
@@ -1518,6 +1517,7 @@ def extract_symptoms_hybrid_report(
             red_flags=red_flags,
         )
     except Exception as e:
+        # Semantic unavailable — fall back to dictionary-only
         report["stages"].append(
             {
                 "stage": "semantic",
@@ -1526,14 +1526,14 @@ def extract_symptoms_hybrid_report(
                 "error": str(e),
             }
         )
-        report["final"]["symptoms"] = []
+        report["final"]["symptoms"] = dict_symptoms
         report["final"]["conditions"] = dict_conditions
-        report["final"]["source"] = "none"
+        report["final"]["source"] = "dictionary" if dict_symptoms else "none"
         return report
 
-    # Select TOP-N symptoms that passed the threshold.
+    # Select TOP-N semantic candidates
     candidates = [row for row in diag_sorted if row["symptom"] in semantic_detected]
-    selected = [row["symptom"] for row in candidates[:semantic_max_symptoms]]
+    semantic_selected = [row["symptom"] for row in candidates[:semantic_max_symptoms]]
 
     report["stages"].append(
         {
@@ -1544,14 +1544,30 @@ def extract_symptoms_hybrid_report(
             "top_margin": semantic_top_margin,
             "max_symptoms": semantic_max_symptoms,
             "detected_raw": semantic_detected,
-            "detected_selected": selected,
+            "detected_selected": semantic_selected,
             "scores": diag_sorted,
         }
     )
 
-    report["final"]["symptoms"] = selected
+    # Merge: start with semantic-selected, then add dictionary hits that the
+    # model also ranked above a relaxed threshold (≥0.40), ensuring the
+    # semantic model acts as a "corrector" over dictionary false positives.
+    merged = list(semantic_selected)  # semantic takes priority
+    dict_score_map = {r["symptom"]: r["score"] for r in diag_sorted}
+    for s in dict_symptoms:
+        if s not in merged:
+            # Keep dictionary-only symptom if the model also scored it ≥0.40
+            if dict_score_map.get(s, 0) >= 0.40:
+                merged.append(s)
+            # If model scored it very low (<0.40), it's likely a false positive — skip it
+
+    # Normalize: NASAL_CONGESTION and RUNNY_NOSE are the same thing (sipon)
+    merged = ["RUNNY_NOSE" if s == "NASAL_CONGESTION" else s for s in merged]
+    merged = list(dict.fromkeys(merged))
+
+    report["final"]["symptoms"] = merged
     report["final"]["conditions"] = dict_conditions
-    report["final"]["source"] = "semantic_fallback" if selected else "none"
+    report["final"]["source"] = "hybrid_merged" if merged else "none"
     return report
 
 

@@ -1,0 +1,317 @@
+{% extends 'pos/base.html' %}
+{% set active_page = 'logs' %}
+{% block title %}Interaction Logs — Mendo POS{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <div>
+    <h2>Interaction Logs</h2>
+    <p>Every AI consultation session — inputs, pipeline decisions, and outputs</p>
+  </div>
+  <div class="page-header-actions">
+    <div class="search-box" style="max-width:240px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="logSearch" placeholder="Search logs..." oninput="scheduleSearch()">
+    </div>
+    <button class="btn btn--primary btn--sm" onclick="exportLogs('json')">JSON</button>
+    <button class="btn btn--primary btn--sm" onclick="exportLogs('csv')">CSV</button>
+    <button class="btn btn--primary btn--sm" onclick="exportLogs('pdf')">PDF</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- ═══ Stats ═══ -->
+<div class="stats-grid" style="margin-bottom:20px;">
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__label">Total Interactions</div>
+    <div class="stat-card__value">{{ total_logs }}</div>
+    <div class="stat-card__sub">All time</div>
+  </div>
+  <div class="stat-card stat-card--success">
+    <div class="stat-card__label">Today</div>
+    <div class="stat-card__value">{{ today_logs }}</div>
+    <div class="stat-card__sub">Interactions today</div>
+  </div>
+  <div class="stat-card stat-card--warning">
+    <div class="stat-card__label">Most Common Symptom</div>
+    <div class="stat-card__value" style="font-size:20px;">{{ top_symptom or '—' }}</div>
+    <div class="stat-card__sub">Across all sessions</div>
+  </div>
+  <div class="stat-card stat-card--danger">
+    <div class="stat-card__label">Export</div>
+    <div class="stat-card__value" style="font-size:16px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <a href="{{ url_for('admin.api_export_logs_json') }}" class="btn btn--sm" style="font-size:11px;">⬇ JSON</a>
+      <a href="{{ url_for('admin.api_export_logs_csv') }}" class="btn btn--sm" style="font-size:11px;">⬇ CSV</a>
+      <a href="{{ url_for('admin.api_export_logs_pdf') }}" class="btn btn--sm" style="font-size:11px;">⬇ PDF</a>
+    </div>
+    <div class="stat-card__sub">Download all records</div>
+  </div>
+</div>
+
+<!-- ═══ Full Log Table ═══ -->
+<div class="card">
+  <div class="card-header">
+    <h3>Session Logs</h3>
+    <span class="text-sm text-muted" id="logCount">{{ total_logs }} records</span>
+  </div>
+  <div class="card-body--flush table-wrap">
+    <table id="logTable">
+      <thead>
+        <tr>
+          <th style="width:30px;"></th>
+          <th>ID</th>
+          <th>Timestamp</th>
+          <th>Type</th>
+          <th>User Input</th>
+          <th>Symptoms</th>
+          <th>Headache</th>
+          <th>Duration</th>
+          <th>Action</th>
+          <th>Age</th>
+        </tr>
+      </thead>
+      <tbody id="logTableBody">
+        <tr><td colspan="10" class="table-empty">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);">
+    <span class="text-sm text-muted" id="paginationInfo">Page 1</span>
+    <div class="flex gap-2">
+      <button class="btn btn--sm" id="prevPageBtn" onclick="changePage(-1)" disabled>← Prev</button>
+      <button class="btn btn--sm" id="nextPageBtn" onclick="changePage(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Detail Modal (used by expand) ═══ -->
+<div class="modal-overlay" id="logDetailModal">
+  <div class="modal modal--lg" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Log Details</h3>
+      <button class="modal-close" onclick="closeLogDetail()">&times;</button>
+    </div>
+    <div class="modal-body" id="logDetailBody" style="max-height:70vh;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeLogDetail()">Close</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .log-expand-btn {
+    background:none;border:1px solid var(--border);border-radius:4px;
+    cursor:pointer;padding:2px 6px;font-size:12px;color:var(--text-muted);
+    transition:all .15s;
+  }
+  .log-expand-btn:hover { background:var(--bg);color:var(--text); }
+  .log-expanded-row td { background:#f8fafc;padding:16px 20px; }
+  .log-expanded-row pre {
+    font-family:var(--mono);font-size:11px;line-height:1.6;
+    max-height:300px;overflow-y:auto;background:var(--bg);
+    padding:12px;border-radius:var(--radius-sm);white-space:pre-wrap;
+    color:var(--text-secondary);
+  }
+  .detail-section { margin-bottom:16px; }
+  .detail-section h4 { font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:6px; }
+  .detail-section .kv { display:grid;grid-template-columns:120px 1fr;gap:4px 12px;font-size:13px; }
+  .detail-section .kv dt { color:var(--text-secondary);font-weight:500; }
+  .detail-section .kv dd { color:var(--text); }
+  .detail-pill {
+    display:inline-block;padding:2px 8px;border-radius:100px;
+    font-size:11px;font-weight:600;margin:2px;
+  }
+  .detail-pill.blue { background:var(--primary-light);color:var(--primary); }
+  .detail-pill.green { background:var(--success-light);color:var(--success); }
+  .detail-pill.amber { background:var(--warning-light);color:var(--warning); }
+  .detail-pill.red { background:var(--danger-light);color:var(--danger); }
+  .log-input-cell { max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .log-symptom-cell { max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .log-action-cell { font-weight:600; }
+  .log-action-cell.recommend { color:var(--success); }
+  .log-action-cell.clarify { color:var(--warning); }
+  .log-action-cell.triage { color:var(--danger); }
+</style>
+
+<script>
+let allLogs = [];
+let currentPage = 1;
+const PER_PAGE = 50;
+let searchTimer = null;
+
+function scheduleSearch() {
+  if (searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(loadLogs, 300);
+}
+
+async function loadLogs() {
+  const search = document.getElementById('logSearch').value.trim();
+  const offset = (currentPage - 1) * PER_PAGE;
+  try {
+    const res = await fetch(`/admin/api/logs?limit=${PER_PAGE}&offset=${offset}&search=${encodeURIComponent(search)}`);
+    const data = await res.json();
+    allLogs = data.logs || [];
+    renderTable(allLogs, data.total);
+  } catch (e) {
+    document.getElementById('logTableBody').innerHTML = '<tr><td colspan="10" class="table-empty">Failed to load logs</td></tr>';
+  }
+}
+
+function renderTable(logs, total) {
+  const tbody = document.getElementById('logTableBody');
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+  document.getElementById('paginationInfo').textContent = `Page ${currentPage} of ${totalPages} (${total} records)`;
+  document.getElementById('logCount').textContent = `${total} records`;
+  document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+  document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+
+  if (!logs.length) {
+    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No logs found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = logs.map((log, idx) => {
+    const syms = Array.isArray(log.extracted_symptoms) ? log.extracted_symptoms : [];
+    const symHtml = syms.map(s => `<span class="detail-pill blue">${s}</span>`).join(' ');
+    const actionClass = log.action === 'recommend' ? 'recommend' : (log.action === 'triage' ? 'triage' : (log.action === 'ask_clarify' ? 'clarify' : ''));
+    const typeLabels = {
+      analysis: 'Initial Assessment',
+      triage: 'Doctor Referral',
+      duration_blocked: 'Duration Blocked',
+      duration_warning: 'Duration Warning',
+      duration_ok: 'Duration OK',
+      clarify_context: 'Context Clarification',
+      clarify_symptom: 'Symptom Clarification',
+    };
+    const typeBadgeColors = {
+      analysis: 'badge--primary',
+      triage: 'badge--danger',
+      duration_blocked: 'badge--danger',
+      duration_warning: 'badge--warning',
+      duration_ok: 'badge--success',
+      clarify_context: 'badge--warning',
+      clarify_symptom: 'badge--info',
+    };
+    const typeLabel = typeLabels[log.interaction_type] || log.interaction_type;
+    const badgeColor = typeBadgeColors[log.interaction_type] || 'badge--neutral';
+    const typeBadge = `<span class="badge ${badgeColor}">${typeLabel}</span>`;
+    const input = log.user_input || '';
+    const truncatedInput = input.length > 60 ? input.slice(0, 60) + '…' : input;
+    const rowId = `log-row-${idx}`;
+    const expandId = `log-expand-${idx}`;
+
+    const pd = log.pipeline_detail || {};
+    const headacheText = pd.headache_location ? `${pd.headache_location}${pd.headache_danger ? ' ('+pd.headache_danger+')' : ''}` : '-';
+    const durationText = pd.duration_symptom ? `${pd.duration_symptom}: ${pd.duration_value || pd.duration_days+'d'}` : '-';
+
+    return `<tr>
+      <td><button class="log-expand-btn" onclick="toggleExpand('${expandId}', this)">▶</button></td>
+      <td class="mono text-sm">${log.interaction_id || '-'}</td>
+      <td class="text-sm text-secondary">${log.timestamp || ''}</td>
+      <td>${typeBadge}</td>
+      <td class="log-input-cell" title="${escHtml(input)}">${escHtml(truncatedInput)}</td>
+      <td class="log-symptom-cell">${symHtml}</td>
+      <td class="text-sm">${headacheText}</td>
+      <td class="text-sm">${durationText}</td>
+      <td class="log-action-cell ${actionClass}">${log.action || '-'}</td>
+      <td class="text-sm">${log.age != null ? log.age + 'y' : '-'}</td>
+    </tr>
+    <tr class="log-expanded-row" id="${expandId}" style="display:none;">
+      <td colspan="10">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="detail-section">
+            <h4>Input</h4>
+            <pre>${escHtml(input) || '(empty)'}</pre>
+          </div>
+          <div class="detail-section">
+            <h4>Pipeline Info</h4>
+            <div class="kv">
+              <dt>Source</dt><dd>${log.extraction_source || '-'}</dd>
+              <dt>Clarification</dt><dd>${log.clarification || '-'}</dd>
+              <dt>Context Override</dt><dd>${log.context_override || '-'}</dd>
+              <dt>Session ID</dt><dd class="mono">${log.session_id || '-'}</dd>
+              <dt>Headache</dt><dd>${headacheText}</dd>
+              <dt>Duration</dt><dd>${durationText}</dd>
+              <dt>Severity</dt><dd>${log.severity != null ? log.severity + '/10' : '-'}</dd>
+            </div>
+          </div>
+          <div class="detail-section">
+            <h4>Extracted Symptoms</h4>
+            <div>${syms.length ? syms.map(s => `<span class="detail-pill blue">${escHtml(s)}</span>`).join(' ') : '<span class="text-muted text-sm">None</span>'}</div>
+            ${log.red_flags && log.red_flags.length ? `<div style="margin-top:8px;"><h4 style="color:var(--danger);">Red Flags</h4>${(Array.isArray(log.red_flags) ? log.red_flags : []).map(f => `<span class="detail-pill red">${escHtml(typeof f === 'string' ? f : f.flag || JSON.stringify(f))}</span>`).join(' ')}</div>` : ''}
+          </div>
+          <div class="detail-section">
+            <h4>Recommendations</h4>
+            ${renderRecs(log.recommendations)}
+          </div>
+          <div class="detail-section" style="grid-column:1/-1;">
+            <h4>Pipeline Stages</h4>
+            ${renderStages(log.pipeline_stages)}
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderRecs(recs) {
+  if (!recs || !recs.length) return '<span class="text-muted text-sm">None</span>';
+  return recs.map(r => {
+    const brand = r.brand || r.generic || '-';
+    const cat = r.category ? ` <span class="detail-pill amber">${escHtml(r.category)}</span>` : '';
+    const reasons = r.reasons ? ` <span class="text-sm text-muted">(${escHtml(Array.isArray(r.reasons) ? r.reasons.join(', ') : r.reasons)})</span>` : '';
+    return `<div style="margin:4px 0;">• <strong>${escHtml(brand)}</strong>${cat}${reasons}</div>`;
+  }).join('');
+}
+
+function renderStages(stages) {
+  if (!stages || !stages.length) return '<span class="text-muted text-sm">No pipeline data</span>';
+  return stages.map(s => {
+    const step = s.step || '?';
+    const stageName = s.stage || 'unknown';
+    const detected = s.detected || s.detected_selected || [];
+    const detectedStr = Array.isArray(detected) ? detected.join(', ') : (detected || '-');
+    const scores = s.scores || [];
+    const scoresStr = scores.length ? scores.map(sc => `${sc.symptom}: ${sc.score}`).join(', ') : '';
+    return `<div style="margin:4px 0;font-size:12px;">
+      <strong>Step ${step}: ${stageName}</strong>
+      ${detectedStr ? `<span class="text-muted"> → ${escHtml(detectedStr)}</span>` : ''}
+      ${scoresStr ? `<br><span class="text-muted" style="font-size:11px;">scores: ${escHtml(scoresStr)}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function toggleExpand(id, btn) {
+  const row = document.getElementById(id);
+  if (!row) return;
+  const isHidden = row.style.display === 'none';
+  row.style.display = isHidden ? 'table-row' : 'none';
+  btn.textContent = isHidden ? '▼' : '▶';
+}
+
+function changePage(delta) {
+  currentPage = Math.max(1, currentPage + delta);
+  loadLogs();
+}
+
+function exportLogs(format) {
+  window.location.href = `/admin/api/logs/export/${format}`;
+}
+
+function closeLogDetail() {
+  document.getElementById('logDetailModal').classList.remove('active');
+}
+
+function escHtml(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+loadLogs();
+</script>
+{% endblock %}

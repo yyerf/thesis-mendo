@@ -1,0 +1,443 @@
+{
+  "timestamp": "20260629_173201",
+  "overall_stats": {
+    "total_tests": 288,
+    "exact_matches": 283,
+    "partial_matches": 0,
+    "failed_detections": 5,
+    "false_positives": 0,
+    "negation_handled": 6,
+    "negation_failed": 0,
+    "recommendation_success": 225,
+    "recommendation_failed": 5
+  },
+  "category_stats": {
+    "simple_single": {
+      "total": 10,
+      "exact": 10,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "multiple_symptoms": {
+      "total": 10,
+      "exact": 10,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "negation": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "partial_negation": {
+      "total": 4,
+      "exact": 4,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "noisy_input": {
+      "total": 10,
+      "exact": 10,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "misspelling": {
+      "total": 10,
+      "exact": 10,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "alternative_phrasing": {
+      "total": 10,
+      "exact": 10,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "english": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "code_switching": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "third_person": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "temporal": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "age_context": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "severe_intensity": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "mild_intensity": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "question_form": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "jejemon_leetspeak": {
+      "total": 8,
+      "exact": 8,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "bisaya_heavy": {
+      "total": 7,
+      "exact": 7,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "compound_multi": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "contrastive_negation": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "run_on_realistic": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "diagnostic_confusion": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "interjection_filler": {
+      "total": 7,
+      "exact": 7,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "symptom_chain": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "temporal_progression": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "polite_formal": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "extreme_severity": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "very_mild": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "english_complex": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "heavy_code_switch": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "pharmacy_kiosk_realistic": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "negation_complex": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "double_misspelling": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "figurative_speech": {
+      "total": 5,
+      "exact": 5,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_neg_universal": {
+      "total": 7,
+      "exact": 6,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.8571428571428571
+    },
+    "adversarial_false_positive": {
+      "total": 10,
+      "exact": 9,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.9
+    },
+    "adversarial_sore_throat": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_neg_sore_throat": {
+      "total": 2,
+      "exact": 1,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.5
+    },
+    "adversarial_contrastive_new": {
+      "total": 7,
+      "exact": 7,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_multi_negation": {
+      "total": 2,
+      "exact": 2,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_mixed_complex": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_non_symptom": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_single_word": {
+      "total": 6,
+      "exact": 6,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_stress_all": {
+      "total": 1,
+      "exact": 1,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_bisaya_negation": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_reversed_order": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_conyo": {
+      "total": 2,
+      "exact": 2,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_sore_throat_combo": {
+      "total": 2,
+      "exact": 2,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_bisaya_sore_throat": {
+      "total": 1,
+      "exact": 1,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_gibberish": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_post_negation": {
+      "total": 1,
+      "exact": 1,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_long_realistic": {
+      "total": 1,
+      "exact": 1,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "adversarial_allergy_nasal": {
+      "total": 1,
+      "exact": 1,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_chest_pain": {
+      "total": 4,
+      "exact": 4,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_breathing": {
+      "total": 4,
+      "exact": 4,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_blood": {
+      "total": 4,
+      "exact": 3,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.75
+    },
+    "triage_consciousness": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_seizure": {
+      "total": 2,
+      "exact": 2,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_allergic_severe": {
+      "total": 2,
+      "exact": 1,
+      "partial": 0,
+      "failed": 1,
+      "avg_f1": 0.5
+    },
+    "triage_high_fever": {
+      "total": 2,
+      "exact": 2,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    },
+    "triage_mixed": {
+      "total": 3,
+      "exact": 3,
+      "partial": 0,
+      "failed": 0,
+      "avg_f1": 1.0
+    }
+  },
+  "overall_metrics": {
+    "accuracy": 0.983,
+    "partial_success_rate": 0.983,
+    "avg_f1_score": 0.983,
+    "avg_precision": 0.983,
+    "avg_recall": 0.983
+  }
+}

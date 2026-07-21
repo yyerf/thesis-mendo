@@ -43,11 +43,17 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* No decorative shadows on components */
+    .kiosk-step .num, .home-cta-icon, .age-display input, .patient-badge,
+    .idle-countdown, .followup-profile, .home-lang-switch,
+    .idle-shell, .lang-info-btn, .mic-btn, .why-ask-link .q-icon,
+    .help-btn-home, .help-btn-bar { box-shadow: none !important; }
+    .checkout-fab, .checkout-fab:hover, .auth-btn:hover { box-shadow: none !important; }
     html { font-size: 16px; -webkit-font-smoothing: antialiased; }
     body {
       font-family: var(--font); color: var(--zinc-800);
       background: var(--white); min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden; overflow-y: auto;
     }
 
     .hidden { display: none !important; }
@@ -238,96 +244,152 @@
       margin-top: 16px;
     }
 
-    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-
-    .idle-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1400;
-      background:
-        radial-gradient(circle at top, rgba(14, 165, 233, 0.18), transparent 35%),
-        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(240,249,255,0.98) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      animation: fadeIn 0.2s ease;
+    /* ═══ Headache Type Selector — Image Card Grid ═══ */
+    .headache-step-content {
+      flex: 1; display: flex; flex-direction: row;
+      align-items: flex-start; width: 100%;
+      gap: 16px; padding: 8px 16px;
+      min-height: 0;
     }
-    .idle-overlay.hidden { display: none !important; }
-    .idle-shell {
-      width: min(100%, 760px);
-      border-radius: 36px;
-      padding: 40px 34px;
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(125, 211, 252, 0.55);
-      box-shadow: 0 32px 80px rgba(14, 165, 233, 0.18);
-      text-align: center;
+    .headache-grid-col {
+      flex: 1; min-width: 0; overflow-y: auto;
+      max-height: 100%;
     }
-    .idle-brand {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: var(--blue-50);
-      border: 1px solid var(--blue-200);
-      color: var(--blue-700);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
+    .headache-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      width: 100%;
+      padding: 4px 0;
     }
-    .idle-title {
-      font-size: 42px;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      color: var(--zinc-900);
-      margin-bottom: 12px;
-    }
-    .idle-copy {
-      max-width: 560px;
-      margin: 0 auto;
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--zinc-600);
-    }
-    .idle-countdown {
-      margin: 28px auto 20px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
-      color: var(--white);
+    .headache-card {
+      overflow: hidden;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 24px 50px rgba(2, 132, 199, 0.28);
+      text-align: center;
+      user-select: none;
+      border: 1px solid var(--zinc-200);
+      border-radius: 10px;
+      background: var(--white);
+      transition: border-color .15s, box-shadow .15s;
     }
-    .idle-countdown strong {
-      font-size: 54px;
-      font-weight: 900;
-      line-height: 1;
+    .headache-card:hover {
+      border-color: var(--blue-300);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     }
-    .idle-countdown span {
-      font-size: 12px;
+    .headache-card.selected {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 2px var(--blue-200);
+    }
+    .headache-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .headache-card-label {
+      padding: 6px 4px 8px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      opacity: 0.84;
-      margin-top: 8px;
+      color: var(--zinc-700);
+      line-height: 1.3;
+      width: 100%;
+      border-top: 1px solid var(--zinc-100);
     }
-    .idle-actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
+    /* Detail sidebar */
+    .headache-detail-sidebar {
+      width: 280px; flex-shrink: 0;
+      position: sticky; top: 0;
+      align-self: flex-start;
+      display: none;
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
-    .idle-tap-note {
-      margin-top: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--zinc-500);
+    .headache-detail-sidebar.visible { display: block; }
+    .headache-detail-sidebar h4 {
+      font-size: 16px; font-weight: 800;
+      color: var(--zinc-800); margin-bottom: 8px;
+    }
+    .headache-detail-sidebar .desc {
+      font-size: 13px; color: var(--zinc-600);
+      line-height: 1.6; margin-bottom: 12px;
+    }
+    .headache-detail-sidebar .causes {
+      font-size: 12px; color: var(--zinc-500);
+      margin-bottom: 12px;
+    }
+    .headache-detail-sidebar .causes strong { color: var(--zinc-700); }
+
+    /* Detail sidebar handled by .headache-detail-sidebar above */
+
+    /* ═══ Shimmer loading (shadcn-style) ═══ */
+    @keyframes tw-shimmer {
+      0% { background-position: calc(-1 * var(--shimmer-spread, 140px)) 0; }
+      100% { background-position: calc(100% + var(--shimmer-spread, 140px)) 0; }
+    }
+    .shimmer {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: tw-shimmer var(--shimmer-duration, 2s) linear infinite;
+      background-image: linear-gradient(90deg,
+        var(--zinc-400) 0%,
+        var(--zinc-300) 40%,
+        var(--zinc-400) 80%
+      );
+      background-size: 200% 100%;
+      background-repeat: no-repeat;
+    }
+    .shimmer-primary {
+      background-image: linear-gradient(90deg,
+        var(--blue-500) 0%,
+        var(--blue-300) 40%,
+        var(--blue-500) 80%
+      );
+    }
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+    .idle-overlay {
+      position: fixed; inset: 0; z-index: 1400;
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; animation: fadeIn 0.15s ease;
+    }
+    .idle-overlay.hidden { display: none !important; }
+    .idle-box {
+      background: var(--white); border-radius: 16px;
+      width: 100%; max-width: 400px;
+      padding: 32px 28px 24px;
+      text-align: center;
+    }
+    .idle-box .idle-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 22px;
+    }
+    .idle-box h3 {
+      font-size: 20px; font-weight: 800; color: var(--zinc-800);
+      margin-bottom: 8px;
+    }
+    .idle-box p {
+      font-size: 14px; color: var(--zinc-500); line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .idle-box .idle-countdown {
+      font-size: 13px; font-weight: 700; color: var(--zinc-400);
+      margin-bottom: 18px;
+    }
+    .idle-box .idle-countdown strong {
+      font-size: 20px; color: var(--blue-500);
+    }
+    .idle-box .idle-actions {
+      display: flex; flex-direction: column; gap: 8px;
     }
 
     /* ── Disclaimer ticker ── */
@@ -352,7 +414,7 @@
     ═══════════════════════════════ */
     .kiosk {
       height: 100vh; display: flex; flex-direction: column;
-      background: var(--zinc-50); padding-top: 26px;
+      background: var(--white); padding-top: 26px;
     }
 
     /* Top bar */
@@ -418,6 +480,11 @@
       padding: 40px 24px;
       max-width: 700px; margin: 0 auto; width: 100%;
     }
+    #panel3.active .panel-content {
+      justify-content: flex-start;
+      max-width: 1040px;
+      overflow-y: auto;
+    }
 
     .panel-footer {
       padding: 16px 24px; background: var(--white);
@@ -436,18 +503,20 @@
       margin-bottom: 32px; line-height: 1.5;
     }
 
-    /* ═══ Buttons ═══ */
+    /* ═══ Buttons (shadcn-style) ═══ */
     .btn {
       display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; padding: 14px 28px;
-      border-radius: var(--radius); font-size: 16px; font-weight: 600;
+      gap: 8px; padding: 12px 24px;
+      border-radius: var(--radius); font-size: 15px; font-weight: 600;
       border: 1px solid var(--zinc-200); background: var(--white);
-      color: var(--zinc-700); cursor: pointer; transition: all 0.2s;
-      font-family: var(--font);
+      color: var(--zinc-700); cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      font-family: var(--font); user-select: none; line-height: 1;
     }
-    .btn:hover { background: var(--zinc-50); }
-    .btn:active { transform: scale(0.98); }
+    .btn:hover { background: var(--zinc-100); }
+    .btn:active { transform: none; }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn--sm { padding: 8px 16px; font-size: 13px; }
 
     .btn--primary {
       background: var(--blue-500); color: var(--white);
@@ -455,18 +524,19 @@
     }
     .btn--primary:hover { background: var(--blue-600); border-color: var(--blue-600); }
 
-    .btn--lg { padding: 16px 36px; font-size: 17px; }
+    .btn--lg { padding: 14px 30px; font-size: 16px; }
 
     .btn--outline {
       background: var(--white); color: var(--zinc-700);
-      border: 2px solid var(--zinc-200);
+      border: 1px solid var(--zinc-300);
     }
-    .btn--outline:hover { border-color: var(--zinc-400); }
+    .btn--outline:hover { background: var(--zinc-50); border-color: var(--zinc-400); }
 
     .btn--danger {
       background: var(--danger); color: var(--white);
       border-color: var(--danger);
     }
+    .btn--danger:hover { background: #dc2626; border-color: #dc2626; }
 
     /* ═══════════════════════════════
        STEP 1 — Age Input
@@ -504,24 +574,20 @@
     }
     .age-slider {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 6px; border-radius: 3px;
+      width: 100%; height: 4px; border-radius: 2px;
       background: var(--zinc-200); outline: none;
       cursor: pointer; display: block;
     }
     .age-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 28px; height: 28px;
+      -webkit-appearance: none; width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer; transition: transform 0.15s;
+      border: none; cursor: pointer; transition: transform 0.15s;
     }
-    .age-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .age-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .age-slider::-moz-range-thumb {
-      width: 28px; height: 28px;
+      width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer;
+      border: none; cursor: pointer;
     }
 
     /* "Why do we ask" link — sits near footer */
@@ -549,31 +615,32 @@
       position: relative; width: 100%;
     }
     .symptom-textarea {
-      width: 100%; min-height: 160px; padding: 20px 56px 20px 20px;
-      font-size: 17px; line-height: 1.6; font-family: var(--font);
-      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      width: 100%; min-height: 160px; padding: 18px 56px 18px 18px;
+      font-size: 16px; line-height: 1.7; font-family: var(--font);
+      border: 1px solid var(--zinc-200); border-radius: var(--radius);
       color: var(--zinc-800); background: var(--white);
-      resize: vertical; transition: border-color 0.2s;
+      resize: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
     .symptom-textarea:focus {
       outline: none; border-color: var(--blue-400);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
     }
     .symptom-textarea::placeholder { color: var(--zinc-300); }
 
     /* Mic button inside textarea */
     .mic-btn {
       position: absolute; right: 12px; bottom: 12px;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--zinc-100); border: 1px solid var(--zinc-200);
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--white); border: 1px solid var(--zinc-300);
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s;
     }
-    .mic-btn:hover { background: var(--blue-50); border-color: var(--blue-300); }
+    .mic-btn:hover { background: var(--zinc-50); border-color: var(--zinc-400); }
     .mic-btn.recording {
-      background: var(--danger-light); border-color: var(--danger);
+      background: #fef2f2; border-color: var(--danger);
       animation: pulse-mic 1.5s infinite;
     }
-    .mic-btn svg { width: 20px; height: 20px; }
+    .mic-btn svg { width: 16px; height: 16px; }
     .mic-btn.recording svg { stroke: var(--danger); }
 
     @keyframes pulse-mic {
@@ -586,28 +653,7 @@
       align-items: center;
       justify-content: flex-end;
     }
-    .typewriter-title {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 1.3em;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .typewriter-title::after {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 0.95em;
-      margin-left: 6px;
-      border-radius: 999px;
-      background: var(--blue-500);
-      animation: blink-caret 0.9s step-end infinite;
-    }
-    @keyframes blink-caret {
-      0%, 48% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
+
     .lang-info-btn {
       width: 22px; height: 22px; border-radius: 50%;
       border: 2px solid var(--zinc-300); background: none;
@@ -639,24 +685,20 @@
     }
     .pain-slider {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 6px; border-radius: 3px;
+      width: 100%; height: 4px; border-radius: 2px;
       background: var(--zinc-200); outline: none;
       cursor: pointer;
     }
     .pain-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 28px; height: 28px;
+      -webkit-appearance: none; width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer; transition: transform 0.15s;
+      border: none; cursor: pointer; transition: transform 0.15s;
     }
-    .pain-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .pain-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .pain-slider::-moz-range-thumb {
-      width: 28px; height: 28px;
+      width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer;
+      border: none; cursor: pointer;
     }
 
     .pain-labels {
@@ -791,7 +833,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin: 0 auto;
-      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.08);
+
     }
     .summary-card {
       width: 100%;
@@ -1476,16 +1518,260 @@
       to { opacity: 1; transform: translateX(0); }
     }
 
+    /* ═══════════════════════════════
+       CHECKOUT FLOW
+    ═══════════════════════════════ */
+    .rec-buy-btn i { font-size: 11px; }
+
+    .checkout-fab {
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      z-index: 900;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(2, 132, 199, 0.35);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+    }
+    .checkout-fab:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(2, 132, 199, 0.45); }
+    .checkout-fab .badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--white); color: var(--blue-600);
+      font-size: 12px; font-weight: 800;
+    }
+
+    /* Checkout Modal */
+    .checkout-overlay {
+      position: fixed; inset: 0; z-index: 1500;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .checkout-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .checkout-modal {
+      width: 95%; max-width: 520px;
+      max-height: 90vh;
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 32px 72px rgba(0,0,0,0.2);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+    .checkout-overlay.active .checkout-modal { transform: translateY(0); }
+
+    .checkout-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--zinc-200);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .checkout-header h3 {
+      font-size: 18px; font-weight: 800; color: var(--zinc-800);
+    }
+    .checkout-close {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--zinc-200); background: var(--white);
+      font-size: 18px; color: var(--zinc-500);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .checkout-close:hover { background: var(--zinc-100); color: var(--zinc-800); }
+
+    .checkout-body {
+      flex: 1; overflow-y: auto; padding: 20px 24px;
+    }
+
+    .checkout-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--zinc-200);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* Steps indicator */
+    .checkout-steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-bottom: 20px;
+    }
+    .checkout-step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--zinc-200);
+      transition: all 0.2s;
+    }
+    .checkout-step-dot.active { background: var(--blue-500); width: 12px; height: 12px; }
+    .checkout-step-dot.done { background: var(--success); }
+    .checkout-step-line {
+      width: 24px; height: 2px; background: var(--zinc-200); border-radius: 2px;
+    }
+
+    /* Cart items in checkout */
+    .checkout-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border: 1px solid var(--zinc-200);
+      border-radius: 12px; margin-bottom: 8px;
+      background: var(--white);
+    }
+    .checkout-item-info { flex: 1; min-width: 0; }
+    .checkout-item-brand { font-size: 14px; font-weight: 700; color: var(--zinc-800); }
+    .checkout-item-generic { font-size: 11px; color: var(--zinc-500); }
+    .checkout-item-price { font-size: 13px; font-weight: 600; color: var(--blue-600); margin-top: 2px; }
+    .checkout-item-qty {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .checkout-qty-btn {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: 1px solid var(--zinc-200); background: var(--white);
+      font-size: 16px; font-weight: 700; color: var(--zinc-600);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .checkout-qty-btn:hover { background: var(--zinc-100); }
+    .checkout-qty-val {
+      width: 28px; text-align: center; font-size: 14px; font-weight: 700; color: var(--zinc-800);
+    }
+    .checkout-item-remove {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: none; background: var(--danger-light);
+      color: var(--danger); font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .checkout-item-remove:hover { background: var(--danger); color: var(--white); }
+
+    .checkout-total {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-radius: 12px;
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      margin-top: 12px;
+    }
+    .checkout-total .label { font-size: 14px; font-weight: 700; color: var(--zinc-600); }
+    .checkout-total .amount { font-size: 20px; font-weight: 900; color: var(--blue-600); }
+
+    .checkout-limit-note {
+      font-size: 11px; color: var(--zinc-400); margin-top: 8px; text-align: center;
+    }
+
+    /* Fingerprint auth */
+    .auth-section { text-align: center; padding: 20px 0; }
+    .auth-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--blue-50); border: 2px solid var(--blue-200);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 36px; color: var(--blue-500);
+      transition: all 0.3s;
+    }
+    .auth-icon.authenticated {
+      background: var(--success-light); border-color: var(--success);
+      color: var(--success);
+    }
+    .auth-title { font-size: 20px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
+    .auth-subtitle { font-size: 14px; color: var(--zinc-500); margin-bottom: 20px; line-height: 1.6; }
+    .btn--success {
+      background: var(--success); color: var(--white); border-color: var(--success);
+    }
+    .btn--success:hover { background: #16a34a; border-color: #16a34a; }
+    .auth-status {
+      margin-top: 14px; font-size: 14px; font-weight: 600;
+      display: none;
+    }
+    .auth-status.show { display: block; }
+    .auth-status.ok { color: var(--success); }
+    .auth-status.fail { color: var(--danger); }
+
+    /* Payment method */
+    .payment-section { padding: 10px 0; }
+    .payment-title { font-size: 18px; font-weight: 800; color: var(--zinc-800); text-align: center; margin-bottom: 16px; }
+    .payment-options { display: flex; flex-direction: column; gap: 10px; }
+    .payment-option {
+      padding: 18px; border: 2px solid var(--zinc-200);
+      border-radius: 14px; background: var(--white);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 14px;
+      position: relative;
+    }
+    .payment-option:hover { border-color: var(--blue-300); }
+    .payment-option.selected { border-color: var(--blue-500); background: var(--blue-50); }
+    .payment-option.disabled {
+      opacity: 0.45; cursor: not-allowed;
+      pointer-events: none;
+    }
+    .payment-option .po-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .payment-option .po-icon.cashless { background: var(--blue-100); color: var(--blue-600); }
+    .payment-option .po-icon.cash { background: var(--zinc-100); color: var(--zinc-500); }
+    .payment-option .po-info { flex: 1; }
+    .payment-option .po-label { font-size: 15px; font-weight: 700; color: var(--zinc-800); }
+    .payment-option .po-desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .payment-option .coming-soon-badge {
+      position: absolute; top: 10px; right: 10px;
+      padding: 3px 10px; border-radius: 999px;
+      background: var(--warning-light); color: var(--warning);
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Processing */
+    .processing-section { text-align: center; padding: 40px 0; }
+    .processing-spinner {
+      width: 56px; height: 56px; margin: 0 auto 16px;
+      border: 4px solid var(--zinc-200); border-top-color: var(--blue-500);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    .processing-text { font-size: 16px; font-weight: 700; color: var(--zinc-700); }
+    .processing-sub { font-size: 13px; color: var(--zinc-400); margin-top: 6px; }
+
+    /* Success */
+    .success-section { text-align: center; padding: 20px 0; }
+    .success-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--success-light); border: 2px solid var(--success);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 32px; color: var(--success);
+    }
+    .success-title { font-size: 22px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
+    .success-ref { font-size: 14px; color: var(--zinc-500); margin-bottom: 16px; }
+    .success-items {
+      background: var(--zinc-50); border: 1px solid var(--zinc-200);
+      border-radius: 12px; padding: 14px; text-align: left;
+      margin-bottom: 16px;
+    }
+    .success-item-row {
+      display: flex; justify-content: space-between;
+      padding: 6px 0; font-size: 13px; color: var(--zinc-700);
+    }
+    .success-item-row .brand { font-weight: 600; }
+    .success-total-row {
+      display: flex; justify-content: space-between;
+      padding: 10px 0 0; margin-top: 8px;
+      border-top: 1px solid var(--zinc-200);
+      font-size: 15px; font-weight: 800; color: var(--zinc-800);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       .section-title { font-size: 26px; }
       .pain-value-display { font-size: 56px; }
       .age-display input { font-size: 32px; width: 120px; }
-      .idle-shell { padding: 32px 20px; border-radius: 28px; }
-      .idle-title { font-size: 32px; }
-      .idle-copy { font-size: 15px; }
-      .idle-countdown { width: 126px; height: 126px; }
-      .idle-countdown strong { font-size: 44px; }
+      .idle-box { padding: 28px 20px; }
+      .idle-box h3 { font-size: 18px; }
       .clarify-page-title { font-size: 24px; }
       .clarify-page-question { font-size: 26px; line-height: 1.35; }
       .clarify-buttons {
@@ -1501,7 +1787,6 @@
       .summary-card h2 { font-size: 28px; }
       .summary-card.summary-card--compact h2 { font-size: 20px; }
       .summary-metrics { grid-template-columns: 1fr; }
-      .typewriter-title { white-space: normal; }
       .clarify-language-bar {
         flex-direction: column;
         align-items: stretch;
@@ -1558,7 +1843,9 @@
      SCREEN 0 — Home / Welcome
 ═══════════════════════════════ -->
 <div class="screen-home" id="screenHome">
-  <a href="{{ url_for('admin.dashboard') }}" class="admin-link">Admin Panel</a>
+  <div style="position:fixed; top:46px; left:20px; z-index:600; display:flex; gap:8px;">
+    <a href="{{ url_for('admin.dashboard') }}" class="admin-link" style="position:static">Admin Panel</a>
+  </div>
   <div class="home-top-right">
     <div class="home-lang-switch" onclick="event.stopPropagation()">
       <button class="home-lang-btn" data-home-lang="en" onclick="setLanguage('en', event)">EN</button>
@@ -1653,7 +1940,6 @@
 <div class="modal-overlay hidden" id="legalNoticeModal" onclick="closeModal('legalNoticeModal', event)">
   <div class="modal-box legal-notice-box" onclick="event.stopPropagation()">
     <h3>Legal Notice & Warning</h3>
-    <div class="legal-note-tag">Philippines</div>
     <p>
       In compliance with the <strong>Price Act (RA 7581, as amended)</strong>,
       hoarding and illegal stockpiling of medicines are prohibited.
@@ -1673,18 +1959,16 @@
 </div>
 
 <div class="idle-overlay hidden" id="idleModal" onclick="resumeFromIdle(event)">
-  <div class="idle-shell" onclick="event.stopPropagation()">
-    <div class="idle-brand">Mendo Session</div>
-    <div class="idle-title">Are you still there?</div>
-    <p class="idle-copy">Your consultation is about to return to the welcome screen because there has been no activity.</p>
+  <div class="idle-box" onclick="event.stopPropagation()">
+    <div class="idle-icon">👋</div>
+    <h3>Are you still there?</h3>
+    <p>Your session will return to the welcome screen due to inactivity.</p>
     <div class="idle-countdown">
-      <strong id="idleCountdown">10</strong>
-      <span>Seconds Left</span>
+      <strong id="idleCountdown">10</strong> seconds left
     </div>
     <div class="idle-actions">
-      <button class="btn btn--primary btn--lg" onclick="resumeFromIdle(event)">Continue Session</button>
+      <button class="btn btn--primary" onclick="resumeFromIdle(event)" style="width:100%;">Continue Session</button>
     </div>
-    <div class="idle-tap-note">Tap anywhere to keep using Mendo</div>
   </div>
 </div>
 
@@ -1747,7 +2031,7 @@
     <!-- ═══ STEP 2: Symptoms ═══ -->
     <div class="kiosk-panel" id="panel2">
       <div class="panel-content">
-        <div class="section-title"><span class="typewriter-title" id="symptomTypewriterText">What are you feeling?</span></div>
+        <div class="section-title" id="symptomTitle">What are you feeling?</div>
         <div style="height: 28px;"></div>
 
         <div class="symptom-input-area">
@@ -1781,15 +2065,13 @@
     <!-- ═══ STEP 3: Pain Scale (per-symptom) ═══ -->
     <div class="kiosk-panel" id="panel3">
       <div class="panel-content">
-        <!-- Pre-detect loading spinner (shown while detecting symptoms) -->
+        <!-- Pre-detect loading shimmer -->
         <div id="preDetectLoading" class="analysis-loading hidden">
-          <div class="spinner"></div>
-          <p>Detecting symptoms...</p>
-          <div class="loading-progress">
-            <div class="loading-progress-bar"><div class="loading-progress-fill" id="preDetectProgressFill"></div></div>
-            <div class="loading-percent" id="preDetectPercent">0%</div>
-          </div>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Detecting symptoms...</p>
         </div>
+
+        <!-- Headache Location Visualizer (shown if HEADACHE detected) -->
+        <div id="headacheLocationSelector" class="hidden" style="width:100%;"></div>
 
         <!-- Per-symptom severity container (dynamically rendered) -->
         <div id="perSymptomSeverity"></div>
@@ -1809,6 +2091,10 @@
       </div>
       <div class="panel-footer">
         <button class="btn" onclick="goToStep(2)">Back</button>
+        <button class="btn btn--primary btn--lg hidden" id="confirmHeadLocFooter" onclick="confirmHeadacheType()">
+          Confirm
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
         <button class="btn btn--primary btn--lg hidden" id="analyzeBtn" onclick="runAnalysis()">
           Analyze Symptoms
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1819,15 +2105,10 @@
     <!-- ═══ STEP 4: Analysis + Recommendations ═══ -->
     <div class="kiosk-panel" id="panel4">
       <div class="kiosk-body" style="overflow-y:auto;">
-        <!-- Loading -->
+        <!-- Loading shimmer -->
         <div class="analysis-loading" id="analysisLoading">
-          <div class="spinner"></div>
-          <p style="font-weight:600;">Analyzing your symptoms...</p>
-          <p style="font-size:13px;color:var(--zinc-400);">Running hybrid NLP pipeline</p>
-          <div class="loading-progress">
-            <div class="loading-progress-bar"><div class="loading-progress-fill" id="analysisProgressFill"></div></div>
-            <div class="loading-percent" id="analysisPercent">0%</div>
-          </div>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Analyzing your symptoms...</p>
+          <p class="shimmer" style="font-size:13px;margin-top:8px;">Running hybrid NLP pipeline</p>
         </div>
 
         <!-- Results -->
@@ -1849,6 +2130,29 @@
   </div>
 </div>
 
+<!-- ═══ Checkout FAB ═══ -->
+<button class="checkout-fab" id="checkoutFab" onclick="openCheckoutModal()">
+  <i class="fa-solid fa-bag-shopping"></i>
+  Checkout
+  <span class="badge" id="fabBadge">0</span>
+</button>
+
+<!-- ═══ Checkout Modal ═══ -->
+<div class="checkout-overlay" id="checkoutOverlay" onclick="closeCheckoutModal(event)">
+  <div class="checkout-modal" onclick="event.stopPropagation()">
+    <div class="checkout-header">
+      <h3 id="checkoutTitle">Your Cart</h3>
+      <button class="checkout-close" onclick="closeCheckoutModal()">&times;</button>
+    </div>
+    <div class="checkout-body" id="checkoutBody">
+      <!-- Dynamically rendered -->
+    </div>
+    <div class="checkout-footer" id="checkoutFooter">
+      <!-- Dynamically rendered -->
+    </div>
+  </div>
+</div>
+
 <div id="toastContainer" class="toast-container"></div>
 
 <script>
@@ -1865,8 +2169,6 @@
   let analysisData = null;
   let showingRecs = false;
   let selectedLanguage = 'en';
-  let symptomTypewriterTimer = null;
-  let symptomTypewriterRunId = 0;
   let idleWarningTimer = null;
   let idleResetTimer = null;
   let idleCountdownTimer = null;
@@ -1878,6 +2180,11 @@
   let durationContextOverride = null;
   let durationClarificationData = {};
   let durationBySymptom = {};
+
+  // ── Headache location state ──
+  let headacheLocations = [];       // cached from API
+  let selectedHeadacheLocation = null; // key like "occipital"
+  let headacheLocationConfirmed = false;
 
   // ── DOM ──
   const screenHome = document.getElementById('screenHome');
@@ -1891,7 +2198,7 @@
   const painValue = document.getElementById('painValue');
   const painLabel = document.getElementById('painLabel');
   const severityWarning = document.getElementById('severityWarning');
-  const symptomTypewriterText = document.getElementById('symptomTypewriterText');
+  const symptomTitleEl = document.getElementById('symptomTitle');
   const idleModal = document.getElementById('idleModal');
   const idleCountdown = document.getElementById('idleCountdown');
 
@@ -2273,8 +2580,8 @@
     if (ageTitleText) {
       ageTitleText.textContent = t('ageTitle');
     }
-    if (symptomTypewriterText) {
-      symptomTypewriterText.textContent = t('symptomTitle');
+    if (symptomTitleEl) {
+      symptomTitleEl.textContent = t('symptomTitle');
     }
     symptomInput.placeholder = t('symptomPlaceholder');
     document.querySelectorAll('[data-home-lang]').forEach(btn => {
@@ -2284,56 +2591,6 @@
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
     updatePain();
-  }
-
-  function startSymptomTitleRotation() {
-    if (!symptomTypewriterText) return;
-
-    symptomTypewriterRunId += 1;
-    const runId = symptomTypewriterRunId;
-    if (symptomTypewriterTimer) {
-      clearTimeout(symptomTypewriterTimer);
-      symptomTypewriterTimer = null;
-    }
-
-    const fullText = t('symptomTitle');
-    let charIndex = 0;
-    let deleting = false;
-
-    function schedule(nextTick, delay) {
-      symptomTypewriterTimer = setTimeout(() => {
-        if (runId !== symptomTypewriterRunId) return;
-        nextTick();
-      }, delay);
-    }
-
-    function tick() {
-      if (runId !== symptomTypewriterRunId) return;
-
-      if (!deleting) {
-        charIndex += 1;
-        symptomTypewriterText.textContent = fullText.slice(0, charIndex);
-        if (charIndex === fullText.length) {
-          deleting = true;
-          schedule(tick, 5000);
-          return;
-        }
-        schedule(tick, 65);
-        return;
-      }
-
-      charIndex -= 1;
-      symptomTypewriterText.textContent = fullText.slice(0, Math.max(charIndex, 0));
-      if (charIndex === 0) {
-        deleting = false;
-        schedule(tick, 65);
-        return;
-      }
-      schedule(tick, 35);
-    }
-
-    symptomTypewriterText.textContent = '';
-    tick();
   }
 
   function clearIdleTimers() {
@@ -2517,6 +2774,93 @@
     return `You are <span class="age-highlight">${ageText}</span> years old and currently experiencing <span class="condition-highlight">${listText}</span>.`;
   }
 
+  // ═══════════════════════════════════════
+  //  HEADACHE TYPE SELECTOR — Image Card Grid
+  // ═══════════════════════════════════════
+
+  async function renderHeadacheLocationSelector() {
+    const container = document.getElementById('headacheLocationSelector');
+    document.getElementById('perSymptomSeverity').innerHTML = '';
+    document.getElementById('noSymptomsStep3').classList.add('hidden');
+    document.getElementById('analyzeBtn').classList.add('hidden');
+
+    let locs = [];
+    try {
+      const res = await fetch('/consult/api/headache-locations');
+      locs = (await res.json()).locations || [];
+    } catch { locs = []; }
+    headacheLocations = locs;
+    selectedHeadacheLocation = null;
+
+    const lang = selectedLanguage || 'en';
+    const ll = (o) => o[lang] || o.en || o;
+
+    document.getElementById('confirmHeadLocFooter').classList.remove('hidden');
+    document.getElementById('confirmHeadLocFooter').disabled = true;
+
+    const cardsHtml = locs.map(loc => {
+      const label = ll({en:loc.label_en, tl:loc.label_tl, ceb:loc.label_ceb});
+      const imgUrl = "/static/images/headache/" + encodeURI(loc.image);
+      return `<div class="headache-card" data-key="${loc.key}" onclick="selectHeadacheType('${loc.key}')">
+        <img class="headache-card-img" src="${imgUrl}" alt="${label}" loading="lazy" onerror="this.style.display='none'">
+        <div class="headache-card-label">${label}</div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="headache-step-content">
+        <div class="headache-grid-col">
+          <div class="section-title" style="font-size:22px;margin-bottom:10px;text-align:left;">${ll({en:'What type of headache do you have?', tl:'Anong uri ng sakit ng ulo ang nararamdaman mo?', ceb:'Unsa nga klase sa sakit sa ulo ang imong gibati?'})}</div>
+          <div class="headache-grid" id="headacheGrid">${cardsHtml}</div>
+        </div>
+        <div class="headache-detail-sidebar" id="headacheDetailSidebar"></div>
+      </div>`;
+    container.classList.remove('hidden');
+  }
+
+  window.selectHeadacheType = function(key) {
+    selectedHeadacheLocation = key;
+    document.querySelectorAll('.headache-card').forEach(el => {
+      el.classList.toggle('selected', el.dataset.key === key);
+    });
+    document.getElementById('confirmHeadLocFooter').disabled = false;
+
+    const lang = selectedLanguage || 'en';
+    const ll = (o) => o[lang] || o.en || o;
+    const loc = headacheLocations.find(l => l.key === key);
+    if (!loc) return;
+
+    const label = ll({en:loc.label_en, tl:loc.label_tl, ceb:loc.label_ceb});
+    const desc = ll({en:loc.desc_en, tl:loc.desc_tl, ceb:loc.desc_ceb});
+    const causes = ll({en:loc.common_causes_en, tl:loc.common_causes_tl, ceb:loc.common_causes_ceb});
+    const causesList = Array.isArray(causes) ? causes.join(', ') : (causes || '');
+
+    const sidebar = document.getElementById('headacheDetailSidebar');
+    sidebar.classList.add('visible');
+    sidebar.innerHTML = `
+      <h4>${label}</h4>
+      <div class="desc">${desc}</div>
+      ${causesList ? `<div class="causes"><strong>Common causes:</strong> ${causesList}</div>` : ''}
+    `;
+  };
+
+  window.confirmHeadacheType = function() {
+    proceedAfterHeadache();
+  };
+
+  window.proceedAfterHeadache = function() {
+    const ov = document.getElementById('headTriageOverlay');
+    if (ov) ov.remove();
+    headacheLocationConfirmed = true;
+    const c = document.getElementById('headacheLocationSelector');
+    c.classList.add('hidden'); c.innerHTML = '';
+    document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+    severityMap = {};
+    severityQueue = [...preDetectedSymptoms];
+    severityCompleted = [];
+    askNextSeverity();
+  };
+
   function getSpeechRecognitionLocale(lang) {
     if (lang === 'tl') return 'fil-PH';
     if (lang === 'ceb') return 'ceb-PH';
@@ -2626,7 +2970,11 @@
     }
 
     if (n === 2) {
-      startSymptomTitleRotation();
+      // Reset headache location state when going back to symptoms
+      headacheLocationConfirmed = false;
+      selectedHeadacheLocation = null;
+      const hlc = document.getElementById('headacheLocationSelector');
+      if (hlc) { hlc.classList.add('hidden'); hlc.innerHTML = ''; }
     }
 
     startIdleTracking();
@@ -2731,29 +3079,11 @@
     return names[lang] || names.en || symptom;
   }
 
-  // ── Loading-progress simulation ──
-  let _progressTimers = {};
   function startLoadingProgress(prefix) {
-    const fill = document.getElementById(prefix + 'ProgressFill');
-    const pct  = document.getElementById(prefix + 'Percent');
-    if (!fill || !pct) return;
-    let value = 0;
-    fill.style.width = '0%';
-    pct.textContent = '0%';
-    _progressTimers[prefix] = setInterval(() => {
-      const remaining = 90 - value;
-      value += Math.max(0.5, remaining * 0.06);
-      if (value > 90) value = 90;
-      fill.style.width = Math.round(value) + '%';
-      pct.textContent = Math.round(value) + '%';
-    }, 120);
+    // Shimmer handles the loading state; no progress bar needed
   }
   function completeLoadingProgress(prefix) {
-    if (_progressTimers[prefix]) { clearInterval(_progressTimers[prefix]); delete _progressTimers[prefix]; }
-    const fill = document.getElementById(prefix + 'ProgressFill');
-    const pct  = document.getElementById(prefix + 'Percent');
-    if (fill) fill.style.width = '100%';
-    if (pct) pct.textContent = '100%';
+    // Shimmer handles the loading state
   }
 
   // Override Step 2 Continue button to call pre-detect first
@@ -2805,6 +3135,15 @@
 
       if (preDetectedSymptoms.length === 0) {
         document.getElementById('noSymptomsStep3').classList.remove('hidden');
+        return;
+      }
+
+      // ── HEADACHE LOCATION CHECK ──
+      // If HEADACHE is among the detected symptoms, show the location
+      // visualizer first before proceeding to severity.
+      if (preDetectedSymptoms.includes('HEADACHE') && !headacheLocationConfirmed) {
+        selectedHeadacheLocation = null;
+        renderHeadacheLocationSelector();
         return;
       }
 
@@ -3005,6 +3344,15 @@
       } else {
         payload.severity = severity;
       }
+      // Include headache location if selected
+      if (selectedHeadacheLocation) {
+        payload.headache_location = selectedHeadacheLocation;
+        // Also send the full location object for backend assessment
+        const loc = headacheLocations.find(l => l.key === selectedHeadacheLocation);
+        if (loc) {
+          payload.headache_danger = loc.danger;
+        }
+      }
 
       const res = await fetch('/consult/api/analyze', {
         method: 'POST',
@@ -3123,7 +3471,8 @@
 
     const referralActive = referral && referral.level === 'high';
 
-    let html = renderSummaryCard(symptoms, referralActive ? { cta: false } : {});
+    const opts = referralActive ? { cta: false } : {};
+    let html = renderSummaryCard(symptoms, opts);
 
     container.innerHTML = html;
 
@@ -3439,6 +3788,10 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Duration check failed');
 
+      if (data.warning) {
+        showToast(data.warning, 'warning');
+      }
+
       if (!data.safe) {
         // Duration exceeded — show referral banner
         renderDurationReferral(data);
@@ -3670,6 +4023,7 @@
     }
 
     function renderRecommendationCard(rec, rank) {
+      const canBuy = rec.in_stock === true && rec.stock_quantity > 0;
       return `
         <div class="rec-card ${rec.in_stock === false ? 'out-of-stock' : ''}">
           <div class="rec-rank">${rank}</div>
@@ -3689,6 +4043,7 @@
               : rec.in_stock === false
                 ? `<div class="avail out">\u2717 Out of Stock</div>`
                 : ''}
+            ${canBuy ? `<button class="btn btn--primary btn--sm" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> Buy</button>` : ''}
           </div>
         </div>`;
     }
@@ -3815,9 +4170,16 @@
         <strong>${t('disclaimerTitle')}</strong> ${t('disclaimerBody')}
         ${t('disclaimerAge')} ${patientAge}.
         ${severity >= 8 ? `<br><strong style="color:var(--danger);">${t('disclaimerHighSev')}</strong>` : ''}
+      </div>
+      <div class="results-actions results-actions--center" style="margin-top:14px;">
+        <button class="btn btn--primary btn--lg" onclick="openCheckoutModal()" id="proceedCheckoutBtn" style="display:none;">
+          <i class="fa-solid fa-bag-shopping"></i>&nbsp; Proceed to Checkout
+          <span id="checkoutBtnCount" style="margin-left:6px;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:999px;font-size:12px;">0</span>
+        </button>
       </div>`;
 
     container.innerHTML = html;
+    updateCheckoutFab();
   }
 
   function formatSymptom(s) {
@@ -3945,8 +4307,485 @@
     return map[c] || c.replace(/_/g, ' ').toLowerCase().replace(/(^|\s)\S/g, ch => ch.toUpperCase());
   }
 
+  // ══════════════════════════════
+  //  CHECKOUT FLOW
+  // ══════════════════════════════
+  let kioskCart = [];           // [{brand, quantity, inventory_id, unit_price, generic_name}]
+  let checkoutStep = 1;        // 1=Cart, 2=Auth, 3=Payment, 4=Processing, 5=Success
+  let kioskAuthenticated = false;
+  let currentInvoiceId = null;
+  let paymentCheckInterval = null;
+  let paymentPollFailures = 0;
+  const KIOSK_MAX_QTY = 3;
+  const KIOSK_MAX_ITEMS = 5;
+
+  // ── Add to kiosk cart (from buy button on rec card) ──
+  window.addToKioskCart = async function(brand, evt) {
+    if (evt) { evt.stopPropagation(); evt.preventDefault(); }
+    try {
+      const res = await fetch('/checkout/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ brand, quantity: 1 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Failed to add', 'error');
+        return;
+      }
+      showToast(data.message, 'success');
+      await refreshKioskCart();
+    } catch (err) {
+      showToast('Failed to add to cart', 'error');
+    }
+  };
+
+  async function refreshKioskCart() {
+    try {
+      const res = await fetch('/checkout/api/cart');
+      const data = await res.json();
+      kioskCart = data.items || [];
+      updateCheckoutFab();
+    } catch (err) { /* ignore */ }
+  }
+
+  function updateCheckoutFab() {
+    const fab = document.getElementById('checkoutFab');
+    const badge = document.getElementById('fabBadge');
+    const proceedBtn = document.getElementById('proceedCheckoutBtn');
+    const btnCount = document.getElementById('checkoutBtnCount');
+    const count = kioskCart.reduce((s, c) => s + c.quantity, 0);
+    if (count > 0) {
+      fab.style.display = 'inline-flex';
+      badge.textContent = count;
+      if (proceedBtn) { proceedBtn.style.display = 'inline-flex'; btnCount.textContent = count; }
+    } else {
+      fab.style.display = 'none';
+      if (proceedBtn) { proceedBtn.style.display = 'none'; }
+    }
+  }
+
+  // ── Checkout Modal ──
+  window.openCheckoutModal = async function() {
+    checkoutStep = 1;
+    kioskAuthenticated = false;
+    currentInvoiceId = null;
+    paymentPollFailures = 0;
+    await refreshKioskCart();
+    renderCheckoutStep();
+    document.getElementById('checkoutOverlay').classList.add('active');
+  };
+
+  window.closeCheckoutModal = function(evt) {
+    if (evt && evt.target !== document.getElementById('checkoutOverlay')) return;
+    if (paymentCheckInterval) { clearInterval(paymentCheckInterval); paymentCheckInterval = null; }
+    document.getElementById('checkoutOverlay').classList.remove('active');
+    if (checkoutStep === 5) {
+      refreshKioskCart();
+    }
+  };
+
+  function renderCheckoutStep() {
+    const body = document.getElementById('checkoutBody');
+    const footer = document.getElementById('checkoutFooter');
+    const title = document.getElementById('checkoutTitle');
+
+    const stepsHtml = `
+      <div class="checkout-steps">
+        <div class="checkout-step-dot ${checkoutStep >= 1 ? (checkoutStep > 1 ? 'done' : 'active') : ''}"></div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step-dot ${checkoutStep >= 2 ? (checkoutStep > 2 ? 'done' : 'active') : ''}"></div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step-dot ${checkoutStep >= 3 ? (checkoutStep > 3 ? 'done' : 'active') : ''}"></div>
+      </div>`;
+
+    if (checkoutStep === 1) {
+      title.textContent = 'Your Cart';
+      const total = kioskCart.reduce((s, c) => s + c.subtotal, 0);
+      let itemsHtml = '';
+      if (!kioskCart.length) {
+        itemsHtml = '<p style="text-align:center;color:var(--zinc-400);padding:30px 0;">Your cart is empty. Tap <strong>Buy</strong> on a medicine to add it.</p>';
+      } else {
+        kioskCart.forEach(ci => {
+          itemsHtml += `
+            <div class="checkout-item">
+              <div class="checkout-item-info">
+                <div class="checkout-item-brand">${escHtml(ci.brand)}</div>
+                <div class="checkout-item-generic">${escHtml(ci.generic_name)}</div>
+                <div class="checkout-item-price">\u20B1${ci.unit_price.toFixed(2)} \u00D7 ${ci.quantity} = \u20B1${ci.subtotal.toFixed(2)}</div>
+              </div>
+              <div class="checkout-item-qty">
+                <button class="checkout-qty-btn" onclick="updateKioskQty(${ci.inventory_id}, ${ci.quantity - 1})" ${ci.quantity <= 1 ? 'disabled' : ''}>&#8722;</button>
+                <span class="checkout-qty-val">${ci.quantity}</span>
+                <button class="checkout-qty-btn" onclick="updateKioskQty(${ci.inventory_id}, ${ci.quantity + 1})" ${ci.quantity >= KIOSK_MAX_QTY ? 'disabled' : ''}>+</button>
+              </div>
+              <button class="checkout-item-remove" onclick="removeKioskItem(${ci.inventory_id})" title="Remove">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>`;
+        });
+      }
+
+      body.innerHTML = `
+        ${stepsHtml}
+        ${itemsHtml}
+        ${kioskCart.length ? `
+          <div class="checkout-total">
+            <span class="label">Total</span>
+            <span class="amount">\u20B1${total.toFixed(2)}</span>
+          </div>
+          <div class="checkout-limit-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Max ${KIOSK_MAX_QTY} units per medicine &middot; Max ${KIOSK_MAX_ITEMS} different medicines
+          </div>` : ''}`;
+
+      footer.innerHTML = kioskCart.length ? `
+        <button class="btn" onclick="closeCheckoutModal()">Continue Shopping</button>
+        <button class="btn btn--primary" onclick="goToCheckoutStep(2)">
+          Authenticate <i class="fa-solid fa-arrow-right"></i>
+        </button>` : `
+        <button class="btn" onclick="closeCheckoutModal()">Close</button>`;
+
+    } else if (checkoutStep === 2) {
+      title.textContent = 'Identity Verification';
+      body.innerHTML = `
+        ${stepsHtml}
+        <div class="auth-section">
+          <div class="auth-icon" id="authIcon">
+            <i class="fa-solid fa-fingerprint"></i>
+          </div>
+          <div class="auth-title">Fingerprint Scan</div>
+          <div class="auth-subtitle">
+            Please place your finger on the AS608 sensor to verify your identity,<br>
+            or tap the button below to authenticate.
+          </div>
+          <button class="btn btn--primary" id="authBtn" onclick="doFingerprintAuth()">
+            <i class="fa-solid fa-fingerprint"></i> Authenticate
+          </button>
+          <div class="auth-status" id="authStatus"></div>
+        </div>`;
+
+      footer.innerHTML = `
+        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn--primary" id="toPaymentBtn" onclick="goToCheckoutStep(3)" disabled>
+          Choose Payment <i class="fa-solid fa-arrow-right"></i>
+        </button>`;
+
+    } else if (checkoutStep === 3) {
+      title.textContent = 'Payment Method';
+      const total = kioskCart.reduce((s, c) => s + c.subtotal, 0);
+      body.innerHTML = `
+        ${stepsHtml}
+        <div class="payment-section">
+          <div class="checkout-total" style="margin-bottom:16px;">
+            <span class="label">Amount to Pay</span>
+            <span class="amount">\u20B1${total.toFixed(2)}</span>
+          </div>
+          <div class="payment-title">Select Payment Method</div>
+          <div class="payment-options">
+            <div class="payment-option selected" id="payOptCashless" onclick="selectPayment('cashless')">
+              <div class="po-icon cashless"><i class="fa-solid fa-qrcode"></i></div>
+              <div class="po-info">
+                <div class="po-label">Cashless Payment</div>
+                <div class="po-desc">Pay via GCash, Maya, bank transfer &amp; more (powered by Xendit)</div>
+              </div>
+            </div>
+            <div class="payment-option disabled" id="payOptCash">
+              <div class="po-icon cash"><i class="fa-solid fa-money-bill-wave"></i></div>
+              <div class="po-info">
+                <div class="po-label">Cash</div>
+                <div class="po-desc">Insert cash into the machine</div>
+              </div>
+              <div class="coming-soon-badge">Coming Soon</div>
+            </div>
+          </div>
+        </div>`;
+
+      footer.innerHTML = `
+        <button class="btn" onclick="goToCheckoutStep(2)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn--primary" onclick="processPayment()">
+          <i class="fa-solid fa-lock"></i> Pay Now
+        </button>`;
+
+    } else if (checkoutStep === 4) {
+      title.textContent = 'Processing Payment';
+      body.innerHTML = `
+        <div class="processing-section">
+          <div class="processing-spinner"></div>
+          <div class="processing-text">Redirecting to payment...</div>
+          <div class="processing-sub" id="paymentProcessingSub">Complete your payment in the Xendit window.<br>This page will update automatically.</div>
+        </div>`;
+      footer.innerHTML = `
+        <button class="btn" onclick="cancelPayment()">Cancel</button>
+        <button class="btn btn--primary" onclick="verifyCurrentPayment(true)">I Already Paid</button>`;
+
+    } else if (checkoutStep === 5) {
+      title.textContent = 'Purchase Complete!';
+      const orderData = window._lastOrderResult || {};
+      const items = orderData.items || [];
+      let itemRows = items.map(it => `
+        <div class="success-item-row">
+          <span class="brand">${escHtml(it.brand)} \u00D7 ${it.quantity}</span>
+          <span>\u20B1${it.subtotal.toFixed(2)}</span>
+        </div>`).join('');
+
+      body.innerHTML = `
+        <div class="success-section">
+          <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="success-title">Payment Successful!</div>
+          <div class="success-ref">Ref: ${escHtml(orderData.transaction_ref || '')}</div>
+          <div class="success-items">
+            ${itemRows}
+            <div class="success-total-row">
+              <span>Total</span>
+              <span>\u20B1${(orderData.total_amount || 0).toFixed(2)}</span>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--zinc-500);">Your medicine will be dispensed shortly. Thank you!</p>
+        </div>`;
+      footer.innerHTML = `
+        <button class="btn btn--primary btn--lg" onclick="closeCheckoutAndReset()" style="width:100%;">
+          <i class="fa-solid fa-house"></i> Done
+        </button>`;
+    }
+  }
+
+  window.goToCheckoutStep = function(step) {
+    checkoutStep = step;
+    renderCheckoutStep();
+  };
+
+  window.selectPayment = function(type) {
+    if (type === 'cashless') {
+      document.getElementById('payOptCashless').classList.add('selected');
+    }
+  };
+
+  window.updateKioskQty = async function(invId, newQty) {
+    if (newQty <= 0) {
+      await removeKioskItem(invId);
+      return;
+    }
+    try {
+      await fetch('/checkout/api/cart/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ inventory_id: invId }),
+      });
+      const cartItem = kioskCart.find(c => c.inventory_id === invId);
+      if (cartItem) {
+        const res = await fetch('/checkout/api/cart/add', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ brand: cartItem.brand, quantity: newQty }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Update failed', 'error');
+          await fetch('/checkout/api/cart/add', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ brand: cartItem.brand, quantity: cartItem.quantity }),
+          });
+        }
+      }
+      await refreshKioskCart();
+      renderCheckoutStep();
+    } catch (err) {
+      showToast('Update failed', 'error');
+    }
+  };
+
+  window.removeKioskItem = async function(invId) {
+    try {
+      await fetch('/checkout/api/cart/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ inventory_id: invId }),
+      });
+      await refreshKioskCart();
+      renderCheckoutStep();
+    } catch (err) {
+      showToast('Remove failed', 'error');
+    }
+  };
+
+  window.doFingerprintAuth = async function() {
+    const btn = document.getElementById('authBtn');
+    const icon = document.getElementById('authIcon');
+    const status = document.getElementById('authStatus');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
+
+    try {
+      await new Promise(r => setTimeout(r, 1200));
+
+      const res = await fetch('/checkout/api/auth/fingerprint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        kioskAuthenticated = true;
+        icon.classList.add('authenticated');
+        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        btn.classList.replace('btn--primary', 'btn--success');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified';
+        status.className = 'auth-status show ok';
+        status.textContent = 'Identity verified successfully!';
+        document.getElementById('toPaymentBtn').disabled = false;
+        setTimeout(() => goToCheckoutStep(3), 800);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+        status.className = 'auth-status show fail';
+        status.textContent = 'Verification failed. Please try again.';
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+      status.className = 'auth-status show fail';
+      status.textContent = 'Error: ' + err.message;
+    }
+  };
+
+  window.processPayment = async function() {
+    goToCheckoutStep(4);
+    paymentPollFailures = 0;
+
+    try {
+      const res = await fetch('/checkout/api/pay/xendit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        showToast(data.error || 'Payment creation failed', 'error');
+        goToCheckoutStep(3);
+        return;
+      }
+
+      currentInvoiceId = data.invoice_id;
+
+      const payWindow = window.open(data.invoice_url, '_blank', 'width=480,height=700,scrollbars=yes');
+      if (!payWindow) {
+        showToast('Popup blocked. Please allow popups and try again.', 'error');
+        goToCheckoutStep(3);
+        return;
+      }
+
+      paymentCheckInterval = setInterval(() => {
+        verifyCurrentPayment(false, payWindow);
+      }, 3000);
+
+    } catch (err) {
+      showToast('Payment failed: ' + err.message, 'error');
+      goToCheckoutStep(3);
+    }
+  };
+
+  window.verifyCurrentPayment = async function(showPendingToast = false, payWindow = null) {
+    if (!currentInvoiceId) {
+      showToast('No active payment to verify.', 'warning');
+      return;
+    }
+
+    try {
+      const vRes = await fetch('/checkout/api/pay/verify', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ invoice_id: currentInvoiceId }),
+      });
+      const vData = await vRes.json();
+
+      if (!vRes.ok) {
+        paymentPollFailures += 1;
+        const sub = document.getElementById('paymentProcessingSub');
+        if (sub) {
+          sub.innerHTML = 'We could not confirm the payment yet.<br>Please tap <strong>I Already Paid</strong> or wait a moment.';
+        }
+        if (showPendingToast || paymentPollFailures >= 2) {
+          showToast(vData.error || 'Could not verify payment yet.', 'warning');
+        }
+        return;
+      }
+
+      if (vData.success && vData.status === 'PAID') {
+        if (paymentCheckInterval) {
+          clearInterval(paymentCheckInterval);
+          paymentCheckInterval = null;
+        }
+        paymentPollFailures = 0;
+        window._lastOrderResult = vData;
+        if (payWindow && !payWindow.closed) {
+          try { payWindow.close(); } catch (err) {}
+        }
+        goToCheckoutStep(5);
+        return;
+      }
+
+      if (showPendingToast) {
+        showToast(vData.message || 'Payment is still pending.', 'info');
+      }
+    } catch (err) {
+      paymentPollFailures += 1;
+      if (showPendingToast || paymentPollFailures >= 2) {
+        showToast('Verification failed: ' + err.message, 'warning');
+      }
+    }
+  };
+
+  window.cancelPayment = function() {
+    if (paymentCheckInterval) { clearInterval(paymentCheckInterval); paymentCheckInterval = null; }
+    currentInvoiceId = null;
+    goToCheckoutStep(3);
+  };
+
+  window.closeCheckoutAndReset = function() {
+    document.getElementById('checkoutOverlay').classList.remove('active');
+    refreshKioskCart();
+    setTimeout(() => resetAll(), 300);
+  };
+
+  window.addEventListener('message', (event) => {
+    if (event.origin !== window.location.origin) return;
+    const data = event.data || {};
+    if (data.source !== 'mendo-xendit') return;
+    if (data.invoiceId) {
+      currentInvoiceId = data.invoiceId;
+    }
+    if (data.result === 'success') {
+      verifyCurrentPayment(true);
+    } else if (data.result === 'failure') {
+      if (paymentCheckInterval) {
+        clearInterval(paymentCheckInterval);
+        paymentCheckInterval = null;
+      }
+      showToast('Payment was not completed.', 'warning');
+      goToCheckoutStep(3);
+    }
+  });
+
+  window.addEventListener('focus', () => {
+    if (checkoutStep === 4 && currentInvoiceId) {
+      verifyCurrentPayment(false);
+    }
+  });
+
+  // Clear kiosk cart on full reset
+  const _origResetAll = window.resetAll;
+  window.resetAll = function() {
+    fetch('/checkout/api/cart/clear', { method: 'POST' }).catch(() => {});
+    kioskCart = [];
+    kioskAuthenticated = false;
+    updateCheckoutFab();
+    _origResetAll();
+  };
+
   updateStaticCopy();
-  startSymptomTitleRotation();
 
 })();
 </script>
