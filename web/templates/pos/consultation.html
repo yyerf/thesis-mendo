@@ -43,11 +43,17 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* No decorative shadows on components */
+    .kiosk-step .num, .home-cta-icon, .age-display input, .patient-badge,
+    .idle-countdown, .followup-profile, .home-lang-switch,
+    .idle-shell, .lang-info-btn, .mic-btn, .why-ask-link .q-icon,
+    .help-btn-home, .help-btn-bar { box-shadow: none !important; }
+    .checkout-fab, .checkout-fab:hover, .auth-btn:hover { box-shadow: none !important; }
     html { font-size: 16px; -webkit-font-smoothing: antialiased; }
     body {
       font-family: var(--font); color: var(--zinc-800);
       background: var(--white); min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden; overflow-y: auto;
     }
 
     .hidden { display: none !important; }
@@ -238,96 +244,152 @@
       margin-top: 16px;
     }
 
-    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-
-    .idle-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1400;
-      background:
-        radial-gradient(circle at top, rgba(14, 165, 233, 0.18), transparent 35%),
-        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(240,249,255,0.98) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      animation: fadeIn 0.2s ease;
+    /* ═══ Headache Type Selector — Image Card Grid ═══ */
+    .headache-step-content {
+      flex: 1; display: flex; flex-direction: row;
+      align-items: flex-start; width: 100%;
+      gap: 16px; padding: 8px 16px;
+      min-height: 0;
     }
-    .idle-overlay.hidden { display: none !important; }
-    .idle-shell {
-      width: min(100%, 760px);
-      border-radius: 36px;
-      padding: 40px 34px;
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(125, 211, 252, 0.55);
-      box-shadow: 0 32px 80px rgba(14, 165, 233, 0.18);
-      text-align: center;
+    .headache-grid-col {
+      flex: 1; min-width: 0; overflow-y: auto;
+      max-height: 100%;
     }
-    .idle-brand {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: var(--blue-50);
-      border: 1px solid var(--blue-200);
-      color: var(--blue-700);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
+    .headache-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      width: 100%;
+      padding: 4px 0;
     }
-    .idle-title {
-      font-size: 42px;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      color: var(--zinc-900);
-      margin-bottom: 12px;
-    }
-    .idle-copy {
-      max-width: 560px;
-      margin: 0 auto;
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--zinc-600);
-    }
-    .idle-countdown {
-      margin: 28px auto 20px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
-      color: var(--white);
+    .headache-card {
+      overflow: hidden;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 24px 50px rgba(2, 132, 199, 0.28);
+      text-align: center;
+      user-select: none;
+      border: 1px solid var(--zinc-200);
+      border-radius: 10px;
+      background: var(--white);
+      transition: border-color .15s, box-shadow .15s;
     }
-    .idle-countdown strong {
-      font-size: 54px;
-      font-weight: 900;
-      line-height: 1;
+    .headache-card:hover {
+      border-color: var(--blue-300);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     }
-    .idle-countdown span {
-      font-size: 12px;
+    .headache-card.selected {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 2px var(--blue-200);
+    }
+    .headache-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .headache-card-label {
+      padding: 6px 4px 8px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      opacity: 0.84;
-      margin-top: 8px;
+      color: var(--zinc-700);
+      line-height: 1.3;
+      width: 100%;
+      border-top: 1px solid var(--zinc-100);
     }
-    .idle-actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
+    /* Detail sidebar */
+    .headache-detail-sidebar {
+      width: 280px; flex-shrink: 0;
+      position: sticky; top: 0;
+      align-self: flex-start;
+      display: none;
+      background: var(--white);
+      border: 1px solid var(--zinc-200);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
-    .idle-tap-note {
-      margin-top: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--zinc-500);
+    .headache-detail-sidebar.visible { display: block; }
+    .headache-detail-sidebar h4 {
+      font-size: 16px; font-weight: 800;
+      color: var(--zinc-800); margin-bottom: 8px;
+    }
+    .headache-detail-sidebar .desc {
+      font-size: 13px; color: var(--zinc-600);
+      line-height: 1.6; margin-bottom: 12px;
+    }
+    .headache-detail-sidebar .causes {
+      font-size: 12px; color: var(--zinc-500);
+      margin-bottom: 12px;
+    }
+    .headache-detail-sidebar .causes strong { color: var(--zinc-700); }
+
+    /* Detail sidebar handled by .headache-detail-sidebar above */
+
+    /* ═══ Shimmer loading (shadcn-style) ═══ */
+    @keyframes tw-shimmer {
+      0% { background-position: calc(-1 * var(--shimmer-spread, 140px)) 0; }
+      100% { background-position: calc(100% + var(--shimmer-spread, 140px)) 0; }
+    }
+    .shimmer {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: tw-shimmer var(--shimmer-duration, 2s) linear infinite;
+      background-image: linear-gradient(90deg,
+        var(--zinc-400) 0%,
+        var(--zinc-300) 40%,
+        var(--zinc-400) 80%
+      );
+      background-size: 200% 100%;
+      background-repeat: no-repeat;
+    }
+    .shimmer-primary {
+      background-image: linear-gradient(90deg,
+        var(--blue-500) 0%,
+        var(--blue-300) 40%,
+        var(--blue-500) 80%
+      );
+    }
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+    .idle-overlay {
+      position: fixed; inset: 0; z-index: 1400;
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; animation: fadeIn 0.15s ease;
+    }
+    .idle-overlay.hidden { display: none !important; }
+    .idle-box {
+      background: var(--white); border-radius: 16px;
+      width: 100%; max-width: 400px;
+      padding: 32px 28px 24px;
+      text-align: center;
+    }
+    .idle-box .idle-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 22px;
+    }
+    .idle-box h3 {
+      font-size: 20px; font-weight: 800; color: var(--zinc-800);
+      margin-bottom: 8px;
+    }
+    .idle-box p {
+      font-size: 14px; color: var(--zinc-500); line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .idle-box .idle-countdown {
+      font-size: 13px; font-weight: 700; color: var(--zinc-400);
+      margin-bottom: 18px;
+    }
+    .idle-box .idle-countdown strong {
+      font-size: 20px; color: var(--blue-500);
+    }
+    .idle-box .idle-actions {
+      display: flex; flex-direction: column; gap: 8px;
     }
 
     /* ── Disclaimer ticker ── */
@@ -352,7 +414,7 @@
     ═══════════════════════════════ */
     .kiosk {
       height: 100vh; display: flex; flex-direction: column;
-      background: var(--zinc-50); padding-top: 26px;
+      background: var(--white); padding-top: 26px;
     }
 
     /* Top bar */
@@ -418,6 +480,11 @@
       padding: 40px 24px;
       max-width: 700px; margin: 0 auto; width: 100%;
     }
+    #panel3.active .panel-content {
+      justify-content: flex-start;
+      max-width: 1040px;
+      overflow-y: auto;
+    }
 
     .panel-footer {
       padding: 16px 24px; background: var(--white);
@@ -436,18 +503,20 @@
       margin-bottom: 32px; line-height: 1.5;
     }
 
-    /* ═══ Buttons ═══ */
+    /* ═══ Buttons (shadcn-style) ═══ */
     .btn {
       display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; padding: 14px 28px;
-      border-radius: var(--radius); font-size: 16px; font-weight: 600;
+      gap: 8px; padding: 12px 24px;
+      border-radius: var(--radius); font-size: 15px; font-weight: 600;
       border: 1px solid var(--zinc-200); background: var(--white);
-      color: var(--zinc-700); cursor: pointer; transition: all 0.2s;
-      font-family: var(--font);
+      color: var(--zinc-700); cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      font-family: var(--font); user-select: none; line-height: 1;
     }
-    .btn:hover { background: var(--zinc-50); }
-    .btn:active { transform: scale(0.98); }
+    .btn:hover { background: var(--zinc-100); }
+    .btn:active { transform: none; }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn--sm { padding: 8px 16px; font-size: 13px; }
 
     .btn--primary {
       background: var(--blue-500); color: var(--white);
@@ -455,18 +524,19 @@
     }
     .btn--primary:hover { background: var(--blue-600); border-color: var(--blue-600); }
 
-    .btn--lg { padding: 16px 36px; font-size: 17px; }
+    .btn--lg { padding: 14px 30px; font-size: 16px; }
 
     .btn--outline {
       background: var(--white); color: var(--zinc-700);
-      border: 2px solid var(--zinc-200);
+      border: 1px solid var(--zinc-300);
     }
-    .btn--outline:hover { border-color: var(--zinc-400); }
+    .btn--outline:hover { background: var(--zinc-50); border-color: var(--zinc-400); }
 
     .btn--danger {
       background: var(--danger); color: var(--white);
       border-color: var(--danger);
     }
+    .btn--danger:hover { background: #dc2626; border-color: #dc2626; }
 
     /* ═══════════════════════════════
        STEP 1 — Age Input
@@ -504,24 +574,20 @@
     }
     .age-slider {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 6px; border-radius: 3px;
+      width: 100%; height: 4px; border-radius: 2px;
       background: var(--zinc-200); outline: none;
       cursor: pointer; display: block;
     }
     .age-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 28px; height: 28px;
+      -webkit-appearance: none; width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer; transition: transform 0.15s;
+      border: none; cursor: pointer; transition: transform 0.15s;
     }
-    .age-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .age-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .age-slider::-moz-range-thumb {
-      width: 28px; height: 28px;
+      width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer;
+      border: none; cursor: pointer;
     }
 
     /* "Why do we ask" link — sits near footer */
@@ -549,31 +615,32 @@
       position: relative; width: 100%;
     }
     .symptom-textarea {
-      width: 100%; min-height: 160px; padding: 20px 56px 20px 20px;
-      font-size: 17px; line-height: 1.6; font-family: var(--font);
-      border: 2px solid var(--zinc-200); border-radius: var(--radius);
+      width: 100%; min-height: 160px; padding: 18px 56px 18px 18px;
+      font-size: 16px; line-height: 1.7; font-family: var(--font);
+      border: 1px solid var(--zinc-200); border-radius: var(--radius);
       color: var(--zinc-800); background: var(--white);
-      resize: vertical; transition: border-color 0.2s;
+      resize: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
     .symptom-textarea:focus {
       outline: none; border-color: var(--blue-400);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
     }
     .symptom-textarea::placeholder { color: var(--zinc-300); }
 
     /* Mic button inside textarea */
     .mic-btn {
       position: absolute; right: 12px; bottom: 12px;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--zinc-100); border: 1px solid var(--zinc-200);
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--white); border: 1px solid var(--zinc-300);
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s;
     }
-    .mic-btn:hover { background: var(--blue-50); border-color: var(--blue-300); }
+    .mic-btn:hover { background: var(--zinc-50); border-color: var(--zinc-400); }
     .mic-btn.recording {
-      background: var(--danger-light); border-color: var(--danger);
+      background: #fef2f2; border-color: var(--danger);
       animation: pulse-mic 1.5s infinite;
     }
-    .mic-btn svg { width: 20px; height: 20px; }
+    .mic-btn svg { width: 16px; height: 16px; }
     .mic-btn.recording svg { stroke: var(--danger); }
 
     @keyframes pulse-mic {
@@ -586,28 +653,7 @@
       align-items: center;
       justify-content: flex-end;
     }
-    .typewriter-title {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 1.3em;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .typewriter-title::after {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 0.95em;
-      margin-left: 6px;
-      border-radius: 999px;
-      background: var(--blue-500);
-      animation: blink-caret 0.9s step-end infinite;
-    }
-    @keyframes blink-caret {
-      0%, 48% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
+
     .lang-info-btn {
       width: 22px; height: 22px; border-radius: 50%;
       border: 2px solid var(--zinc-300); background: none;
@@ -639,24 +685,20 @@
     }
     .pain-slider {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 6px; border-radius: 3px;
+      width: 100%; height: 4px; border-radius: 2px;
       background: var(--zinc-200); outline: none;
       cursor: pointer;
     }
     .pain-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 28px; height: 28px;
+      -webkit-appearance: none; width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer; transition: transform 0.15s;
+      border: none; cursor: pointer; transition: transform 0.15s;
     }
-    .pain-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .pain-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .pain-slider::-moz-range-thumb {
-      width: 28px; height: 28px;
+      width: 18px; height: 18px;
       border-radius: 50%; background: var(--blue-500);
-      border: 3px solid var(--white);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-      cursor: pointer;
+      border: none; cursor: pointer;
     }
 
     .pain-labels {
@@ -791,7 +833,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin: 0 auto;
-      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.08);
+
     }
     .summary-card {
       width: 100%;
@@ -1479,24 +1521,6 @@
     /* ═══════════════════════════════
        CHECKOUT FLOW
     ═══════════════════════════════ */
-    .rec-buy-btn {
-      margin-top: 8px;
-      padding: 7px 14px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
-      color: var(--white);
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .rec-buy-btn:hover { background: linear-gradient(135deg, var(--blue-600), var(--blue-700)); transform: translateY(-1px); }
-    .rec-buy-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .rec-buy-btn i { font-size: 11px; }
 
     .checkout-fab {
@@ -1642,6 +1666,32 @@
       font-size: 11px; color: var(--zinc-400); margin-top: 8px; text-align: center;
     }
 
+    /* Fingerprint auth */
+    .auth-section { text-align: center; padding: 20px 0; }
+    .auth-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--blue-50); border: 2px solid var(--blue-200);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 36px; color: var(--blue-500);
+      transition: all 0.3s;
+    }
+    .auth-icon.authenticated {
+      background: var(--success-light); border-color: var(--success);
+      color: var(--success);
+    }
+    .auth-title { font-size: 20px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
+    .auth-subtitle { font-size: 14px; color: var(--zinc-500); margin-bottom: 20px; line-height: 1.6; }
+    .btn--success {
+      background: var(--success); color: var(--white); border-color: var(--success);
+    }
+    .btn--success:hover { background: #16a34a; border-color: #16a34a; }
+    .auth-status {
+      margin-top: 14px; font-size: 14px; font-weight: 600;
+      display: none;
+    }
+    .auth-status.show { display: block; }
+    .auth-status.ok { color: var(--success); }
+    .auth-status.fail { color: var(--danger); }
 
     /* Payment method */
     .payment-section { padding: 10px 0; }
@@ -1720,11 +1770,8 @@
       .section-title { font-size: 26px; }
       .pain-value-display { font-size: 56px; }
       .age-display input { font-size: 32px; width: 120px; }
-      .idle-shell { padding: 32px 20px; border-radius: 28px; }
-      .idle-title { font-size: 32px; }
-      .idle-copy { font-size: 15px; }
-      .idle-countdown { width: 126px; height: 126px; }
-      .idle-countdown strong { font-size: 44px; }
+      .idle-box { padding: 28px 20px; }
+      .idle-box h3 { font-size: 18px; }
       .clarify-page-title { font-size: 24px; }
       .clarify-page-question { font-size: 26px; line-height: 1.35; }
       .clarify-buttons {
@@ -1740,7 +1787,6 @@
       .summary-card h2 { font-size: 28px; }
       .summary-card.summary-card--compact h2 { font-size: 20px; }
       .summary-metrics { grid-template-columns: 1fr; }
-      .typewriter-title { white-space: normal; }
       .clarify-language-bar {
         flex-direction: column;
         align-items: stretch;
@@ -1785,60 +1831,6 @@
       .kiosk-step { padding: 6px 10px; }
       .kiosk-step-divider { width: 14px; }
     }
-
-    /* ── Proxy-purchase screening (Who is this for?) ── */
-    .proxy-screen { margin-bottom: 26px; }
-    .proxy-q {
-      font-size: 15px; font-weight: 700; color: var(--zinc-300);
-      text-align: center; margin-bottom: 12px;
-    }
-    .proxy-options { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .proxy-btn {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px 20px; border-radius: 14px; cursor: pointer;
-      background: var(--zinc-800, #27272a); color: var(--zinc-200, #e4e4e7);
-      border: 2px solid var(--zinc-700, #3f3f46); font-size: 15px; font-weight: 700;
-      transition: border-color .15s, background .15s, transform .1s;
-    }
-    .proxy-btn .proxy-ico { font-size: 18px; opacity: .9; }
-    .proxy-btn:hover { transform: translateY(-1px); }
-    .proxy-btn.active {
-      border-color: var(--accent, #22d3ee); background: rgba(34, 211, 238, 0.12);
-      color: #fff;
-    }
-
-    /* ── OLDCARTS safety screening (head-map, dyspnea checkbox) ── */
-    .screen-page { max-width: 560px; margin: 0 auto; text-align: center; }
-    .screen-q { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-    .screen-sub { font-size: 14px; color: var(--zinc-400); margin-bottom: 22px; }
-    .headmap-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
-    .headmap svg { width: 230px; height: auto; }
-    .headmap .hz {
-      cursor: pointer; transition: fill .15s, opacity .15s;
-      fill: var(--zinc-700, #3f3f46); stroke: var(--zinc-500, #71717a); stroke-width: 1.5;
-    }
-    .headmap .hz:hover { opacity: .85; }
-    .headmap .hz.safe:hover { fill: #2563eb; }
-    .headmap .hz.danger { fill: #4b1d1d; stroke: #b91c1c; }
-    .headmap .hz.danger:hover { fill: #b91c1c; }
-    .headmap-legend {
-      display: flex; gap: 18px; justify-content: center; font-size: 12px;
-      color: var(--zinc-400); margin-bottom: 18px;
-    }
-    .headmap-legend span { display: inline-flex; align-items: center; gap: 6px; }
-    .headmap-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-    .screen-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .screen-btn {
-      padding: 14px 26px; border-radius: 14px; font-size: 16px; font-weight: 800;
-      cursor: pointer; border: 2px solid var(--zinc-700, #3f3f46);
-      background: var(--zinc-800, #27272a); color: var(--zinc-100, #f4f4f5);
-      transition: transform .1s, border-color .15s, background .15s;
-    }
-    .screen-btn:hover { transform: translateY(-1px); }
-    .screen-btn.no { border-color: #16a34a; }
-    .screen-btn.no:hover { background: rgba(22,163,74,.16); }
-    .screen-btn.yes { border-color: #b91c1c; }
-    .screen-btn.yes:hover { background: rgba(185,28,28,.18); }
   </style>
 </head>
 <body>
@@ -1851,7 +1843,9 @@
      SCREEN 0 — Home / Welcome
 ═══════════════════════════════ -->
 <div class="screen-home" id="screenHome">
-  <a href="{{ url_for('admin.dashboard') }}" class="admin-link">Admin Panel</a>
+  <div style="position:fixed; top:46px; left:20px; z-index:600; display:flex; gap:8px;">
+    <a href="{{ url_for('admin.dashboard') }}" class="admin-link" style="position:static">Admin Panel</a>
+  </div>
   <div class="home-top-right">
     <div class="home-lang-switch" onclick="event.stopPropagation()">
       <button class="home-lang-btn" data-home-lang="en" onclick="setLanguage('en', event)">EN</button>
@@ -1946,7 +1940,6 @@
 <div class="modal-overlay hidden" id="legalNoticeModal" onclick="closeModal('legalNoticeModal', event)">
   <div class="modal-box legal-notice-box" onclick="event.stopPropagation()">
     <h3>Legal Notice & Warning</h3>
-    <div class="legal-note-tag">Philippines</div>
     <p>
       In compliance with the <strong>Price Act (RA 7581, as amended)</strong>,
       hoarding and illegal stockpiling of medicines are prohibited.
@@ -1966,18 +1959,16 @@
 </div>
 
 <div class="idle-overlay hidden" id="idleModal" onclick="resumeFromIdle(event)">
-  <div class="idle-shell" onclick="event.stopPropagation()">
-    <div class="idle-brand">Mendo Session</div>
-    <div class="idle-title">Are you still there?</div>
-    <p class="idle-copy">Your consultation is about to return to the welcome screen because there has been no activity.</p>
+  <div class="idle-box" onclick="event.stopPropagation()">
+    <div class="idle-icon">👋</div>
+    <h3>Are you still there?</h3>
+    <p>Your session will return to the welcome screen due to inactivity.</p>
     <div class="idle-countdown">
-      <strong id="idleCountdown">10</strong>
-      <span>Seconds Left</span>
+      <strong id="idleCountdown">10</strong> seconds left
     </div>
     <div class="idle-actions">
-      <button class="btn btn--primary btn--lg" onclick="resumeFromIdle(event)">Continue Session</button>
+      <button class="btn btn--primary" onclick="resumeFromIdle(event)" style="width:100%;">Continue Session</button>
     </div>
-    <div class="idle-tap-note">Tap anywhere to keep using Mendo</div>
   </div>
 </div>
 
@@ -2008,21 +1999,6 @@
     <!-- ═══ STEP 1: Age ═══ -->
     <div class="kiosk-panel active" id="panel1">
       <div class="panel-content">
-        <!-- Proxy-purchase screening: is the buyer the patient, or buying for another person? -->
-        <div class="proxy-screen" id="proxyScreen">
-          <div class="proxy-q" id="proxyQText">Who is this medicine for?</div>
-          <div class="proxy-options">
-            <button type="button" class="proxy-btn active" id="proxySelfBtn" onclick="setPurchaseFor('self')">
-              <span class="proxy-ico"><i class="fa-solid fa-user"></i></span>
-              <span class="proxy-label" id="proxySelfLabel">Myself</span>
-            </button>
-            <button type="button" class="proxy-btn" id="proxyOtherBtn" onclick="setPurchaseFor('other')">
-              <span class="proxy-ico"><i class="fa-solid fa-user-group"></i></span>
-              <span class="proxy-label" id="proxyOtherLabel">Someone else</span>
-            </button>
-          </div>
-        </div>
-
         <div class="section-title" id="ageTitleText">How old are you?</div>
         <div style="height: 24px;"></div>
 
@@ -2055,7 +2031,7 @@
     <!-- ═══ STEP 2: Symptoms ═══ -->
     <div class="kiosk-panel" id="panel2">
       <div class="panel-content">
-        <div class="section-title"><span class="typewriter-title" id="symptomTypewriterText">What are you feeling?</span></div>
+        <div class="section-title" id="symptomTitle">What are you feeling?</div>
         <div style="height: 28px;"></div>
 
         <div class="symptom-input-area">
@@ -2089,15 +2065,13 @@
     <!-- ═══ STEP 3: Pain Scale (per-symptom) ═══ -->
     <div class="kiosk-panel" id="panel3">
       <div class="panel-content">
-        <!-- Pre-detect loading spinner (shown while detecting symptoms) -->
+        <!-- Pre-detect loading shimmer -->
         <div id="preDetectLoading" class="analysis-loading hidden">
-          <div class="spinner"></div>
-          <p>Detecting symptoms...</p>
-          <div class="loading-progress">
-            <div class="loading-progress-bar"><div class="loading-progress-fill" id="preDetectProgressFill"></div></div>
-            <div class="loading-percent" id="preDetectPercent">0%</div>
-          </div>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Detecting symptoms...</p>
         </div>
+
+        <!-- Headache Location Visualizer (shown if HEADACHE detected) -->
+        <div id="headacheLocationSelector" class="hidden" style="width:100%;"></div>
 
         <!-- Per-symptom severity container (dynamically rendered) -->
         <div id="perSymptomSeverity"></div>
@@ -2117,6 +2091,10 @@
       </div>
       <div class="panel-footer">
         <button class="btn" onclick="goToStep(2)">Back</button>
+        <button class="btn btn--primary btn--lg hidden" id="confirmHeadLocFooter" onclick="confirmHeadacheType()">
+          Confirm
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
         <button class="btn btn--primary btn--lg hidden" id="analyzeBtn" onclick="runAnalysis()">
           Analyze Symptoms
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -2127,15 +2105,10 @@
     <!-- ═══ STEP 4: Analysis + Recommendations ═══ -->
     <div class="kiosk-panel" id="panel4">
       <div class="kiosk-body" style="overflow-y:auto;">
-        <!-- Loading -->
+        <!-- Loading shimmer -->
         <div class="analysis-loading" id="analysisLoading">
-          <div class="spinner"></div>
-          <p style="font-weight:600;">Analyzing your symptoms...</p>
-          <p style="font-size:13px;color:var(--zinc-400);">Running hybrid NLP pipeline</p>
-          <div class="loading-progress">
-            <div class="loading-progress-bar"><div class="loading-progress-fill" id="analysisProgressFill"></div></div>
-            <div class="loading-percent" id="analysisPercent">0%</div>
-          </div>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Analyzing your symptoms...</p>
+          <p class="shimmer" style="font-size:13px;margin-top:8px;">Running hybrid NLP pipeline</p>
         </div>
 
         <!-- Results -->
@@ -2187,7 +2160,6 @@
   // ── State ──
   let currentStep = 0;
   let patientAge = null;
-  let purchaseFor = 'self';   // proxy-purchase screening: 'self' | 'other'
   let severity = 3;
   let severityMap = {};            // per-symptom severity { "HEADACHE": 8, ... }
   let preDetectedSymptoms = [];    // symptoms from pre-detect API
@@ -2197,9 +2169,6 @@
   let analysisData = null;
   let showingRecs = false;
   let selectedLanguage = 'en';
-  let symptomTypewriterTimer = null;
-  let symptomTypewriterRunId = 0;
-  let symptomTypewriterLastText = '';
   let idleWarningTimer = null;
   let idleResetTimer = null;
   let idleCountdownTimer = null;
@@ -2211,6 +2180,11 @@
   let durationContextOverride = null;
   let durationClarificationData = {};
   let durationBySymptom = {};
+
+  // ── Headache location state ──
+  let headacheLocations = [];       // cached from API
+  let selectedHeadacheLocation = null; // key like "occipital"
+  let headacheLocationConfirmed = false;
 
   // ── DOM ──
   const screenHome = document.getElementById('screenHome');
@@ -2224,7 +2198,7 @@
   const painValue = document.getElementById('painValue');
   const painLabel = document.getElementById('painLabel');
   const severityWarning = document.getElementById('severityWarning');
-  const symptomTypewriterText = document.getElementById('symptomTypewriterText');
+  const symptomTitleEl = document.getElementById('symptomTitle');
   const idleModal = document.getElementById('idleModal');
   const idleCountdown = document.getElementById('idleCountdown');
 
@@ -2583,14 +2557,14 @@
         ceb: 'Pilia ang pinakaduol sa imong kalibanga.',
       },
       STOMACH: {
-        en: 'When does your stomach pain happen?',
-        tl: 'Kailan sumasakit ang tiyan mo?',
-        ceb: 'Kanus-a mosakit ang imong tiyan?',
+        en: 'Select what matches your stomach pain.',
+        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
+        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
       },
       STOMACH_CONTEXT: {
-        en: 'When does your stomach pain happen?',
-        tl: 'Kailan sumasakit ang tiyan mo?',
-        ceb: 'Kanus-a mosakit ang imong tiyan?',
+        en: 'Select what matches your stomach pain.',
+        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
+        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
       },
     };
 
@@ -2606,8 +2580,8 @@
     if (ageTitleText) {
       ageTitleText.textContent = t('ageTitle');
     }
-    if (symptomTypewriterText && currentStep !== 2) {
-      symptomTypewriterText.textContent = t('symptomTitle');
+    if (symptomTitleEl) {
+      symptomTitleEl.textContent = t('symptomTitle');
     }
     symptomInput.placeholder = t('symptomPlaceholder');
     document.querySelectorAll('[data-home-lang]').forEach(btn => {
@@ -2617,46 +2591,6 @@
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
     updatePain();
-    applyProxyCopy();   // keep proxy labels + age title in sync with language/selection
-  }
-
-  function startSymptomTitleRotation() {
-    if (!symptomTypewriterText) return;
-
-    symptomTypewriterRunId += 1;
-    const runId = symptomTypewriterRunId;
-    if (symptomTypewriterTimer) {
-      clearTimeout(symptomTypewriterTimer);
-      symptomTypewriterTimer = null;
-    }
-
-    const fullText = t('symptomTitle');
-    symptomTypewriterLastText = fullText;
-
-    let charIndex = 0;
-
-    function schedule(nextTick, delay) {
-      symptomTypewriterTimer = setTimeout(() => {
-        if (runId !== symptomTypewriterRunId) return;
-        nextTick();
-      }, delay);
-    }
-
-    function tick() {
-      if (runId !== symptomTypewriterRunId) return;
-
-      charIndex += 1;
-      symptomTypewriterText.textContent = fullText.slice(0, charIndex);
-      if (charIndex < fullText.length) {
-        schedule(tick, 67);
-        return;
-      }
-
-      symptomTypewriterTimer = null;
-    }
-
-    symptomTypewriterText.textContent = '';
-    tick();
   }
 
   function clearIdleTimers() {
@@ -2840,6 +2774,93 @@
     return `You are <span class="age-highlight">${ageText}</span> years old and currently experiencing <span class="condition-highlight">${listText}</span>.`;
   }
 
+  // ═══════════════════════════════════════
+  //  HEADACHE TYPE SELECTOR — Image Card Grid
+  // ═══════════════════════════════════════
+
+  async function renderHeadacheLocationSelector() {
+    const container = document.getElementById('headacheLocationSelector');
+    document.getElementById('perSymptomSeverity').innerHTML = '';
+    document.getElementById('noSymptomsStep3').classList.add('hidden');
+    document.getElementById('analyzeBtn').classList.add('hidden');
+
+    let locs = [];
+    try {
+      const res = await fetch('/consult/api/headache-locations');
+      locs = (await res.json()).locations || [];
+    } catch { locs = []; }
+    headacheLocations = locs;
+    selectedHeadacheLocation = null;
+
+    const lang = selectedLanguage || 'en';
+    const ll = (o) => o[lang] || o.en || o;
+
+    document.getElementById('confirmHeadLocFooter').classList.remove('hidden');
+    document.getElementById('confirmHeadLocFooter').disabled = true;
+
+    const cardsHtml = locs.map(loc => {
+      const label = ll({en:loc.label_en, tl:loc.label_tl, ceb:loc.label_ceb});
+      const imgUrl = "/static/images/headache/" + encodeURI(loc.image);
+      return `<div class="headache-card" data-key="${loc.key}" onclick="selectHeadacheType('${loc.key}')">
+        <img class="headache-card-img" src="${imgUrl}" alt="${label}" loading="lazy" onerror="this.style.display='none'">
+        <div class="headache-card-label">${label}</div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="headache-step-content">
+        <div class="headache-grid-col">
+          <div class="section-title" style="font-size:22px;margin-bottom:10px;text-align:left;">${ll({en:'What type of headache do you have?', tl:'Anong uri ng sakit ng ulo ang nararamdaman mo?', ceb:'Unsa nga klase sa sakit sa ulo ang imong gibati?'})}</div>
+          <div class="headache-grid" id="headacheGrid">${cardsHtml}</div>
+        </div>
+        <div class="headache-detail-sidebar" id="headacheDetailSidebar"></div>
+      </div>`;
+    container.classList.remove('hidden');
+  }
+
+  window.selectHeadacheType = function(key) {
+    selectedHeadacheLocation = key;
+    document.querySelectorAll('.headache-card').forEach(el => {
+      el.classList.toggle('selected', el.dataset.key === key);
+    });
+    document.getElementById('confirmHeadLocFooter').disabled = false;
+
+    const lang = selectedLanguage || 'en';
+    const ll = (o) => o[lang] || o.en || o;
+    const loc = headacheLocations.find(l => l.key === key);
+    if (!loc) return;
+
+    const label = ll({en:loc.label_en, tl:loc.label_tl, ceb:loc.label_ceb});
+    const desc = ll({en:loc.desc_en, tl:loc.desc_tl, ceb:loc.desc_ceb});
+    const causes = ll({en:loc.common_causes_en, tl:loc.common_causes_tl, ceb:loc.common_causes_ceb});
+    const causesList = Array.isArray(causes) ? causes.join(', ') : (causes || '');
+
+    const sidebar = document.getElementById('headacheDetailSidebar');
+    sidebar.classList.add('visible');
+    sidebar.innerHTML = `
+      <h4>${label}</h4>
+      <div class="desc">${desc}</div>
+      ${causesList ? `<div class="causes"><strong>Common causes:</strong> ${causesList}</div>` : ''}
+    `;
+  };
+
+  window.confirmHeadacheType = function() {
+    proceedAfterHeadache();
+  };
+
+  window.proceedAfterHeadache = function() {
+    const ov = document.getElementById('headTriageOverlay');
+    if (ov) ov.remove();
+    headacheLocationConfirmed = true;
+    const c = document.getElementById('headacheLocationSelector');
+    c.classList.add('hidden'); c.innerHTML = '';
+    document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+    severityMap = {};
+    severityQueue = [...preDetectedSymptoms];
+    severityCompleted = [];
+    askNextSeverity();
+  };
+
   function getSpeechRecognitionLocale(lang) {
     if (lang === 'tl') return 'fil-PH';
     if (lang === 'ceb') return 'ceb-PH';
@@ -2853,9 +2874,6 @@
       recognition.lang = getSpeechRecognitionLocale(lang);
     }
     updateStaticCopy();
-    if (currentStep === 2 && symptomTypewriterLastText !== t('symptomTitle')) {
-      startSymptomTitleRotation();
-    }
     if (analysisData && currentStep === 4) {
       if (showingRecs) {
         renderRecommendations(analysisData);
@@ -2952,49 +2970,19 @@
     }
 
     if (n === 2) {
-      startSymptomTitleRotation();
+      // Reset headache location state when going back to symptoms
+      headacheLocationConfirmed = false;
+      selectedHeadacheLocation = null;
+      const hlc = document.getElementById('headacheLocationSelector');
+      if (hlc) { hlc.classList.add('hidden'); hlc.innerHTML = ''; }
     }
 
     startIdleTracking();
   };
 
   // ══════════════════════════════
-  //  STEP 1: PROXY SCREENING + AGE
+  //  STEP 1: AGE
   // ══════════════════════════════
-  // Localized copy for the "Who is this for?" screening
-  const PROXY_COPY = {
-    en:  { q: 'Who is this medicine for?', self: 'Myself', other: 'Someone else',
-           ageSelf: 'How old are you?', ageOther: "How old is the patient?" },
-    tl:  { q: 'Para kanino ang gamot na ito?', self: 'Para sa akin', other: 'Para sa iba',
-           ageSelf: 'Ilang taon ka na?', ageOther: 'Ilang taon ang pasyente?' },
-    ceb: { q: 'Para kang kinsa kini nga tambal?', self: 'Para nako', other: 'Para sa lain',
-           ageSelf: 'Pila na imong edad?', ageOther: 'Pila ang edad sa pasyente?' },
-  };
-
-  function proxyCopy() { return PROXY_COPY[selectedLanguage] || PROXY_COPY.en; }
-
-  function applyProxyCopy() {
-    const c = proxyCopy();
-    const qEl = document.getElementById('proxyQText');
-    const sEl = document.getElementById('proxySelfLabel');
-    const oEl = document.getElementById('proxyOtherLabel');
-    const ageTitle = document.getElementById('ageTitleText');
-    if (qEl) qEl.textContent = c.q;
-    if (sEl) sEl.textContent = c.self;
-    if (oEl) oEl.textContent = c.other;
-    if (ageTitle) ageTitle.textContent = (purchaseFor === 'other') ? c.ageOther : c.ageSelf;
-  }
-
-  window.setPurchaseFor = function(who) {
-    purchaseFor = (who === 'other') ? 'other' : 'self';
-    const selfBtn = document.getElementById('proxySelfBtn');
-    const otherBtn = document.getElementById('proxyOtherBtn');
-    if (selfBtn) selfBtn.classList.toggle('active', purchaseFor === 'self');
-    if (otherBtn) otherBtn.classList.toggle('active', purchaseFor === 'other');
-    applyProxyCopy();
-    registerActivity();
-  };
-
   function validateAge() {
     const raw = ageInput.value.trim();
     const val = parseInt(raw);
@@ -3091,29 +3079,11 @@
     return names[lang] || names.en || symptom;
   }
 
-  // ── Loading-progress simulation ──
-  let _progressTimers = {};
   function startLoadingProgress(prefix) {
-    const fill = document.getElementById(prefix + 'ProgressFill');
-    const pct  = document.getElementById(prefix + 'Percent');
-    if (!fill || !pct) return;
-    let value = 0;
-    fill.style.width = '0%';
-    pct.textContent = '0%';
-    _progressTimers[prefix] = setInterval(() => {
-      const remaining = 90 - value;
-      value += Math.max(0.5, remaining * 0.06);
-      if (value > 90) value = 90;
-      fill.style.width = Math.round(value) + '%';
-      pct.textContent = Math.round(value) + '%';
-    }, 120);
+    // Shimmer handles the loading state; no progress bar needed
   }
   function completeLoadingProgress(prefix) {
-    if (_progressTimers[prefix]) { clearInterval(_progressTimers[prefix]); delete _progressTimers[prefix]; }
-    const fill = document.getElementById(prefix + 'ProgressFill');
-    const pct  = document.getElementById(prefix + 'Percent');
-    if (fill) fill.style.width = '100%';
-    if (pct) pct.textContent = '100%';
+    // Shimmer handles the loading state
   }
 
   // Override Step 2 Continue button to call pre-detect first
@@ -3165,6 +3135,15 @@
 
       if (preDetectedSymptoms.length === 0) {
         document.getElementById('noSymptomsStep3').classList.remove('hidden');
+        return;
+      }
+
+      // ── HEADACHE LOCATION CHECK ──
+      // If HEADACHE is among the detected symptoms, show the location
+      // visualizer first before proceeding to severity.
+      if (preDetectedSymptoms.includes('HEADACHE') && !headacheLocationConfirmed) {
+        selectedHeadacheLocation = null;
+        renderHeadacheLocationSelector();
         return;
       }
 
@@ -3357,13 +3336,22 @@
     document.getElementById('backFromResults').classList.add('hidden');
 
     try {
-      const payload = { text, age: patientAge, purchase_for: purchaseFor };
+      const payload = { text, age: patientAge };
       // Send per-symptom severity map if available, otherwise legacy single value
       if (Object.keys(severityMap).length > 0) {
         payload.severity_map = severityMap;
         payload.severity = severity; // max value for backward compat
       } else {
         payload.severity = severity;
+      }
+      // Include headache location if selected
+      if (selectedHeadacheLocation) {
+        payload.headache_location = selectedHeadacheLocation;
+        // Also send the full location object for backend assessment
+        const loc = headacheLocations.find(l => l.key === selectedHeadacheLocation);
+        if (loc) {
+          payload.headache_danger = loc.danger;
+        }
       }
 
       const res = await fetch('/consult/api/analyze', {
@@ -3447,45 +3435,6 @@
       const questionText = getClarifyQuestionText(clarifyType, rec.question);
       let buttonsHtml = '';
 
-      // ── Stomachache: OLDCARTS food-timing dropdown (before / after / unrelated) ──
-      // Maps the aggravating-factor answer to the existing acid vs cramp therapy split.
-      if (clarifyType === 'STOMACH_CONTEXT') {
-        const lang = selectedLanguage || 'en';
-        const FT = {
-          en: [
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Before eating / empty stomach', d:'Hunger-like or burning pain, eased by food'},
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'After eating',                  d:'Bloating, heartburn, or sour reflux after meals'},
-            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Anytime / not related to food', d:'Cramping or colicky pain that comes and goes'},
-          ],
-          tl: [
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Bago kumain / walang laman ang tiyan', d:'Parang gutom o nasusunog, gumagaan kapag kumain'},
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'Pagkatapos kumain',             d:'Kabag, heartburn, o pag-asim pagkatapos kumain'},
-            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Kahit kailan / hindi sa pagkain', d:'Pulikat o kabag na paputol-putol'},
-          ],
-          ceb: [
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Wala pa mokaon / walay sulod ang tiyan', d:'Mura\'g gutom o nagsunog, mogaan kung mokaon'},
-            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'Human mokaon',                  d:'Kabag, heartburn, o pag-aslom human mokaon'},
-            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Bisan kanus-a / dili sa pagkaon', d:'Kuliti o kabag nga paputol-putol'},
-          ],
-        };
-        const opts = FT[lang] || FT.en;
-        buttonsHtml = opts.map(o => `
-          <button class="clarify-btn" onclick="handleContextClarify('${o.v}', 'STOMACH_CONTEXT')">
-            <div class="icon"><i class="${o.ic}"></i></div>
-            <div class="label">${o.l}</div>
-            <div class="desc">${o.d}</div>
-          </button>`).join('');
-        container.innerHTML = `
-          <div class="clarify-page">
-            <div class="clarify-page-question">${questionText}</div>
-            <div class="clarify-buttons clarify-buttons--compact">${buttonsHtml}</div>
-          </div>`;
-        document.getElementById('backFromResults').classList.remove('hidden');
-        document.getElementById('assessAgainBtn').classList.remove('hidden');
-        document.getElementById('exitBtn').classList.remove('hidden');
-        return;
-      }
-
       if (rec.options && rec.options.length) {
         buttonsHtml = rec.options.map(opt => `
           <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
@@ -3522,18 +3471,12 @@
 
     const referralActive = referral && referral.level === 'high';
 
-    let html = renderSummaryCard(symptoms, referralActive ? { cta: false } : {});
+    const opts = referralActive ? { cta: false } : {};
+    let html = renderSummaryCard(symptoms, opts);
 
     container.innerHTML = html;
 
     if (rec.action === 'recommend') {
-      // ── OLDCARTS safety screening (head-map, rash dyspnea) before duration ──
-      // Runs once per consultation; routes high-risk presentations to Emergency.
-      if (!analysisData._screeningDone) {
-        startSafetyScreening();
-        return;
-      }
-
       // ── Duration Safeguard: check if we need to ask duration questions ──
       // Skip duration flow if we already went through it (durationCompleted populated
       // means we returned from the duration API with proceed=true).
@@ -3623,157 +3566,6 @@
     'BODY_ACHES', 'RASHES', 'ALLERGIC_RHINITIS', 'NASAL_CONGESTION',
     'RUNNY_NOSE', 'COUGH_GENERAL', 'COUGH_DRY', 'COUGH_PRODUCTIVE',
   ];
-
-  // ══════════════════════════════
-  //  OLDCARTS SAFETY SCREENING (head-map + rash dyspnea)
-  //  Self-contained emergency gates that run once, before the duration flow.
-  // ══════════════════════════════
-  let screeningQueue = [];
-
-  const SCREEN_COPY = {
-    en: {
-      headQ: 'Where is your headache?', headSub: 'Tap the part of the head that hurts the most.',
-      front: 'Forehead', crown: 'Top', temple: 'Side / Temple', back: 'Back of head (nape)',
-      thunder: 'It started suddenly and feels like the worst headache of my life',
-      frontTag: 'Front', backTag: 'Back',
-      dyspQ: 'Together with the rashes, are you having difficulty breathing?',
-      dypSub: 'For example: tight throat, wheezing, or shortness of breath.', yes: 'Yes', no: 'No',
-    },
-    tl: {
-      headQ: 'Saan ang sakit ng ulo mo?', headSub: 'Pindutin ang bahagi ng ulo na pinakamasakit.',
-      front: 'Noo', crown: 'Tuktok', temple: 'Gilid / Sentido', back: 'Batok (likod ng ulo)',
-      thunder: 'Biglang sumakit at parang pinakamatinding sakit ng ulo sa buhay ko',
-      frontTag: 'Harap', backTag: 'Likod',
-      dyspQ: 'Kasabay ng pantal, nahihirapan ka bang huminga?',
-      dypSub: 'Halimbawa: masikip na lalamunan, paghihingal, o kapos na paghinga.', yes: 'Oo', no: 'Hindi' },
-    ceb: {
-      headQ: 'Asa ang sakit sa imong ulo?', headSub: 'I-tap ang bahin sa ulo nga labing sakit.',
-      front: 'Agtang', crown: 'Tumoy', temple: 'Kilid / Templo', back: 'Tangkugo (luyo sa ulo)',
-      thunder: 'Kalit ra nga misakit ug mura\'g pinakagrabe nga sakit sa ulo sa akong kinabuhi',
-      frontTag: 'Atubangan', backTag: 'Luyo',
-      dyspQ: 'Kauban sa hubag-hubag, naglisod ka ba og ginhawa?',
-      dypSub: 'Pananglitan: hugot nga tutunlan, hagok, o kapoy nga pagginhawa.', yes: 'Oo', no: 'Dili' },
-  };
-  function screenCopy() { return SCREEN_COPY[selectedLanguage] || SCREEN_COPY.en; }
-
-  function startSafetyScreening() {
-    const symptoms = analysisData.symptoms || [];
-    screeningQueue = [];
-    if (symptoms.includes('HEADACHE')) screeningQueue.push('HEADACHE_LOCATION');
-    if (symptoms.includes('RASHES')) screeningQueue.push('RASH_DYSPNEA');
-    askNextScreening();
-  }
-
-  function askNextScreening() {
-    if (screeningQueue.length === 0) {
-      analysisData._screeningDone = true;
-      renderAnalysis(analysisData);
-      return;
-    }
-    const step = screeningQueue[0];
-    if (step === 'HEADACHE_LOCATION') renderHeadMapScreen();
-    else if (step === 'RASH_DYSPNEA') renderDyspneaScreen();
-    else advanceScreening();
-  }
-
-  window.advanceScreening = function() {
-    screeningQueue = screeningQueue.slice(1);
-    askNextScreening();
-  };
-
-  function screenChromeHidden() {
-    const c = document.getElementById('analysisResult');
-    c.classList.remove('hidden', 'center-stage', 'warning-fullscreen');
-    document.getElementById('analysisLoading').classList.add('hidden');
-    document.getElementById('viewRecsBtn').classList.add('hidden');
-    document.getElementById('assessAgainBtn').classList.add('hidden');
-    document.getElementById('exitBtn').classList.add('hidden');
-    document.getElementById('backFromResults').classList.remove('hidden');
-    return c;
-  }
-
-  function renderHeadMapScreen() {
-    const c = screenChromeHidden();
-    const s = screenCopy();
-    c.innerHTML = `
-      <div class="screen-page">
-        <div class="screen-q">${s.headQ}</div>
-        <div class="screen-sub">${s.headSub}</div>
-        <div class="headmap-wrap">
-          <div class="headmap">
-            <svg viewBox="0 0 240 230" role="img" aria-label="head map">
-              <ellipse cx="120" cy="112" rx="82" ry="92" fill="none" stroke="#52525b" stroke-width="2"></ellipse>
-              <path d="M40 96 q-14 16 0 32" fill="none" stroke="#52525b" stroke-width="2"></path>
-              <text x="52" y="20" fill="#71717a" font-size="11" text-anchor="middle">${s.frontTag}</text>
-              <text x="196" y="20" fill="#71717a" font-size="11" text-anchor="middle">${s.backTag}</text>
-              <circle class="hz safe" cx="86" cy="74" r="23" onclick="handleHeadZone('safe')"></circle>
-              <text x="86" y="78" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.front}</text>
-              <circle class="hz safe" cx="132" cy="50" r="23" onclick="handleHeadZone('safe')"></circle>
-              <text x="132" y="54" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.crown}</text>
-              <circle class="hz safe" cx="78" cy="124" r="23" onclick="handleHeadZone('safe')"></circle>
-              <text x="78" y="128" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.temple}</text>
-              <circle class="hz danger" cx="178" cy="118" r="24" onclick="handleHeadZone('danger')"></circle>
-              <text x="178" y="122" fill="#fecaca" font-size="10" text-anchor="middle" pointer-events="none">${s.back}</text>
-            </svg>
-          </div>
-        </div>
-        <div class="headmap-legend">
-          <span><i style="background:#2563eb"></i>${s.front} / ${s.crown} / ${s.temple}</span>
-          <span><i style="background:#b91c1c"></i>${s.back}</span>
-        </div>
-        <div class="screen-actions">
-          <button class="screen-btn yes" onclick="handleHeadZone('danger')">${s.thunder}</button>
-        </div>
-      </div>`;
-  }
-
-  window.handleHeadZone = function(kind) {
-    if (kind === 'danger') {
-      renderScreeningEmergency('headache_red_flag');
-      return;
-    }
-    advanceScreening();
-  };
-
-  function renderDyspneaScreen() {
-    const c = screenChromeHidden();
-    const s = screenCopy();
-    c.innerHTML = `
-      <div class="screen-page">
-        <div class="screen-q">${s.dyspQ}</div>
-        <div class="screen-sub">${s.dypSub}</div>
-        <div class="screen-actions">
-          <button class="screen-btn no" onclick="handleDyspnea(false)">${s.no}</button>
-          <button class="screen-btn yes" onclick="handleDyspnea(true)">${s.yes}</button>
-        </div>
-      </div>`;
-  }
-
-  window.handleDyspnea = function(hasDyspnea) {
-    if (hasDyspnea) {
-      renderScreeningEmergency('severe_allergic_reaction');
-      return;
-    }
-    advanceScreening();
-  };
-
-  function renderScreeningEmergency(flagKey) {
-    const c = document.getElementById('analysisResult');
-    c.classList.remove('hidden');
-    c.classList.add('center-stage', 'warning-fullscreen');
-    setTapReadyState(false);
-    c.innerHTML = `
-      <div class="triage-banner">
-        <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-        <h3>${t('emergencyTitle')}</h3>
-        <p>${t('emergencySub')}</p>
-        <div class="referral-cta">${t('professionalHelpTitle')}</div>
-        <p class="triage-note">${t('emergencyNote')}</p>
-      </div>`;
-    document.getElementById('backFromResults').classList.remove('hidden');
-    document.getElementById('assessAgainBtn').classList.remove('hidden');
-    document.getElementById('exitBtn').classList.remove('hidden');
-  }
 
   function startDurationFlow() {
     // Build queue of symptoms that need duration checking
@@ -3894,15 +3686,15 @@
       ],
       'NASAL_CONGESTION': [
         {...LESS_THAN_DAY, value: '0'},
-        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
-        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
-        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
+        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
+        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
       ],
       'RUNNY_NOSE': [
         {...LESS_THAN_DAY, value: '0'},
-        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
-        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
-        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
+        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
+        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
+        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
       ],
       'COUGH_GENERAL': [
         {...LESS_THAN_DAY, value: '0'},
@@ -3995,6 +3787,10 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Duration check failed');
+
+      if (data.warning) {
+        showToast(data.warning, 'warning');
+      }
 
       if (!data.safe) {
         // Duration exceeded — show referral banner
@@ -4247,7 +4043,7 @@
               : rec.in_stock === false
                 ? `<div class="avail out">\u2717 Out of Stock</div>`
                 : ''}
-            ${canBuy ? `<button class="rec-buy-btn" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> Buy</button>` : ''}
+            ${canBuy ? `<button class="btn btn--primary btn--sm" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> Buy</button>` : ''}
           </div>
         </div>`;
     }
@@ -4424,7 +4220,6 @@
     toStep2Btn.disabled = true;
     toStep3Btn.disabled = true;
     patientAge = null;
-    setPurchaseFor('self');   // reset proxy screening to default
     severity = 3;
     severityMap = {};
     preDetectedSymptoms = [];
@@ -4516,7 +4311,8 @@
   //  CHECKOUT FLOW
   // ══════════════════════════════
   let kioskCart = [];           // [{brand, quantity, inventory_id, unit_price, generic_name}]
-  let checkoutStep = 1;        // 1=Cart, 3=Payment, 4=Processing, 5=Success
+  let checkoutStep = 1;        // 1=Cart, 2=Auth, 3=Payment, 4=Processing, 5=Success
+  let kioskAuthenticated = false;
   let currentInvoiceId = null;
   let paymentCheckInterval = null;
   let paymentPollFailures = 0;
@@ -4572,6 +4368,7 @@
   // ── Checkout Modal ──
   window.openCheckoutModal = async function() {
     checkoutStep = 1;
+    kioskAuthenticated = false;
     currentInvoiceId = null;
     paymentPollFailures = 0;
     await refreshKioskCart();
@@ -4596,6 +4393,8 @@
     const stepsHtml = `
       <div class="checkout-steps">
         <div class="checkout-step-dot ${checkoutStep >= 1 ? (checkoutStep > 1 ? 'done' : 'active') : ''}"></div>
+        <div class="checkout-step-line"></div>
+        <div class="checkout-step-dot ${checkoutStep >= 2 ? (checkoutStep > 2 ? 'done' : 'active') : ''}"></div>
         <div class="checkout-step-line"></div>
         <div class="checkout-step-dot ${checkoutStep >= 3 ? (checkoutStep > 3 ? 'done' : 'active') : ''}"></div>
       </div>`;
@@ -4642,10 +4441,35 @@
 
       footer.innerHTML = kioskCart.length ? `
         <button class="btn" onclick="closeCheckoutModal()">Continue Shopping</button>
-        <button class="btn btn--primary" onclick="goToCheckoutStep(3)">
-          Choose Payment <i class="fa-solid fa-arrow-right"></i>
+        <button class="btn btn--primary" onclick="goToCheckoutStep(2)">
+          Authenticate <i class="fa-solid fa-arrow-right"></i>
         </button>` : `
         <button class="btn" onclick="closeCheckoutModal()">Close</button>`;
+
+    } else if (checkoutStep === 2) {
+      title.textContent = 'Identity Verification';
+      body.innerHTML = `
+        ${stepsHtml}
+        <div class="auth-section">
+          <div class="auth-icon" id="authIcon">
+            <i class="fa-solid fa-fingerprint"></i>
+          </div>
+          <div class="auth-title">Fingerprint Scan</div>
+          <div class="auth-subtitle">
+            Please place your finger on the AS608 sensor to verify your identity,<br>
+            or tap the button below to authenticate.
+          </div>
+          <button class="btn btn--primary" id="authBtn" onclick="doFingerprintAuth()">
+            <i class="fa-solid fa-fingerprint"></i> Authenticate
+          </button>
+          <div class="auth-status" id="authStatus"></div>
+        </div>`;
+
+      footer.innerHTML = `
+        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn--primary" id="toPaymentBtn" onclick="goToCheckoutStep(3)" disabled>
+          Choose Payment <i class="fa-solid fa-arrow-right"></i>
+        </button>`;
 
     } else if (checkoutStep === 3) {
       title.textContent = 'Payment Method';
@@ -4678,7 +4502,7 @@
         </div>`;
 
       footer.innerHTML = `
-        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn" onclick="goToCheckoutStep(2)"><i class="fa-solid fa-arrow-left"></i> Back</button>
         <button class="btn btn--primary" onclick="processPayment()">
           <i class="fa-solid fa-lock"></i> Pay Now
         </button>`;
@@ -4783,6 +4607,47 @@
       renderCheckoutStep();
     } catch (err) {
       showToast('Remove failed', 'error');
+    }
+  };
+
+  window.doFingerprintAuth = async function() {
+    const btn = document.getElementById('authBtn');
+    const icon = document.getElementById('authIcon');
+    const status = document.getElementById('authStatus');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
+
+    try {
+      await new Promise(r => setTimeout(r, 1200));
+
+      const res = await fetch('/checkout/api/auth/fingerprint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        kioskAuthenticated = true;
+        icon.classList.add('authenticated');
+        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        btn.classList.replace('btn--primary', 'btn--success');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified';
+        status.className = 'auth-status show ok';
+        status.textContent = 'Identity verified successfully!';
+        document.getElementById('toPaymentBtn').disabled = false;
+        setTimeout(() => goToCheckoutStep(3), 800);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+        status.className = 'auth-status show fail';
+        status.textContent = 'Verification failed. Please try again.';
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
+      status.className = 'auth-status show fail';
+      status.textContent = 'Error: ' + err.message;
     }
   };
 
@@ -4915,6 +4780,7 @@
   window.resetAll = function() {
     fetch('/checkout/api/cart/clear', { method: 'POST' }).catch(() => {});
     kioskCart = [];
+    kioskAuthenticated = false;
     updateCheckoutFab();
     _origResetAll();
   };

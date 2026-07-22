@@ -28,10 +28,18 @@ from flask import (
     Blueprint,
     render_template,
     request,
-    session,
     jsonify,
+    Response,
+    session,
 )
 
+from mendo_core.headache_locations import (
+    HEADACHE_LOCATIONS,
+    get_location,
+    classify_danger,
+    build_red_flag_response,
+    all_keys,
+)
 from mendo_core.interaction_logger import log_interaction
 
 log = logging.getLogger("mendo.consultation")
@@ -245,10 +253,8 @@ def api_analyze():
         user_age = data.get("age")  # int or None
         severity = data.get("severity")  # int 1-10 or None (legacy single value)
         severity_map = data.get("severity_map")  # dict symptom→int (per-symptom)
-        # Proxy-purchase screening: who is the medicine for? ("self" | "other").
-        # The age supplied is the intended patient's age, so age-based safety
-        # filtering applies to the actual patient rather than the purchaser.
-        purchase_for = data.get("purchase_for")  # "self" | "other" | None
+        headache_location = data.get("headache_location")  # str key or None
+        headache_danger = data.get("headache_danger")  # str or None
 
         if not user_text:
             return jsonify({"error": "Please describe your symptoms."}), 400
@@ -302,17 +308,80 @@ def api_analyze():
         source = report.get("final", {}).get("source", "unknown")
         red_flags = report.get("red_flags", [])
 
+        # ── Sinus headache: inject runny nose so decongestants match ──
+        if headache_location == "sinus":
+            if "RUNNY_NOSE" not in symptoms:
+                symptoms = list(symptoms) + ["RUNNY_NOSE"]
+
+        # ── Headache location red flags: only real red_flag danger blocks OTC ──
+        headache_cautions = []
+        if headache_location:
+            loc_data_red = get_location(headache_location)
+            if loc_data_red:
+                hf_danger = classify_danger(headache_location, user_age=user_age or 0)
+                if hf_danger == "red_flag":
+                    red_flags.append({
+                        "flag": "headache_location",
+                        "message": loc_data_red.safety_note_en,
+                    })
+                elif loc_data_red.red_flags_en:
+                    headache_cautions = loc_data_red.red_flags_en
+
+        # ── Log detailed pipeline flow ──
+        log.info("── Analyze request: text=%r age=%s severity=%s ──", user_text, user_age, severity)
+        for s in report.get("stages", []):
+            if s.get("stage") == "dictionary":
+                dict_detected = s.get("detected", [])
+                log.info("STAGE1 DICTIONARY: detected=%s conditions=%s", dict_detected, s.get("detected_conditions", []))
+                for d in (s.get("details") or []):
+                    log.info("  DICT match: symptom=%s phrases=%s", d.get("symptom"), d.get("matched_phrases", []))
+            elif s.get("stage") == "semantic":
+                if s.get("available"):
+                    log.info("STAGE2 SEMANTIC: threshold=%.2f top_margin=%.2f max=%d", s.get("threshold"), s.get("top_margin"), s.get("max_symptoms"))
+                    log.info("  raw detected=%s selected=%s", s.get("detected_raw"), s.get("detected_selected"))
+                    for row in (s.get("scores") or []):
+                        log.info("  semantic score %s: %.4f (anchor=%r)", row.get("symptom"), row.get("score"), row.get("best_anchor"))
+                else:
+                    log.warning("STAGE2 SEMANTIC: unavailable (error=%s)", s.get("error"))
+        log.info("FINAL symptoms=%s source=%s red_flags=%s", symptoms, source, red_flags)
+
         # ── Step 4: Recommendation ──
         from mendo_core.step4_recommend import recommend_medicine
 
         med_rows = _get_med_rows()
+
+        # Resolve headache location preferences for recommendation tuning
+        headache_prefer = None
+        headache_avoid = None
+        if headache_location:
+            loc_data = get_location(headache_location)
+            if loc_data:
+                headache_prefer = loc_data.prefer_categories
+                headache_avoid = loc_data.avoid_categories
+
         recommendation = recommend_medicine(
             symptoms,
             med_rows,
             red_flags=red_flags,
             user_input=user_text,
             detected_conditions=detected_conditions,
+            headache_prefer_categories=headache_prefer,
+            headache_avoid_categories=headache_avoid,
         )
+
+        # Log recommendation details
+        rec_action = recommendation.get("action", "unknown")
+        log.info("RECOMMENDATION: action=%s", rec_action)
+        if rec_action == "recommend":
+            for r in recommendation.get("recommendations", []) or []:
+                log.info("  MED: brand=%s generic=%s category=%s reasons=%s min_age=%s",
+                         r.get("brand"), r.get("active_ingredients"), r.get("drug_category"),
+                         r.get("reasons"), r.get("min_age"))
+        elif rec_action == "ask_clarify":
+            log.info("  CLARIFY: question=%s options=%s", recommendation.get("question"),
+                     [o.get("label") for o in (recommendation.get("options") or [])])
+        elif rec_action in ("triage", "no_match"):
+            log.info("  ACTION=%s message=%s", rec_action, recommendation.get("message") or recommendation.get("question"))
 
         # ── Filter by age + cross-reference POS inventory ──
         if user_age is not None:
@@ -366,9 +435,37 @@ def api_analyze():
             resp["severity_map"] = severity_map
         if referral is not None:
             resp["referral"] = referral
+        if headache_cautions:
+            resp["headache_cautions"] = headache_cautions
+
+        # ── Headache location context ──
+        if headache_location:
+            loc_data = get_location(headache_location)
+            if loc_data:
+                resp["headache_location"] = {
+                    "key": headache_location,
+                    "label_en": loc_data.label_en,
+                    "danger": loc_data.danger,
+                }
+                # If headache danger is red_flag, add a specific referral
+                if headache_danger == "red_flag" or loc_data.danger == "red_flag":
+                    if referral is None:
+                        referral = {
+                            "level": "high",
+                            "severity": severity,
+                            "message": (
+                                "The reported headache type requires medical "
+                                "attention. Please consult a doctor before "
+                                "taking any medication."
+                            ),
+                        }
+                        resp["referral"] = referral
 
         # ── Log interaction for Iteration 2 expert validation ──
         try:
+            is_triage = bool(referral)
+            if not is_triage and headache_location:
+                is_triage = classify_danger(headache_location, user_age or 0) == "red_flag"
             log_interaction(
                 user_input=user_text,
                 extracted_symptoms=symptoms,
@@ -376,11 +473,12 @@ def api_analyze():
                 pipeline_stages=report.get("stages", []),
                 recommendation=recommendation,
                 red_flags=red_flags,
-                interaction_type="initial_analysis",
+                interaction_type="triage" if is_triage else "analysis",
                 severity=severity,
                 age=user_age,
                 session_id=session.get("sid"),
-                purchase_for=purchase_for,
+                headache_location=headache_location,
+                headache_danger=headache_danger,
             )
         except Exception:
             pass  # logging must never break the main flow
@@ -459,18 +557,54 @@ def api_duration_check():
         result = check_duration_safety(symptom, reported_days)
 
         if not result["safe"]:
+            # RUNNY_NOSE exceeding threshold gets a soft warning (still proceed)
+            if symptom == "RUNNY_NOSE":
+                warning_msg = (
+                    f"Your runny nose has lasted {reported_days} days. "
+                    "We recommend consulting a doctor if it persists. "
+                    "You may still proceed with OTC medication."
+                )
+                try:
+                    log_interaction(
+                        user_input=f"{symptom} ({reported_days} days) — duration warning, allowed",
+                        extracted_symptoms=original_symptoms,
+                        extraction_source="duration_safeguard",
+                        pipeline_stages=[],
+                        recommendation={"action": "none", "recommendations": []},
+                        interaction_type="duration_warning",
+                        severity=dur_severity,
+                        age=user_age,
+                        session_id=session.get("sid"),
+                        duration_symptom=symptom,
+                        duration_value=duration_value,
+                        duration_days=reported_days,
+                    )
+                except Exception:
+                    pass
+                # Return safe=true so the flow continues, but attach a warning
+                return jsonify({
+                    "safe": True,
+                    "proceed": True,
+                    "warning": warning_msg,
+                    "symptoms": original_symptoms,
+                    "recommendation": {"action": "none", "recommendations": []},
+                })
+
             # Duration exceeded — block OTC, refer to doctor
             try:
                 log_interaction(
-                    user_input=f"[duration-block:{symptom}={duration_value}({reported_days}d)]",
+                    user_input=f"{symptom} ({reported_days} days) — duration too long, blocked",
                     extracted_symptoms=original_symptoms,
                     extraction_source="duration_safeguard",
                     pipeline_stages=[],
                     recommendation=result["referral"],
-                    interaction_type="duration_block",
+                    interaction_type="duration_blocked",
                     severity=dur_severity,
                     age=user_age,
                     session_id=session.get("sid"),
+                    duration_symptom=symptom,
+                    duration_value=duration_value,
+                    duration_days=reported_days,
                 )
             except Exception:
                 pass
@@ -542,15 +676,18 @@ def api_duration_check():
         # Log
         try:
             log_interaction(
-                user_input=f"[duration-safe:{symptom}={duration_value}({reported_days}d)]",
+                user_input=f"{symptom} ({reported_days} days) — duration ok",
                 extracted_symptoms=original_symptoms,
                 extraction_source="duration_safeguard",
                 pipeline_stages=[],
                 recommendation=recommendation,
-                interaction_type="duration_pass",
+                interaction_type="duration_ok",
                 severity=dur_severity,
                 age=user_age,
                 session_id=session.get("sid"),
+                duration_symptom=symptom,
+                duration_value=duration_value,
+                duration_days=reported_days,
             )
         except Exception:
             pass
@@ -654,6 +791,10 @@ def api_context_clarify():
             pseudo_input = "sipon allergy sneezing itchy nose"
         elif clarification == "SIPON_COLD_WEATHER":
             pseudo_input = "sipon cold weather malamig"
+        elif clarification == "RASHES_BREATHING_YES":
+            pseudo_input = "rashes difficulty breathing emergency"
+        elif clarification == "RASHES_BREATHING_NO":
+            pseudo_input = "rashes no difficulty breathing"
         else:
             pseudo_input = None
 
@@ -699,14 +840,14 @@ def api_context_clarify():
         # Log
         try:
             log_interaction(
-                user_input=f"[context-clarify:{clarify_type}={clarification}]",
+                user_input=f"Clarified: {clarification}",
                 extracted_symptoms=symptoms,
                 extraction_source="context_clarification",
                 pipeline_stages=[],
                 recommendation=recommendation,
                 clarification=clarification,
                 context_override=clarification,
-                interaction_type="context_clarification",
+                interaction_type="clarify_context",
                 severity=data.get("severity"),
                 age=user_age,
                 session_id=session.get("sid"),
@@ -797,13 +938,13 @@ def api_clarify():
         # ── Log clarification interaction ──
         try:
             log_interaction(
-                user_input="[clarification]",
+                user_input=f"Clarified: {clarification}",
                 extracted_symptoms=symptoms,
                 extraction_source="clarification",
                 pipeline_stages=[],
                 recommendation=recommendation,
                 clarification=clarification,
-                interaction_type="cough_clarification",
+                interaction_type="clarify_symptom",
                 severity=data.get("severity"),
                 age=user_age,
                 session_id=session.get("sid"),
@@ -819,6 +960,118 @@ def api_clarify():
 
     except Exception as e:
         log.error("Clarify error: %s", e)
+        return jsonify({"error": str(e)}), 500
+
+
+@consultation_bp.route("/api/headache-locations", methods=["GET"])
+def api_headache_locations():
+    """Return the list of known headache locations with multilingual labels.
+
+    Response JSON:
+        {
+            "locations": [...]
+        }
+    """
+    try:
+        locs = []
+        for loc in HEADACHE_LOCATIONS:
+            locs.append({
+                "key": loc.key,
+                "image": loc.image,
+                "label_en": loc.label_en,
+                "label_tl": loc.label_tl,
+                "label_ceb": loc.label_ceb,
+                "desc_en": loc.desc_en,
+                "desc_tl": loc.desc_tl,
+                "desc_ceb": loc.desc_ceb,
+                "danger": loc.danger,
+                "common_causes_en": loc.common_causes_en,
+                "common_causes_tl": loc.common_causes_tl,
+                "common_causes_ceb": loc.common_causes_ceb,
+                "red_flags_en": loc.red_flags_en,
+                "red_flags_tl": loc.red_flags_tl,
+                "red_flags_ceb": loc.red_flags_ceb,
+                "safety_note_en": loc.safety_note_en,
+                "safety_note_tl": loc.safety_note_tl,
+                "safety_note_ceb": loc.safety_note_ceb,
+                "otc_safe_if_isolated": loc.otc_safe_if_isolated,
+            })
+        return jsonify({"locations": locs})
+    except Exception as e:
+        log.error("Headache locations error: %s", e)
+        return jsonify({"error": str(e)}), 500
+
+
+@consultation_bp.route("/api/headache-assess", methods=["POST"])
+def api_headache_assess():
+    """Assess a selected headache location and return red-flag / safety info.
+
+    Request JSON:
+        {
+            "location_key": "occipital",
+            "age": 25,
+            "has_fever": false,
+            "has_neck_stiffness": false,
+            "has_vision_changes": false
+        }
+
+    Response JSON:
+        {
+            "location_key": "occipital",
+            "label_en": "Back of Head / Base of Skull",
+            "danger": "caution",            # "safe" | "caution" | "red_flag"
+            "red_flag": null | { "flag": "headache_red_flag", ... },
+            "safety_note_en": "...",
+            "prefer_categories": [...],
+            "avoid_categories": [],
+            "otc_safe_if_isolated": true
+        }
+    """
+    try:
+        data = request.get_json(force=True)
+        location_key = (data.get("location_key") or "").strip()
+        if not location_key:
+            return jsonify({"error": "Missing location_key"}), 400
+
+        user_age = data.get("age", 0)
+        has_fever = bool(data.get("has_fever", False))
+        has_neck_stiffness = bool(data.get("has_neck_stiffness", False))
+        has_vision_changes = bool(data.get("has_vision_changes", False))
+
+        loc = get_location(location_key)
+        if not loc:
+            return jsonify({"error": f"Unknown location: {location_key}"}), 400
+
+        danger = classify_danger(
+            location_key,
+            user_age=user_age,
+            has_fever=has_fever,
+            has_neck_stiffness=has_neck_stiffness,
+            has_vision_changes=has_vision_changes,
+        )
+
+        resp = {
+            "location_key": loc.key,
+            "label_en": loc.label_en,
+            "label_tl": loc.label_tl,
+            "label_ceb": loc.label_ceb,
+            "danger": danger,
+            "red_flag": None,
+            "safety_note_en": loc.safety_note_en,
+            "safety_note_tl": loc.safety_note_tl,
+            "safety_note_ceb": loc.safety_note_ceb,
+            "prefer_categories": loc.prefer_categories,
+            "avoid_categories": loc.avoid_categories,
+            "otc_safe_if_isolated": loc.otc_safe_if_isolated,
+        }
+
+        if danger == "red_flag":
+            resp["red_flag"] = build_red_flag_response(location_key)
+
+        return jsonify(resp)
+
+    except Exception as e:
+        log.error("Headache assess error: %s", e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -858,3 +1111,33 @@ def api_transcribe():
     except Exception as e:
         log.error("Transcribe error: %s", e)
         return jsonify({"error": f"Transcription failed: {e}"}), 500
+
+
+@consultation_bp.route("/api/export-logs/csv", methods=["GET"])
+def api_export_logs_csv():
+    """Export all interaction logs as CSV."""
+    try:
+        from mendo_core.interaction_logger import export_logs_as_csv
+        csv_data = export_logs_as_csv()
+        if not csv_data:
+            return jsonify({"error": "No logs found"}), 404
+        return Response(csv_data, mimetype="text/csv",
+                        headers={"Content-Disposition": "attachment; filename=interaction_logs.csv"})
+    except Exception as e:
+        log.error("Export CSV error: %s", e)
+        return jsonify({"error": str(e)}), 500
+
+
+@consultation_bp.route("/api/export-logs/pdf", methods=["GET"])
+def api_export_logs_pdf():
+    """Export all interaction logs as PDF."""
+    try:
+        from mendo_core.interaction_logger import export_logs_as_pdf
+        pdf_data = export_logs_as_pdf()
+        if not pdf_data:
+            return jsonify({"error": "No logs found"}), 404
+        return Response(pdf_data, mimetype="application/pdf",
+                        headers={"Content-Disposition": "attachment; filename=interaction_logs.pdf"})
+    except Exception as e:
+        log.error("Export PDF error: %s", e)
+        return jsonify({"error": str(e)}), 500

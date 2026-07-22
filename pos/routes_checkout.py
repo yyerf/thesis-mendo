@@ -3,8 +3,9 @@
 Flow:
   1. Customer selects medicines from recommendation results
   2. Anti-hoarding: max 3 units per item, max 5 distinct items
-  3. Payment method: Cashless (Xendit invoice) or Cash (coming soon)
-  4. On successful payment → inventory deducted, transaction logged
+  3. Fingerprint auth (simulated with button click for demo)
+  4. Payment method: Cashless (Xendit invoice) or Cash (coming soon)
+  5. On successful payment → inventory deducted, transaction logged
 """
 
 from __future__ import annotations
@@ -198,11 +199,30 @@ def api_kiosk_cart_clear():
     return jsonify({"success": True})
 
 
+# ─────────── Fingerprint Auth (simulated) ───────────
+
+@checkout_bp.route("/api/auth/fingerprint", methods=["POST"])
+def api_fingerprint_auth():
+    """Simulate AS608 fingerprint sensor authentication.
+    In production this would talk to the hardware via serial bridge.
+    For demo: always succeeds on button click.
+    """
+    session["kiosk_authenticated"] = True
+    return jsonify({
+        "success": True,
+        "message": "Fingerprint authenticated successfully",
+        "authenticated": True,
+    })
+
+
 # ─────────── Xendit Invoice Creation ───────────
 
 @checkout_bp.route("/api/pay/xendit", methods=["POST"])
 def api_pay_xendit():
     """Create a Xendit invoice for kiosk cashless payment."""
+    if not session.get("kiosk_authenticated"):
+        return jsonify({"error": "Please authenticate first (fingerprint scan)"}), 403
+
     cart = _get_kiosk_cart()
     if not cart:
         return jsonify({"error": "Cart is empty"}), 400
@@ -345,6 +365,7 @@ def api_verify_payment():
         # Clear session data
         _set_kiosk_cart([])
         session.pop("pending_order", None)
+        session.pop("kiosk_authenticated", None)
 
         return jsonify({
             "success": True,
