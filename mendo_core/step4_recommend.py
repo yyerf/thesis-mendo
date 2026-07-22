@@ -254,7 +254,7 @@ DURATION_THRESHOLDS: Dict[str, Dict[str, Any]] = {
         "days": 3,
     },
     "DIARRHEA": {
-        "days": 2,
+        "days": 7,
     },
     "SORE_THROAT": {
         "days": 5,
@@ -301,9 +301,9 @@ _DURATION_OPTIONS: Dict[str, list] = {
     ],
     "DIARRHEA": [
         {"label": "Less than a day", "value": "0"},
-        {"label": "About a day", "value": "1"},
-        {"label": "2 days", "value": "2"},
-        {"label": "More than 2 days", "value": "3+"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
     ],
     "SORE_THROAT": [
         {"label": "Less than a day", "value": "0"},
@@ -586,6 +586,8 @@ def recommend_from_dataset(
     user_input: Optional[str] = None,
     context_override: Optional[str] = None,
     detected_conditions: Optional[Sequence[str]] = None,
+    headache_prefer_categories: Optional[Sequence[str]] = None,
+    headache_avoid_categories: Optional[Sequence[str]] = None,
 ) -> Dict[str, Any]:
     """Rule-based mapping aligned to your dataset.
 
@@ -668,6 +670,8 @@ def recommend_from_dataset(
         _stomach_acidic = True
     elif context_override == "STOMACH_CRAMPING":
         _stomach_cramping = True
+    elif context_override == "STOMACH_GENERAL":
+        pass  # No specific context — use general stomach ache matching
     elif context_override == "SIPON_VIRAL_COLD":
         _sipon_context_answered = True
     elif context_override == "SIPON_ALLERGY":
@@ -731,25 +735,31 @@ def recommend_from_dataset(
                     "action": "ask_clarify",
                     "clarify_type": "STOMACH_CONTEXT",
                     "question": (
-                        "Para mas tama ang i-recommend, ano ang nararamdaman mo?\n"
-                        "• Maanghang / nasusunog ba? (Burning / acidic feeling?)\n"
+                        "Para mas tama ang i-recommend, pakisagot:\n"
+                        "• Sumakit ba ang tiyan mo bago o pagkatapos kumain?\n"
+                        "  (Did it start before or after eating?)\n"
+                        "• Maanghang / nasusunog ba? (Burning / acidic?)\n"
                         "• Pulikat / kabag ba? (Cramping / bloating?)"
                     ),
                     "options": [
                         {
-                            "label": "Maanghang / Nasusunog / Burning / Acidic",
+                            "label": "Bago kumain, nasusunog / Before meal, burning",
                             "value": "STOMACH_ACIDIC",
                         },
                         {
-                            "label": "Pulikat / Kabag / Cramping / Bloating",
+                            "label": "Pagkatapos kumain, masikip / After meal, bloated",
                             "value": "STOMACH_CRAMPING",
+                        },
+                        {
+                            "label": "Hindi sigurado / Not sure",
+                            "value": "STOMACH_GENERAL",
                         },
                     ],
                     "original_symptoms": list(symptoms),
                 }
 
         # --- RUNNY_NOSE (sipon): allergy vs viral cold vs cold weather ---
-        if "RUNNY_NOSE" in symptoms_set:
+        if "RUNNY_NOSE" in symptoms_set or "NASAL_CONGESTION" in symptoms_set:
             if not _sipon_context_answered:
                 _sipon_cold_weather = any(
                     c in _input_lower for c in _COLD_WEATHER_SIPON_CLUES
@@ -759,7 +769,7 @@ def recommend_from_dataset(
                 )
             # Only ask clarification when sipon is the sole symptom
             # and no context clues were detected from the input text
-            other_syms = symptoms_set - {"RUNNY_NOSE"}
+            other_syms = symptoms_set - {"RUNNY_NOSE", "NASAL_CONGESTION"}
             if (
                 not _sipon_cold_weather
                 and not _sipon_allergy
@@ -794,6 +804,44 @@ def recommend_from_dataset(
                     ],
                     "original_symptoms": list(symptoms),
                 }
+
+        # --- RASHES: difficulty breathing → Emergency Triage ---
+        if "RASHES" in symptoms_set:
+            if context_override == "RASHES_BREATHING_YES":
+                red_flags_user = list(red_flags or [])
+                red_flags_user.append({
+                    "flag": "rashes_breathing_difficulty",
+                    "message": "Rashes with difficulty breathing may indicate a severe allergic reaction (anaphylaxis). Seek emergency care immediately."
+                })
+                return {
+                    "action": "triage",
+                    "triage_flags": red_flags_user,
+                    "message": "⚠️ EMERGENCY: Rashes with difficulty breathing may indicate anaphylaxis. Call 911 or go to the ER immediately.",
+                    "recommendations": [],
+                    "safety_warnings": [],
+                }
+            elif context_override not in {"RASHES_BREATHING_NO", "RASHES_BREATHING_YES"}:
+                other_syms = symptoms_set - {"RASHES"}
+                if not other_syms:
+                    return {
+                        "action": "ask_clarify",
+                        "clarify_type": "RASHES_BREATHING",
+                        "question": (
+                            "May kasama bang hirap sa paghinga?\n"
+                            "(Are you experiencing difficulty breathing?)"
+                        ),
+                        "options": [
+                            {
+                                "label": "Oo / Yes",
+                                "value": "RASHES_BREATHING_YES",
+                            },
+                            {
+                                "label": "Hindi / No",
+                                "value": "RASHES_BREATHING_NO",
+                            },
+                        ],
+                        "original_symptoms": list(symptoms),
+                    }
 
     if "HYPERTENSION" in normalized_conditions:
         nasal_syms = {"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"}
@@ -978,6 +1026,22 @@ def recommend_from_dataset(
                 else:
                     add_candidate(row, "stomach_ache_match", 2)
 
+    # ── Headache location preference boost / penalty ──
+    _headache_prefer = headache_prefer_categories or []
+    _headache_avoid = headache_avoid_categories or []
+    if _headache_prefer or _headache_avoid:
+        boosted = []
+        for score, row, reasons in candidates:
+            cat = row.drug_category.lower()
+            if any(p in cat for p in _headache_prefer):
+                score += 2
+                reasons.append("headache_location_preferred")
+            if any(a in cat for a in _headache_avoid):
+                score -= 2
+                reasons.append("headache_location_avoided")
+            boosted.append((score, row, reasons if score > 0 else [reasons[0]]))
+        candidates = [(s, r, rs) for s, r, rs in boosted if s > 0]
+
     # Merge by brand (keep highest score, merge reasons)
     by_brand: Dict[str, Tuple[int, MedRow, List[str]]] = {}
     for score, row, reasons in candidates:
@@ -1142,6 +1206,8 @@ def recommend_medicine(
     user_input: Optional[str] = None,
     context_override: Optional[str] = None,
     detected_conditions: Optional[Sequence[str]] = None,
+    headache_prefer_categories: Optional[Sequence[str]] = None,
+    headache_avoid_categories: Optional[Sequence[str]] = None,
 ) -> Dict[str, Any]:
     """Stage 5 recommendation entrypoint with condition-aware safety filtering."""
 
@@ -1152,6 +1218,8 @@ def recommend_medicine(
         user_input=user_input,
         context_override=context_override,
         detected_conditions=detected_conditions,
+        headache_prefer_categories=headache_prefer_categories,
+        headache_avoid_categories=headache_avoid_categories,
     )
 
 

@@ -1049,6 +1049,11 @@ def _infer_nasal_label(normalized_text: str, detected: List[str], negated_labels
     if _has_any(congestion_cues) and not congestion_cue_negated and "NASAL_CONGESTION" not in detected and "NASAL_CONGESTION" not in negated_labels:
         detected.append("NASAL_CONGESTION")
     
+    # If user mentioned congestion (barado) without runny cues, also register
+    # RUNNY_NOSE so the sipon-clarification flow triggers for "barado na ilong".
+    if "NASAL_CONGESTION" in detected and "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
+        detected.append("RUNNY_NOSE")
+    
     # If neither was detected and nose/ilong was mentioned, default to congestion
     nasal_labels = {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}
     if not any(l in nasal_labels for l in detected):
@@ -1083,11 +1088,11 @@ def extract_symptoms(user_input: str) -> List[str]:
     if "HEADACHE" not in detected:
         tokens = normalized_text.split()
 
-        head_present = re.search(r"\b(head|ulo)\b", normalized_text) is not None
+        head_present = re.search(r"\b(head|ulo|uwlo|uwo|ulu|olo)\b", normalized_text) is not None
         if not head_present:
-            # Typo/jejemon rescue: hed->head, olo->ulo
+            # Typo/jejemon rescue: hed->head, olo->ulo, uo->ulo
             head_present = any(
-                (len(t) >= 3 and (_levenshtein_within(t, "head", 1) or _levenshtein_within(t, "ulo", 1)))
+                (len(t) >= 2 and (_levenshtein_within(t, "head", 1) or _levenshtein_within(t, "ulo", 1)))
                 for t in tokens
             )
 
@@ -1098,22 +1103,22 @@ def extract_symptoms(user_input: str) -> List[str]:
         if not pain_present:
             # Typo/jejemon rescue: skit->sakit, lbd->labad, masaket->masakit
             pain_present = any(
-                (len(t) >= 3 and (_levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "labad", 2) or _levenshtein_within(t, "masakit", 1)))
+                (len(t) >= 2 and (_levenshtein_within(t, "sakit", 1) or _levenshtein_within(t, "labad", 2) or _levenshtein_within(t, "masakit", 1)))
                 for t in tokens
             )
 
         headache_explicitly_negated = (
-            re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,3}\s+\b(headache|ulo|head)\b", normalized_text)
+            re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,3}\s+\b(headache|ulo|uwlo|uwo|ulu|olo|head)\b", normalized_text)
             is not None
         )
         if head_present and pain_present and not headache_explicitly_negated:
             # Proximity check: head_word and pain_word must be within 5 tokens of each other
             # This prevents "sakit ng ulo... katawan ko" from triggering HEADACHE when pain refers to body
-            head_positions = [i for i, t in enumerate(tokens) if re.match(r"^(head|ulo)$", t)]
+            head_positions = [i for i, t in enumerate(tokens) if re.match(r"^(head|ulo|uwlo|uwo|ulu|olo)$", t)]
             pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|ache|aches|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
             # Also check for fuzzy-matched head/pain tokens
             for i, t in enumerate(tokens):
-                if len(t) >= 3:
+                if len(t) >= 2:
                     if i not in [p for p in head_positions]:
                         if _levenshtein_within(t, "head", 1) or _levenshtein_within(t, "ulo", 1):
                             if t not in {"ubo", "ubi", "uno", "uso"}:  # exclude cough and other common words
@@ -1235,9 +1240,12 @@ def extract_symptoms(user_input: str) -> List[str]:
     # Example: "ssinisipown" -> RUNNY_NOSE, "sepun" -> RUNNY_NOSE
     if "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
         tokens = normalized_text.split()
+        sipon_exclusion = {"ngipon", "ipin", "tooth", "dental", "ngilo", "bag-ang", "pangil"}
         sipon_targets = ["sinisipon", "sinasipon", "sisipon", "sipon"]
         for tok in tokens:
             if len(tok) < 4:
+                continue
+            if tok in sipon_exclusion:
                 continue
             if any(_levenshtein_within(tok, target, max_dist=2) for target in sipon_targets):
                 detected.append("RUNNY_NOSE")
