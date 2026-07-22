@@ -65,14 +65,13 @@
           <th>Type</th>
           <th>User Input</th>
           <th>Symptoms</th>
-          <th>Headache</th>
           <th>Duration</th>
           <th>Action</th>
           <th>Age</th>
         </tr>
       </thead>
       <tbody id="logTableBody">
-        <tr><td colspan="10" class="table-empty">Loading...</td></tr>
+        <tr><td colspan="9" class="table-empty">Loading...</td></tr>
       </tbody>
     </table>
   </div>
@@ -195,14 +194,15 @@ function renderTable(logs, total) {
     };
     const typeLabel = typeLabels[log.interaction_type] || log.interaction_type;
     const badgeColor = typeBadgeColors[log.interaction_type] || 'badge--neutral';
-    const typeBadge = `<span class="badge ${badgeColor}">${typeLabel}</span>`;
+    const pd = log.pipeline_detail || {};
+    const hl = pd.headache_location || '';
+    const typeBadge = `<span class="badge ${badgeColor}">${typeLabel}${hl ? ' &middot; ' + escHtml(hl.charAt(0).toUpperCase() + hl.slice(1)) : ''}</span>`;
     const input = log.user_input || '';
     const truncatedInput = input.length > 60 ? input.slice(0, 60) + '…' : input;
     const rowId = `log-row-${idx}`;
     const expandId = `log-expand-${idx}`;
 
-    const pd = log.pipeline_detail || {};
-    const headacheText = pd.headache_location ? `${pd.headache_location}${pd.headache_danger ? ' ('+pd.headache_danger+')' : ''}` : '-';
+    const headacheDetail = pd.headache_location ? `${hl ? hl.charAt(0).toUpperCase() + hl.slice(1) + ' Headache' : pd.headache_location}${pd.headache_danger ? ' ('+pd.headache_danger+')' : ''}` : '-';
     const durationText = pd.duration_symptom ? `${pd.duration_symptom}: ${pd.duration_value || pd.duration_days+'d'}` : '-';
 
     return `<tr>
@@ -212,13 +212,12 @@ function renderTable(logs, total) {
       <td>${typeBadge}</td>
       <td class="log-input-cell" title="${escHtml(input)}">${escHtml(truncatedInput)}</td>
       <td class="log-symptom-cell">${symHtml}</td>
-      <td class="text-sm">${headacheText}</td>
       <td class="text-sm">${durationText}</td>
       <td class="log-action-cell ${actionClass}">${log.action || '-'}</td>
       <td class="text-sm">${log.age != null ? log.age + 'y' : '-'}</td>
     </tr>
     <tr class="log-expanded-row" id="${expandId}" style="display:none;">
-      <td colspan="10">
+      <td colspan="9">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="detail-section">
             <h4>Input</h4>
@@ -231,7 +230,7 @@ function renderTable(logs, total) {
               <dt>Clarification</dt><dd>${log.clarification || '-'}</dd>
               <dt>Context Override</dt><dd>${log.context_override || '-'}</dd>
               <dt>Session ID</dt><dd class="mono">${log.session_id || '-'}</dd>
-              <dt>Headache</dt><dd>${headacheText}</dd>
+              <dt>Headache</dt><dd>${headacheDetail}</dd>
               <dt>Duration</dt><dd>${durationText}</dd>
               <dt>Severity</dt><dd>${log.severity != null ? log.severity + '/10' : '-'}</dd>
             </div>

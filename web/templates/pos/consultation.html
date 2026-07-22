@@ -2855,6 +2855,12 @@
     const c = document.getElementById('headacheLocationSelector');
     c.classList.add('hidden'); c.innerHTML = '';
     document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+
+    // Sinus headache: inject RUNNY_NOSE into symptoms so severity is asked for it too
+    if (selectedHeadacheLocation === 'sinus' && !preDetectedSymptoms.includes('RUNNY_NOSE')) {
+      preDetectedSymptoms.push('RUNNY_NOSE');
+    }
+
     severityMap = {};
     severityQueue = [...preDetectedSymptoms];
     severityCompleted = [];
