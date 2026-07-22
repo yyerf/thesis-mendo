@@ -700,8 +700,17 @@ class DurationSafeguardTests(unittest.TestCase):
         result = check_duration_safety("COUGH_GENERAL", 14)
         self.assertTrue(result["safe"])
 
-    def test_runny_nose_exactly_10_days_safe(self):
-        result = check_duration_safety("RUNNY_NOSE", 10)
+    def test_runny_nose_exactly_7_days_safe(self):
+        # Colds/Sipon threshold tightened to 7 days (Dr. Cherrie: refer if > 1 week)
+        result = check_duration_safety("RUNNY_NOSE", 7)
+        self.assertTrue(result["safe"])
+
+    def test_runny_nose_8_days_blocked(self):
+        result = check_duration_safety("RUNNY_NOSE", 8)
+        self.assertFalse(result["safe"])
+
+    def test_nasal_congestion_exactly_7_days_safe(self):
+        result = check_duration_safety("NASAL_CONGESTION", 7)
         self.assertTrue(result["safe"])
 
     # -- API endpoint tests --

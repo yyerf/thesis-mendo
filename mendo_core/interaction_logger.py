@@ -61,6 +61,7 @@ def log_interaction(
     severity: Optional[int] = None,
     age: Optional[int] = None,
     session_id: Optional[str] = None,
+    purchase_for: Optional[str] = None,
 ) -> str:
     """Append one interaction record to the JSONL log file.
 
@@ -115,6 +116,7 @@ def log_interaction(
         "context_override": context_override,
         "severity": severity,
         "age": age,
+        "purchase_for": purchase_for,
     }
 
     try:

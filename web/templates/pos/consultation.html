@@ -1642,41 +1642,6 @@
       font-size: 11px; color: var(--zinc-400); margin-top: 8px; text-align: center;
     }
 
-    /* Fingerprint auth */
-    .auth-section { text-align: center; padding: 20px 0; }
-    .auth-icon {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: var(--blue-50); border: 2px solid var(--blue-200);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 16px; font-size: 36px; color: var(--blue-500);
-      transition: all 0.3s;
-    }
-    .auth-icon.authenticated {
-      background: var(--success-light); border-color: var(--success);
-      color: var(--success);
-    }
-    .auth-title { font-size: 20px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
-    .auth-subtitle { font-size: 14px; color: var(--zinc-500); margin-bottom: 20px; line-height: 1.6; }
-    .auth-btn {
-      padding: 14px 28px; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
-      color: var(--white); font-family: var(--font);
-      font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .auth-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(2,132,199,0.3); }
-    .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .auth-btn.success {
-      background: linear-gradient(135deg, var(--success), #16a34a);
-    }
-    .auth-status {
-      margin-top: 14px; font-size: 14px; font-weight: 600;
-      display: none;
-    }
-    .auth-status.show { display: block; }
-    .auth-status.ok { color: var(--success); }
-    .auth-status.fail { color: var(--danger); }
 
     /* Payment method */
     .payment-section { padding: 10px 0; }
@@ -1820,6 +1785,60 @@
       .kiosk-step { padding: 6px 10px; }
       .kiosk-step-divider { width: 14px; }
     }
+
+    /* ── Proxy-purchase screening (Who is this for?) ── */
+    .proxy-screen { margin-bottom: 26px; }
+    .proxy-q {
+      font-size: 15px; font-weight: 700; color: var(--zinc-300);
+      text-align: center; margin-bottom: 12px;
+    }
+    .proxy-options { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .proxy-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 20px; border-radius: 14px; cursor: pointer;
+      background: var(--zinc-800, #27272a); color: var(--zinc-200, #e4e4e7);
+      border: 2px solid var(--zinc-700, #3f3f46); font-size: 15px; font-weight: 700;
+      transition: border-color .15s, background .15s, transform .1s;
+    }
+    .proxy-btn .proxy-ico { font-size: 18px; opacity: .9; }
+    .proxy-btn:hover { transform: translateY(-1px); }
+    .proxy-btn.active {
+      border-color: var(--accent, #22d3ee); background: rgba(34, 211, 238, 0.12);
+      color: #fff;
+    }
+
+    /* ── OLDCARTS safety screening (head-map, dyspnea checkbox) ── */
+    .screen-page { max-width: 560px; margin: 0 auto; text-align: center; }
+    .screen-q { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .screen-sub { font-size: 14px; color: var(--zinc-400); margin-bottom: 22px; }
+    .headmap-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
+    .headmap svg { width: 230px; height: auto; }
+    .headmap .hz {
+      cursor: pointer; transition: fill .15s, opacity .15s;
+      fill: var(--zinc-700, #3f3f46); stroke: var(--zinc-500, #71717a); stroke-width: 1.5;
+    }
+    .headmap .hz:hover { opacity: .85; }
+    .headmap .hz.safe:hover { fill: #2563eb; }
+    .headmap .hz.danger { fill: #4b1d1d; stroke: #b91c1c; }
+    .headmap .hz.danger:hover { fill: #b91c1c; }
+    .headmap-legend {
+      display: flex; gap: 18px; justify-content: center; font-size: 12px;
+      color: var(--zinc-400); margin-bottom: 18px;
+    }
+    .headmap-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .headmap-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+    .screen-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .screen-btn {
+      padding: 14px 26px; border-radius: 14px; font-size: 16px; font-weight: 800;
+      cursor: pointer; border: 2px solid var(--zinc-700, #3f3f46);
+      background: var(--zinc-800, #27272a); color: var(--zinc-100, #f4f4f5);
+      transition: transform .1s, border-color .15s, background .15s;
+    }
+    .screen-btn:hover { transform: translateY(-1px); }
+    .screen-btn.no { border-color: #16a34a; }
+    .screen-btn.no:hover { background: rgba(22,163,74,.16); }
+    .screen-btn.yes { border-color: #b91c1c; }
+    .screen-btn.yes:hover { background: rgba(185,28,28,.18); }
   </style>
 </head>
 <body>
@@ -1989,6 +2008,21 @@
     <!-- ═══ STEP 1: Age ═══ -->
     <div class="kiosk-panel active" id="panel1">
       <div class="panel-content">
+        <!-- Proxy-purchase screening: is the buyer the patient, or buying for another person? -->
+        <div class="proxy-screen" id="proxyScreen">
+          <div class="proxy-q" id="proxyQText">Who is this medicine for?</div>
+          <div class="proxy-options">
+            <button type="button" class="proxy-btn active" id="proxySelfBtn" onclick="setPurchaseFor('self')">
+              <span class="proxy-ico"><i class="fa-solid fa-user"></i></span>
+              <span class="proxy-label" id="proxySelfLabel">Myself</span>
+            </button>
+            <button type="button" class="proxy-btn" id="proxyOtherBtn" onclick="setPurchaseFor('other')">
+              <span class="proxy-ico"><i class="fa-solid fa-user-group"></i></span>
+              <span class="proxy-label" id="proxyOtherLabel">Someone else</span>
+            </button>
+          </div>
+        </div>
+
         <div class="section-title" id="ageTitleText">How old are you?</div>
         <div style="height: 24px;"></div>
 
@@ -2153,6 +2187,7 @@
   // ── State ──
   let currentStep = 0;
   let patientAge = null;
+  let purchaseFor = 'self';   // proxy-purchase screening: 'self' | 'other'
   let severity = 3;
   let severityMap = {};            // per-symptom severity { "HEADACHE": 8, ... }
   let preDetectedSymptoms = [];    // symptoms from pre-detect API
@@ -2548,14 +2583,14 @@
         ceb: 'Pilia ang pinakaduol sa imong kalibanga.',
       },
       STOMACH: {
-        en: 'Select what matches your stomach pain.',
-        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
-        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
+        en: 'When does your stomach pain happen?',
+        tl: 'Kailan sumasakit ang tiyan mo?',
+        ceb: 'Kanus-a mosakit ang imong tiyan?',
       },
       STOMACH_CONTEXT: {
-        en: 'Select what matches your stomach pain.',
-        tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
-        ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
+        en: 'When does your stomach pain happen?',
+        tl: 'Kailan sumasakit ang tiyan mo?',
+        ceb: 'Kanus-a mosakit ang imong tiyan?',
       },
     };
 
@@ -2582,6 +2617,7 @@
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
     updatePain();
+    applyProxyCopy();   // keep proxy labels + age title in sync with language/selection
   }
 
   function startSymptomTitleRotation() {
@@ -2923,8 +2959,42 @@
   };
 
   // ══════════════════════════════
-  //  STEP 1: AGE
+  //  STEP 1: PROXY SCREENING + AGE
   // ══════════════════════════════
+  // Localized copy for the "Who is this for?" screening
+  const PROXY_COPY = {
+    en:  { q: 'Who is this medicine for?', self: 'Myself', other: 'Someone else',
+           ageSelf: 'How old are you?', ageOther: "How old is the patient?" },
+    tl:  { q: 'Para kanino ang gamot na ito?', self: 'Para sa akin', other: 'Para sa iba',
+           ageSelf: 'Ilang taon ka na?', ageOther: 'Ilang taon ang pasyente?' },
+    ceb: { q: 'Para kang kinsa kini nga tambal?', self: 'Para nako', other: 'Para sa lain',
+           ageSelf: 'Pila na imong edad?', ageOther: 'Pila ang edad sa pasyente?' },
+  };
+
+  function proxyCopy() { return PROXY_COPY[selectedLanguage] || PROXY_COPY.en; }
+
+  function applyProxyCopy() {
+    const c = proxyCopy();
+    const qEl = document.getElementById('proxyQText');
+    const sEl = document.getElementById('proxySelfLabel');
+    const oEl = document.getElementById('proxyOtherLabel');
+    const ageTitle = document.getElementById('ageTitleText');
+    if (qEl) qEl.textContent = c.q;
+    if (sEl) sEl.textContent = c.self;
+    if (oEl) oEl.textContent = c.other;
+    if (ageTitle) ageTitle.textContent = (purchaseFor === 'other') ? c.ageOther : c.ageSelf;
+  }
+
+  window.setPurchaseFor = function(who) {
+    purchaseFor = (who === 'other') ? 'other' : 'self';
+    const selfBtn = document.getElementById('proxySelfBtn');
+    const otherBtn = document.getElementById('proxyOtherBtn');
+    if (selfBtn) selfBtn.classList.toggle('active', purchaseFor === 'self');
+    if (otherBtn) otherBtn.classList.toggle('active', purchaseFor === 'other');
+    applyProxyCopy();
+    registerActivity();
+  };
+
   function validateAge() {
     const raw = ageInput.value.trim();
     const val = parseInt(raw);
@@ -3287,7 +3357,7 @@
     document.getElementById('backFromResults').classList.add('hidden');
 
     try {
-      const payload = { text, age: patientAge };
+      const payload = { text, age: patientAge, purchase_for: purchaseFor };
       // Send per-symptom severity map if available, otherwise legacy single value
       if (Object.keys(severityMap).length > 0) {
         payload.severity_map = severityMap;
@@ -3377,6 +3447,45 @@
       const questionText = getClarifyQuestionText(clarifyType, rec.question);
       let buttonsHtml = '';
 
+      // ── Stomachache: OLDCARTS food-timing dropdown (before / after / unrelated) ──
+      // Maps the aggravating-factor answer to the existing acid vs cramp therapy split.
+      if (clarifyType === 'STOMACH_CONTEXT') {
+        const lang = selectedLanguage || 'en';
+        const FT = {
+          en: [
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Before eating / empty stomach', d:'Hunger-like or burning pain, eased by food'},
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'After eating',                  d:'Bloating, heartburn, or sour reflux after meals'},
+            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Anytime / not related to food', d:'Cramping or colicky pain that comes and goes'},
+          ],
+          tl: [
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Bago kumain / walang laman ang tiyan', d:'Parang gutom o nasusunog, gumagaan kapag kumain'},
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'Pagkatapos kumain',             d:'Kabag, heartburn, o pag-asim pagkatapos kumain'},
+            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Kahit kailan / hindi sa pagkain', d:'Pulikat o kabag na paputol-putol'},
+          ],
+          ceb: [
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-utensils',          l:'Wala pa mokaon / walay sulod ang tiyan', d:'Mura\'g gutom o nagsunog, mogaan kung mokaon'},
+            {v:'STOMACH_ACIDIC',   ic:'fa-solid fa-plate-wheat',       l:'Human mokaon',                  d:'Kabag, heartburn, o pag-aslom human mokaon'},
+            {v:'STOMACH_CRAMPING', ic:'fa-solid fa-arrows-left-right',  l:'Bisan kanus-a / dili sa pagkaon', d:'Kuliti o kabag nga paputol-putol'},
+          ],
+        };
+        const opts = FT[lang] || FT.en;
+        buttonsHtml = opts.map(o => `
+          <button class="clarify-btn" onclick="handleContextClarify('${o.v}', 'STOMACH_CONTEXT')">
+            <div class="icon"><i class="${o.ic}"></i></div>
+            <div class="label">${o.l}</div>
+            <div class="desc">${o.d}</div>
+          </button>`).join('');
+        container.innerHTML = `
+          <div class="clarify-page">
+            <div class="clarify-page-question">${questionText}</div>
+            <div class="clarify-buttons clarify-buttons--compact">${buttonsHtml}</div>
+          </div>`;
+        document.getElementById('backFromResults').classList.remove('hidden');
+        document.getElementById('assessAgainBtn').classList.remove('hidden');
+        document.getElementById('exitBtn').classList.remove('hidden');
+        return;
+      }
+
       if (rec.options && rec.options.length) {
         buttonsHtml = rec.options.map(opt => `
           <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
@@ -3418,6 +3527,13 @@
     container.innerHTML = html;
 
     if (rec.action === 'recommend') {
+      // ── OLDCARTS safety screening (head-map, rash dyspnea) before duration ──
+      // Runs once per consultation; routes high-risk presentations to Emergency.
+      if (!analysisData._screeningDone) {
+        startSafetyScreening();
+        return;
+      }
+
       // ── Duration Safeguard: check if we need to ask duration questions ──
       // Skip duration flow if we already went through it (durationCompleted populated
       // means we returned from the duration API with proceed=true).
@@ -3507,6 +3623,157 @@
     'BODY_ACHES', 'RASHES', 'ALLERGIC_RHINITIS', 'NASAL_CONGESTION',
     'RUNNY_NOSE', 'COUGH_GENERAL', 'COUGH_DRY', 'COUGH_PRODUCTIVE',
   ];
+
+  // ══════════════════════════════
+  //  OLDCARTS SAFETY SCREENING (head-map + rash dyspnea)
+  //  Self-contained emergency gates that run once, before the duration flow.
+  // ══════════════════════════════
+  let screeningQueue = [];
+
+  const SCREEN_COPY = {
+    en: {
+      headQ: 'Where is your headache?', headSub: 'Tap the part of the head that hurts the most.',
+      front: 'Forehead', crown: 'Top', temple: 'Side / Temple', back: 'Back of head (nape)',
+      thunder: 'It started suddenly and feels like the worst headache of my life',
+      frontTag: 'Front', backTag: 'Back',
+      dyspQ: 'Together with the rashes, are you having difficulty breathing?',
+      dypSub: 'For example: tight throat, wheezing, or shortness of breath.', yes: 'Yes', no: 'No',
+    },
+    tl: {
+      headQ: 'Saan ang sakit ng ulo mo?', headSub: 'Pindutin ang bahagi ng ulo na pinakamasakit.',
+      front: 'Noo', crown: 'Tuktok', temple: 'Gilid / Sentido', back: 'Batok (likod ng ulo)',
+      thunder: 'Biglang sumakit at parang pinakamatinding sakit ng ulo sa buhay ko',
+      frontTag: 'Harap', backTag: 'Likod',
+      dyspQ: 'Kasabay ng pantal, nahihirapan ka bang huminga?',
+      dypSub: 'Halimbawa: masikip na lalamunan, paghihingal, o kapos na paghinga.', yes: 'Oo', no: 'Hindi' },
+    ceb: {
+      headQ: 'Asa ang sakit sa imong ulo?', headSub: 'I-tap ang bahin sa ulo nga labing sakit.',
+      front: 'Agtang', crown: 'Tumoy', temple: 'Kilid / Templo', back: 'Tangkugo (luyo sa ulo)',
+      thunder: 'Kalit ra nga misakit ug mura\'g pinakagrabe nga sakit sa ulo sa akong kinabuhi',
+      frontTag: 'Atubangan', backTag: 'Luyo',
+      dyspQ: 'Kauban sa hubag-hubag, naglisod ka ba og ginhawa?',
+      dypSub: 'Pananglitan: hugot nga tutunlan, hagok, o kapoy nga pagginhawa.', yes: 'Oo', no: 'Dili' },
+  };
+  function screenCopy() { return SCREEN_COPY[selectedLanguage] || SCREEN_COPY.en; }
+
+  function startSafetyScreening() {
+    const symptoms = analysisData.symptoms || [];
+    screeningQueue = [];
+    if (symptoms.includes('HEADACHE')) screeningQueue.push('HEADACHE_LOCATION');
+    if (symptoms.includes('RASHES')) screeningQueue.push('RASH_DYSPNEA');
+    askNextScreening();
+  }
+
+  function askNextScreening() {
+    if (screeningQueue.length === 0) {
+      analysisData._screeningDone = true;
+      renderAnalysis(analysisData);
+      return;
+    }
+    const step = screeningQueue[0];
+    if (step === 'HEADACHE_LOCATION') renderHeadMapScreen();
+    else if (step === 'RASH_DYSPNEA') renderDyspneaScreen();
+    else advanceScreening();
+  }
+
+  window.advanceScreening = function() {
+    screeningQueue = screeningQueue.slice(1);
+    askNextScreening();
+  };
+
+  function screenChromeHidden() {
+    const c = document.getElementById('analysisResult');
+    c.classList.remove('hidden', 'center-stage', 'warning-fullscreen');
+    document.getElementById('analysisLoading').classList.add('hidden');
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.add('hidden');
+    document.getElementById('exitBtn').classList.add('hidden');
+    document.getElementById('backFromResults').classList.remove('hidden');
+    return c;
+  }
+
+  function renderHeadMapScreen() {
+    const c = screenChromeHidden();
+    const s = screenCopy();
+    c.innerHTML = `
+      <div class="screen-page">
+        <div class="screen-q">${s.headQ}</div>
+        <div class="screen-sub">${s.headSub}</div>
+        <div class="headmap-wrap">
+          <div class="headmap">
+            <svg viewBox="0 0 240 230" role="img" aria-label="head map">
+              <ellipse cx="120" cy="112" rx="82" ry="92" fill="none" stroke="#52525b" stroke-width="2"></ellipse>
+              <path d="M40 96 q-14 16 0 32" fill="none" stroke="#52525b" stroke-width="2"></path>
+              <text x="52" y="20" fill="#71717a" font-size="11" text-anchor="middle">${s.frontTag}</text>
+              <text x="196" y="20" fill="#71717a" font-size="11" text-anchor="middle">${s.backTag}</text>
+              <circle class="hz safe" cx="86" cy="74" r="23" onclick="handleHeadZone('safe')"></circle>
+              <text x="86" y="78" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.front}</text>
+              <circle class="hz safe" cx="132" cy="50" r="23" onclick="handleHeadZone('safe')"></circle>
+              <text x="132" y="54" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.crown}</text>
+              <circle class="hz safe" cx="78" cy="124" r="23" onclick="handleHeadZone('safe')"></circle>
+              <text x="78" y="128" fill="#e4e4e7" font-size="10" text-anchor="middle" pointer-events="none">${s.temple}</text>
+              <circle class="hz danger" cx="178" cy="118" r="24" onclick="handleHeadZone('danger')"></circle>
+              <text x="178" y="122" fill="#fecaca" font-size="10" text-anchor="middle" pointer-events="none">${s.back}</text>
+            </svg>
+          </div>
+        </div>
+        <div class="headmap-legend">
+          <span><i style="background:#2563eb"></i>${s.front} / ${s.crown} / ${s.temple}</span>
+          <span><i style="background:#b91c1c"></i>${s.back}</span>
+        </div>
+        <div class="screen-actions">
+          <button class="screen-btn yes" onclick="handleHeadZone('danger')">${s.thunder}</button>
+        </div>
+      </div>`;
+  }
+
+  window.handleHeadZone = function(kind) {
+    if (kind === 'danger') {
+      renderScreeningEmergency('headache_red_flag');
+      return;
+    }
+    advanceScreening();
+  };
+
+  function renderDyspneaScreen() {
+    const c = screenChromeHidden();
+    const s = screenCopy();
+    c.innerHTML = `
+      <div class="screen-page">
+        <div class="screen-q">${s.dyspQ}</div>
+        <div class="screen-sub">${s.dypSub}</div>
+        <div class="screen-actions">
+          <button class="screen-btn no" onclick="handleDyspnea(false)">${s.no}</button>
+          <button class="screen-btn yes" onclick="handleDyspnea(true)">${s.yes}</button>
+        </div>
+      </div>`;
+  }
+
+  window.handleDyspnea = function(hasDyspnea) {
+    if (hasDyspnea) {
+      renderScreeningEmergency('severe_allergic_reaction');
+      return;
+    }
+    advanceScreening();
+  };
+
+  function renderScreeningEmergency(flagKey) {
+    const c = document.getElementById('analysisResult');
+    c.classList.remove('hidden');
+    c.classList.add('center-stage', 'warning-fullscreen');
+    setTapReadyState(false);
+    c.innerHTML = `
+      <div class="triage-banner">
+        <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>${t('emergencyTitle')}</h3>
+        <p>${t('emergencySub')}</p>
+        <div class="referral-cta">${t('professionalHelpTitle')}</div>
+        <p class="triage-note">${t('emergencyNote')}</p>
+      </div>`;
+    document.getElementById('backFromResults').classList.remove('hidden');
+    document.getElementById('assessAgainBtn').classList.remove('hidden');
+    document.getElementById('exitBtn').classList.remove('hidden');
+  }
 
   function startDurationFlow() {
     // Build queue of symptoms that need duration checking
@@ -3627,15 +3894,15 @@
       ],
       'NASAL_CONGESTION': [
         {...LESS_THAN_DAY, value: '0'},
-        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
-        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
-        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
       ],
       'RUNNY_NOSE': [
         {...LESS_THAN_DAY, value: '0'},
-        {en: '1–5 days',            tl: '1–5 araw',            ceb: '1–5 ka adlaw',           value: '1-5'},
-        {en: '6–10 days',           tl: '6–10 araw',           ceb: '6–10 ka adlaw',          value: '6-10'},
-        {en: 'More than 10 days',   tl: 'Higit sa 10 araw',    ceb: 'Labaw sa 10 ka adlaw',   value: '11+'},
+        {en: '1–3 days',            tl: '1–3 araw',            ceb: '1–3 ka adlaw',           value: '1-3'},
+        {en: '4–7 days',            tl: '4–7 araw',            ceb: '4–7 ka adlaw',           value: '4-7'},
+        {en: 'More than 1 week',    tl: 'Higit sa 1 linggo',   ceb: 'Labaw sa 1 ka semana',   value: '8+'},
       ],
       'COUGH_GENERAL': [
         {...LESS_THAN_DAY, value: '0'},
@@ -4157,6 +4424,7 @@
     toStep2Btn.disabled = true;
     toStep3Btn.disabled = true;
     patientAge = null;
+    setPurchaseFor('self');   // reset proxy screening to default
     severity = 3;
     severityMap = {};
     preDetectedSymptoms = [];
@@ -4248,8 +4516,7 @@
   //  CHECKOUT FLOW
   // ══════════════════════════════
   let kioskCart = [];           // [{brand, quantity, inventory_id, unit_price, generic_name}]
-  let checkoutStep = 1;        // 1=Cart, 2=Auth, 3=Payment, 4=Processing, 5=Success
-  let kioskAuthenticated = false;
+  let checkoutStep = 1;        // 1=Cart, 3=Payment, 4=Processing, 5=Success
   let currentInvoiceId = null;
   let paymentCheckInterval = null;
   let paymentPollFailures = 0;
@@ -4305,7 +4572,6 @@
   // ── Checkout Modal ──
   window.openCheckoutModal = async function() {
     checkoutStep = 1;
-    kioskAuthenticated = false;
     currentInvoiceId = null;
     paymentPollFailures = 0;
     await refreshKioskCart();
@@ -4330,8 +4596,6 @@
     const stepsHtml = `
       <div class="checkout-steps">
         <div class="checkout-step-dot ${checkoutStep >= 1 ? (checkoutStep > 1 ? 'done' : 'active') : ''}"></div>
-        <div class="checkout-step-line"></div>
-        <div class="checkout-step-dot ${checkoutStep >= 2 ? (checkoutStep > 2 ? 'done' : 'active') : ''}"></div>
         <div class="checkout-step-line"></div>
         <div class="checkout-step-dot ${checkoutStep >= 3 ? (checkoutStep > 3 ? 'done' : 'active') : ''}"></div>
       </div>`;
@@ -4378,35 +4642,10 @@
 
       footer.innerHTML = kioskCart.length ? `
         <button class="btn" onclick="closeCheckoutModal()">Continue Shopping</button>
-        <button class="btn btn--primary" onclick="goToCheckoutStep(2)">
-          Authenticate <i class="fa-solid fa-arrow-right"></i>
+        <button class="btn btn--primary" onclick="goToCheckoutStep(3)">
+          Choose Payment <i class="fa-solid fa-arrow-right"></i>
         </button>` : `
         <button class="btn" onclick="closeCheckoutModal()">Close</button>`;
-
-    } else if (checkoutStep === 2) {
-      title.textContent = 'Identity Verification';
-      body.innerHTML = `
-        ${stepsHtml}
-        <div class="auth-section">
-          <div class="auth-icon" id="authIcon">
-            <i class="fa-solid fa-fingerprint"></i>
-          </div>
-          <div class="auth-title">Fingerprint Scan</div>
-          <div class="auth-subtitle">
-            Please place your finger on the AS608 sensor to verify your identity,<br>
-            or tap the button below to authenticate.
-          </div>
-          <button class="auth-btn" id="authBtn" onclick="doFingerprintAuth()">
-            <i class="fa-solid fa-fingerprint"></i> Authenticate
-          </button>
-          <div class="auth-status" id="authStatus"></div>
-        </div>`;
-
-      footer.innerHTML = `
-        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-        <button class="btn btn--primary" id="toPaymentBtn" onclick="goToCheckoutStep(3)" disabled>
-          Choose Payment <i class="fa-solid fa-arrow-right"></i>
-        </button>`;
 
     } else if (checkoutStep === 3) {
       title.textContent = 'Payment Method';
@@ -4439,7 +4678,7 @@
         </div>`;
 
       footer.innerHTML = `
-        <button class="btn" onclick="goToCheckoutStep(2)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn" onclick="goToCheckoutStep(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
         <button class="btn btn--primary" onclick="processPayment()">
           <i class="fa-solid fa-lock"></i> Pay Now
         </button>`;
@@ -4544,47 +4783,6 @@
       renderCheckoutStep();
     } catch (err) {
       showToast('Remove failed', 'error');
-    }
-  };
-
-  window.doFingerprintAuth = async function() {
-    const btn = document.getElementById('authBtn');
-    const icon = document.getElementById('authIcon');
-    const status = document.getElementById('authStatus');
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
-
-    try {
-      await new Promise(r => setTimeout(r, 1200));
-
-      const res = await fetch('/checkout/api/auth/fingerprint', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        kioskAuthenticated = true;
-        icon.classList.add('authenticated');
-        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-        btn.classList.add('success');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified';
-        status.className = 'auth-status show ok';
-        status.textContent = 'Identity verified successfully!';
-        document.getElementById('toPaymentBtn').disabled = false;
-        setTimeout(() => goToCheckoutStep(3), 800);
-      } else {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
-        status.className = 'auth-status show fail';
-        status.textContent = 'Verification failed. Please try again.';
-      }
-    } catch (err) {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
-      status.className = 'auth-status show fail';
-      status.textContent = 'Error: ' + err.message;
     }
   };
 
@@ -4717,7 +4915,6 @@
   window.resetAll = function() {
     fetch('/checkout/api/cart/clear', { method: 'POST' }).catch(() => {});
     kioskCart = [];
-    kioskAuthenticated = false;
     updateCheckoutFab();
     _origResetAll();
   };

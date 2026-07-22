@@ -245,6 +245,10 @@ def api_analyze():
         user_age = data.get("age")  # int or None
         severity = data.get("severity")  # int 1-10 or None (legacy single value)
         severity_map = data.get("severity_map")  # dict symptom→int (per-symptom)
+        # Proxy-purchase screening: who is the medicine for? ("self" | "other").
+        # The age supplied is the intended patient's age, so age-based safety
+        # filtering applies to the actual patient rather than the purchaser.
+        purchase_for = data.get("purchase_for")  # "self" | "other" | None
 
         if not user_text:
             return jsonify({"error": "Please describe your symptoms."}), 400
@@ -376,6 +380,7 @@ def api_analyze():
                 severity=severity,
                 age=user_age,
                 session_id=session.get("sid"),
+                purchase_for=purchase_for,
             )
         except Exception:
             pass  # logging must never break the main flow

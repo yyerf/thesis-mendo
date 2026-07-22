@@ -275,10 +275,10 @@ DURATION_THRESHOLDS: Dict[str, Dict[str, Any]] = {
         "days": 7,
     },
     "NASAL_CONGESTION": {
-        "days": 10,
+        "days": 7,
     },
     "RUNNY_NOSE": {
-        "days": 10,
+        "days": 7,
     },
     "COUGH_GENERAL": {
         "days": 14,
@@ -343,15 +343,15 @@ _DURATION_OPTIONS: Dict[str, list] = {
     ],
     "NASAL_CONGESTION": [
         {"label": "Less than a day", "value": "0"},
-        {"label": "1–5 days", "value": "1-5"},
-        {"label": "6–10 days", "value": "6-10"},
-        {"label": "More than 10 days", "value": "11+"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
     ],
     "RUNNY_NOSE": [
         {"label": "Less than a day", "value": "0"},
-        {"label": "1–5 days", "value": "1-5"},
-        {"label": "6–10 days", "value": "6-10"},
-        {"label": "More than 10 days", "value": "11+"},
+        {"label": "1–3 days", "value": "1-3"},
+        {"label": "4–7 days", "value": "4-7"},
+        {"label": "More than 1 week", "value": "8+"},
     ],
     "COUGH_GENERAL": [
         {"label": "Less than a day", "value": "0"},
