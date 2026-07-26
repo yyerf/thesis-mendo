@@ -23,6 +23,9 @@ def login_required(f: Callable) -> Callable:
             session.pop("pos_user_id", None)
             flash("Session expired. Please log in again.", "warning")
             return redirect(url_for("admin.login"))
+        if user.get("role") == "reviewer":
+            flash("Reviewer accounts are restricted to the clinical audit workspace.", "warning")
+            return redirect(url_for("admin.logs_dashboard"))
         kwargs["current_user"] = user
         return f(*args, **kwargs)
     return wrapper
@@ -42,6 +45,25 @@ def admin_required(f: Callable) -> Callable:
             return redirect(url_for("admin.login"))
         if user["role"] != "admin":
             flash("Admin privileges required.", "error")
+            return redirect(url_for("admin.dashboard"))
+        kwargs["current_user"] = user
+        return f(*args, **kwargs)
+    return wrapper
+
+
+def reviewer_required(f: Callable) -> Callable:
+    """Restrict clinical audit data to reviewers and administrators."""
+    @wraps(f)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        uid = session.get("pos_user_id")
+        if not uid:
+            return redirect(url_for("admin.login", next=request.path))
+        user = get_user_by_id(uid)
+        if not user or not user.get("is_active"):
+            session.pop("pos_user_id", None)
+            return redirect(url_for("admin.login"))
+        if user["role"] not in {"admin", "reviewer"}:
+            flash("Domain-expert reviewer access required.", "error")
             return redirect(url_for("admin.dashboard"))
         kwargs["current_user"] = user
         return f(*args, **kwargs)

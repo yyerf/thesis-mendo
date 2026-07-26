@@ -41,6 +41,14 @@ from mendo_core.headache_locations import (
     all_keys,
 )
 from mendo_core.interaction_logger import log_interaction
+from mendo_core.prediction_pipeline import (
+    ENGINE_ID,
+    TRACE_SCHEMA_VERSION,
+    apply_headache_selection,
+    predict_symptoms,
+    record_decision,
+)
+from pos.auth import reviewer_required
 
 log = logging.getLogger("mendo.consultation")
 
@@ -49,6 +57,44 @@ consultation_bp = Blueprint(
     __name__,
     url_prefix="/consult",
 )
+
+CONSENT_COPY_VERSION = "research-consent-v1-2026-07"
+
+
+def _consent_log_kwargs(data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    data = data or {}
+    return {
+        "research_consent": bool(session.get("research_consent", False)),
+        "consent_version": session.get("consent_version"),
+        "language": data.get("language") or session.get("consult_language") or "unspecified",
+        "input_mode": data.get("input_mode") or session.get("consult_input_mode") or "text",
+    }
+
+
+def _headache_snapshot(location_key: Optional[str], user_age: Optional[int]) -> Optional[Dict[str, Any]]:
+    if not location_key:
+        return None
+    location = get_location(location_key)
+    if not location:
+        raise ValueError(f"Unknown headache illustration: {location_key}")
+    danger = classify_danger(location_key, user_age=user_age or 0)
+    return {
+        "source": "user_selected_illustration",
+        "key": location.key,
+        "label_en": location.label_en,
+        "label_tl": location.label_tl,
+        "label_ceb": location.label_ceb,
+        "image": location.image,
+        "image_url": f"/static/images/headache/{location.image}",
+        "zone": location.zone,
+        "danger": danger,
+        "safety_note_en": location.safety_note_en,
+        "rule_effects": (
+            ["add_nasal_congestion_for_sinus_recommendation_rule"]
+            if location.key == "sinus"
+            else []
+        ),
+    }
 
 # ── Dataset (loaded once) ──────────────────────────────────────────────────
 
@@ -184,6 +230,33 @@ def index():
     return render_template("pos/consultation.html")
 
 
+@consultation_bp.route("/api/research-consent", methods=["GET", "POST"])
+def api_research_consent():
+    """Store the participant's research choice separately from clinical access."""
+    if request.method == "GET":
+        return jsonify(
+            {
+                "decided": "research_consent" in session,
+                "research_consent": bool(session.get("research_consent", False)),
+                "consent_version": session.get("consent_version"),
+            }
+        )
+    data = request.get_json(force=True)
+    if not isinstance(data.get("consent"), bool):
+        return jsonify({"error": "consent must be true or false"}), 400
+    session["research_consent"] = data["consent"]
+    session["consent_version"] = CONSENT_COPY_VERSION
+    return jsonify(
+        {
+            "saved": True,
+            "research_consent": data["consent"],
+            "consultation_available": True,
+            "raw_input_persisted": data["consent"],
+            "consent_version": CONSENT_COPY_VERSION,
+        }
+    )
+
+
 @consultation_bp.route("/api/pre-detect", methods=["POST"])
 def api_pre_detect():
     """Lightweight symptom detection — called before the pain scale step
@@ -205,15 +278,7 @@ def api_pre_detect():
         if not user_text:
             return jsonify({"error": "Please describe your symptoms."}), 400
 
-        from mendo_core.step3_hybrid import extract_symptoms_hybrid_report
-
-        report = extract_symptoms_hybrid_report(
-            user_text,
-            semantic_threshold=0.65,
-            semantic_top_margin=0.08,
-            semantic_max_symptoms=2,
-            enable_semantic_fallback=True,
-        )
+        report = predict_symptoms(user_text)
         symptoms = report.get("final", {}).get("symptoms", [])
         red_flags = report.get("red_flags", [])
 
@@ -223,6 +288,8 @@ def api_pre_detect():
             "symptoms": symptoms,
             "severity_hints": severity_hints,
             "red_flags": red_flags,
+            "engine": report.get("engine"),
+            "trace_version": report.get("trace_version"),
         })
     except Exception as e:
         log.error("Pre-detect error: %s\n%s", e, traceback.format_exc())
@@ -254,13 +321,21 @@ def api_analyze():
         severity = data.get("severity")  # int 1-10 or None (legacy single value)
         severity_map = data.get("severity_map")  # dict symptom→int (per-symptom)
         headache_location = data.get("headache_location")  # str key or None
-        headache_danger = data.get("headache_danger")  # str or None
+        language = (data.get("language") or "unspecified").strip()
+        input_mode = (data.get("input_mode") or "text").strip()
 
         if not user_text:
             return jsonify({"error": "Please describe your symptoms."}), 400
+        if user_age is not None:
+            try:
+                user_age = int(user_age)
+            except (TypeError, ValueError):
+                return jsonify({"error": "age must be a whole number"}), 400
 
         # ── Assign a session ID for this consultation flow ──
         session["sid"] = uuid.uuid4().hex[:8]
+        session["consult_language"] = language
+        session["consult_input_mode"] = input_mode
 
         # ── Resolve effective severity ──
         # If per-symptom severity_map is provided, use the max value for the
@@ -293,25 +368,16 @@ def api_analyze():
                 ),
             }
 
-        # ── Step 1-3: Hybrid symptom extraction ──
-        from mendo_core.step3_hybrid import extract_symptoms_hybrid_report
-
-        report = extract_symptoms_hybrid_report(
-            user_text,
-            semantic_threshold=0.65,
-            semantic_top_margin=0.08,
-            semantic_max_symptoms=2,
-            enable_semantic_fallback=True,
-        )
+        # ── Step 1-3: one shared, versioned prediction service ──
+        try:
+            headache = _headache_snapshot(headache_location, user_age)
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+        report = apply_headache_selection(predict_symptoms(user_text), headache)
         symptoms = report.get("final", {}).get("symptoms", [])
         detected_conditions = report.get("final", {}).get("conditions", [])
         source = report.get("final", {}).get("source", "unknown")
         red_flags = report.get("red_flags", [])
-
-        # ── Sinus headache: inject runny nose so decongestants match ──
-        if headache_location == "sinus":
-            if "RUNNY_NOSE" not in symptoms:
-                symptoms = list(symptoms) + ["RUNNY_NOSE"]
 
         # ── Headache location red flags: only real red_flag danger blocks OTC ──
         headache_cautions = []
@@ -327,23 +393,16 @@ def api_analyze():
                 elif loc_data_red.red_flags_en:
                     headache_cautions = loc_data_red.red_flags_en
 
-        # ── Log detailed pipeline flow ──
-        log.info("── Analyze request: text=%r age=%s severity=%s ──", user_text, user_age, severity)
-        for s in report.get("stages", []):
-            if s.get("stage") == "dictionary":
-                dict_detected = s.get("detected", [])
-                log.info("STAGE1 DICTIONARY: detected=%s conditions=%s", dict_detected, s.get("detected_conditions", []))
-                for d in (s.get("details") or []):
-                    log.info("  DICT match: symptom=%s phrases=%s", d.get("symptom"), d.get("matched_phrases", []))
-            elif s.get("stage") == "semantic":
-                if s.get("available"):
-                    log.info("STAGE2 SEMANTIC: threshold=%.2f top_margin=%.2f max=%d", s.get("threshold"), s.get("top_margin"), s.get("max_symptoms"))
-                    log.info("  raw detected=%s selected=%s", s.get("detected_raw"), s.get("detected_selected"))
-                    for row in (s.get("scores") or []):
-                        log.info("  semantic score %s: %.4f (anchor=%r)", row.get("symptom"), row.get("score"), row.get("best_anchor"))
-                else:
-                    log.warning("STAGE2 SEMANTIC: unavailable (error=%s)", s.get("error"))
-        log.info("FINAL symptoms=%s source=%s red_flags=%s", symptoms, source, red_flags)
+        # Keep raw health text out of general application logs.
+        log.info(
+            "Analyze request session=%s age=%s severity=%s labels=%d red_flags=%d engine=%s",
+            session.get("sid"),
+            user_age,
+            severity,
+            len(symptoms),
+            len(red_flags),
+            ENGINE_ID,
+        )
 
         # ── Step 4: Recommendation ──
         from mendo_core.step4_recommend import recommend_medicine
@@ -390,6 +449,7 @@ def api_analyze():
             except (TypeError, ValueError):
                 user_age = None
 
+        recommendation_filtering: List[Dict[str, Any]] = []
         try:
             from pos.db import get_inventory_by_brand
             if recommendation.get("action") == "recommend":
@@ -402,6 +462,15 @@ def api_analyze():
                     except (TypeError, ValueError):
                         min_age = 0
                     if user_age is not None and user_age < min_age:
+                        recommendation_filtering.append(
+                            {
+                                "brand": rec.get("brand"),
+                                "decision": "excluded",
+                                "reason": "patient_age_below_minimum",
+                                "patient_age": user_age,
+                                "minimum_age": min_age,
+                            }
+                        )
                         continue  # skip medicines not suitable for this age
 
                     inv = get_inventory_by_brand(rec["brand"])
@@ -415,6 +484,16 @@ def api_analyze():
                         rec["stock_quantity"] = 0
                         rec["pos_price"] = None
                         rec["inventory_id"] = None
+                    recommendation_filtering.append(
+                        {
+                            "brand": rec.get("brand"),
+                            "decision": "kept",
+                            "reason": "age_eligible",
+                            "inventory": (
+                                "in_stock" if rec.get("in_stock") else "out_of_stock"
+                            ),
+                        }
+                    )
                     filtered_recs.append(rec)
                 recommendation["recommendations"] = filtered_recs
         except Exception:
@@ -428,6 +507,8 @@ def api_analyze():
                 "stages": report.get("stages", []),
             },
             "recommendation": recommendation,
+            "engine": report.get("engine"),
+            "trace_version": TRACE_SCHEMA_VERSION,
         }
         if user_age is not None:
             resp["age"] = user_age
@@ -442,13 +523,9 @@ def api_analyze():
         if headache_location:
             loc_data = get_location(headache_location)
             if loc_data:
-                resp["headache_location"] = {
-                    "key": headache_location,
-                    "label_en": loc_data.label_en,
-                    "danger": loc_data.danger,
-                }
+                resp["headache_location"] = headache
                 # If headache danger is red_flag, add a specific referral
-                if headache_danger == "red_flag" or loc_data.danger == "red_flag":
+                if headache and headache["danger"] == "red_flag":
                     if referral is None:
                         referral = {
                             "level": "high",
@@ -466,7 +543,26 @@ def api_analyze():
             is_triage = bool(referral)
             if not is_triage and headache_location:
                 is_triage = classify_danger(headache_location, user_age or 0) == "red_flag"
-            log_interaction(
+            trace = record_decision(
+                report,
+                action="refer" if is_triage else recommendation.get("action", "unknown"),
+                severity=severity,
+                clarification=(
+                    {
+                        "required": True,
+                        "type": recommendation.get("clarify_type"),
+                        "question": recommendation.get("question"),
+                        "options": [
+                            option.get("value")
+                            for option in recommendation.get("options", []) or []
+                        ],
+                    }
+                    if recommendation.get("action") == "ask_clarify"
+                    else {"required": False}
+                ),
+                recommendation_filtering=recommendation_filtering,
+            )
+            interaction_id = log_interaction(
                 user_input=user_text,
                 extracted_symptoms=symptoms,
                 extraction_source=source,
@@ -477,11 +573,15 @@ def api_analyze():
                 severity=severity,
                 age=user_age,
                 session_id=session.get("sid"),
-                headache_location=headache_location,
-                headache_danger=headache_danger,
+                trace=trace,
+                headache=headache,
+                severity_map=severity_map if isinstance(severity_map, dict) else None,
+                **_consent_log_kwargs(data),
             )
-        except Exception:
-            pass  # logging must never break the main flow
+            resp["interaction_id"] = interaction_id
+        except Exception as exc:
+            log.error("Structured interaction logging failed: %s", exc)
+            resp["interaction_id"] = "write_failed"
 
         return jsonify(resp)
 
@@ -578,6 +678,7 @@ def api_duration_check():
                         duration_symptom=symptom,
                         duration_value=duration_value,
                         duration_days=reported_days,
+                        **_consent_log_kwargs(data),
                     )
                 except Exception:
                     pass
@@ -605,6 +706,7 @@ def api_duration_check():
                     duration_symptom=symptom,
                     duration_value=duration_value,
                     duration_days=reported_days,
+                    **_consent_log_kwargs(data),
                 )
             except Exception:
                 pass
@@ -688,6 +790,7 @@ def api_duration_check():
                 duration_symptom=symptom,
                 duration_value=duration_value,
                 duration_days=reported_days,
+                **_consent_log_kwargs(data),
             )
         except Exception:
             pass
@@ -851,6 +954,7 @@ def api_context_clarify():
                 severity=data.get("severity"),
                 age=user_age,
                 session_id=session.get("sid"),
+                **_consent_log_kwargs(data),
             )
         except Exception:
             pass
@@ -948,6 +1052,7 @@ def api_clarify():
                 severity=data.get("severity"),
                 age=user_age,
                 session_id=session.get("sid"),
+                **_consent_log_kwargs(data),
             )
         except Exception:
             pass  # logging must never break the main flow
@@ -1114,7 +1219,8 @@ def api_transcribe():
 
 
 @consultation_bp.route("/api/export-logs/csv", methods=["GET"])
-def api_export_logs_csv():
+@reviewer_required
+def api_export_logs_csv(current_user=None):
     """Export all interaction logs as CSV."""
     try:
         from mendo_core.interaction_logger import export_logs_as_csv
@@ -1129,7 +1235,8 @@ def api_export_logs_csv():
 
 
 @consultation_bp.route("/api/export-logs/pdf", methods=["GET"])
-def api_export_logs_pdf():
+@reviewer_required
+def api_export_logs_pdf(current_user=None):
     """Export all interaction logs as PDF."""
     try:
         from mendo_core.interaction_logger import export_logs_as_pdf

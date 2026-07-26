@@ -48,4 +48,19 @@ htmlcov/
 
 # Project specific
 *.log
+*.bak
+.~lock.*#
+_For-Mendo/
 
+# Runtime health data and SQLite journals
+data/*.db
+data/*.sqlite
+*.db-wal
+*.db-shm
+*.db-journal
+logs/*.jsonl
+
+# Reproducible benchmark: retain only the canonical manifest
+testing/benchmark/results/*
+!testing/benchmark/results/current.json
+experiments/classifier_benchmark/results/*.json

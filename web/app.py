@@ -8,8 +8,12 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+except ImportError:  # Keep first-run development usable before optional deps install.
+    load_dotenv = None
+if load_dotenv:
+    load_dotenv()
 
 from flask import Flask, redirect, url_for
 

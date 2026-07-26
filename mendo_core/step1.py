@@ -1049,11 +1049,6 @@ def _infer_nasal_label(normalized_text: str, detected: List[str], negated_labels
     if _has_any(congestion_cues) and not congestion_cue_negated and "NASAL_CONGESTION" not in detected and "NASAL_CONGESTION" not in negated_labels:
         detected.append("NASAL_CONGESTION")
     
-    # If user mentioned congestion (barado) without runny cues, also register
-    # RUNNY_NOSE so the sipon-clarification flow triggers for "barado na ilong".
-    if "NASAL_CONGESTION" in detected and "RUNNY_NOSE" not in detected and "RUNNY_NOSE" not in negated_labels:
-        detected.append("RUNNY_NOSE")
-    
     # If neither was detected and nose/ilong was mentioned, default to congestion
     nasal_labels = {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}
     if not any(l in nasal_labels for l in detected):

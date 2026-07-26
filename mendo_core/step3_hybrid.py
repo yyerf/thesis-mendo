@@ -819,6 +819,11 @@ def detect_red_flags(user_input: str) -> List[Dict[str, str]]:
             "matched": hypertension_match,
         })
 
+    # A co-occurrence window is not enough when one component is explicitly
+    # denied (for example "walang pantal pero may lagnat").
+    if _explicitly_negates_fever(user_input) or _explicitly_negates_rash(user_input):
+        flags = [row for row in flags if row.get("flag") != "dengue_warning"]
+
     # De-duplicate while preserving first-hit order
     deduped: List[Dict[str, str]] = []
     seen: set[str] = set()
@@ -921,18 +926,66 @@ def _explicitly_negates_sore_throat(user_input: str, _nt: str = "") -> bool:
 def _explicitly_negates_nasal(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
-    return (
-        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion)\b", nt)
-        is not None
-        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+barado\b(?:\s+\w+){{0,3}}\s+\b(ilong|nose)\b", nt)
-        is not None
-    )
+    decisions: List[bool] = []
+    for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
+        if not re.search(r"\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion|barado|ilong|nose)\b", clause):
+            continue
+        decisions.append(
+            re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion)\b", clause)
+            is not None
+            or re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+barado\b(?:\s+\w+){{0,3}}\s+\b(ilong|nose)\b", clause)
+            is not None
+        )
+    return decisions[-1] if decisions else False
 
 
 def _explicitly_negates_allergy(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
+    if re.search(r"\b(di|hindi|dili)\s+(ko|ako)\s+alam\s+kung\b", nt):
+        return False
     neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
-    return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(allergy|allergies|allergic)\b", nt) is not None
+    decisions: List[bool] = []
+    for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
+        if not re.search(r"\b(allergy|allergies|allergic)\b", clause):
+            continue
+        decisions.append(
+            re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(allergy|allergies|allergic)\b", clause)
+            is not None
+        )
+    return decisions[-1] if decisions else False
+
+
+def _explicitly_negates_rash(user_input: str, _nt: str = "") -> bool:
+    nt = _nt or _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
+    decisions: List[bool] = []
+    for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
+        if not re.search(r"\b(pantal|rash|rashes|hives|butlig)\b", clause):
+            continue
+        decisions.append(
+            re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(pantal|rash|rashes|hives|butlig)\b", clause)
+            is not None
+        )
+    return decisions[-1] if decisions else False
+
+
+def _explicitly_negates_body_aches(user_input: str, _nt: str = "") -> bool:
+    """Recognize common English, Tagalog, and Cebuano body-pain negations."""
+    nt = _nt or _normalize(user_input)
+    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
+    return (
+        re.search(
+            rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(body\s*aches?|body\s*pain|katawan|lawas|kalamnan|muscle)\b",
+            nt,
+        )
+        is not None
+        or re.search(
+            rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(sakit|masakit|pain|ache)\b"
+            rf"(?:\s+\w+){{0,2}}\s+\b(katawan|body|lawas|kalamnan|muscle)\b",
+            nt,
+        )
+        is not None
+    )
 
 
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
@@ -990,6 +1043,20 @@ def _apply_semantic_safety_filters(
     if _explicitly_negates_allergy(user_input, _nt=nt):
         _drop({"ALLERGIC_RHINITIS"})
 
+    if _explicitly_negates_body_aches(user_input, _nt=nt):
+        _drop({"BODY_ACHES"})
+
+    if _explicitly_negates_rash(user_input, _nt=nt):
+        _drop({"RASHES"})
+
+    # A wholly negative statement must not acquire an unrelated semantic
+    # symptom (for example "walang sore throat" -> BODY_ACHES).
+    if (
+        re.match(r"^(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b", nt)
+        and not re.search(r"\b(pero|but|kaso|however|though)\b", nt)
+    ):
+        _drop(set(filtered))
+
     # Blood-context safety filter — shared with dictionary path.
     blood_filtered = _apply_blood_context_filter(user_input, filtered)
     removed_by_blood = set(filtered) - set(blood_filtered)
@@ -1007,6 +1074,8 @@ def _apply_semantic_safety_filters(
         _drop({"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"})
     if "severe_allergic_reaction" in red_flag_names:
         _drop({"SORE_THROAT"})
+    if "blood_vomit" in red_flag_names:
+        _drop({"STOMACH_ACHE"})
 
     return filtered, filtered_rows
 
@@ -1095,9 +1164,6 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "init akong lawas",
         "mainit ang katawan",
         "mainit katawan",
-        # Standalone Bisaya/Tagalog heat words
-        "init",
-        "mainit",
         "noo",
         "sinusunog",
         "nasusunog",
@@ -1441,9 +1507,6 @@ def extract_symptoms_hybrid(
 
     # Distinct merge (dictionary first)
     merged = list(dict.fromkeys(detected + selected))
-    # Normalize: NASAL_CONGESTION and RUNNY_NOSE are the same thing (sipon)
-    merged = ["RUNNY_NOSE" if s == "NASAL_CONGESTION" else s for s in merged]
-    merged = list(dict.fromkeys(merged))
     return merged
 
 
@@ -1549,20 +1612,14 @@ def extract_symptoms_hybrid_report(
         }
     )
 
-    # Merge: start with semantic-selected, then add dictionary hits that the
-    # model also ranked above a relaxed threshold (≥0.40), ensuring the
-    # semantic model acts as a "corrector" over dictionary false positives.
+    # Merge semantic candidates with deterministic dictionary hits. Dictionary
+    # phrases already pass explicit negation, idiom, and safety filters; a
+    # pretrained similarity model must not veto strong lexical evidence.
     merged = list(semantic_selected)  # semantic takes priority
-    dict_score_map = {r["symptom"]: r["score"] for r in diag_sorted}
     for s in dict_symptoms:
         if s not in merged:
-            # Keep dictionary-only symptom if the model also scored it ≥0.40
-            if dict_score_map.get(s, 0) >= 0.40:
-                merged.append(s)
-            # If model scored it very low (<0.40), it's likely a false positive — skip it
+            merged.append(s)
 
-    # Normalize: NASAL_CONGESTION and RUNNY_NOSE are the same thing (sipon)
-    merged = ["RUNNY_NOSE" if s == "NASAL_CONGESTION" else s for s in merged]
     merged = list(dict.fromkeys(merged))
 
     report["final"]["symptoms"] = merged

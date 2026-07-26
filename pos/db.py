@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
     username      TEXT    UNIQUE NOT NULL,
     password_hash TEXT    NOT NULL,
     full_name     TEXT    NOT NULL,
-    role          TEXT    DEFAULT 'staff' CHECK(role IN ('admin','staff')),
+    role          TEXT    DEFAULT 'staff' CHECK(role IN ('admin','staff','reviewer')),
     is_active     INTEGER DEFAULT 1,
     created_at    TEXT    DEFAULT (datetime('now','localtime')),
     last_login    TEXT
@@ -133,7 +133,59 @@ CREATE TABLE IF NOT EXISTS interaction_logs (
     age                 INTEGER,
     pipeline_detail     TEXT    DEFAULT '{}',
     recommendation_detail TEXT  DEFAULT '{}',
+    research_consent      INTEGER NOT NULL DEFAULT 0,
+    consent_version       TEXT,
+    language              TEXT,
+    input_mode            TEXT,
+    trace_version         INTEGER NOT NULL DEFAULT 1,
+    engine_id             TEXT,
     created_at          TEXT    DEFAULT (datetime('now','localtime'))
+);
+
+CREATE TABLE IF NOT EXISTS interaction_reviews (
+    id                          INTEGER PRIMARY KEY AUTOINCREMENT,
+    interaction_id              TEXT NOT NULL,
+    reviewer_id                 INTEGER NOT NULL,
+    expected_symptoms           TEXT NOT NULL DEFAULT '[]',
+    correct_symptoms            TEXT NOT NULL DEFAULT '[]',
+    missed_symptoms             TEXT NOT NULL DEFAULT '[]',
+    expected_red_flags          TEXT NOT NULL DEFAULT '[]',
+    expected_action             TEXT NOT NULL
+        CHECK(expected_action IN ('recommend','clarify','refer','no_match')),
+    recommendation_appropriateness TEXT NOT NULL
+        CHECK(recommendation_appropriateness IN ('appropriate','inappropriate','not_applicable','uncertain')),
+    expected_medicines          TEXT NOT NULL DEFAULT '[]',
+    error_category              TEXT,
+    reviewer_confidence         INTEGER NOT NULL CHECK(reviewer_confidence BETWEEN 1 AND 5),
+    notes                       TEXT,
+    created_at                  TEXT DEFAULT (datetime('now','localtime')),
+    updated_at                  TEXT DEFAULT (datetime('now','localtime')),
+    UNIQUE(interaction_id, reviewer_id),
+    FOREIGN KEY (interaction_id) REFERENCES interaction_logs(interaction_id),
+    FOREIGN KEY (reviewer_id) REFERENCES admin_users(id)
+);
+
+CREATE TABLE IF NOT EXISTS interaction_adjudications (
+    interaction_id              TEXT PRIMARY KEY,
+    adjudicator_id              INTEGER NOT NULL,
+    final_symptoms              TEXT NOT NULL DEFAULT '[]',
+    final_red_flags             TEXT NOT NULL DEFAULT '[]',
+    final_action                TEXT NOT NULL
+        CHECK(final_action IN ('recommend','clarify','refer','no_match')),
+    recommendation_appropriateness TEXT NOT NULL
+        CHECK(recommendation_appropriateness IN ('appropriate','inappropriate','not_applicable')),
+    expected_medicines          TEXT NOT NULL DEFAULT '[]',
+    notes                       TEXT,
+    adjudicated_at              TEXT DEFAULT (datetime('now','localtime')),
+    FOREIGN KEY (interaction_id) REFERENCES interaction_logs(interaction_id),
+    FOREIGN KEY (adjudicator_id) REFERENCES admin_users(id)
+);
+
+CREATE TABLE IF NOT EXISTS operational_counters (
+    counter_date        TEXT NOT NULL,
+    interaction_type    TEXT NOT NULL,
+    count               INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY(counter_date, interaction_type)
 );
 """
 
@@ -162,6 +214,7 @@ def init_db() -> None:
     """Create tables, seed default admin, and auto-populate inventory."""
     db = get_db()
     db.executescript(_SCHEMA)
+    _migrate_schema(db)
 
     # Seed default admin if none exists
     row = db.execute("SELECT COUNT(*) AS c FROM admin_users").fetchone()
@@ -200,6 +253,69 @@ def init_db() -> None:
         except Exception:
             pass
     db.commit()
+
+
+def _migrate_schema(db: sqlite3.Connection) -> None:
+    """Apply additive audit migrations while preserving legacy consultations."""
+    columns = {
+        row["name"] for row in db.execute("PRAGMA table_info(interaction_logs)").fetchall()
+    }
+    additions = {
+        "research_consent": "INTEGER NOT NULL DEFAULT 0",
+        "consent_version": "TEXT",
+        "language": "TEXT",
+        "input_mode": "TEXT",
+        "trace_version": "INTEGER NOT NULL DEFAULT 1",
+        "engine_id": "TEXT",
+    }
+    for name, definition in additions.items():
+        if name not in columns:
+            db.execute(f"ALTER TABLE interaction_logs ADD COLUMN {name} {definition}")
+
+    review_columns = {
+        row["name"] for row in db.execute("PRAGMA table_info(interaction_reviews)").fetchall()
+    }
+    if "correct_symptoms" not in review_columns:
+        db.execute(
+            "ALTER TABLE interaction_reviews "
+            "ADD COLUMN correct_symptoms TEXT NOT NULL DEFAULT '[]'"
+        )
+
+    # Older databases constrained roles to admin/staff. Rebuild only that
+    # table, preserving ids so transaction and review foreign keys stay valid.
+    row = db.execute(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='admin_users'"
+    ).fetchone()
+    table_sql = (row["sql"] or "") if row else ""
+    if "'reviewer'" not in table_sql:
+        db.commit()
+        db.execute("PRAGMA foreign_keys=OFF")
+        db.execute("PRAGMA legacy_alter_table=ON")
+        db.executescript(
+            """
+            BEGIN;
+            ALTER TABLE admin_users RENAME TO admin_users_legacy;
+            CREATE TABLE admin_users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                full_name TEXT NOT NULL,
+                role TEXT DEFAULT 'staff'
+                    CHECK(role IN ('admin','staff','reviewer')),
+                is_active INTEGER DEFAULT 1,
+                created_at TEXT DEFAULT (datetime('now','localtime')),
+                last_login TEXT
+            );
+            INSERT INTO admin_users
+                (id, username, password_hash, full_name, role, is_active, created_at, last_login)
+            SELECT id, username, password_hash, full_name, role, is_active, created_at, last_login
+            FROM admin_users_legacy;
+            DROP TABLE admin_users_legacy;
+            COMMIT;
+            """
+        )
+        db.execute("PRAGMA legacy_alter_table=OFF")
+        db.execute("PRAGMA foreign_keys=ON")
 
 
 # ─────────────────────────────────────────────────

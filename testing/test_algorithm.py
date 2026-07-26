@@ -23,6 +23,7 @@ Results are saved to benchmark/results/ with detailed metrics.
 import os
 import sys
 import csv
+import hashlib
 import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -31,7 +32,12 @@ from pathlib import Path
 # Add parent directory to path to import mendo_core
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from mendo_core.step3_hybrid import extract_symptoms_hybrid_report
+from mendo_core.evaluation import aggregate_metrics
+from mendo_core.prediction_pipeline import (
+    ENGINE_ID,
+    TRACE_SCHEMA_VERSION,
+    predict_symptoms,
+)
 from mendo_core.step4_recommend import load_mendo_dataset, recommend_from_dataset, DATASET_DEFAULT
 
 
@@ -165,18 +171,14 @@ class AlgorithmTester:
         
         # Run hybrid detection
         try:
-            report = extract_symptoms_hybrid_report(
-                input_text,
-                semantic_threshold=0.65,
-                semantic_top_margin=0.08,
-                semantic_max_symptoms=3,
-                enable_semantic_fallback=True,
-            )
+            report = predict_symptoms(input_text)
             detected_symptoms = list(report.get("final", {}).get("symptoms", []) or [])
+            raw_detected_symptoms = list(detected_symptoms)
             detection_source = report.get("final", {}).get("source", "unknown")
             detection_error = None
         except Exception as e:
             detected_symptoms = []
+            raw_detected_symptoms = []
             detection_source = "error"
             detection_error = str(e)
 
@@ -207,6 +209,7 @@ class AlgorithmTester:
             'cough_type': cough_type or '',
             'expected_symptoms': ','.join(expected_symptoms),
             'detected_symptoms': ','.join(detected_symptoms),
+            'raw_detected_symptoms': ','.join(raw_detected_symptoms),
             'detection_source': detection_source,
             'test_category': test_category,
             'notes': notes,
@@ -291,8 +294,12 @@ class AlgorithmTester:
         if not mapped:
             return labels
         
-        # Remove COUGH_GENERAL and the opposite type, add the specific type
-        out = [l for l in labels if l != "COUGH_GENERAL" and l != mapped]
+        # A guided answer replaces every generic/competing cough label.
+        out = [
+            label
+            for label in labels
+            if label not in {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
+        ]
         out.append(mapped)
         return out
 
@@ -347,11 +354,11 @@ class AlgorithmTester:
         print("\nAll tests completed!\n")
 
     def save_results(self, output_dir: str):
-        """Save detailed results to CSV and generate standalone HTML."""
+        """Save one reproducible detail file and one canonical manifest."""
         os.makedirs(output_dir, exist_ok=True)
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        results_file = os.path.join(output_dir, f"test_results_{timestamp}.csv")
+
+        timestamp = datetime.now().isoformat(timespec="seconds")
+        results_file = os.path.join(output_dir, "current.csv")
         
         if not self.results:
             print("No results to save.")
@@ -367,18 +374,49 @@ class AlgorithmTester:
         print(f"✓ Detailed results saved to: {results_file}")
 
         # Save summary statistics
-        summary_file = os.path.join(output_dir, f"test_summary_{timestamp}.json")
+        summary_file = os.path.join(output_dir, "current.json")
+        guided_cases = []
+        raw_cases = []
+        for row in self.results:
+            predicted = [v for v in row["detected_symptoms"].split(",") if v]
+            raw_predicted = [v for v in row["raw_detected_symptoms"].split(",") if v]
+            expected = [
+                v for v in row["expected_symptoms"].split(",") if v and v != "NONE"
+            ]
+            guided_cases.append({"predicted": predicted, "expected": expected})
+            raw_cases.append({"predicted": raw_predicted, "expected": expected})
+        metrics = {
+            "raw_input": aggregate_metrics(raw_cases),
+            "guided_workflow": aggregate_metrics(guided_cases),
+        }
         summary = {
-            'timestamp': timestamp,
+            'generated_at': timestamp,
+            'status': 'generated',
+            'provenance': 'researcher_and_llm_created_synthetic_cases',
+            'dataset': 'testing/benchmark/testing.csv',
+            'dataset_sha256': hashlib.sha256(
+                (Path(__file__).parent / "benchmark" / "testing.csv").read_bytes()
+            ).hexdigest(),
+            'engine_id': ENGINE_ID,
+            'trace_version': TRACE_SCHEMA_VERSION,
+            'automatic_production_training': False,
+            'modes': {
+                'raw_input': (
+                    'Initial deployed prediction before the guided cough-type answer.'
+                ),
+                'guided_workflow': (
+                    'Same prediction followed by the CSV cough_type answer, simulating '
+                    'the deployed dry/productive clarification.'
+                ),
+            },
+            'limitations': [
+                'Synthetic researcher/LLM-created regression cases; not participant field data.',
+                'The benchmark is not an independently collected clinical gold corpus.',
+                'A perfect guided score must not be reported as clinical validation.',
+            ],
+            'metrics': metrics,
             'overall_stats': self.stats,
             'category_stats': self.category_stats,
-            'overall_metrics': {
-                'accuracy': round(self.stats['exact_matches'] / self.stats['total_tests'], 3) if self.stats['total_tests'] > 0 else 0,
-                'partial_success_rate': round((self.stats['exact_matches'] + self.stats['partial_matches']) / self.stats['total_tests'], 3) if self.stats['total_tests'] > 0 else 0,
-                'avg_f1_score': round(sum(r['f1_score'] for r in self.results) / len(self.results), 3) if self.results else 0,
-                'avg_precision': round(sum(r['precision'] for r in self.results) / len(self.results), 3) if self.results else 0,
-                'avg_recall': round(sum(r['recall'] for r in self.results) / len(self.results), 3) if self.results else 0,
-            }
         }
         
         with open(summary_file, 'w', encoding='utf-8') as f:
@@ -386,12 +424,7 @@ class AlgorithmTester:
         
         print(f"✓ Summary statistics saved to: {summary_file}")
 
-        # Generate standalone HTML with embedded results
-        html_file = os.path.join(output_dir, f"test_results_{timestamp}.html")
-        self._generate_html_report(html_file, timestamp)
-        print(f"✓ Interactive HTML report: {html_file}")
-
-        return results_file, summary_file, html_file
+        return results_file, summary_file
 
     def print_summary(self):
         """Print comprehensive summary to terminal."""

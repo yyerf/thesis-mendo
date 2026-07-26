@@ -36,6 +36,8 @@
           <td>
             {% if u.role == 'admin' %}
               <span class="badge badge--primary">Admin</span>
+            {% elif u.role == 'reviewer' %}
+              <span class="badge badge--warning">Reviewer</span>
             {% else %}
               <span class="badge badge--neutral">Cashier</span>
             {% endif %}
@@ -88,7 +90,8 @@
       <div class="form-group">
         <label class="form-label">Role</label>
         <select class="form-select" id="newRole">
-          <option value="cashier">Cashier</option>
+          <option value="staff">Cashier / Staff</option>
+          <option value="reviewer">Domain-expert Reviewer</option>
           <option value="admin">Admin</option>
         </select>
       </div>

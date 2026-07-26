@@ -58,6 +58,25 @@
 
     .hidden { display: none !important; }
 
+    .consent-box {
+      max-width: 680px;
+      border-top: 5px solid var(--blue-600);
+    }
+    .consent-kicker {
+      color: var(--blue-700); font-size: 12px; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .consent-facts {
+      display: grid; gap: 10px; margin: 18px 0; padding: 16px;
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      border-radius: var(--radius);
+    }
+    .consent-fact { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
+    .consent-fact i { color: var(--blue-600); margin-top: 3px; }
+    .consent-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .consent-note { font-size: 12px; color: var(--zinc-500); margin: 12px 0 18px; }
+    @media (max-width: 560px) { .consent-actions { grid-template-columns: 1fr; } }
+
     /* ═══════════════════════════════
        SCREEN 0 — Home / Intro
     ═══════════════════════════════ */
@@ -1958,6 +1977,29 @@
   </div>
 </div>
 
+<!-- Research participation is optional; declining never blocks consultation. -->
+<div class="modal-overlay hidden" id="researchConsentModal">
+  <div class="modal-box consent-box" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+    <div class="consent-kicker">Thesis field validation · Boluntaryong paglahok</div>
+    <h3 id="consentTitle">May we save this consultation for research review?</h3>
+    <p id="consentIntro">
+      Mendo can still help you if you decline. If you agree, your symptom text,
+      system trace, and outcome will be stored so authorized domain experts can
+      independently review the system. Reviews never retrain production automatically.
+    </p>
+    <div class="consent-facts">
+      <div class="consent-fact"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span id="consentAgree"><strong>Agree:</strong> save this consultation for consented, de-identified research export after expert adjudication.</span></div>
+      <div class="consent-fact"><i class="fa-solid fa-user-slash" aria-hidden="true"></i><span id="consentDecline"><strong>Decline:</strong> do not persist raw symptom text; retain only an anonymous operational count.</span></div>
+      <div class="consent-fact"><i class="fa-solid fa-language" aria-hidden="true"></i><span id="consentChoice"><strong>Your choice:</strong> consultation remains available either way.</span></div>
+    </div>
+    <p class="consent-note" id="consentNote">Select one choice before continuing. This is research consent, not consent to medical treatment.</p>
+    <div class="consent-actions">
+      <button class="btn btn--primary" id="consentYes" onclick="saveResearchConsent(true, event)">I agree to research use</button>
+      <button class="btn btn--outline" id="consentNo" onclick="saveResearchConsent(false, event)">Decline and continue</button>
+    </div>
+  </div>
+</div>
+
 <div class="idle-overlay hidden" id="idleModal" onclick="resumeFromIdle(event)">
   <div class="idle-box" onclick="event.stopPropagation()">
     <div class="idle-icon">👋</div>
@@ -2169,6 +2211,7 @@
   let analysisData = null;
   let showingRecs = false;
   let selectedLanguage = 'en';
+  let consultInputMode = 'text';
   let idleWarningTimer = null;
   let idleResetTimer = null;
   let idleCountdownTimer = null;
@@ -2855,6 +2898,12 @@
     const c = document.getElementById('headacheLocationSelector');
     c.classList.add('hidden'); c.innerHTML = '';
     document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+
+    // Sinus illustration triggers congestion; it does not imply a runny nose.
+    if (selectedHeadacheLocation === 'sinus' && !preDetectedSymptoms.includes('NASAL_CONGESTION')) {
+      preDetectedSymptoms.push('NASAL_CONGESTION');
+    }
+
     severityMap = {};
     severityQueue = [...preDetectedSymptoms];
     severityCompleted = [];
@@ -2937,7 +2986,75 @@
   window.confirmLegalNotice = function(event) {
     if (event) event.stopPropagation();
     document.getElementById('legalNoticeModal').classList.add('hidden');
-    enterKioskFlow();
+    renderResearchConsentCopy();
+    document.getElementById('researchConsentModal').classList.remove('hidden');
+  };
+
+  function renderResearchConsentCopy() {
+    const copy = {
+      en: {
+        title: 'May we save this consultation for research review?',
+        intro: 'Mendo can still help you if you decline. If you agree, your symptom text, system trace, and outcome will be stored so authorized domain experts can independently review the system. Reviews never retrain production automatically.',
+        agree: 'Agree: save this consultation for consented, de-identified research export after expert adjudication.',
+        decline: 'Decline: do not persist raw symptom text; retain only an anonymous operational count.',
+        choice: 'Your choice: consultation remains available either way.',
+        note: 'Select one choice before continuing. This is research consent, not consent to medical treatment.',
+        yes: 'I agree to research use', no: 'Decline and continue',
+      },
+      tl: {
+        title: 'Maaari ba naming i-save ang konsultasyong ito para sa pagsusuri?',
+        intro: 'Makakatulong pa rin ang Mendo kahit tumanggi ka. Kapag pumayag ka, ise-save ang teksto ng sintomas, trace ng sistema, at resulta upang masuri nang hiwalay ng awtorisadong domain experts. Walang review na awtomatikong magre-retrain sa production system.',
+        agree: 'Pumayag: isama ang de-identified na konsultasyon sa research export matapos ang expert adjudication.',
+        decline: 'Tumanggi: huwag i-save ang raw na teksto ng sintomas; anonymous na bilang lamang ang itatago.',
+        choice: 'Anuman ang piliin mo, maaari mong ipagpatuloy ang konsultasyon.',
+        note: 'Pumili bago magpatuloy. Pahintulot ito para sa research, hindi pahintulot para sa medical treatment.',
+        yes: 'Pumapayag ako sa research', no: 'Tumanggi at magpatuloy',
+      },
+      ceb: {
+        title: 'Mahimo ba namong i-save kini nga konsultasyon para sa research review?',
+        intro: 'Makatabang gihapon ang Mendo bisan dili ka mouyon. Kung mouyon ka, i-save ang symptom text, system trace, ug resulta aron independente nga ma-review sa awtorisadong domain experts. Walay review nga awtomatikong mag-retrain sa production system.',
+        agree: 'Mouyon: iapil ang de-identified nga konsultasyon sa research export human sa expert adjudication.',
+        decline: 'Dili mouyon: dili i-save ang raw symptom text; anonymous nga ihap ra ang tipigan.',
+        choice: 'Bisan unsa imong pilion, makapadayon gihapon ka sa konsultasyon.',
+        note: 'Pagpili usa sa dili pa mopadayon. Research consent kini, dili consent sa medical treatment.',
+        yes: 'Mouyon ko sa research', no: 'Dili mouyon ug mopadayon',
+      },
+    }[selectedLanguage] || {};
+    document.getElementById('consentTitle').textContent = copy.title;
+    document.getElementById('consentIntro').textContent = copy.intro;
+    document.getElementById('consentAgree').textContent = copy.agree;
+    document.getElementById('consentDecline').textContent = copy.decline;
+    document.getElementById('consentChoice').textContent = copy.choice;
+    document.getElementById('consentNote').textContent = copy.note;
+    document.getElementById('consentYes').textContent = copy.yes;
+    document.getElementById('consentNo').textContent = copy.no;
+  }
+
+  window.saveResearchConsent = async function(consent, event) {
+    if (event) event.stopPropagation();
+    const buttons = document.querySelectorAll('#researchConsentModal button');
+    buttons.forEach(btn => btn.disabled = true);
+    try {
+      const response = await fetch('/consult/api/research-consent', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({consent}),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Could not save your choice');
+      document.getElementById('researchConsentModal').classList.add('hidden');
+      enterKioskFlow();
+      showToast(
+        consent
+          ? 'Research consent saved. This consultation may be reviewed.'
+          : 'Consultation will continue without saving your raw symptom text.',
+        'info'
+      );
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      buttons.forEach(btn => btn.disabled = false);
+    }
   };
 
   window.backToHome = function() {
@@ -3038,6 +3155,7 @@
   //  STEP 2: SYMPTOMS
   // ══════════════════════════════
   symptomInput.addEventListener('input', () => {
+    consultInputMode = 'text';
     toStep3Btn.disabled = !symptomInput.value.trim();
     const detected = detectLanguageFromText(symptomInput.value);
     if (detected && detected !== selectedLanguage) {
@@ -3104,7 +3222,11 @@
       const res = await fetch('/consult/api/pre-detect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({
+          text,
+          language: selectedLanguage,
+          input_mode: consultInputMode,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Detection failed');
@@ -3336,7 +3458,12 @@
     document.getElementById('backFromResults').classList.add('hidden');
 
     try {
-      const payload = { text, age: patientAge };
+      const payload = {
+        text,
+        age: patientAge,
+        language: selectedLanguage,
+        input_mode: consultInputMode,
+      };
       // Send per-symptom severity map if available, otherwise legacy single value
       if (Object.keys(severityMap).length > 0) {
         payload.severity_map = severityMap;
@@ -3347,11 +3474,6 @@
       // Include headache location if selected
       if (selectedHeadacheLocation) {
         payload.headache_location = selectedHeadacheLocation;
-        // Also send the full location object for backend assessment
-        const loc = headacheLocations.find(l => l.key === selectedHeadacheLocation);
-        if (loc) {
-          payload.headache_danger = loc.danger;
-        }
       }
 
       const res = await fetch('/consult/api/analyze', {
@@ -3922,6 +4044,7 @@
     updatePain();
     analysisData = null;
     showingRecs = false;
+    consultInputMode = 'text';
     durationQueue = [];
     durationCompleted = [];
     durationContextOverride = null;
@@ -4214,6 +4337,7 @@
   // ══════════════════════════════
   window.resetAll = function() {
     hideIdlePrompt();
+    consultInputMode = 'text';
     symptomInput.value = '';
     ageInput.value = '';
     ageSlider.value = 1;
@@ -4265,6 +4389,7 @@
         transcript += e.results[i][0].transcript;
       }
       symptomInput.value = transcript;
+      consultInputMode = 'voice';
       toStep3Btn.disabled = !transcript.trim();
       const detected = detectLanguageFromText(transcript);
       if (detected && detected !== selectedLanguage) {
@@ -4290,6 +4415,7 @@
         recognition.stop();
       } else {
         isRecording = true;
+        consultInputMode = 'voice';
         voiceBtn.classList.add('recording');
         recognition.lang = getSpeechRecognitionLocale(selectedLanguage);
         recognition.start();

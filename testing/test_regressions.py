@@ -402,14 +402,17 @@ class RegressionTests(unittest.TestCase):
         self.assertEqual(rec.get("action"), "triage")
 
     def test_logger_new_fields_present(self):
-        """Logger output must include interaction_type, context_override, step numbers."""
-        import json
-        from mendo_core.interaction_logger import log_interaction
+        """Consented SQLite audit rows include type, context, and trace steps."""
+        import tempfile
+        from mendo_core.interaction_logger import get_interaction_logs, log_interaction
         import mendo_core.interaction_logger as _ilog2
 
-        _ilog2._disabled = False  # temporarily enable for this test
+        old_path = _ilog2._DB_PATH
+        temp_dir = tempfile.TemporaryDirectory()
+        _ilog2._DB_PATH = str(Path(temp_dir.name) / "audit.sqlite")
+        _ilog2._disabled = False
         try:
-            iid = log_interaction(
+            log_interaction(
                 user_input="unit test input",
                 extracted_symptoms=["HEADACHE"],
                 extraction_source="dictionary",
@@ -424,10 +427,9 @@ class RegressionTests(unittest.TestCase):
                 severity=5,
                 age=25,
                 session_id="unit_test",
+                research_consent=True,
             )
-            # Read back last line
-            with open("logs/interactions.jsonl") as f:
-                last = json.loads(f.readlines()[-1])
+            last = get_interaction_logs(limit=1)[0]
 
             self.assertEqual(last["interaction_type"], "initial_analysis")
             self.assertIsNone(last["context_override"])
@@ -435,14 +437,10 @@ class RegressionTests(unittest.TestCase):
             self.assertEqual(last["pipeline_stages"][0]["step"], 1)
             self.assertEqual(last["pipeline_stages"][1]["step"], 2)
             self.assertEqual(last["severity"], 5)
-
-            # Cleanup: remove test entry
-            with open("logs/interactions.jsonl") as f:
-                lines = f.readlines()
-            with open("logs/interactions.jsonl", "w") as f:
-                f.writelines(lines[:-1])
         finally:
+            _ilog2._DB_PATH = old_path
             _ilog2._disabled = True
+            temp_dir.cleanup()
 
     def test_stomach_ache_detects_bisaya_gasakit_variant(self):
         report = extract_symptoms_hybrid_report(

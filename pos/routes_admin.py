@@ -7,7 +7,7 @@ from flask import (
     url_for, session, flash, jsonify,
 )
 
-from .auth import login_required, admin_required
+from .auth import login_required, admin_required, reviewer_required
 from .db import (
     authenticate_user, get_dashboard_stats,
     list_inventory, get_inventory_item, update_stock,
@@ -25,6 +25,15 @@ from mendo_core.interaction_logger import (
     export_logs_as_csv as export_logs_csv,
     export_logs_as_json as export_logs_json,
     export_logs_as_pdf as export_logs_pdf,
+    adjudicate,
+    export_research_csv,
+    export_research_jsonl,
+    get_aggregate_metrics,
+    get_operational_summary,
+    get_session_trace,
+    get_sessions,
+    research_manifest,
+    submit_review,
 )
 
 admin_bp = Blueprint(
@@ -46,7 +55,8 @@ def login():
             session["pos_user_id"] = user["id"]
             session["pos_user_name"] = user["full_name"]
             session["pos_user_role"] = user["role"]
-            next_url = request.args.get("next", url_for("admin.dashboard"))
+            default_route = "admin.logs_dashboard" if user["role"] == "reviewer" else "admin.dashboard"
+            next_url = request.args.get("next", url_for(default_route))
             return redirect(next_url)
         flash("Invalid username or password.", "error")
     return render_template("pos/login.html")
@@ -211,7 +221,7 @@ def api_create_user(current_user=None):
         role = data.get("role", "staff")
         if not username or not password or not full_name:
             return jsonify({"error": "All fields are required"}), 400
-        if role not in ("admin", "staff"):
+        if role not in ("admin", "staff", "reviewer"):
             return jsonify({"error": "Invalid role"}), 400
         create_user(username, password, full_name, role)
         return jsonify({"success": True, "message": f"User '{username}' created"})
@@ -248,7 +258,7 @@ def api_toggle_user(uid, current_user=None):
 # ─────────── Interaction Logs Dashboard ───────────
 
 @admin_bp.route("/logs")
-@login_required
+@reviewer_required
 def logs_dashboard(current_user=None):
     """Render the interaction logs dashboard page."""
     total = count_interaction_logs()
@@ -256,11 +266,14 @@ def logs_dashboard(current_user=None):
     top_symptom = get_most_common_symptom()
     return render_template("pos/logs.html", user=current_user,
                            total_logs=total, today_logs=today,
-                           top_symptom=top_symptom)
+                           top_symptom=top_symptom,
+                           operational=get_operational_summary(),
+                           field_metrics=get_aggregate_metrics(),
+                           synthetic_benchmark=_load_synthetic_benchmark())
 
 
 @admin_bp.route("/api/logs", methods=["GET"])
-@login_required
+@reviewer_required
 def api_logs(current_user=None):
     """Return interaction logs as paginated JSON (for frontend table)."""
     limit = int(request.args.get("limit", 100))
@@ -271,8 +284,100 @@ def api_logs(current_user=None):
     return jsonify({"logs": logs, "total": total})
 
 
+@admin_bp.route("/api/audit/sessions", methods=["GET"])
+@reviewer_required
+def api_audit_sessions(current_user=None):
+    limit = min(max(int(request.args.get("limit", 100)), 1), 500)
+    offset = max(int(request.args.get("offset", 0)), 0)
+    search = request.args.get("search", "").strip()
+    return jsonify(
+        {
+            "sessions": get_sessions(limit=limit, offset=offset, search=search),
+            "total_events": count_interaction_logs(search=search),
+        }
+    )
+
+
+@admin_bp.route("/api/audit/sessions/<session_id>", methods=["GET"])
+@reviewer_required
+def api_audit_session_detail(session_id, current_user=None):
+    detail = get_session_trace(session_id)
+    if not detail:
+        return jsonify({"error": "Session not found"}), 404
+    return jsonify(detail)
+
+
+@admin_bp.route("/api/audit/interactions/<interaction_id>/reviews", methods=["POST"])
+@reviewer_required
+def api_submit_review(interaction_id, current_user=None):
+    try:
+        return jsonify(submit_review(interaction_id, current_user["id"], request.get_json(force=True)))
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/audit/interactions/<interaction_id>/adjudication", methods=["POST"])
+@admin_required
+def api_adjudicate(interaction_id, current_user=None):
+    try:
+        return jsonify(adjudicate(interaction_id, current_user["id"], request.get_json(force=True)))
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/audit/metrics", methods=["GET"])
+@reviewer_required
+def api_audit_metrics(current_user=None):
+    return jsonify(
+        {
+            "synthetic": _load_synthetic_benchmark(),
+            "field_validation": get_aggregate_metrics(),
+            "operational": get_operational_summary(),
+        }
+    )
+
+
+@admin_bp.route("/api/audit/export/research.jsonl", methods=["GET"])
+@admin_required
+def api_export_research_jsonl(current_user=None):
+    from flask import Response
+    data = export_research_jsonl()
+    if not data:
+        return jsonify({"error": "No consented, adjudicated records are export-eligible"}), 404
+    return Response(
+        data,
+        mimetype="application/x-ndjson",
+        headers={"Content-Disposition": "attachment; filename=mendo_research.jsonl"},
+    )
+
+
+@admin_bp.route("/api/audit/export/research.csv", methods=["GET"])
+@admin_required
+def api_export_research_csv(current_user=None):
+    from flask import Response
+    data = export_research_csv()
+    if not data:
+        return jsonify({"error": "No consented, adjudicated records are export-eligible"}), 404
+    return Response(
+        data,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=mendo_research.csv"},
+    )
+
+
+@admin_bp.route("/api/audit/export/manifest.json", methods=["GET"])
+@admin_required
+def api_export_research_manifest(current_user=None):
+    from flask import Response
+    return Response(
+        __import__("json").dumps(research_manifest(), ensure_ascii=False, indent=2),
+        mimetype="application/json",
+        headers={"Content-Disposition": "attachment; filename=dataset_manifest.json"},
+    )
+
+
 @admin_bp.route("/api/logs/export/json")
-@login_required
+@reviewer_required
 def api_export_logs_json(current_user=None):
     data = export_logs_json()
     if not data or data == "[]":
@@ -283,7 +388,7 @@ def api_export_logs_json(current_user=None):
 
 
 @admin_bp.route("/api/logs/export/csv")
-@login_required
+@reviewer_required
 def api_export_logs_csv(current_user=None):
     data = export_logs_csv()
     if not data:
@@ -294,7 +399,7 @@ def api_export_logs_csv(current_user=None):
 
 
 @admin_bp.route("/api/logs/export/pdf")
-@login_required
+@reviewer_required
 def api_export_logs_pdf(current_user=None):
     data = export_logs_pdf()
     if not data:
@@ -302,3 +407,23 @@ def api_export_logs_pdf(current_user=None):
     from flask import Response
     return Response(data, mimetype="application/pdf",
                     headers={"Content-Disposition": "attachment; filename=interaction_logs.pdf"})
+
+
+def _load_synthetic_benchmark():
+    """Load the one reproducible researcher-created benchmark manifest."""
+    from pathlib import Path
+    import json
+
+    path = Path(__file__).resolve().parents[1] / "testing" / "benchmark" / "results" / "current.json"
+    if not path.exists():
+        return {
+            "status": "not_generated",
+            "provenance": "researcher_and_llm_created_synthetic_cases",
+        }
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {
+            "status": "invalid_manifest",
+            "provenance": "researcher_and_llm_created_synthetic_cases",
+        }

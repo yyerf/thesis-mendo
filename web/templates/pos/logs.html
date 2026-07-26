@@ -1,317 +1,375 @@
 {% extends 'pos/base.html' %}
 {% set active_page = 'logs' %}
-{% block title %}Interaction Logs — Mendo POS{% endblock %}
+{% block title %}Clinical Audit — Mendo{% endblock %}
 
 {% block header %}
-<div class="page-header">
+<div class="page-header audit-header">
   <div>
-    <h2>Interaction Logs</h2>
-    <p>Every AI consultation session — inputs, pipeline decisions, and outputs</p>
+    <div class="audit-kicker">Restricted clinical evidence workspace</div>
+    <h2>Consultation Audit</h2>
+    <p>Session timelines, explainable traces, independent review, and adjudicated validation</p>
   </div>
   <div class="page-header-actions">
-    <div class="search-box" style="max-width:240px;">
+    <div class="search-box audit-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="logSearch" placeholder="Search logs..." oninput="scheduleSearch()">
+      <input type="search" id="sessionSearch" placeholder="Session, text, or label" aria-label="Search audit sessions">
     </div>
-    <button class="btn btn--primary btn--sm" onclick="exportLogs('json')">JSON</button>
-    <button class="btn btn--primary btn--sm" onclick="exportLogs('csv')">CSV</button>
-    <button class="btn btn--primary btn--sm" onclick="exportLogs('pdf')">PDF</button>
+    {% if user.role == 'admin' %}
+    <a class="btn btn--primary btn--sm" href="{{ url_for('admin.api_export_research_manifest') }}">Dataset manifest</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<!-- ═══ Stats ═══ -->
-<div class="stats-grid" style="margin-bottom:20px;">
-  <div class="stat-card stat-card--primary">
-    <div class="stat-card__label">Total Interactions</div>
-    <div class="stat-card__value">{{ total_logs }}</div>
-    <div class="stat-card__sub">All time</div>
-  </div>
-  <div class="stat-card stat-card--success">
-    <div class="stat-card__label">Today</div>
-    <div class="stat-card__value">{{ today_logs }}</div>
-    <div class="stat-card__sub">Interactions today</div>
-  </div>
-  <div class="stat-card stat-card--warning">
-    <div class="stat-card__label">Most Common Symptom</div>
-    <div class="stat-card__value" style="font-size:20px;">{{ top_symptom or '—' }}</div>
-    <div class="stat-card__sub">Across all sessions</div>
-  </div>
-  <div class="stat-card stat-card--danger">
-    <div class="stat-card__label">Export</div>
-    <div class="stat-card__value" style="font-size:16px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-      <a href="{{ url_for('admin.api_export_logs_json') }}" class="btn btn--sm" style="font-size:11px;">⬇ JSON</a>
-      <a href="{{ url_for('admin.api_export_logs_csv') }}" class="btn btn--sm" style="font-size:11px;">⬇ CSV</a>
-      <a href="{{ url_for('admin.api_export_logs_pdf') }}" class="btn btn--sm" style="font-size:11px;">⬇ PDF</a>
-    </div>
-    <div class="stat-card__sub">Download all records</div>
-  </div>
-</div>
-
-<!-- ═══ Full Log Table ═══ -->
-<div class="card">
-  <div class="card-header">
-    <h3>Session Logs</h3>
-    <span class="text-sm text-muted" id="logCount">{{ total_logs }} records</span>
-  </div>
-  <div class="card-body--flush table-wrap">
-    <table id="logTable">
-      <thead>
-        <tr>
-          <th style="width:30px;"></th>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>Type</th>
-          <th>User Input</th>
-          <th>Symptoms</th>
-          <th>Headache</th>
-          <th>Duration</th>
-          <th>Action</th>
-          <th>Age</th>
-        </tr>
-      </thead>
-      <tbody id="logTableBody">
-        <tr><td colspan="10" class="table-empty">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card-footer" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);">
-    <span class="text-sm text-muted" id="paginationInfo">Page 1</span>
-    <div class="flex gap-2">
-      <button class="btn btn--sm" id="prevPageBtn" onclick="changePage(-1)" disabled>← Prev</button>
-      <button class="btn btn--sm" id="nextPageBtn" onclick="changePage(1)">Next →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ Detail Modal (used by expand) ═══ -->
-<div class="modal-overlay" id="logDetailModal">
-  <div class="modal modal--lg" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <h3>Log Details</h3>
-      <button class="modal-close" onclick="closeLogDetail()">&times;</button>
-    </div>
-    <div class="modal-body" id="logDetailBody" style="max-height:70vh;overflow-y:auto;"></div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeLogDetail()">Close</button>
-    </div>
-  </div>
-</div>
-
 <style>
-  .log-expand-btn {
-    background:none;border:1px solid var(--border);border-radius:4px;
-    cursor:pointer;padding:2px 6px;font-size:12px;color:var(--text-muted);
-    transition:all .15s;
-  }
-  .log-expand-btn:hover { background:var(--bg);color:var(--text); }
-  .log-expanded-row td { background:#f8fafc;padding:16px 20px; }
-  .log-expanded-row pre {
-    font-family:var(--mono);font-size:11px;line-height:1.6;
-    max-height:300px;overflow-y:auto;background:var(--bg);
-    padding:12px;border-radius:var(--radius-sm);white-space:pre-wrap;
-    color:var(--text-secondary);
-  }
-  .detail-section { margin-bottom:16px; }
-  .detail-section h4 { font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:6px; }
-  .detail-section .kv { display:grid;grid-template-columns:120px 1fr;gap:4px 12px;font-size:13px; }
-  .detail-section .kv dt { color:var(--text-secondary);font-weight:500; }
-  .detail-section .kv dd { color:var(--text); }
-  .detail-pill {
-    display:inline-block;padding:2px 8px;border-radius:100px;
-    font-size:11px;font-weight:600;margin:2px;
-  }
-  .detail-pill.blue { background:var(--primary-light);color:var(--primary); }
-  .detail-pill.green { background:var(--success-light);color:var(--success); }
-  .detail-pill.amber { background:var(--warning-light);color:var(--warning); }
-  .detail-pill.red { background:var(--danger-light);color:var(--danger); }
-  .log-input-cell { max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
-  .log-symptom-cell { max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
-  .log-action-cell { font-weight:600; }
-  .log-action-cell.recommend { color:var(--success); }
-  .log-action-cell.clarify { color:var(--warning); }
-  .log-action-cell.triage { color:var(--danger); }
+  .audit-header h2 { letter-spacing: -.035em; }
+  .audit-kicker { color:#0369a1; font-size:11px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; margin-bottom:5px; }
+  .audit-search { min-width:280px; }
+  .audit-notice { display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid #bae6fd; border-left:4px solid #0284c7; background:#f0f9ff; border-radius:8px; margin-bottom:18px; color:#0c4a6e; }
+  .audit-notice strong { display:block; margin-bottom:2px; }
+  .audit-notice p { margin:0; font-size:13px; line-height:1.5; }
+  .evidence-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+  .evidence-card { background:#fff; border:1px solid #e4e4e7; border-radius:10px; padding:15px; position:relative; overflow:hidden; }
+  .evidence-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:#0ea5e9; }
+  .evidence-card.legacy::before { background:#f59e0b; }
+  .evidence-card.review::before { background:#8b5cf6; }
+  .evidence-card.gold::before { background:#22c55e; }
+  .evidence-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#71717a; }
+  .evidence-value { font-size:28px; font-weight:850; line-height:1.15; color:#18181b; margin-top:7px; }
+  .evidence-sub { font-size:12px; color:#71717a; margin-top:4px; }
+  .metric-panels { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+  .metric-panel { background:#18181b; color:#fafafa; border-radius:12px; padding:18px; }
+  .metric-panel.field { background:#083344; }
+  .metric-title-row { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:14px; }
+  .metric-panel h3 { font-size:16px; margin:0 0 4px; }
+  .metric-panel p { color:#a1a1aa; font-size:12px; line-height:1.45; margin:0; }
+  .metric-panel.field p { color:#a5f3fc; }
+  .provenance-pill { flex:none; border:1px solid #52525b; border-radius:99px; padding:4px 8px; font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+  .metric-panel.field .provenance-pill { border-color:#0e7490; color:#cffafe; }
+  .metric-row { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+  .metric-cell { border-top:1px solid #3f3f46; padding-top:10px; }
+  .metric-panel.field .metric-cell { border-color:#155e75; }
+  .metric-panel.field .metric-row { grid-template-columns:repeat(3,minmax(0,1fr)); row-gap:12px; }
+  .metric-cell strong { display:block; font-size:20px; }
+  .metric-cell span { color:#a1a1aa; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
+  .workspace-grid { display:grid; grid-template-columns:minmax(330px,.85fr) minmax(0,1.65fr); gap:14px; align-items:start; }
+  .session-list-card, .detail-card { background:#fff; border:1px solid #e4e4e7; border-radius:12px; overflow:hidden; }
+  .audit-card-head { padding:14px 16px; border-bottom:1px solid #e4e4e7; display:flex; justify-content:space-between; align-items:center; }
+  .audit-card-head h3 { font-size:14px; margin:0; }
+  .session-list { max-height:760px; overflow:auto; }
+  .session-item { width:100%; border:0; border-bottom:1px solid #f4f4f5; background:#fff; text-align:left; padding:14px 16px; cursor:pointer; transition:.15s ease; }
+  .session-item:hover, .session-item.active { background:#f0f9ff; }
+  .session-item.active { box-shadow:inset 3px 0 #0284c7; }
+  .session-top { display:flex; justify-content:space-between; gap:8px; align-items:center; }
+  .session-id { font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace; color:#0369a1; }
+  .session-date { font-size:11px; color:#71717a; }
+  .session-preview { font-size:13px; color:#3f3f46; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:8px 0; }
+  .chip-row { display:flex; flex-wrap:wrap; gap:5px; }
+  .audit-chip { display:inline-flex; align-items:center; border-radius:99px; padding:3px 7px; font-size:10px; font-weight:750; background:#f4f4f5; color:#52525b; }
+  .audit-chip.consent { background:#dcfce7; color:#166534; }
+  .audit-chip.legacy { background:#fef3c7; color:#92400e; }
+  .audit-chip.gold { background:#dbeafe; color:#1d4ed8; }
+  .detail-empty { min-height:500px; display:grid; place-items:center; padding:40px; text-align:center; color:#71717a; }
+  .detail-empty strong { color:#27272a; display:block; margin-bottom:6px; }
+  .detail-body { padding:18px; }
+  .case-banner { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding-bottom:15px; margin-bottom:16px; border-bottom:1px solid #e4e4e7; }
+  .case-banner h3 { margin:0 0 4px; font-size:18px; }
+  .case-banner p { margin:0; color:#71717a; font-size:12px; }
+  .timeline { position:relative; padding-left:24px; }
+  .timeline::before { content:""; position:absolute; left:7px; top:5px; bottom:6px; width:2px; background:#e4e4e7; }
+  .event { position:relative; margin-bottom:15px; border:1px solid #e4e4e7; border-radius:10px; padding:14px; }
+  .event::before { content:""; position:absolute; left:-22px; top:18px; width:10px; height:10px; border-radius:50%; background:#0284c7; border:3px solid white; box-shadow:0 0 0 1px #bae6fd; }
+  .event-head { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .event-type { font-size:12px; font-weight:850; text-transform:uppercase; letter-spacing:.06em; color:#0369a1; }
+  .event-time { font-size:11px; color:#71717a; }
+  .raw-input { background:#fafafa; border:1px solid #e4e4e7; border-radius:7px; padding:10px; font-size:13px; line-height:1.5; margin-bottom:10px; }
+  .trace-tabs { display:grid; gap:8px; margin-top:10px; }
+  details.trace-block { border:1px solid #e4e4e7; border-radius:8px; overflow:hidden; }
+  details.trace-block summary { cursor:pointer; padding:9px 11px; background:#fafafa; font-size:12px; font-weight:750; }
+  .trace-content { padding:11px; font-size:12px; }
+  .trace-row { display:grid; grid-template-columns:150px 1fr auto; gap:9px; align-items:center; padding:6px 0; border-bottom:1px solid #f4f4f5; }
+  .score-track { height:5px; background:#e4e4e7; border-radius:99px; overflow:hidden; }
+  .score-fill { height:100%; background:#0284c7; }
+  .headache-proof { display:flex; gap:12px; align-items:center; padding:10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; margin-top:10px; }
+  .headache-proof img { width:88px; height:68px; object-fit:contain; background:white; border-radius:6px; }
+  .headache-proof strong { display:block; color:#9a3412; }
+  .headache-proof span { font-size:11px; color:#7c2d12; }
+  .review-section { border-top:2px solid #18181b; margin-top:20px; padding-top:18px; }
+  .review-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .review-grid .full { grid-column:1/-1; }
+  .review-grid label { display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#52525b; margin-bottom:5px; }
+  .review-grid input, .review-grid select, .review-grid textarea { width:100%; border:1px solid #d4d4d8; border-radius:7px; padding:9px; font:inherit; }
+  .review-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+  .review-history { display:grid; gap:8px; margin:14px 0; }
+  .review-record { border-left:3px solid #8b5cf6; background:#fafafa; padding:10px 12px; font-size:12px; }
+  .muted { color:#71717a; }
+  @media (max-width:1100px) { .evidence-grid{grid-template-columns:repeat(2,1fr)} .workspace-grid,.metric-panels{grid-template-columns:1fr} }
+  @media (max-width:650px) { .evidence-grid{grid-template-columns:1fr} .metric-row{grid-template-columns:repeat(2,1fr)} .review-grid{grid-template-columns:1fr} .review-grid .full{grid-column:auto} .audit-search{min-width:0;width:100%} }
 </style>
 
+<div class="audit-notice">
+  <span aria-hidden="true">🔬</span>
+  <div>
+    <strong>Correct scientific framing</strong>
+    <p>Mendo is a knowledge-based expert system assisted by a pretrained MiniLM semantic component. Cosine similarity is not probability, and no consultation automatically changes production behavior.</p>
+  </div>
+</div>
+
+<section class="evidence-grid" aria-label="Audit population">
+  <div class="evidence-card"><div class="evidence-label">Stored events</div><div class="evidence-value">{{ operational.total or 0 }}</div><div class="evidence-sub">Structured consultation timeline events</div></div>
+  <div class="evidence-card legacy"><div class="evidence-label">Legacy / unconsented</div><div class="evidence-value">{{ operational.legacy_unconsented or 0 }}</div><div class="evidence-sub">Excluded from research and field metrics</div></div>
+  <div class="evidence-card review"><div class="evidence-label">Independent reviews</div><div class="evidence-value">{{ operational.independent_reviews or 0 }}</div><div class="evidence-sub">One record per reviewer and interaction</div></div>
+  <div class="evidence-card gold"><div class="evidence-label">Adjudicated gold</div><div class="evidence-value">{{ operational.adjudicated or 0 }}</div><div class="evidence-sub">Eligible only when research-consented</div></div>
+</section>
+
+<section class="metric-panels" aria-label="Evaluation metrics">
+  <article class="metric-panel">
+    <div class="metric-title-row">
+      <div><h3>Synthetic technical benchmark</h3><p>Researcher/LLM-created cases. Useful for regression testing; not clinical field evidence.</p></div>
+      <span class="provenance-pill">Synthetic</span>
+    </div>
+    {% set syn = synthetic_benchmark.get('metrics', {}) %}
+    {% set raw = syn.get('raw_input', {}) %}
+    {% set guided = syn.get('guided_workflow', {}) %}
+    <div class="metric-row">
+      <div class="metric-cell"><strong>{{ '%.3f'|format(raw.get('exact_match_rate', 0)) if raw else '—' }}</strong><span>Raw exact</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(raw.get('micro_f1', 0)) if raw else '—' }}</strong><span>Raw micro F1</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(guided.get('exact_match_rate', 0)) if guided else '—' }}</strong><span>Guided exact</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(guided.get('micro_f1', 0)) if guided else '—' }}</strong><span>Guided micro F1</span></div>
+    </div>
+  </article>
+  <article class="metric-panel field">
+    <div class="metric-title-row">
+      <div><h3>Domain-expert field validation</h3><p>Only consented consultations with administrator-adjudicated gold labels.</p></div>
+      <span class="provenance-pill">Field</span>
+    </div>
+    {% set field = field_metrics.get('aggregate', {}) %}
+    {% set kappa = field_metrics.get('inter_reviewer_agreement', {}) %}
+    {% set clinical = field_metrics.get('clinical_appropriateness', {}) %}
+    <div class="metric-row">
+      <div class="metric-cell"><strong>{{ field.get('case_count', 0) }}</strong><span>Gold cases</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(field.get('micro_f1', 0)) if field.get('case_count') else '—' }}</strong><span>Micro F1</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(field.get('macro_f1', 0)) if field.get('case_count') else '—' }}</strong><span>Macro F1</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(field.get('exact_match_rate', 0)) if field.get('case_count') else '—' }}</strong><span>Exact match</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(clinical.get('rate', 0)) if clinical.get('rate') is not none else '—' }}</strong><span>Clinical appropriate</span></div>
+      <div class="metric-cell"><strong>{{ '%.3f'|format(kappa.get('kappa')) if kappa.get('status') == 'available' else 'Insufficient' }}</strong><span>Cohen’s κ</span></div>
+    </div>
+  </article>
+</section>
+
+<div class="workspace-grid">
+  <section class="session-list-card">
+    <div class="audit-card-head"><h3>Consultation sessions</h3><span class="text-sm text-muted" id="sessionCount">Loading…</span></div>
+    <div class="session-list" id="sessionList"><div class="detail-empty"><div><strong>Loading audit trail…</strong></div></div></div>
+  </section>
+  <section class="detail-card" id="detailCard">
+    <div class="detail-empty"><div><strong>Select a consultation session</strong><span>Its assessment, clarifications, duration checks, selected illustration, trace, and review history will appear here.</span></div></div>
+  </section>
+</div>
+
+{% if user.role == 'admin' %}
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">
+  <a class="btn btn--sm" href="{{ url_for('admin.api_export_research_jsonl') }}">Research JSONL</a>
+  <a class="btn btn--sm" href="{{ url_for('admin.api_export_research_csv') }}">Research CSV</a>
+  <a class="btn btn--sm" href="{{ url_for('admin.api_export_research_manifest') }}">Manifest</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
 <script>
-let allLogs = [];
-let currentPage = 1;
-const PER_PAGE = 50;
-let searchTimer = null;
+(() => {
+  const isAdmin = {{ 'true' if user.role == 'admin' else 'false' }};
+  const list = document.getElementById('sessionList');
+  const detail = document.getElementById('detailCard');
+  const search = document.getElementById('sessionSearch');
+  let selectedSession = null;
+  let searchTimer = null;
 
-function scheduleSearch() {
-  if (searchTimer) clearTimeout(searchTimer);
-  searchTimer = setTimeout(loadLogs, 300);
-}
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const labels = value => Array.isArray(value) ? value : [];
+  const fmt = value => value ? new Date(value).toLocaleString() : '—';
+  const splitCSV = value => value.split(',').map(v => v.trim()).filter(Boolean);
+  const pct = value => Math.max(0, Math.min(100, Number(value || 0) * 100));
 
-async function loadLogs() {
-  const search = document.getElementById('logSearch').value.trim();
-  const offset = (currentPage - 1) * PER_PAGE;
-  try {
-    const res = await fetch(`/admin/api/logs?limit=${PER_PAGE}&offset=${offset}&search=${encodeURIComponent(search)}`);
-    const data = await res.json();
-    allLogs = data.logs || [];
-    renderTable(allLogs, data.total);
-  } catch (e) {
-    document.getElementById('logTableBody').innerHTML = '<tr><td colspan="10" class="table-empty">Failed to load logs</td></tr>';
-  }
-}
-
-function renderTable(logs, total) {
-  const tbody = document.getElementById('logTableBody');
-  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
-  document.getElementById('paginationInfo').textContent = `Page ${currentPage} of ${totalPages} (${total} records)`;
-  document.getElementById('logCount').textContent = `${total} records`;
-  document.getElementById('prevPageBtn').disabled = currentPage <= 1;
-  document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
-
-  if (!logs.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No logs found</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = logs.map((log, idx) => {
-    const syms = Array.isArray(log.extracted_symptoms) ? log.extracted_symptoms : [];
-    const symHtml = syms.map(s => `<span class="detail-pill blue">${s}</span>`).join(' ');
-    const actionClass = log.action === 'recommend' ? 'recommend' : (log.action === 'triage' ? 'triage' : (log.action === 'ask_clarify' ? 'clarify' : ''));
-    const typeLabels = {
-      analysis: 'Initial Assessment',
-      triage: 'Doctor Referral',
-      duration_blocked: 'Duration Blocked',
-      duration_warning: 'Duration Warning',
-      duration_ok: 'Duration OK',
-      clarify_context: 'Context Clarification',
-      clarify_symptom: 'Symptom Clarification',
-    };
-    const typeBadgeColors = {
-      analysis: 'badge--primary',
-      triage: 'badge--danger',
-      duration_blocked: 'badge--danger',
-      duration_warning: 'badge--warning',
-      duration_ok: 'badge--success',
-      clarify_context: 'badge--warning',
-      clarify_symptom: 'badge--info',
-    };
-    const typeLabel = typeLabels[log.interaction_type] || log.interaction_type;
-    const badgeColor = typeBadgeColors[log.interaction_type] || 'badge--neutral';
-    const typeBadge = `<span class="badge ${badgeColor}">${typeLabel}</span>`;
-    const input = log.user_input || '';
-    const truncatedInput = input.length > 60 ? input.slice(0, 60) + '…' : input;
-    const rowId = `log-row-${idx}`;
-    const expandId = `log-expand-${idx}`;
-
-    const pd = log.pipeline_detail || {};
-    const headacheText = pd.headache_location ? `${pd.headache_location}${pd.headache_danger ? ' ('+pd.headache_danger+')' : ''}` : '-';
-    const durationText = pd.duration_symptom ? `${pd.duration_symptom}: ${pd.duration_value || pd.duration_days+'d'}` : '-';
-
-    return `<tr>
-      <td><button class="log-expand-btn" onclick="toggleExpand('${expandId}', this)">▶</button></td>
-      <td class="mono text-sm">${log.interaction_id || '-'}</td>
-      <td class="text-sm text-secondary">${log.timestamp || ''}</td>
-      <td>${typeBadge}</td>
-      <td class="log-input-cell" title="${escHtml(input)}">${escHtml(truncatedInput)}</td>
-      <td class="log-symptom-cell">${symHtml}</td>
-      <td class="text-sm">${headacheText}</td>
-      <td class="text-sm">${durationText}</td>
-      <td class="log-action-cell ${actionClass}">${log.action || '-'}</td>
-      <td class="text-sm">${log.age != null ? log.age + 'y' : '-'}</td>
-    </tr>
-    <tr class="log-expanded-row" id="${expandId}" style="display:none;">
-      <td colspan="10">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="detail-section">
-            <h4>Input</h4>
-            <pre>${escHtml(input) || '(empty)'}</pre>
-          </div>
-          <div class="detail-section">
-            <h4>Pipeline Info</h4>
-            <div class="kv">
-              <dt>Source</dt><dd>${log.extraction_source || '-'}</dd>
-              <dt>Clarification</dt><dd>${log.clarification || '-'}</dd>
-              <dt>Context Override</dt><dd>${log.context_override || '-'}</dd>
-              <dt>Session ID</dt><dd class="mono">${log.session_id || '-'}</dd>
-              <dt>Headache</dt><dd>${headacheText}</dd>
-              <dt>Duration</dt><dd>${durationText}</dd>
-              <dt>Severity</dt><dd>${log.severity != null ? log.severity + '/10' : '-'}</dd>
-            </div>
-          </div>
-          <div class="detail-section">
-            <h4>Extracted Symptoms</h4>
-            <div>${syms.length ? syms.map(s => `<span class="detail-pill blue">${escHtml(s)}</span>`).join(' ') : '<span class="text-muted text-sm">None</span>'}</div>
-            ${log.red_flags && log.red_flags.length ? `<div style="margin-top:8px;"><h4 style="color:var(--danger);">Red Flags</h4>${(Array.isArray(log.red_flags) ? log.red_flags : []).map(f => `<span class="detail-pill red">${escHtml(typeof f === 'string' ? f : f.flag || JSON.stringify(f))}</span>`).join(' ')}</div>` : ''}
-          </div>
-          <div class="detail-section">
-            <h4>Recommendations</h4>
-            ${renderRecs(log.recommendations)}
-          </div>
-          <div class="detail-section" style="grid-column:1/-1;">
-            <h4>Pipeline Stages</h4>
-            ${renderStages(log.pipeline_stages)}
-          </div>
+  async function loadSessions() {
+    list.innerHTML = '<div class="detail-empty"><div><strong>Loading audit trail…</strong></div></div>';
+    const response = await fetch(`/admin/api/audit/sessions?limit=200&search=${encodeURIComponent(search.value.trim())}`);
+    const data = await response.json();
+    const sessions = data.sessions || [];
+    document.getElementById('sessionCount').textContent = `${sessions.length} sessions`;
+    if (!sessions.length) {
+      list.innerHTML = '<div class="detail-empty"><div><strong>No matching sessions</strong><span>Legacy data is visible for audit but cannot be reviewed or exported for research.</span></div></div>';
+      return;
+    }
+    list.innerHTML = sessions.map(s => {
+      const symptoms = labels(s.extracted_symptoms);
+      return `<button class="session-item ${selectedSession === s.session_id ? 'active' : ''}" data-session="${esc(s.session_id)}">
+        <div class="session-top"><span class="session-id">${esc(s.session_id || 'no-session')}</span><span class="session-date">${esc(fmt(s.started_at))}</span></div>
+        <div class="session-preview">${esc(s.user_input || 'No retained raw text')}</div>
+        <div class="chip-row">
+          <span class="audit-chip">${Number(s.event_count || 0)} events</span>
+          ${symptoms.slice(0,2).map(v => `<span class="audit-chip">${esc(v)}</span>`).join('')}
+          <span class="audit-chip ${s.research_consent ? 'consent' : 'legacy'}">${s.research_consent ? 'Consented' : 'Legacy / excluded'}</span>
+          ${s.adjudicated ? '<span class="audit-chip gold">Adjudicated</span>' : ''}
         </div>
-      </td>
-    </tr>`;
-  }).join('');
-}
+      </button>`;
+    }).join('');
+    list.querySelectorAll('.session-item').forEach(button => button.addEventListener('click', () => loadDetail(button.dataset.session)));
+  }
 
-function renderRecs(recs) {
-  if (!recs || !recs.length) return '<span class="text-muted text-sm">None</span>';
-  return recs.map(r => {
-    const brand = r.brand || r.generic || '-';
-    const cat = r.category ? ` <span class="detail-pill amber">${escHtml(r.category)}</span>` : '';
-    const reasons = r.reasons ? ` <span class="text-sm text-muted">(${escHtml(Array.isArray(r.reasons) ? r.reasons.join(', ') : r.reasons)})</span>` : '';
-    return `<div style="margin:4px 0;">• <strong>${escHtml(brand)}</strong>${cat}${reasons}</div>`;
-  }).join('');
-}
+  async function loadDetail(sessionId) {
+    selectedSession = sessionId;
+    list.querySelectorAll('.session-item').forEach(item => item.classList.toggle('active', item.dataset.session === sessionId));
+    detail.innerHTML = '<div class="detail-empty"><div><strong>Loading session…</strong></div></div>';
+    const response = await fetch(`/admin/api/audit/sessions/${encodeURIComponent(sessionId)}`);
+    const data = await response.json();
+    if (!response.ok) {
+      detail.innerHTML = `<div class="detail-empty"><div><strong>Could not load session</strong><span>${esc(data.error)}</span></div></div>`;
+      return;
+    }
+    renderDetail(data);
+  }
 
-function renderStages(stages) {
-  if (!stages || !stages.length) return '<span class="text-muted text-sm">No pipeline data</span>';
-  return stages.map(s => {
-    const step = s.step || '?';
-    const stageName = s.stage || 'unknown';
-    const detected = s.detected || s.detected_selected || [];
-    const detectedStr = Array.isArray(detected) ? detected.join(', ') : (detected || '-');
-    const scores = s.scores || [];
-    const scoresStr = scores.length ? scores.map(sc => `${sc.symptom}: ${sc.score}`).join(', ') : '';
-    return `<div style="margin:4px 0;font-size:12px;">
-      <strong>Step ${step}: ${stageName}</strong>
-      ${detectedStr ? `<span class="text-muted"> → ${escHtml(detectedStr)}</span>` : ''}
-      ${scoresStr ? `<br><span class="text-muted" style="font-size:11px;">scores: ${escHtml(scoresStr)}</span>` : ''}
+  function renderDetail(data) {
+    const primary = data.events.find(e => ['analysis','triage','initial_analysis'].includes(e.interaction_type)) || data.events[0];
+    const reviewEligible = Boolean(data.research_consent);
+    detail.innerHTML = `
+      <div class="audit-card-head"><h3>Session evidence</h3><span class="session-id">${esc(data.session_id)}</span></div>
+      <div class="detail-body">
+        <div class="case-banner">
+          <div><h3>${esc(primary.extracted_symptoms?.join(', ') || 'No symptom labels')}</h3><p>Engine ${esc(primary.engine_id || 'legacy/unversioned')} · Trace v${esc(primary.trace_version || 1)}</p></div>
+          <span class="audit-chip ${reviewEligible ? 'consent' : 'legacy'}">${reviewEligible ? 'Research consent granted' : 'Legacy / unconsented — excluded'}</span>
+        </div>
+        <div class="timeline">${data.events.map(renderEvent).join('')}</div>
+        ${renderReviewHistory(data.reviews, data.adjudications)}
+        ${reviewEligible ? renderReviewForm(primary.interaction_id) : '<div class="audit-notice"><div><strong>Not review-eligible</strong><p>Existing legacy records are retained for operational history only and are excluded from research exports and field metrics.</p></div></div>'}
+      </div>`;
+    wireForms(primary.interaction_id);
+  }
+
+  function renderEvent(event) {
+    const detailData = event.pipeline_detail || {};
+    const trace = detailData.trace || {};
+    const headache = detailData.headache;
+    return `<article class="event">
+      <div class="event-head"><span class="event-type">${esc(event.interaction_type)}</span><span class="event-time">${esc(fmt(event.timestamp))} · ${esc(event.interaction_id)}</span></div>
+      <div class="raw-input">${esc(event.user_input || 'Raw text not retained')}</div>
+      <div class="chip-row">
+        ${labels(event.extracted_symptoms).map(s => `<span class="audit-chip">${esc(s)}</span>`).join('')}
+        <span class="audit-chip">Action: ${esc(event.action || '—')}</span>
+        ${event.severity != null ? `<span class="audit-chip">Severity ${esc(event.severity)}/10</span>` : ''}
+      </div>
+      ${headache ? `<div class="headache-proof">
+        <img src="${esc(headache.image_url || `/static/images/headache/${headache.image || ''}`)}" alt="${esc(headache.label_en || 'Selected headache illustration')}">
+        <div><strong>${esc(headache.label_en || headache.key)}</strong><span>Selected by user · ${esc(headache.image || 'catalog image')} · ${esc(headache.danger || 'unknown')}<br>No computer vision recognition was performed.</span></div>
+      </div>` : ''}
+      ${renderTrace(trace)}
+    </article>`;
+  }
+
+  function renderTrace(trace) {
+    if (!trace || !Object.keys(trace).length) return '';
+    const dictionary = (trace.stages || []).find(s => s.stage === 'dictionary') || {};
+    const semantic = (trace.stages || []).find(s => s.stage === 'semantic') || {};
+    const dictionaryRows = (dictionary.details || []).map(row =>
+      `<div class="trace-row"><strong>${esc(row.symptom)}</strong><span>${esc((row.matched_phrases || []).join(', '))}</span><span class="audit-chip">${esc(row.decision || 'matched')}</span></div>`
+    ).join('') || '<span class="muted">No dictionary phrase matched.</span>';
+    const semanticRows = (semantic.scores || []).slice(0,8).map(row =>
+      `<div class="trace-row"><strong>${esc(row.symptom)}</strong><div><div class="score-track"><div class="score-fill" style="width:${pct(row.score)}%"></div></div><span class="muted">${esc(row.best_anchor || '')}</span></div><span>${Number(row.score || 0).toFixed(4)}</span></div>`
+    ).join('') || `<span class="muted">${semantic.available === false ? 'Semantic component unavailable for this event.' : 'No semantic scores retained.'}</span>`;
+    return `<div class="trace-tabs">
+      <details class="trace-block"><summary>Dictionary evidence · matched / negated / suppressed</summary><div class="trace-content">${dictionaryRows}</div></details>
+      <details class="trace-block"><summary>MiniLM cosine similarities · threshold ${esc(semantic.threshold ?? trace.engine?.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(trace.engine?.semantic_model_id || 'legacy/unrecorded')}. Scores are cosine similarity, not confidence probabilities.</p>${semanticRows}</div></details>
+      <details class="trace-block"><summary>Final transformations and action</summary><div class="trace-content"><pre style="white-space:pre-wrap;margin:0">${esc(JSON.stringify({transformations:trace.transformations || [], final:trace.final || {}, decision:trace.decision || {}}, null, 2))}</pre></div></details>
     </div>`;
-  }).join('');
-}
+  }
 
-function toggleExpand(id, btn) {
-  const row = document.getElementById(id);
-  if (!row) return;
-  const isHidden = row.style.display === 'none';
-  row.style.display = isHidden ? 'table-row' : 'none';
-  btn.textContent = isHidden ? '▼' : '▶';
-}
+  function renderReviewHistory(reviews, adjudications) {
+    const reviewHtml = (reviews || []).map(r => `<div class="review-record"><strong>${esc(r.reviewer_name || `Reviewer ${r.reviewer_id}`)}</strong> · confidence ${esc(r.reviewer_confidence)}/5<br><span>Correct: ${esc((r.correct_symptoms || []).join(', ') || 'none')} · missed: ${esc((r.missed_symptoms || []).join(', ') || 'none')} · expected ${esc(r.expected_action)}</span>${r.notes ? `<br><span class="muted">${esc(r.notes)}</span>` : ''}</div>`).join('');
+    const goldHtml = (adjudications || []).map(a => `<div class="review-record" style="border-color:#22c55e"><strong>Adjudicated gold · ${esc(a.adjudicator_name || a.adjudicator_id)}</strong><br><span>${esc((a.final_symptoms || []).join(', ') || 'No symptoms')} · final ${esc(a.final_action)}</span>${a.notes ? `<br><span class="muted">${esc(a.notes)}</span>` : ''}</div>`).join('');
+    return `<section class="review-section"><h3>Independent review history</h3><div class="review-history">${reviewHtml || '<span class="muted">No independent reviews yet.</span>'}${goldHtml}</div></section>`;
+  }
 
-function changePage(delta) {
-  currentPage = Math.max(1, currentPage + delta);
-  loadLogs();
-}
+  function renderReviewForm(interactionId) {
+    return `<section class="review-section">
+      <h3>Full safety review</h3>
+      <p class="muted" style="font-size:12px;margin:4px 0 14px">Your review is stored independently under your account. Use comma-separated canonical labels.</p>
+      <form id="reviewForm" class="review-grid">
+        <div><label>Correct symptom labels</label><input id="reviewExpected" required placeholder="HEADACHE, FEVER"></div>
+        <div><label>Missed symptom labels</label><input id="reviewMissed" placeholder="SORE_THROAT"></div>
+        <div><label>Expected red flags</label><input id="reviewFlags" placeholder="seizure, hypertension_risk"></div>
+        <div><label>Expected safety action</label><select id="reviewAction"><option value="recommend">Recommend</option><option value="clarify">Clarify</option><option value="refer">Refer</option><option value="no_match">No match</option></select></div>
+        <div><label>Recommendation judgment</label><select id="reviewAppropriate"><option value="appropriate">Appropriate</option><option value="inappropriate">Inappropriate</option><option value="not_applicable">Not applicable</option><option value="uncertain">Uncertain</option></select></div>
+        <div><label>Expected medicines</label><input id="reviewMedicines" placeholder="Biogesic, Cetirizine"></div>
+        <div><label>Error category</label><input id="reviewError" placeholder="false_positive, safety_miss, none"></div>
+        <div><label>Reviewer confidence (1–5)</label><input id="reviewConfidence" type="number" min="1" max="5" value="3" required></div>
+        <div class="full"><label>Clinical notes</label><textarea id="reviewNotes" rows="3"></textarea></div>
+      </form>
+      <div class="review-actions"><button class="btn btn--primary btn--sm" id="saveReview">Save independent review</button></div>
+      ${isAdmin ? renderAdjudicationForm(interactionId) : ''}
+    </section>`;
+  }
 
-function exportLogs(format) {
-  window.location.href = `/admin/api/logs/export/${format}`;
-}
+  function renderAdjudicationForm() {
+    return `<details class="trace-block" style="margin-top:18px"><summary>Administrator adjudication</summary><div class="trace-content">
+      <form id="goldForm" class="review-grid">
+        <div><label>Final gold symptoms</label><input id="goldSymptoms" required></div>
+        <div><label>Final red flags</label><input id="goldFlags"></div>
+        <div><label>Final action</label><select id="goldAction"><option value="recommend">Recommend</option><option value="clarify">Clarify</option><option value="refer">Refer</option><option value="no_match">No match</option></select></div>
+        <div><label>Recommendation judgment</label><select id="goldAppropriate"><option value="appropriate">Appropriate</option><option value="inappropriate">Inappropriate</option><option value="not_applicable">Not applicable</option></select></div>
+        <div class="full"><label>Expected medicines</label><input id="goldMedicines"></div>
+        <div class="full"><label>Adjudication notes</label><textarea id="goldNotes" rows="3"></textarea></div>
+      </form>
+      <div class="review-actions"><button class="btn btn--primary btn--sm" id="saveGold">Publish gold annotation</button></div>
+    </div></details>`;
+  }
 
-function closeLogDetail() {
-  document.getElementById('logDetailModal').classList.remove('active');
-}
+  function wireForms(interactionId) {
+    document.getElementById('saveReview')?.addEventListener('click', async () => {
+      const payload = {
+        correct_symptoms: splitCSV(document.getElementById('reviewExpected').value),
+        missed_symptoms: splitCSV(document.getElementById('reviewMissed').value),
+        expected_red_flags: splitCSV(document.getElementById('reviewFlags').value),
+        expected_action: document.getElementById('reviewAction').value,
+        recommendation_appropriateness: document.getElementById('reviewAppropriate').value,
+        expected_medicines: splitCSV(document.getElementById('reviewMedicines').value),
+        error_category: document.getElementById('reviewError').value.trim(),
+        reviewer_confidence: Number(document.getElementById('reviewConfidence').value),
+        notes: document.getElementById('reviewNotes').value.trim(),
+      };
+      await postAnnotation(`/admin/api/audit/interactions/${encodeURIComponent(interactionId)}/reviews`, payload);
+    });
+    document.getElementById('saveGold')?.addEventListener('click', async () => {
+      const payload = {
+        final_symptoms: splitCSV(document.getElementById('goldSymptoms').value),
+        final_red_flags: splitCSV(document.getElementById('goldFlags').value),
+        final_action: document.getElementById('goldAction').value,
+        recommendation_appropriateness: document.getElementById('goldAppropriate').value,
+        expected_medicines: splitCSV(document.getElementById('goldMedicines').value),
+        notes: document.getElementById('goldNotes').value.trim(),
+      };
+      await postAnnotation(`/admin/api/audit/interactions/${encodeURIComponent(interactionId)}/adjudication`, payload);
+    });
+  }
 
-function escHtml(v) {
-  return String(v == null ? '' : v)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+  async function postAnnotation(url, payload) {
+    const response = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const result = await response.json();
+    if (!response.ok) return POS.showToast(result.error || 'Could not save annotation', 'error');
+    POS.showToast('Annotation saved', 'success');
+    await loadDetail(selectedSession);
+    await loadSessions();
+  }
 
-loadLogs();
+  search.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(loadSessions, 250);
+  });
+  loadSessions().catch(error => {
+    list.innerHTML = `<div class="detail-empty"><div><strong>Could not load sessions</strong><span>${esc(error.message)}</span></div></div>`;
+  });
+})();
 </script>
 {% endblock %}

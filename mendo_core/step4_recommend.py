@@ -254,7 +254,7 @@ DURATION_THRESHOLDS: Dict[str, Dict[str, Any]] = {
         "days": 3,
     },
     "DIARRHEA": {
-        "days": 7,
+        "days": 2,
     },
     "SORE_THROAT": {
         "days": 5,
@@ -278,7 +278,7 @@ DURATION_THRESHOLDS: Dict[str, Dict[str, Any]] = {
         "days": 7,
     },
     "RUNNY_NOSE": {
-        "days": 7,
+        "days": 10,
     },
     "COUGH_GENERAL": {
         "days": 14,
@@ -301,9 +301,9 @@ _DURATION_OPTIONS: Dict[str, list] = {
     ],
     "DIARRHEA": [
         {"label": "Less than a day", "value": "0"},
-        {"label": "1–3 days", "value": "1-3"},
-        {"label": "4–7 days", "value": "4-7"},
-        {"label": "More than 1 week", "value": "8+"},
+        {"label": "1 day", "value": "1"},
+        {"label": "2 days", "value": "2"},
+        {"label": "More than 2 days", "value": "3+"},
     ],
     "SORE_THROAT": [
         {"label": "Less than a day", "value": "0"},
@@ -350,8 +350,8 @@ _DURATION_OPTIONS: Dict[str, list] = {
     "RUNNY_NOSE": [
         {"label": "Less than a day", "value": "0"},
         {"label": "1–3 days", "value": "1-3"},
-        {"label": "4–7 days", "value": "4-7"},
-        {"label": "More than 1 week", "value": "8+"},
+        {"label": "4–10 days", "value": "4-10"},
+        {"label": "More than 10 days", "value": "11+"},
     ],
     "COUGH_GENERAL": [
         {"label": "Less than a day", "value": "0"},

@@ -517,7 +517,7 @@ const POS = (() => {
       const fullName = document.getElementById('newFullName')?.value.trim();
       const username = document.getElementById('newUsername')?.value.trim();
       const password = document.getElementById('newPassword')?.value;
-      const role = document.getElementById('newRole')?.value || 'cashier';
+      const role = document.getElementById('newRole')?.value || 'staff';
 
       if (!fullName || !username || !password) {
         showToast('All fields are required', 'warning');
