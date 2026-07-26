@@ -48,6 +48,8 @@ htmlcov/
 
 # Project specific
 *.log
+*.pid
+*.ctl
 *.bak
 .~lock.*#
 _For-Mendo/
