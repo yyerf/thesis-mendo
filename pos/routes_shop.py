@@ -40,10 +40,11 @@ def index(current_user=None):
 @shop_bp.route("/api/products")
 @login_required
 def api_products(current_user=None):
-    items = list_inventory(active_only=True)
+    items = list_inventory(active_only=True, catalog_only=True)
     return jsonify([
         {
             "id": it["id"],
+            "hardware_slot": it.get("hardware_slot"),
             "brand": it["brand"],
             "generic_name": it["generic_name"],
             "category": it["category"],
@@ -74,11 +75,12 @@ def api_get_cart(current_user=None):
     total = 0.0
     for ci in cart:
         item = get_inventory_item(ci["inventory_id"])
-        if item:
+        if item and item["is_active"] and item.get("hardware_slot") is not None:
             subtotal = round(item["unit_price"] * ci["quantity"], 2)
             total += subtotal
             enriched.append({
                 "inventory_id": item["id"],
+                "hardware_slot": item.get("hardware_slot"),
                 "brand": item["brand"],
                 "generic_name": item.get("generic_name", ""),
                 "unit_price": item["unit_price"],
@@ -89,7 +91,7 @@ def api_get_cart(current_user=None):
     return jsonify({
         "items": enriched,
         "total": round(total, 2),
-        "item_count": sum(c["quantity"] for c in cart),
+        "item_count": sum(item["quantity"] for item in enriched),
     })
 
 
@@ -106,6 +108,8 @@ def api_cart_add(current_user=None):
         return jsonify({"error": "Product not found"}), 404
     if not item["is_active"]:
         return jsonify({"error": "Product is inactive"}), 400
+    if item.get("hardware_slot") is None:
+        return jsonify({"error": "Product is outside the active hardware catalog"}), 400
 
     cart = _get_cart()
     for ci in cart:

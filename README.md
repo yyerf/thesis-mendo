@@ -31,6 +31,32 @@ The seeded administrator is for first-run development only:
 Change the password immediately in any shared or deployed environment, and set
 `MENDO_SECRET_KEY` to a stable secret.
 
+## Ten-slot medicine catalog
+
+Production recommendations, POS inventory, checkout, and benchmarks use one
+versioned hardware catalog:
+`mendo-hardware-catalog-v1-2026-07`. The formulation-level JSON remains the
+reference source, but runtime loading selects exactly these ten physical items:
+
+| Slot | Medicine | Runtime category | Form | Minimum age |
+|---:|---|---|---|---:|
+| 1 | Advil | Pain & Inflammation | Tablet | 12 |
+| 2 | Bioflu | Cold & Flu | Tablet | 12 |
+| 3 | Biogesic | Pain & Fever | Tablet | 12 |
+| 4 | Cetirizine | Allergy | Tablet | 6 |
+| 5 | Solmux | Cough with Phlegm / Productive Cough | Capsule | 12 |
+| 6 | Tuseran | Dry Cough | Tablet | 12 |
+| 7 | Symdex | Cold & Cough | Tablet | 6 |
+| 8 | Neozep | Cold | Tablet | 6 |
+| 9 | Loperamide | Anti-diarrhea | Tablet | 6 |
+| 10 | Erceflora | Probiotic (Adjunct for Diarrhea) | Oral Suspension | All ages |
+
+Startup migrations rename older aliases without changing inventory IDs, assign
+hardware slots, and mark products outside the catalog inactive. Historical
+transactions and stock movements are never deleted. Erceflora is treated only
+as an adjunct; food-poisoning guidance still requires oral rehydration and
+excludes loperamide.
+
 ## Consultation and audit flow
 
 1. The participant accepts or declines multilingual research consent.
@@ -80,6 +106,7 @@ and writes the single tracked manifest at
 ## Repository map
 
 - `mendo_core/prediction_pipeline.py` — deployed, versioned prediction service
+- `mendo_core/medicine_catalog.py` — canonical hardware-slot allowlist and aliases
 - `mendo_core/interaction_logger.py` — consent, audit, reviews, adjudication,
   metrics, and de-identified exports
 - `pos/routes_consultation.py` — consultation APIs

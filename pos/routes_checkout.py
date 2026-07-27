@@ -120,11 +120,12 @@ def api_kiosk_cart():
     total = 0.0
     for ci in cart:
         item = get_inventory_item(ci["inventory_id"])
-        if item:
+        if item and item["is_active"] and item.get("hardware_slot") is not None:
             subtotal = round(item["unit_price"] * ci["quantity"], 2)
             total += subtotal
             enriched.append({
                 "inventory_id": item["id"],
+                "hardware_slot": item.get("hardware_slot"),
                 "brand": item["brand"],
                 "generic_name": item.get("generic_name", ""),
                 "unit_price": item["unit_price"],
@@ -135,7 +136,7 @@ def api_kiosk_cart():
     return jsonify({
         "items": enriched,
         "total": round(total, 2),
-        "item_count": sum(c["quantity"] for c in cart),
+        "item_count": sum(item["quantity"] for item in enriched),
     })
 
 
@@ -153,6 +154,8 @@ def api_kiosk_cart_add():
         return jsonify({"error": "Product not found"}), 404
     if not item["is_active"]:
         return jsonify({"error": "Product is inactive"}), 400
+    if item.get("hardware_slot") is None:
+        return jsonify({"error": "Product is outside the active hardware catalog"}), 400
     if item["stock_quantity"] <= 0:
         return jsonify({"error": "Out of stock"}), 400
 
@@ -238,6 +241,8 @@ def api_pay_xendit():
         item = get_inventory_item(ci["inventory_id"])
         if not item:
             return jsonify({"error": f"Item id={ci['inventory_id']} not found"}), 400
+        if not item["is_active"] or item.get("hardware_slot") is None:
+            return jsonify({"error": f"{item['brand']} is not available for dispensing"}), 400
         if item["stock_quantity"] < ci["quantity"]:
             return jsonify({"error": f"Not enough stock for {item['brand']}"}), 400
         subtotal = round(item["unit_price"] * ci["quantity"], 2)

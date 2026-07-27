@@ -7,7 +7,7 @@ Inputs:
 
 Outputs:
 - Detected symptom intents (uses the hybrid pipeline)
-- A short recommendation list of medicine brands from Mendo-Datasets.json
+- A short recommendation list constrained to the ten-slot hardware catalog
 - If cough is ambiguous (COUGH_GENERAL), ask a clarifying question
 
 This script is deterministic in its recommendation rules.
@@ -175,7 +175,7 @@ def _condition_safety_hits_for_row(
     return hits
 
 
-def load_mendo_dataset(path: str) -> List[MedRow]:
+def load_mendo_dataset(path: str, *, catalog_only: bool = True) -> List[MedRow]:
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(f"Dataset not found: {path}")
@@ -184,6 +184,10 @@ def load_mendo_dataset(path: str) -> List[MedRow]:
     rows = obj.get("Sheet1")
     if not isinstance(rows, list):
         raise ValueError("Expected top-level key 'Sheet1' to be a list")
+    if catalog_only:
+        from .medicine_catalog import select_runtime_entries
+
+        rows = select_runtime_entries(rows)
 
     out: List[MedRow] = []
     for r in rows:
@@ -227,8 +231,26 @@ def _check_paracetamol_overlap(recs: List[Dict[str, Any]]) -> List[str]:
 
 def _check_opposing_mechanisms(recs: List[Dict[str, Any]]) -> List[str]:
     """Warn if a cough suppressant is combined with an expectorant."""
-    cats = {r.get("drug_category", "") for r in recs}
-    if "expectorant" in cats and "cough suppressant" in cats:
+    blobs = [
+        " ".join(
+            [
+                _norm(r.get("brand")),
+                _norm(r.get("active_ingredients")),
+                _norm(r.get("drug_category")),
+                " ".join(_norm(reason) for reason in r.get("reasons", [])),
+            ]
+        )
+        for r in recs
+    ]
+    has_expectorant = any(
+        any(term in blob for term in ("expectorant", "productive cough", "phlegm", "carbocisteine"))
+        for blob in blobs
+    )
+    has_suppressant = any(
+        any(term in blob for term in ("cough suppressant", "dry cough", "dextromethorphan"))
+        for blob in blobs
+    )
+    if has_expectorant and has_suppressant:
         return [
             "⚠ Expectorant + Cough Suppressant detected — opposing mechanisms. "
             "Use only one type at a time."
@@ -865,7 +887,6 @@ def recommend_from_dataset(
 
     cold_context_present = bool(
         symptoms_set & {
-            "FEVER",
             "RUNNY_NOSE",
             "NASAL_CONGESTION",
             "COUGH_GENERAL",
@@ -876,7 +897,36 @@ def recommend_from_dataset(
     )
 
     for row in rows:
-        # Productive cough -> Solmux / Ascof / Robitussin patterns
+        normalized_brand = _norm(row.brand)
+        cough_present = bool(
+            symptoms_set & {"COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE"}
+        )
+        nasal_present = bool(
+            symptoms_set & {"RUNNY_NOSE", "NASAL_CONGESTION"}
+        )
+        flu_cluster_count = len(
+            symptoms_set
+            & {
+                "FEVER",
+                "BODY_ACHES",
+                "HEADACHE",
+                "RUNNY_NOSE",
+                "NASAL_CONGESTION",
+                "COUGH_GENERAL",
+                "COUGH_DRY",
+                "COUGH_PRODUCTIVE",
+            }
+        )
+
+        # Physical-catalog combination products retain their package-use gates.
+        # Bioflu is for a multi-symptom flu presentation, while Symdex requires
+        # cough together with a nasal cold symptom.
+        if normalized_brand == "bioflu" and flu_cluster_count < 2:
+            continue
+        if normalized_brand == "symdex" and not (cough_present and nasal_present):
+            continue
+
+        # Productive cough -> the stocked Solmux slot.
         if "COUGH_PRODUCTIVE" in matching_symptoms:
             productive_indicators = [
                 "productive cough",
@@ -907,7 +957,7 @@ def recommend_from_dataset(
             ) or ("expectorant" in row.drug_category):
                 add_candidate(row, "productive_cough_match", 3)
 
-        # Dry cough -> Tuseran / Sinecod patterns
+        # Dry cough -> the stocked Tuseran slot.
         if "COUGH_DRY" in matching_symptoms:
             if (
                 "dry cough" in row.primary_symptom
@@ -925,9 +975,10 @@ def recommend_from_dataset(
 
         # Fever/headache/body aches -> analgesics first; cold combos only when there
         # is actual cold context. This prevents plain headache from pulling noisy
-        # cold medications like Decolgen unless other cold symptoms are present.
+        # cold-combination products unless other cold symptoms are present.
         if "FEVER" in matching_symptoms and "fever" in row.typical_symptoms:
-            add_candidate(row, "fever_match", 2)
+            fever_score = 4 if normalized_brand == "biogesic" else 2
+            add_candidate(row, "fever_match", fever_score)
         if "HEADACHE" in matching_symptoms and "headache" in row.typical_symptoms:
             combined_head = f"{row.primary_symptom} {row.typical_symptoms} {row.drug_category}"
             is_analgesic = (
@@ -938,15 +989,29 @@ def recommend_from_dataset(
             is_cold_combo = any(cat in row.drug_category for cat in ["cold", "cold & flu", "cold & cough"])
 
             if is_analgesic:
-                add_candidate(row, "headache_primary_match", 4)
+                headache_score = 5 if "headache" in row.primary_symptom else 4
+                add_candidate(row, "headache_primary_match", headache_score)
             elif cold_context_present and is_cold_combo:
                 add_candidate(row, "headache_cold_context_match", 2)
         if "BODY_ACHES" in matching_symptoms and ("body" in row.typical_symptoms and "pain" in row.typical_symptoms):
             add_candidate(row, "body_aches_match", 1)
 
         # Nasal congestion/runny nose
-        if "NASAL_CONGESTION" in matching_symptoms and ("nasal congestion" in row.typical_symptoms or "stuffy" in row.typical_symptoms):
-            add_candidate(row, "nasal_congestion_match", 2)
+        if "NASAL_CONGESTION" in matching_symptoms:
+            if _sipon_allergy and (
+                "allergy" in row.drug_category
+                or "allergic rhinitis" in row.typical_symptoms
+            ):
+                add_candidate(row, "nasal_allergy_match", 4)
+            elif (
+                not _sipon_allergy
+                and not _sipon_cold_weather
+                and (
+                    "nasal congestion" in row.typical_symptoms
+                    or "stuffy" in row.typical_symptoms
+                )
+            ):
+                add_candidate(row, "nasal_congestion_match", 2)
         if "RUNNY_NOSE" in matching_symptoms and ("runny nose" in row.typical_symptoms or "sipon" in row.typical_symptoms):
             # If allergy context detected via OLDCARTS, steer toward antihistamines
             if _sipon_allergy and ("allergy" in row.drug_category or "allergy" in row.typical_symptoms):
@@ -978,8 +1043,8 @@ def recommend_from_dataset(
             or "rehydration" in row.drug_category
         ):
             if _diarrhea_food_poisoning:
-                # Food poisoning / infection suspected: ORS is top priority,
-                # probiotics second, exclude loperamide (traps bacteria/toxins)
+                # Food poisoning / infection suspected: the stocked probiotic
+                # may only be adjunctive; exclude loperamide.
                 if "rehydration" in row.drug_category:
                     add_candidate(row, "ors_food_poisoning_priority", 6)
                 elif "probiotic" in row.drug_category or "bacillus" in _norm(row.generic_main_use):
@@ -988,7 +1053,8 @@ def recommend_from_dataset(
                     add_candidate(row, "diarrhea_supportive", 2)
                 # else: skip anti-diarrheal (loperamide) entirely
             else:
-                # Non-infectious diarrhea: ORS still recommended alongside treatment
+                # Non-infectious diarrhea: use the stocked anti-diarrheal and
+                # adjunctive probiotic when safety checks allow them.
                 if "rehydration" in row.drug_category:
                     add_candidate(row, "ors_hydration_support", 4)
                 else:
@@ -1012,13 +1078,13 @@ def recommend_from_dataset(
             )
             if _is_stomach_drug:
                 if _stomach_acidic:
-                    # Burning/acidic → prioritize antacid (e.g., Kremil-S)
+                    # Reference-mode rule; the ten-slot catalog has no antacid.
                     if "antacid" in row.drug_category:
                         add_candidate(row, "acidic_stomach_match", 5)
                     else:
                         add_candidate(row, "stomach_ache_match", 1)
                 elif _stomach_cramping:
-                    # Cramping/bloating → prioritize antispasmodic (e.g., Buscopan)
+                    # Reference-mode rule; the catalog has no antispasmodic.
                     if "antispasmodic" in row.drug_category:
                         add_candidate(row, "cramping_stomach_match", 5)
                     else:
@@ -1111,8 +1177,9 @@ def recommend_from_dataset(
     if _diarrhea_food_poisoning:
         safety_warnings.append(
             "⚠ Possible food poisoning or infection suspected. Anti-diarrheal medicine "
-            "(e.g., loperamide/Diatabs) is NOT recommended — it may trap bacteria or "
-            "toxins in the body. Use Hydrite (ORS) to stay hydrated. "
+            "(loperamide) is NOT recommended because it may be inappropriate for some "
+            "infectious diarrhea. Erceflora is only an adjunct and does not replace oral rehydration. "
+            "Use an appropriate oral rehydration solution and drink safe fluids. "
             "Consult a doctor if symptoms persist beyond 2 days, or if you develop "
             "high fever or blood in stool."
         )
@@ -1142,8 +1209,9 @@ def recommend_from_dataset(
         )
 
     # Sipon cold-weather advisory — no medicine needed
-    if _sipon_cold_weather and "RUNNY_NOSE" in symptoms_set:
-        other_syms = symptoms_set - {"RUNNY_NOSE"}
+    nasal_symptoms = {"RUNNY_NOSE", "NASAL_CONGESTION"}
+    if _sipon_cold_weather and symptoms_set & nasal_symptoms:
+        other_syms = symptoms_set - nasal_symptoms
         if not other_syms:
             return {
                 "action": "recommend",

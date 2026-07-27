@@ -11,9 +11,10 @@ from copy import deepcopy
 import re
 from typing import Any, Dict, Optional
 
+from .medicine_catalog import MEDICINE_CATALOG_VERSION
 from .step3_hybrid import extract_symptoms_hybrid_report
 
-ENGINE_ID = "mendo-expert-minilm-v3.1"
+ENGINE_ID = "mendo-expert-minilm-v3.2"
 TRACE_SCHEMA_VERSION = 2
 SEMANTIC_MODEL_ID = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 SEMANTIC_THRESHOLD = 0.65
@@ -36,6 +37,7 @@ def predict_symptoms(user_input: str) -> Dict[str, Any]:
     trace["trace_version"] = TRACE_SCHEMA_VERSION
     trace["engine"] = {
         "engine_id": ENGINE_ID,
+        "medicine_catalog_version": MEDICINE_CATALOG_VERSION,
         "architecture": "knowledge_based_expert_system_with_pretrained_semantic_component",
         "semantic_model_id": SEMANTIC_MODEL_ID,
         "semantic_score_type": "cosine_similarity",

@@ -6,7 +6,7 @@
 <div class="page-header">
   <div>
     <h2>Inventory</h2>
-    <p>{{ items | length }} products registered</p>
+    <p>{{ items | length }} of 10 hardware slots configured</p>
   </div>
   <div class="page-header-actions">
     <div class="search-box">
@@ -23,6 +23,7 @@
     <table id="invTable">
       <thead>
         <tr>
+          <th>Slot</th>
           <th>Brand</th>
           <th>Generic Name</th>
           <th>Category</th>
@@ -36,6 +37,7 @@
       <tbody>
         {% for item in items %}
         <tr data-id="{{ item.id }}" data-brand="{{ item.brand }}" data-search="{{ item.brand|lower }} {{ (item.generic_name or '')|lower }} {{ (item.category or '')|lower }}">
+          <td><span class="badge badge--neutral">#{{ item.hardware_slot }}</span></td>
           <td class="font-bold">{{ item.brand }}</td>
           <td class="text-secondary text-sm truncate" style="max-width: 160px;">{{ item.generic_name or '—' }}</td>
           <td><span class="badge badge--neutral">{{ item.category or '—' }}</span></td>
@@ -68,7 +70,7 @@
           </td>
         </tr>
         {% else %}
-        <tr><td colspan="8" class="table-empty">No products in inventory</td></tr>
+        <tr><td colspan="9" class="table-empty">No hardware-slot products configured</td></tr>
         {% endfor %}
       </tbody>
     </table>

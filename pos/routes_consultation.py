@@ -474,21 +474,28 @@ def api_analyze():
                         continue  # skip medicines not suitable for this age
 
                     inv = get_inventory_by_brand(rec["brand"])
-                    if inv:
+                    if (
+                        inv
+                        and inv.get("is_active")
+                        and inv.get("hardware_slot") is not None
+                    ):
                         rec["in_stock"] = inv["stock_quantity"] > 0
                         rec["stock_quantity"] = inv["stock_quantity"]
                         rec["pos_price"] = inv["unit_price"]
                         rec["inventory_id"] = inv["id"]
+                        rec["hardware_slot"] = inv.get("hardware_slot")
                     else:
                         rec["in_stock"] = False
                         rec["stock_quantity"] = 0
                         rec["pos_price"] = None
                         rec["inventory_id"] = None
+                        rec["hardware_slot"] = None
                     recommendation_filtering.append(
                         {
                             "brand": rec.get("brand"),
                             "decision": "kept",
                             "reason": "age_eligible",
+                            "hardware_slot": rec.get("hardware_slot"),
                             "inventory": (
                                 "in_stock" if rec.get("in_stock") else "out_of_stock"
                             ),
@@ -760,16 +767,22 @@ def api_duration_check():
                     if user_age is not None and user_age < min_age:
                         continue
                     inv = get_inventory_by_brand(rec["brand"])
-                    if inv:
+                    if (
+                        inv
+                        and inv.get("is_active")
+                        and inv.get("hardware_slot") is not None
+                    ):
                         rec["in_stock"] = inv["stock_quantity"] > 0
                         rec["stock_quantity"] = inv["stock_quantity"]
                         rec["pos_price"] = inv["unit_price"]
                         rec["inventory_id"] = inv["id"]
+                        rec["hardware_slot"] = inv.get("hardware_slot")
                     else:
                         rec["in_stock"] = False
                         rec["stock_quantity"] = 0
                         rec["pos_price"] = None
                         rec["inventory_id"] = None
+                        rec["hardware_slot"] = None
                     filtered_recs.append(rec)
                 recommendation["recommendations"] = filtered_recs
         except Exception:
@@ -925,16 +938,22 @@ def api_context_clarify():
                     if user_age is not None and user_age < min_age:
                         continue
                     inv = get_inventory_by_brand(rec["brand"])
-                    if inv:
+                    if (
+                        inv
+                        and inv.get("is_active")
+                        and inv.get("hardware_slot") is not None
+                    ):
                         rec["in_stock"] = inv["stock_quantity"] > 0
                         rec["stock_quantity"] = inv["stock_quantity"]
                         rec["pos_price"] = inv["unit_price"]
                         rec["inventory_id"] = inv["id"]
+                        rec["hardware_slot"] = inv.get("hardware_slot")
                     else:
                         rec["in_stock"] = False
                         rec["stock_quantity"] = 0
                         rec["pos_price"] = None
                         rec["inventory_id"] = None
+                        rec["hardware_slot"] = None
                     filtered_recs.append(rec)
                 recommendation["recommendations"] = filtered_recs
         except Exception:
@@ -1024,16 +1043,22 @@ def api_clarify():
                         continue
 
                     inv = get_inventory_by_brand(rec["brand"])
-                    if inv:
+                    if (
+                        inv
+                        and inv.get("is_active")
+                        and inv.get("hardware_slot") is not None
+                    ):
                         rec["in_stock"] = inv["stock_quantity"] > 0
                         rec["stock_quantity"] = inv["stock_quantity"]
                         rec["pos_price"] = inv["unit_price"]
                         rec["inventory_id"] = inv["id"]
+                        rec["hardware_slot"] = inv.get("hardware_slot")
                     else:
                         rec["in_stock"] = False
                         rec["stock_quantity"] = 0
                         rec["pos_price"] = None
                         rec["inventory_id"] = None
+                        rec["hardware_slot"] = None
                     filtered_recs.append(rec)
                 recommendation["recommendations"] = filtered_recs
         except Exception:

@@ -4140,7 +4140,7 @@
         return cat.includes('antacid') || cat.includes('antispasmodic') || ps.includes('stomach') || ps.includes('abdominal');
       }
       if (symptom === 'DIARRHEA' || symptom.startsWith('DIARRHEA_')) {
-        return cat.includes('rehydration') || cat.includes('anti-diarrhea') || ps.includes('diarrhea') || brand.includes('hydrite');
+        return cat.includes('anti-diarrhea') || cat.includes('probiotic') || ps.includes('diarrhea');
       }
       return false;
     }
@@ -4156,6 +4156,7 @@
             <div class="rec-meta">
               ${rec.drug_category ? `<span class="rec-tag">${escHtml(rec.drug_category)}</span>` : ''}
               ${rec.dosage_form ? `<span class="rec-tag">${escHtml(rec.dosage_form)}</span>` : ''}
+              ${rec.hardware_slot ? `<span class="rec-tag">Slot #${escHtml(rec.hardware_slot)}</span>` : ''}
               ${rec.min_age ? `<span class="rec-tag">Age ${escHtml(rec.min_age)}+</span>` : ''}
             </div>
           </div>

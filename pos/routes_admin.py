@@ -86,14 +86,14 @@ def dashboard(current_user=None):
 @admin_bp.route("/inventory")
 @login_required
 def inventory(current_user=None):
-    items = list_inventory()
+    items = list_inventory(catalog_only=True)
     return render_template("pos/inventory.html", items=items, user=current_user)
 
 
 @admin_bp.route("/api/inventory", methods=["GET"])
 @login_required
 def api_inventory(current_user=None):
-    items = list_inventory()
+    items = list_inventory(catalog_only=True)
     return jsonify(items)
 
 
@@ -108,6 +108,8 @@ def api_restock(item_id, current_user=None):
         item = get_inventory_item(item_id)
         if not item:
             return jsonify({"error": "Item not found"}), 404
+        if item.get("hardware_slot") is None:
+            return jsonify({"error": "Item is outside the active hardware catalog"}), 400
         new_qty = item["stock_quantity"] + qty
         update_stock(item_id, new_qty, "restock",
                      reference=f"Restocked +{qty} units",
@@ -129,6 +131,8 @@ def api_adjust(item_id, current_user=None):
         item = get_inventory_item(item_id)
         if not item:
             return jsonify({"error": "Item not found"}), 404
+        if item.get("hardware_slot") is None:
+            return jsonify({"error": "Item is outside the active hardware catalog"}), 400
         update_stock(item_id, new_qty, "adjustment",
                      reference=reason,
                      performed_by=current_user["id"])
@@ -141,6 +145,11 @@ def api_adjust(item_id, current_user=None):
 @login_required
 def api_update_details(item_id, current_user=None):
     try:
+        item = get_inventory_item(item_id)
+        if not item:
+            return jsonify({"error": "Item not found"}), 404
+        if item.get("hardware_slot") is None:
+            return jsonify({"error": "Item is outside the active hardware catalog"}), 400
         data = request.get_json(force=True)
         kwargs = {}
         if "unit_price" in data:

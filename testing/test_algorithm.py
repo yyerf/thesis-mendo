@@ -33,6 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from mendo_core.evaluation import aggregate_metrics
+from mendo_core.medicine_catalog import MEDICINE_CATALOG_VERSION
 from mendo_core.prediction_pipeline import (
     ENGINE_ID,
     TRACE_SCHEMA_VERSION,
@@ -398,6 +399,7 @@ class AlgorithmTester:
                 (Path(__file__).parent / "benchmark" / "testing.csv").read_bytes()
             ).hexdigest(),
             'engine_id': ENGINE_ID,
+            'medicine_catalog_version': MEDICINE_CATALOG_VERSION,
             'trace_version': TRACE_SCHEMA_VERSION,
             'automatic_production_training': False,
             'modes': {

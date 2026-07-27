@@ -281,7 +281,7 @@
     ).join('') || `<span class="muted">${semantic.available === false ? 'Semantic component unavailable for this event.' : 'No semantic scores retained.'}</span>`;
     return `<div class="trace-tabs">
       <details class="trace-block"><summary>Dictionary evidence · matched / negated / suppressed</summary><div class="trace-content">${dictionaryRows}</div></details>
-      <details class="trace-block"><summary>MiniLM cosine similarities · threshold ${esc(semantic.threshold ?? trace.engine?.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(trace.engine?.semantic_model_id || 'legacy/unrecorded')}. Scores are cosine similarity, not confidence probabilities.</p>${semanticRows}</div></details>
+      <details class="trace-block"><summary>MiniLM cosine similarities · threshold ${esc(semantic.threshold ?? trace.engine?.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(trace.engine?.semantic_model_id || 'legacy/unrecorded')}. Scores are cosine similarity, not confidence probabilities.<br>Medicine catalog: ${esc(trace.engine?.medicine_catalog_version || 'legacy/unrecorded')}.</p>${semanticRows}</div></details>
       <details class="trace-block"><summary>Final transformations and action</summary><div class="trace-content"><pre style="white-space:pre-wrap;margin:0">${esc(JSON.stringify({transformations:trace.transformations || [], final:trace.final || {}, decision:trace.decision || {}}, null, 2))}</pre></div></details>
     </div>`;
   }

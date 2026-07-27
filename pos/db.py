@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS inventory (
     stock_quantity  INTEGER NOT NULL DEFAULT 0,
     min_stock_level INTEGER DEFAULT 5,
     is_active       INTEGER DEFAULT 1,
+    hardware_slot   INTEGER,
     created_at      TEXT    DEFAULT (datetime('now','localtime')),
     updated_at      TEXT    DEFAULT (datetime('now','localtime'))
 );
@@ -189,27 +190,6 @@ CREATE TABLE IF NOT EXISTS operational_counters (
 );
 """
 
-# Default prices (PHP) for common PH OTC medicines
-_DEFAULT_PRICES: Dict[str, float] = {
-    "Bioflu": 12.00,
-    "Neozep / Neozep Z+": 9.50,
-    "Neozep Syrup": 65.00,
-    "Decolgen": 7.00,
-    "Decolgen Forte": 8.00,
-    "Symdex-D": 55.00,
-    "Tuseran Forte": 10.00,
-    "Ascof Forte": 9.00,
-    "Solmux": 12.00,
-    "Robitussin": 90.00,
-    "Sinecod Forte": 18.00,
-    "Biogesic": 5.00,
-    "Advil": 15.00,
-    "Cetirizine": 5.00,
-    "Loperamide (Diatabs)": 6.00,
-    "Erceflora": 28.00,
-}
-
-
 def init_db() -> None:
     """Create tables, seed default admin, and auto-populate inventory."""
     db = get_db()
@@ -225,33 +205,18 @@ def init_db() -> None:
         )
         db.commit()
 
-    # Auto-populate inventory from Mendo dataset
-    existing = {r["brand"] for r in db.execute("SELECT brand FROM inventory").fetchall()}
+    # Reconcile the database with the ten physical vending slots. Historical
+    # products are archived in place so transaction and stock-log FKs survive.
     dataset_path = Path(__file__).resolve().parents[1] / "data" / "Mendo-Datasets.json"
-    if dataset_path.exists():
-        try:
-            obj = json.loads(dataset_path.read_text(encoding="utf-8"))
-            for entry in obj.get("Sheet1", []):
-                brand = str(entry.get("Brand") or "").strip()
-                if not brand or brand in existing:
-                    continue
-                price = _DEFAULT_PRICES.get(brand, 10.00)
-                db.execute(
-                    """INSERT INTO inventory
-                       (brand, generic_name, category, dosage_form, unit_price, stock_quantity)
-                       VALUES (?,?,?,?,?,?)""",
-                    (
-                        brand,
-                        str(entry.get("Generic/Main Use") or ""),
-                        str(entry.get("Drug Category") or ""),
-                        str(entry.get("Dosage Form") or ""),
-                        price,
-                        0,
-                    ),
-                )
-                existing.add(brand)
-        except Exception:
-            pass
+    if not dataset_path.exists():
+        raise FileNotFoundError(f"Medicine dataset not found: {dataset_path}")
+    from mendo_core.medicine_catalog import inventory_catalog_records
+
+    obj = json.loads(dataset_path.read_text(encoding="utf-8"))
+    entries = obj.get("Sheet1")
+    if not isinstance(entries, list):
+        raise ValueError("Medicine dataset must contain a Sheet1 list")
+    _sync_inventory_catalog(db, inventory_catalog_records(entries))
     db.commit()
 
 
@@ -271,6 +236,16 @@ def _migrate_schema(db: sqlite3.Connection) -> None:
     for name, definition in additions.items():
         if name not in columns:
             db.execute(f"ALTER TABLE interaction_logs ADD COLUMN {name} {definition}")
+
+    inventory_columns = {
+        row["name"] for row in db.execute("PRAGMA table_info(inventory)").fetchall()
+    }
+    if "hardware_slot" not in inventory_columns:
+        db.execute("ALTER TABLE inventory ADD COLUMN hardware_slot INTEGER")
+    db.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_inventory_hardware_slot "
+        "ON inventory(hardware_slot) WHERE hardware_slot IS NOT NULL"
+    )
 
     review_columns = {
         row["name"] for row in db.execute("PRAGMA table_info(interaction_reviews)").fetchall()
@@ -316,6 +291,103 @@ def _migrate_schema(db: sqlite3.Connection) -> None:
         )
         db.execute("PRAGMA legacy_alter_table=OFF")
         db.execute("PRAGMA foreign_keys=ON")
+
+
+def _sync_inventory_catalog(
+    db: sqlite3.Connection,
+    records: List[Dict[str, Any]],
+) -> None:
+    """Map existing inventory to ten slots without deleting historical rows."""
+    db.execute("UPDATE inventory SET hardware_slot=NULL")
+
+    for record in records:
+        names = tuple(dict.fromkeys(record["aliases"]))
+        placeholders = ",".join("?" for _ in names)
+        candidates = db.execute(
+            f"""
+            SELECT i.*,
+                   (SELECT COUNT(*) FROM transaction_items ti
+                    WHERE ti.inventory_id=i.id) AS transaction_refs,
+                   (SELECT COUNT(*) FROM stock_logs sl
+                    WHERE sl.inventory_id=i.id) AS stock_refs
+            FROM inventory i
+            WHERE lower(i.brand) IN ({placeholders})
+            """,
+            tuple(name.casefold() for name in names),
+        ).fetchall()
+
+        desired_form = record["dosage_form"].casefold()
+        chosen = None
+        if candidates:
+            chosen = sorted(
+                candidates,
+                key=lambda row: (
+                    str(row["dosage_form"] or "").casefold() != desired_form,
+                    -(int(row["transaction_refs"]) + int(row["stock_refs"])),
+                    row["id"],
+                ),
+            )[0]
+
+            # Free the canonical unique brand before renaming the selected row.
+            for row in candidates:
+                if row["id"] == chosen["id"]:
+                    continue
+                archived_brand = f"{row['brand']} [archived #{row['id']}]"
+                db.execute(
+                    """
+                    UPDATE inventory
+                    SET brand=?, is_active=0, hardware_slot=NULL,
+                        updated_at=datetime('now','localtime')
+                    WHERE id=?
+                    """,
+                    (archived_brand, row["id"]),
+                )
+
+            db.execute(
+                """
+                UPDATE inventory
+                SET brand=?, generic_name=?, category=?, dosage_form=?,
+                    hardware_slot=?, updated_at=datetime('now','localtime')
+                WHERE id=?
+                """,
+                (
+                    record["brand"],
+                    record["generic_name"],
+                    record["category"],
+                    record["dosage_form"],
+                    record["slot"],
+                    chosen["id"],
+                ),
+            )
+        else:
+            db.execute(
+                """
+                INSERT INTO inventory
+                    (brand, generic_name, category, dosage_form, unit_price,
+                     stock_quantity, hardware_slot, is_active)
+                VALUES (?,?,?,?,?,0,?,1)
+                """,
+                (
+                    record["brand"],
+                    record["generic_name"],
+                    record["category"],
+                    record["dosage_form"],
+                    record["default_price"],
+                    record["slot"],
+                ),
+            )
+
+    canonical = tuple(record["brand"] for record in records)
+    placeholders = ",".join("?" for _ in canonical)
+    db.execute(
+        f"""
+        UPDATE inventory
+        SET is_active=0, hardware_slot=NULL,
+            updated_at=datetime('now','localtime')
+        WHERE brand NOT IN ({placeholders})
+        """,
+        canonical,
+    )
 
 
 # ─────────────────────────────────────────────────
@@ -379,11 +451,19 @@ def toggle_user_active(uid: int) -> bool:
 # Inventory helpers
 # ─────────────────────────────────────────────────
 
-def list_inventory(active_only: bool = False) -> List[Dict[str, Any]]:
+def list_inventory(
+    active_only: bool = False,
+    catalog_only: bool = False,
+) -> List[Dict[str, Any]]:
     q = "SELECT * FROM inventory"
+    clauses = []
     if active_only:
-        q += " WHERE is_active=1"
-    q += " ORDER BY brand"
+        clauses.append("is_active=1")
+    if catalog_only:
+        clauses.append("hardware_slot IS NOT NULL")
+    if clauses:
+        q += " WHERE " + " AND ".join(clauses)
+    q += " ORDER BY hardware_slot IS NULL, hardware_slot, brand"
     return [dict(r) for r in get_db().execute(q).fetchall()]
 
 
@@ -475,6 +555,8 @@ def create_transaction(
         inv = get_inventory_item(it["inventory_id"])
         if not inv:
             raise ValueError(f"Item id={it['inventory_id']} not found")
+        if not inv["is_active"] or inv.get("hardware_slot") is None:
+            raise ValueError(f"{inv['brand']} is not available in the hardware catalog")
         qty = int(it["quantity"])
         if qty <= 0:
             raise ValueError(f"Invalid quantity for {inv['brand']}")

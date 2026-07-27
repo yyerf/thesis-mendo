@@ -131,6 +131,7 @@ const POS = (() => {
         <div class="product-card ${p.stock_quantity <= 0 ? 'product-card--oos' : ''}"
              onclick="${p.stock_quantity > 0 ? `POS.shop.addToCart(${p.id})` : ''}"
              title="${p.generic_name || ''}">
+          <div class="text-xs text-muted">Hardware slot #${p.hardware_slot}</div>
           <div class="product-card__name">${p.brand}</div>
           <div class="product-card__generic">${p.generic_name || ''}</div>
           <div class="product-card__meta">
