@@ -163,6 +163,14 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "nag-ubo ko",
         "kakaubo",
         "kakaubo ko",
+        # Bisaya — inflected forms of "ubo" (cough)
+        "gihubo",
+        "gihubo ko",
+        "nagubo",
+        "nagubo ko",
+        "nahubo",
+        "mihubo",
+        "mag-ubo ko",
         # Common shorthand
         "sige ubo",
         "cge ubo",
@@ -204,6 +212,19 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "gi hilantan",
         "ginahilanat",
         "naay hilanat",
+        # Bisaya — inflected / verb forms of "hilanat" (fever).
+        # These carry common Cebuano affixes (ni-, gi-, na-, -od/-on). They
+        # previously fell through to the semantic fallback, which is weak for
+        # Cebuano, so they are pinned here deterministically instead.
+        # NOTE: only single-token forms are listed so negation scoping works
+        # ("walay nihilantan ko" must not match "hilantan ko" by substring).
+        "hilantan",
+        "gihilantan",
+        "nihilantan",
+        "nahilantan",
+        "mihilantan",
+        "naghihilantan",
+        "hilanaton",
         # Bisaya phrasing for "my body feels hot" (common fever description)
         "init akong lawas",
         "init kaayo akong lawas",
@@ -239,7 +260,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "ga-init",
     ],
     "BODY_ACHES": [
-        # English
+        # English   
         "body aches",
         "body ache",
         "body pain",
@@ -705,6 +726,11 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
                 "naubo",
                 "ga ubo",
                 "ga-ubo",
+                # Bisaya inflected forms of "ubo"
+                "gihubo",
+                "nagubo",
+                "nahubo",
+                "mihubo",
             )
         )
     if not cough_present:
@@ -716,7 +742,7 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
     # Important guard: "no plema ... coughing" does NOT mean "no cough".
     # The negation applies to phlegm, not to cough itself.
     cough_neg_matches = re.finditer(
-        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
+        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo|gihubo|nagubo|nahubo|mihubo)\b",
         normalized_text,
     )
     for m in cough_neg_matches:
@@ -1202,10 +1228,13 @@ def extract_symptoms(user_input: str) -> List[str]:
 
     # Fuzzy rescue for fever typos: e.g., "my lgnat" -> FEVER
     # Also handles vowel-dropped abbreviations like "lgnt" -> lagnat
+    # Exclusion: common English words that are edit-distance-1 from "fever"
+    # ("ever", "never", "lever", "sever", "fewer", "fiver") must not fire FEVER.
     if "FEVER" not in detected and "FEVER" not in negated_labels:
         tokens = normalized_text.split()
+        fever_exclusion = {"ever", "never", "lever", "sever", "fewer", "fiver"}
         if any(
-            (len(t) >= 4 and (_levenshtein_within(t, "lagnat", 1) or _levenshtein_within(t, "fever", 1) or _levenshtein_within(t, "hilanat", 1)))
+            (len(t) >= 4 and t not in fever_exclusion and (_levenshtein_within(t, "lagnat", 1) or _levenshtein_within(t, "fever", 1) or _levenshtein_within(t, "hilanat", 1)))
             for t in tokens
         ):
             detected.append("FEVER")

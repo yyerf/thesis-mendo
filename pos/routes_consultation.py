@@ -71,7 +71,11 @@ def _consent_log_kwargs(data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]
     }
 
 
-def _headache_snapshot(location_key: Optional[str], user_age: Optional[int]) -> Optional[Dict[str, Any]]:
+def _headache_snapshot(
+    location_key: Optional[str],
+    user_age: Optional[int],
+    source: str = "user_selected_illustration",
+) -> Optional[Dict[str, Any]]:
     if not location_key:
         return None
     location = get_location(location_key)
@@ -79,7 +83,7 @@ def _headache_snapshot(location_key: Optional[str], user_age: Optional[int]) -> 
         raise ValueError(f"Unknown headache illustration: {location_key}")
     danger = classify_danger(location_key, user_age=user_age or 0)
     return {
-        "source": "user_selected_illustration",
+        "source": source,
         "key": location.key,
         "label_en": location.label_en,
         "label_tl": location.label_tl,
@@ -95,6 +99,39 @@ def _headache_snapshot(location_key: Optional[str], user_age: Optional[int]) -> 
             else []
         ),
     }
+
+def _apply_text_headache_intake(
+    report: Dict[str, Any],
+    user_text: str,
+    user_age: Optional[int],
+) -> Optional[Dict[str, Any]]:
+    """Free-text headache-type intake (deterministic tags, no ML).
+
+    Runs only when no illustration was clicked:
+      - HEADACHE already detected  -> classify the type directly
+      - nothing detected at all    -> promote a bare type cue ("sinus",
+        "sinusitis", "tension", "high blood") to a headache consult
+    Returns the intake dict (or None). In the bare-cue case HEADACHE is
+    promoted into report["final"]["symptoms"].
+    """
+    from mendo_core.headache_intake import (
+        classify_headache_text,
+        promote_bare_headache_cue,
+    )
+
+    symptoms = report["final"]["symptoms"]
+    if "HEADACHE" in symptoms:
+        intake = classify_headache_text(user_text, user_age=user_age)
+        if intake and intake.get("matched"):
+            return intake
+        return None
+    if not symptoms:
+        intake = promote_bare_headache_cue(user_text)
+        if intake:
+            report["final"]["symptoms"].append("HEADACHE")
+            return intake
+    return None
+
 
 # ── Dataset (loaded once) ──────────────────────────────────────────────────
 
@@ -279,6 +316,12 @@ def api_pre_detect():
             return jsonify({"error": "Please describe your symptoms."}), 400
 
         report = predict_symptoms(user_text)
+        headache_intake = _apply_text_headache_intake(report, user_text, None)
+        # Mirror apply_headache_selection so the severity step asks about the
+        # full final symptom set (e.g. sinus intake -> NASAL_CONGESTION too).
+        if headache_intake and headache_intake.get("key") == "sinus":
+            if "NASAL_CONGESTION" not in report["final"]["symptoms"]:
+                report["final"]["symptoms"].append("NASAL_CONGESTION")
         symptoms = report.get("final", {}).get("symptoms", [])
         red_flags = report.get("red_flags", [])
 
@@ -288,6 +331,7 @@ def api_pre_detect():
             "symptoms": symptoms,
             "severity_hints": severity_hints,
             "red_flags": red_flags,
+            "headache_intake": headache_intake,
             "engine": report.get("engine"),
             "trace_version": report.get("trace_version"),
         })
@@ -369,11 +413,47 @@ def api_analyze():
             }
 
         # ── Step 1-3: one shared, versioned prediction service ──
+        report = predict_symptoms(user_text)
+        symptoms = report.get("final", {}).get("symptoms", [])
+
+        # ── Free-text headache-type intake: when HEADACHE is detected from
+        #    typed text and no illustration was clicked, try to classify the
+        #    type directly from the description (deterministic tags). An
+        #    explicit illustration click always wins. A bare type cue with
+        #    no other detected symptom (e.g. "sinus", "sinusitis") is
+        #    promoted to a headache consult instead of a no-match. ──
+        headache_intake = None
+        if not headache_location:
+            headache_intake = _apply_text_headache_intake(report, user_text, user_age)
+            if headache_intake:
+                headache_location = headache_intake["key"]
+
+        # An explicit/auto-confirmed headache location implies a headache
+        # consult even when the typed text was a bare type cue ("tusok tusok
+        # sa ulo", "sinus") that the dictionary could not map to HEADACHE.
+        if headache_location and "HEADACHE" not in report["final"]["symptoms"]:
+            report["final"]["symptoms"].append("HEADACHE")
+            report.setdefault("transformations", []).append({
+                "rule": "headache_location_implies_headache",
+                "input": f"headache_location:{headache_location}",
+                "output": "HEADACHE",
+                "reason": "User-confirmed headache type guarantees the headache symptom.",
+            })
+
         try:
-            headache = _headache_snapshot(headache_location, user_age)
+            headache = _headache_snapshot(
+                headache_location,
+                user_age,
+                source=(
+                    "user_selected_illustration"
+                    if headache_location and headache_location == data.get("headache_location")
+                    else "free_text_intake"
+                ),
+            )
         except ValueError as exc:
             return jsonify({"error": str(exc)}), 400
-        report = apply_headache_selection(predict_symptoms(user_text), headache)
+        report = apply_headache_selection(report, headache)
+        report["headache_intake"] = headache_intake
         symptoms = report.get("final", {}).get("symptoms", [])
         detected_conditions = report.get("final", {}).get("conditions", [])
         source = report.get("final", {}).get("source", "unknown")
@@ -512,8 +592,10 @@ def api_analyze():
             "source": source,
             "pipeline": {
                 "stages": report.get("stages", []),
+                "semantic": report.get("semantic"),
             },
             "recommendation": recommendation,
+            "recommendation_filtering": recommendation_filtering,
             "engine": report.get("engine"),
             "trace_version": TRACE_SCHEMA_VERSION,
         }
@@ -531,6 +613,7 @@ def api_analyze():
             loc_data = get_location(headache_location)
             if loc_data:
                 resp["headache_location"] = headache
+                resp["headache_intake"] = report.get("headache_intake")
                 # If headache danger is red_flag, add a specific referral
                 if headache and headache["danger"] == "red_flag":
                     if referral is None:

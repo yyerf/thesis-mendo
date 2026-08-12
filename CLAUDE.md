@@ -18,6 +18,7 @@ Always activate the venv first: `source .venv/bin/activate`
 | Production | `gunicorn wsgi:app --bind 0.0.0.0:8000` |
 | Regression tests | `pytest testing/test_regressions.py` |
 | Algorithm tests (detection, Tiers 1–4, 288 cases) | `python testing/test_algorithm.py` |
+| Headache-type intake (free text → 14 types) | `python testing/test_headache_intake.py` |
 | Duration Safeguard (Tier 5, 31 cases) | `python testing/test_duration.py` |
 | Benchmark | `python _run_bench.py` (writes `_bench_output.txt`, gitignored) |
 | Recommend (CLI) | `python -m mendo_core.step4_recommend --text "masakit ulo"` |
@@ -36,6 +37,7 @@ User text → symptoms → medicines. Two entry functions matter:
 | `step1.py` | Stage 1: dictionary phrase matching (331 phrases, 13 labels, 5 languages); negation, contrastive splitting, cough-type tree, fuzzy rescue. `extract_symptoms(text)`. No ML. |
 | `step2.py` | Stage 2: semantic fallback. `EmbeddingSymptomExtractor.analyze()` using `paraphrase-multilingual-MiniLM-L12-v2` (~33M params), cosine vs 118 anchor sentences, threshold 0.65. |
 | `step3_hybrid.py` | Stages 0+3: red-flag triage (`detect_red_flags`), orchestrates Stage 1, falls back to Stage 2 **only when Stage 1 returns nothing** (precision-first), applies lexical guards + safety filters. Main detection entry point. |
+| `headache_intake.py` | **Free-text headache-type intake**: deterministic multilingual tag matching (strong/weak per type) over the 14 clinical types in `headache_locations.py` (202 strong + 67 weak tags). Red-zone types (thunderclap/hypertension/spinal/post_traumatic/exertion) dominate and auto-refer. `classify_headache_text(text) -> dict`. Runs in `/api/analyze` when HEADACHE is detected from typed text (an explicit head-map click still wins). No ML. |
 | `step4_recommend.py` | Stage 4: rule-based recommendation + safety (paracetamol overlap, opposing-mechanism, age filter, duration thresholds). `load_mendo_dataset(path)`, `recommend_medicine(...)`. |
 | `symptom_models.py` | Baseline models (regex/rules) used only for the comparative benchmark. |
 | `interaction_logger.py` | `log_interaction(...)` → appends JSON line to `logs/interactions.jsonl` (audit trail). |
@@ -94,7 +96,7 @@ The structured benchmark is **319 cases across 5 tiers**, all reproducible:
 ## Project notes
 
 - **Fingerprint/biometric (AS608) was removed** by decision (checkout went 3 steps → 2: Cart → Payment). Do not reintroduce. The thesis does not include biometrics; the no-biometric design is now *defended* in the paper ("On User Verification and Anonymity" — RA 10173 / accessibility) in response to Emberda's panel comment. (Branch `latest-experiment-with-biometrics` is misnamed; no biometric code exists.)
-- **June-30 defense revision (consultation UI):** added OLDCARTS safety-screening features in `consultation.html` — a clickable headache **head-map** (occipital/thunderclap → Emergency Triage), a rash **"difficulty breathing?"** screen → Emergency, a stomachache **before/after-eating** selector (maps to the existing acid-vs-cramp therapy split), and a **"Who is this for? (self/other)"** proxy-purchase step on the age panel (patient age flows to the age filter; `purchase_for` logged). These run as a flag-gated `startSafetyScreening()` phase before the duration flow.
+- **June-30 defense revision (consultation UI):** added OLDCARTS safety-screening features in `consultation.html` — a clickable headache **head-map** (occipital/thunderclap → Emergency Triage), a rash **"difficulty breathing?"** screen → Emergency, a stomachache **before/after-eating** selector (maps to the existing acid-vs-cramp therapy split), and a **"Who is this for? (self/other)"** proxy-purchase step on the age panel (patient age flows to the age filter; `purchase_for` logged). These run as a flag-gated `startSafetyScreening()` phase before the duration flow. The 14 head-map types are **also reachable via typed free text** (`headache_intake.py`, deterministic, no ML): typing "sinus", "sinusitis", "worst headache ever", "high blood", "regla", etc. routes to the same type data (danger zone, prefer/avoid, referral) with zero extra UI steps.
 - **Defense deliverables (repo root, June-30):** `RPIC-Latest (Revised - Highlighted).docx` = the revised thesis with all changes highlighted **yellow** for copy-paste (the 208 pre-existing highlights are invisible `white`); `Thesis (Comments_Suggestions) - Synced.docx` = the routing form with Diapana/Emberda actions filled and the diarrhea/runny-nose claims corrected. Built by scripts in the session scratchpad.
 - `_For-Mendo/` is an archived copy of the old v1/v2 system — **legacy, gitignored, not the live code.** Ignore it.
 - Thesis docs (`Revision_Thesis.docx`, various `*.md`) are working academic files at repo root.

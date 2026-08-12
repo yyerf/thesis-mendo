@@ -1126,6 +1126,13 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "nagtatae",
         "lbm",
         "kalibang",
+        "nagkalibang",
+        "nagkalibanga",
+        "kalibanga",
+        "gi kalibang",
+        "gi kalibang",
+        "gi-kalibang",
+        "gikalibang",
         "tae",
         "bawas",
         # Alternative phrasings
@@ -1149,6 +1156,33 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "nagatulo",
         "kasimhot",
         "simhot",
+    ]
+
+    # Label-specific nasal cues: blocked/stuffy = congestion cues, dripping
+    # = runny cues. A bare nose/ilong mention must not let RUNNY_NOSE through.
+    nasal_runny_keywords = [
+        "sipon",
+        "runny",
+        "running",
+        "tumutulo",
+        "nagatulo",
+        "dripping",
+        "drip",
+        "tulo",
+    ]
+    nasal_congestion_keywords = [
+        "stuffy",
+        "stuffy nose",
+        "blocked",
+        "blocked nose",
+        "clogged",
+        "clogged nose",
+        "barado",
+        "bara",
+        "congestion",
+        "nasal congestion",
+        "lisod",
+        "hard to breathe",
     ]
 
     fever_keywords = [
@@ -1353,12 +1387,18 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
             continue
 
         if s in {"NASAL_CONGESTION", "RUNNY_NOSE", "ALLERGIC_RHINITIS"}:
-            # If they mention nose/ilong/sipon, these are plausible.
-            if _has_any(nt, nasal_keywords):
-                allowed.append(s)
+            # Label-specific cues: a runny-nose prediction needs a dripping
+            # cue; a congestion prediction needs a stuffiness/blockage cue.
+            # Generic nose/ilong mention alone must not elevate RUNNY_NOSE.
+            if s == "RUNNY_NOSE":
+                if _has_any(nt, nasal_runny_keywords):
+                    allowed.append(s)
+            elif s == "NASAL_CONGESTION":
+                if _has_any(nt, nasal_congestion_keywords) or _has_any(nt, nasal_keywords):
+                    allowed.append(s)
             else:
-                # Still allow allergy if explicit "allergy" is mentioned.
-                if s == "ALLERGIC_RHINITIS" and _has_any(nt, ["allergy", "allergic", "bahing", "sneeze", "makati", "katol"]):
+                # ALLERGIC_RHINITIS — allergy/sneeze/itch context.
+                if _has_any(nt, ["allergy", "allergic", "bahing", "sneeze", "makati", "katol"]):
                     allowed.append(s)
             continue
 
@@ -1579,6 +1619,19 @@ def extract_symptoms_hybrid_report(
             diag_rows=diag_sorted,
             red_flags=red_flags,
         )
+
+        # Partition the audit rows so symptoms the lexical guard / safety
+        # filters rejected are NOT ranked ahead of plausible candidates. The
+        # raw cosine list is otherwise noise-driven: DIARRHEA's best anchor can
+        # out-rank FEVER's on a fever sentence even though DIARRHEA was vetoed.
+        kept = set(semantic_detected)
+        candidate_rows = [row for row in diag_sorted if row["symptom"] in kept]
+        vetoed_rows = [
+            {**row, "vetoed": True, "veto_reason": "rejected_by_lexical_guard_or_safety_filter"}
+            for row in diag_sorted
+            if row["symptom"] not in kept
+        ]
+        diag_sorted = candidate_rows + vetoed_rows
     except Exception as e:
         # Semantic unavailable — fall back to dictionary-only
         report["stages"].append(
