@@ -89,6 +89,9 @@
   details.trace-block summary { cursor:pointer; padding:9px 11px; background:#fafafa; font-size:12px; font-weight:750; }
   .trace-content { padding:11px; font-size:12px; }
   .trace-row { display:grid; grid-template-columns:150px 1fr auto; gap:9px; align-items:center; padding:6px 0; border-bottom:1px solid #f4f4f5; }
+  .trace-row--vetoed { opacity:0.55; }
+  .trace-row--vetoed .trace-col-label { text-decoration:line-through; }
+  .veto-chip { display:inline-block; margin-left:6px; border-radius:99px; padding:1px 6px; font-size:9px; font-weight:700; background:#fef3c7; color:#92400e; }
   .score-track { height:5px; background:#e4e4e7; border-radius:99px; overflow:hidden; }
   .score-fill { height:100%; background:#0284c7; }
   .headache-proof { display:flex; gap:12px; align-items:center; padding:10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; margin-top:10px; }
@@ -277,7 +280,7 @@
       `<div class="trace-row"><strong>${esc(row.symptom)}</strong><span>${esc((row.matched_phrases || []).join(', '))}</span><span class="audit-chip">${esc(row.decision || 'matched')}</span></div>`
     ).join('') || '<span class="muted">No dictionary phrase matched.</span>';
     const semanticRows = (semantic.scores || []).slice(0,8).map(row =>
-      `<div class="trace-row"><strong>${esc(row.symptom)}</strong><div><div class="score-track"><div class="score-fill" style="width:${pct(row.score)}%"></div></div><span class="muted">${esc(row.best_anchor || '')}</span></div><span>${Number(row.score || 0).toFixed(4)}</span></div>`
+      `<div class="trace-row${row.vetoed ? ' trace-row--vetoed' : ''}"><strong>${esc(row.symptom)}</strong><div><div class="score-track"><div class="score-fill" style="width:${pct(row.score)}%"></div></div><span class="muted">${esc(row.best_anchor || '')}</span></div><span>${Number(row.score || 0).toFixed(4)}${row.vetoed ? '<span class="veto-chip" title="Rejected by keyword guard / safety filter">vetoed</span>' : ''}</span></div>`
     ).join('') || `<span class="muted">${semantic.available === false ? 'Semantic component unavailable for this event.' : 'No semantic scores retained.'}</span>`;
     return `<div class="trace-tabs">
       <details class="trace-block"><summary>Dictionary evidence · matched / negated / suppressed</summary><div class="trace-content">${dictionaryRows}</div></details>

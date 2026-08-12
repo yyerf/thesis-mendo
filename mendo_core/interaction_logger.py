@@ -33,6 +33,7 @@ _JSON_COLUMNS = {
     "recommendations",
     "pipeline_detail",
     "recommendation_detail",
+    "semantic_summary",
 }
 
 
@@ -77,6 +78,8 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
             input_mode TEXT,
             trace_version INTEGER NOT NULL DEFAULT 1,
             engine_id TEXT,
+            summary TEXT,
+            semantic_summary TEXT DEFAULT '{}',
             created_at TEXT DEFAULT (datetime('now','localtime'))
         );
         CREATE TABLE IF NOT EXISTS operational_counters (
@@ -126,6 +129,8 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
         "input_mode": "TEXT",
         "trace_version": "INTEGER NOT NULL DEFAULT 1",
         "engine_id": "TEXT",
+        "summary": "TEXT",
+        "semantic_summary": "TEXT DEFAULT '{}'",
     }.items():
         if name not in columns:
             conn.execute(f"ALTER TABLE interaction_logs ADD COLUMN {name} {definition}")
@@ -157,6 +162,90 @@ def increment_operational_counter(interaction_type: str) -> None:
         conn.commit()
     finally:
         conn.close()
+
+
+def _trace_semantic_summary(effective_trace: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract a compact, stable cosine-similarity summary from a trace.
+
+    Mirrors the top-level `semantic` block produced by prediction_pipeline so
+    the DB row carries an easy-to-query snapshot of what the model scored.
+    """
+    semantic = (effective_trace or {}).get("semantic") or {}
+    if not semantic.get("used"):
+        return {"used": False}
+    return {
+        "used": True,
+        "score_type": semantic.get("score_type", "cosine_similarity"),
+        "comparison": semantic.get(
+            "comparison", "user_input_embedding_vs_symptom_anchor_sentences"
+        ),
+        "threshold": semantic.get("threshold"),
+        "anchor_sentences_total": semantic.get("anchor_sentences_total"),
+        "selected": [
+            {
+                "symptom": row.get("symptom"),
+                "score": row.get("score"),
+                "threshold": row.get("threshold"),
+                "best_anchor": row.get("best_anchor"),
+                "decision": row.get("decision", "selected"),
+            }
+            for row in semantic.get("selected", []) or []
+        ],
+        "near_miss_rejected": [
+            {
+                "symptom": row.get("symptom"),
+                "score": row.get("score"),
+                "best_anchor": row.get("best_anchor"),
+                "decision": row.get("decision", "below_threshold_or_safety_suppressed"),
+            }
+            for row in semantic.get("near_miss_rejected", []) or []
+        ],
+    }
+
+
+def _trace_one_line_summary(
+    effective_trace: Dict[str, Any],
+    action: str,
+    extraction_source: str,
+    red_flags: Optional[List[Any]],
+) -> str:
+    """Build a short human-readable one-liner for the logs list view."""
+    stages = (effective_trace or {}).get("stages", []) or []
+    source = extraction_source or "unknown"
+    flag_names = ",".join(
+        f.get("flag", "?") for f in (red_flags or []) if isinstance(f, dict)
+    )
+
+    parts = [f"src={source}", f"action={action}"]
+    if flag_names:
+        parts.append(f"flags=[{flag_names}]")
+
+    for stage in stages:
+        name = stage.get("stage")
+        if name == "dictionary":
+            detected = stage.get("detected", [])
+            if detected:
+                parts.append("dict=" + ",".join(detected))
+        elif name == "semantic":
+            available = stage.get("available", False)
+            if available:
+                sem = (effective_trace or {}).get("semantic") or {}
+                selected = sem.get("selected", []) or []
+                if selected:
+                    top = selected[0]
+                    parts.append(
+                        f"sem_top={top.get('symptom')}:{top.get('score'):.3f}"
+                        f"/{sem.get('threshold')}"
+                        f" anchor={top.get('best_anchor')!r}"
+                    )
+                else:
+                    parts.append("sem=none")
+            else:
+                parts.append("sem=unavailable")
+
+    decision = (effective_trace or {}).get("decision") or {}
+    final_action = decision.get("final_action") or action
+    return f"{' | '.join(parts)} | final_action={final_action}"
 
 
 def log_interaction(
@@ -303,6 +392,10 @@ def log_interaction(
         "input_mode": input_mode or "text",
         "trace_version": int(effective_trace.get("trace_version", TRACE_SCHEMA_VERSION)),
         "engine_id": effective_trace.get("engine", {}).get("engine_id", ENGINE_ID),
+        "summary": _trace_one_line_summary(
+            effective_trace, action, extraction_source, red_flags
+        ),
+        "semantic_summary": _trace_semantic_summary(effective_trace),
     }
     conn = _get_db()
     if conn is None:
@@ -512,11 +605,107 @@ def count_logs_today() -> int:
 
 
 def get_most_common_symptom() -> str:
-    counts: Dict[str, int] = {}
-    for row in get_interaction_logs(limit=999999):
-        for symptom in row.get("extracted_symptoms", []):
-            counts[symptom] = counts.get(symptom, 0) + 1
-    return max(counts, key=counts.get) if counts else ""
+    """Most frequent detected symptom, aggregated in SQL (no full-table scan)."""
+    conn = _get_db()
+    if conn is None:
+        return ""
+    try:
+        row = conn.execute(
+            """
+            SELECT s.value AS symptom, COUNT(*) AS c
+            FROM interaction_logs, json_each(interaction_logs.extracted_symptoms) AS s
+            WHERE s.value IS NOT NULL AND s.value != ''
+            GROUP BY s.value
+            ORDER BY c DESC, s.value
+            LIMIT 1
+            """
+        ).fetchone()
+        return row["symptom"] if row else ""
+    finally:
+        conn.close()
+
+
+def get_semantic_stats() -> Dict[str, Any]:
+    """Aggregate cosine-similarity statistics across consented interactions.
+
+    Answers: for each symptom, how many times did the semantic layer select it,
+    at what average/max cosine score, plus global selected/rejected score means.
+    Only rows that actually used the semantic model are counted.
+    """
+    conn = _get_db()
+    if conn is None:
+        return {}
+    try:
+        rows = conn.execute(
+            """
+            SELECT semantic_summary
+            FROM interaction_logs
+            WHERE research_consent=1
+              AND semantic_summary IS NOT NULL
+              AND semantic_summary != ''
+            """
+        ).fetchall()
+
+        per_symptom: Dict[str, Dict[str, Any]] = {}
+        selected_scores: List[float] = []
+        rejected_scores: List[float] = []
+        used_count = 0
+
+        for row in rows:
+            try:
+                data = json.loads(row["semantic_summary"])
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if not data.get("used"):
+                continue
+            used_count += 1
+            for item in data.get("selected", []) or []:
+                label = item.get("symptom")
+                if not label:
+                    continue
+                try:
+                    score = float(item.get("score") or 0)
+                except (TypeError, ValueError):
+                    continue
+                bucket = per_symptom.setdefault(
+                    label, {"selected_count": 0, "score_sum": 0.0, "max_score": 0.0}
+                )
+                bucket["selected_count"] += 1
+                bucket["score_sum"] += score
+                bucket["max_score"] = max(bucket["max_score"], score)
+                selected_scores.append(score)
+            for item in data.get("near_miss_rejected", []) or []:
+                try:
+                    score = float(item.get("score") or 0)
+                except (TypeError, ValueError):
+                    continue
+                rejected_scores.append(score)
+
+        symptom_rows = {}
+        for label, bucket in sorted(per_symptom.items()):
+            count = bucket["selected_count"]
+            symptom_rows[label] = {
+                "selected_count": count,
+                "selected_mean_score": round(bucket["score_sum"] / count, 4),
+                "selected_max_score": round(bucket["max_score"], 4),
+            }
+
+        def _mean(vals: List[float]) -> Optional[float]:
+            return round(sum(vals) / len(vals), 4) if vals else None
+
+        return {
+            "eligible_consented_rows": len(rows),
+            "semantic_used_rows": used_count,
+            "global": {
+                "selected_count": len(selected_scores),
+                "selected_mean_score": _mean(selected_scores),
+                "rejected_count": len(rejected_scores),
+                "rejected_mean_score": _mean(rejected_scores),
+            },
+            "per_symptom": symptom_rows,
+        }
+    finally:
+        conn.close()
 
 
 def submit_review(interaction_id: str, reviewer_id: int, payload: Dict[str, Any]) -> Dict[str, Any]:

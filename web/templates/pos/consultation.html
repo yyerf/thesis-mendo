@@ -3416,6 +3416,7 @@
       preDetectedSymptoms = data.symptoms || [];
       severityHints = data.severity_hints || {};
       const preDetectRedFlags = data.red_flags || [];
+      const preDetectHeadacheIntake = data.headache_intake || null;
 
       // If triage red flags are already detected in pre-detect, do not stop at
       // the severity screen (which depends on symptom labels). Jump to full
@@ -3432,11 +3433,18 @@
 
       // ── HEADACHE LOCATION CHECK ──
       // If HEADACHE is among the detected symptoms, show the location
-      // visualizer first before proceeding to severity.
+      // visualizer first before proceeding to severity — UNLESS the free-text
+      // intake already classified the type (e.g. typed "sinus"), in which
+      // case the type is auto-confirmed and we proceed straight to severity.
       if (preDetectedSymptoms.includes('HEADACHE') && !headacheLocationConfirmed) {
-        selectedHeadacheLocation = null;
-        renderHeadacheLocationSelector();
-        return;
+        if (preDetectHeadacheIntake && preDetectHeadacheIntake.matched) {
+          selectedHeadacheLocation = preDetectHeadacheIntake.key;
+          headacheLocationConfirmed = true;
+        } else {
+          selectedHeadacheLocation = null;
+          renderHeadacheLocationSelector();
+          return;
+        }
       }
 
       // Initialize per-symptom severity flow
@@ -4312,6 +4320,9 @@
       if (symptom === 'DIARRHEA' || symptom.startsWith('DIARRHEA_')) {
         return cat.includes('anti-diarrhea') || cat.includes('probiotic') || ps.includes('diarrhea');
       }
+      if (symptom === 'HEADACHE') {
+        return cat.includes('pain') || ps.includes('headache');
+      }
       return false;
     }
 
@@ -4350,8 +4361,15 @@
       const columns = symptomList.map(sym => {
         let matches = medicineList.filter(m => medicineMatchesSymptom(m, sym)).slice(0, 4);
         if (!matches.length) {
-          // Keep each symptom column populated even when reason tags are sparse.
-          matches = medicineList.slice(0, 2);
+          // Fallback: prefer category-consistent meds before anything else so a
+          // "Headache" column never fills with a nasal medicine.
+          const catConsistent = medicineList.filter(m => {
+            const cat = (m.drug_category || '').toLowerCase();
+            if (sym === 'HEADACHE') return cat.includes('pain');
+            if (sym === 'NASAL_CONGESTION' || sym.startsWith('RUNNY_NOSE')) return cat.includes('cold') || cat.includes('allergy');
+            return false;
+          });
+          matches = catConsistent.length ? catConsistent.slice(0, 2) : medicineList.slice(0, 2);
         }
         const cards = matches
           .map((m, idx) => renderRecommendationCard(m, idx + 1))
@@ -4459,7 +4477,19 @@
       <div class="detected-section">
         <h3>${t('recommendationFor')}: ${symptoms.map(s => getSymptomLabel(s)).join(', ')}</h3>
       </div>
-      ${buildSymptomRecommendationColumns(symptoms, recs)}
+      ${buildSymptomRecommendationColumns(symptoms, recs)}`;
+
+    // Explain why some medicines are missing (age safety filter, etc.)
+    const exclusions = (data.recommendation_filtering || []).filter(f => f.decision === 'excluded');
+    if (exclusions.length) {
+      html += `
+        <div class="rec-note" style="margin:10px 0;padding:10px 12px;background:var(--zinc-100);border-radius:10px;font-size:12.5px;color:var(--zinc-600);">
+          <strong style="color:var(--zinc-700);">Not shown:</strong>
+          ${exclusions.map(e => `${escHtml(e.brand)} (${escHtml(e.reason === 'patient_age_below_minimum' ? `minimum age ${e.minimum_age}` : e.reason)})`).join(' &nbsp;·&nbsp; ')}
+        </div>`;
+    }
+
+    html += `
       <div class="rec-disclaimer">
         <strong>${t('disclaimerTitle')}</strong> ${t('disclaimerBody')}
         ${t('disclaimerAge')} ${patientAge}.

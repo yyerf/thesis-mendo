@@ -12,6 +12,7 @@ import re
 from typing import Any, Dict, Optional
 
 from .medicine_catalog import MEDICINE_CATALOG_VERSION
+from .step2 import SYMPTOM_ANCHORS
 from .step3_hybrid import extract_symptoms_hybrid_report
 
 ENGINE_ID = "mendo-expert-minilm-v3.2"
@@ -66,11 +67,14 @@ def predict_symptoms(user_input: str) -> Dict[str, Any]:
             for row in stage.get("scores", []):
                 row["score_type"] = "cosine_similarity"
                 row["threshold"] = threshold
-                row["decision"] = (
-                    "selected"
-                    if row.get("symptom") in selected_semantic
-                    else "below_threshold_or_safety_suppressed"
-                )
+                if row.get("vetoed"):
+                    row["decision"] = row.get("veto_reason", "lexically_vetoed")
+                else:
+                    row["decision"] = (
+                        "selected"
+                        if row.get("symptom") in selected_semantic
+                        else "below_threshold_or_safety_suppressed"
+                    )
 
     trace["final"]["decisions"] = [
         {
@@ -80,7 +84,94 @@ def predict_symptoms(user_input: str) -> Dict[str, Any]:
         }
         for symptom in trace.get("final", {}).get("symptoms", [])
     ]
+
+    _attach_semantic_summary(trace)
     return trace
+
+
+def _attach_semantic_summary(trace: Dict[str, Any]) -> None:
+    """Attach a compact top-level `semantic` block summarizing the cosine
+    comparison against the anchor sentences.
+
+    Selected rows are the predictions that passed threshold + safety filters;
+    near_miss_rejected rows are the highest-scoring symptoms that did not
+    make it (above threshold but suppressed, or just below it) — useful for
+    calibration and for explaining why something was *not* chosen.
+    """
+    semantic_stage = next(
+        (s for s in trace.get("stages", []) if s.get("stage") == "semantic"),
+        None,
+    )
+    if not semantic_stage or not semantic_stage.get("available"):
+        trace["semantic"] = {"used": False}
+        return
+
+    scores = semantic_stage.get("scores", []) or []
+    threshold = float(semantic_stage.get("threshold", SEMANTIC_THRESHOLD))
+    selected_names = set(semantic_stage.get("detected_selected", []) or [])
+    selected = [
+        row
+        for row in scores
+        if row.get("symptom") in selected_names
+    ]
+    near_miss = sorted(
+        (
+            row
+            for row in scores
+            if row.get("symptom") not in selected_names and not row.get("vetoed")
+        ),
+        key=lambda r: float(r.get("score", 0) or 0),
+        reverse=True,
+    )[:5]
+    vetoed = sorted(
+        (row for row in scores if row.get("vetoed")),
+        key=lambda r: float(r.get("score", 0) or 0),
+        reverse=True,
+    )[:5]
+
+    trace["semantic"] = {
+        "used": True,
+        "score_type": "cosine_similarity",
+        "comparison": "user_input_embedding_vs_symptom_anchor_sentences",
+        "threshold": threshold,
+        "max_symptoms": int(semantic_stage.get("max_symptoms", SEMANTIC_MAX_SYMPTOMS)),
+        "anchor_sentences_total": sum(
+            len(phrases) for phrases in SYMPTOM_ANCHORS.values()
+        ),
+        "anchor_sentences_per_symptom": {
+            symptom: len(phrases) for symptom, phrases in SYMPTOM_ANCHORS.items()
+        },
+        "selected": [
+            {
+                "symptom": row.get("symptom"),
+                "score": float(row.get("score", 0) or 0),
+                "threshold": float(row.get("threshold", threshold)),
+                "best_anchor": row.get("best_anchor"),
+                "decision": row.get("decision", "selected"),
+            }
+            for row in selected
+        ],
+        "near_miss_rejected": [
+            {
+                "symptom": row.get("symptom"),
+                "score": float(row.get("score", 0) or 0),
+                "threshold": float(row.get("threshold", threshold)),
+                "best_anchor": row.get("best_anchor"),
+                "decision": row.get("decision", "below_threshold_or_safety_suppressed"),
+            }
+            for row in near_miss
+        ],
+        "lexical_guard_vetoed": [
+            {
+                "symptom": row.get("symptom"),
+                "score": float(row.get("score", 0) or 0),
+                "threshold": float(row.get("threshold", threshold)),
+                "best_anchor": row.get("best_anchor"),
+                "veto_reason": row.get("veto_reason", "lexically_vetoed"),
+            }
+            for row in vetoed
+        ],
+    }
 
 
 def _apply_expert_disambiguation(user_input: str, report: Dict[str, Any]) -> None:
@@ -117,10 +208,10 @@ def _apply_expert_disambiguation(user_input: str, report: Dict[str, Any]) -> Non
             decisions.append(not bool(negated))
         return decisions[-1] if decisions else False
 
-    has_runny = bool(re.search(r"\b(sipon|sip on|runny nose|tumutulo(?:ng)? ilong|nagatulo(?:ng)? ilong)\b", text))
-    has_blocked = bool(re.search(r"\b(barado|bara(?:do)?|stuffy nose|nasal congestion|blocked nose)\b", text))
-    positive_runny = positive_in_last_clause(r"\b(sipon|sip on|runny nose)\b")
-    positive_blocked = positive_in_last_clause(r"\b(barado|stuffy nose|nasal congestion|blocked nose)\b")
+    has_runny = bool(re.search(r"\b(sipon|sip on|runny|tumutulo(?:ng)? ilong|nagatulo(?:ng)? ilong)\b", text))
+    has_blocked = bool(re.search(r"\b(barado|bara(?:do)?|stuffy|blocked|clogged|nasal congestion)\b", text))
+    positive_runny = positive_in_last_clause(r"\b(sipon|sip on|runny)\b")
+    positive_blocked = positive_in_last_clause(r"\b(barado|bara|stuffy|blocked|clogged|nasal congestion)\b")
 
     if has_runny and not has_blocked:
         remove("NASAL_CONGESTION", "runny_cue_does_not_imply_congestion")

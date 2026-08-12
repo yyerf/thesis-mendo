@@ -227,6 +227,34 @@ class RegressionTests(unittest.TestCase):
         symptoms = report.get("final", {}).get("symptoms", [])
         self.assertIn("HEADACHE", symptoms)
 
+    def test_ever_never_do_not_fire_fever_fuzzy_rescue(self):
+        # "ever"/"never" are edit-distance-1 from "fever"; must not trigger FEVER.
+        for text in [
+            "worst headache ever",
+            "i never get headaches",
+        ]:
+            with self.subTest(text=text):
+                report = extract_symptoms_hybrid_report(
+                    text,
+                    semantic_threshold=0.65,
+                    semantic_top_margin=0.08,
+                    semantic_max_symptoms=2,
+                    enable_semantic_fallback=False,
+                )
+                symptoms = report.get("final", {}).get("symptoms", [])
+                self.assertNotIn("FEVER", symptoms, text)
+
+    def test_fever_typo_rescue_still_works(self):
+        report = extract_symptoms_hybrid_report(
+            "my lgnat is gone",
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=2,
+            enable_semantic_fallback=False,
+        )
+        symptoms = report.get("final", {}).get("symptoms", [])
+        self.assertIn("FEVER", symptoms)
+
     def test_hypertension_primary_complaint_is_red_flag(self):
         for text in [
             "naa koy high blood",
@@ -294,6 +322,51 @@ class RegressionTests(unittest.TestCase):
         self.assertNotIn("NASAL_CONGESTION", symptoms)
         self.assertNotIn("RUNNY_NOSE", symptoms)
         self.assertEqual(symptoms, [])
+
+    def test_blocked_nose_never_double_detects_runny(self):
+        """'blocked/stuffy nose' must detect congestion only — a blocked nose
+        has a congestion cue, not a dripping cue, so RUNNY_NOSE must not leak in
+        from the semantic layer even when it clears the cosine threshold."""
+        for text in [
+            "my nose has been blocked since morning",
+            "nakabara ang ilong ko",
+            "barado ang ilong ko",
+            "I have stuffy nose and its difficult to breathe through it",
+        ]:
+            with self.subTest(text=text):
+                report = extract_symptoms_hybrid_report(
+                    text,
+                    semantic_threshold=0.65,
+                    semantic_top_margin=0.08,
+                    semantic_max_symptoms=3,
+                    enable_semantic_fallback=True,
+                )
+                symptoms = report.get("final", {}).get("symptoms", [])
+                self.assertIn("NASAL_CONGESTION", symptoms, text)
+                self.assertNotIn("RUNNY_NOSE", symptoms, text)
+
+    def test_blocked_nose_recommends_decongestant_not_runny_clarify(self):
+        """Pure congestion (no dripping cue) must go straight to a decongestant
+        recommendation, never the runny-nose SIPON_CONTEXT clarification."""
+        for text in [
+            "my nose has been blocked since morning",
+            "I have stuffy nose and its difficult to breathe through it",
+            "barado ang ilong ko",
+        ]:
+            with self.subTest(text=text):
+                report = extract_symptoms_hybrid_report(
+                    text,
+                    semantic_threshold=0.65,
+                    semantic_top_margin=0.08,
+                    semantic_max_symptoms=3,
+                    enable_semantic_fallback=True,
+                )
+                symptoms = report.get("final", {}).get("symptoms", [])
+                rec = recommend_from_dataset(symptoms, self.rows, user_input=text)
+                self.assertEqual(rec.get("action"), "recommend", text)
+                self.assertNotEqual(rec.get("clarify_type"), "SIPON_CONTEXT", text)
+                brands = [row["brand"] for row in rec.get("recommendations", [])]
+                self.assertIn("Neozep", brands, text)
 
     def test_plain_headache_does_not_pull_cold_meds(self):
         rec = recommend_from_dataset(["HEADACHE"], self.rows, user_input="sakit akong ulo")
@@ -693,9 +766,13 @@ class DurationSafeguardTests(unittest.TestCase):
         result = check_duration_safety("COUGH_GENERAL", 14)
         self.assertTrue(result["safe"])
 
-    def test_runny_nose_exactly_10_days_safe(self):
-        result = check_duration_safety("RUNNY_NOSE", 10)
+    def test_runny_nose_exactly_7_days_safe(self):
+        result = check_duration_safety("RUNNY_NOSE", 7)
         self.assertTrue(result["safe"])
+
+    def test_runny_nose_exactly_10_days_blocks(self):
+        result = check_duration_safety("RUNNY_NOSE", 10)
+        self.assertFalse(result["safe"])
 
     # -- API endpoint tests --
 

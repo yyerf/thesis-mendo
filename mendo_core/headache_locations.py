@@ -40,6 +40,11 @@ class HeadacheType:
     common_causes_en: List[str] = field(default_factory=list)
     common_causes_tl: List[str] = field(default_factory=list)
     common_causes_ceb: List[str] = field(default_factory=list)
+    # Free-text intake tags (multilingual). "Strong" tags are diagnostic
+    # (a hit is near-certain); "weak" tags only confirm/boost an already
+    # strong match or are used alone only when unambiguous.
+    tags_strong: List[str] = field(default_factory=list)
+    tags_weak: List[str] = field(default_factory=list)
     red_flags_en: List[str] = field(default_factory=list)
     red_flags_tl: List[str] = field(default_factory=list)
     red_flags_ceb: List[str] = field(default_factory=list)
@@ -72,6 +77,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Stress", "Muscle tension", "Poor posture", "Eye strain"],
         common_causes_tl=["Stress", "Pag-igting ng kalamnan", "Maling postura", "Pagod na mata"],
         common_causes_ceb=["Stress", "Tension sa kaunoran", "Sayop nga postura", "Kapoy nga mata"],
+        tags_strong=[
+            "tension headache", "tension", "stress headache", "tight band",
+            "band like", "band around", "muscle tension", "squeezing",
+            "pressing around head", "pagka tight sa ulo", "huot ang ulo",
+        ],
+        tags_weak=[
+            "dull ache", "dull pain", "both sides of my head", "eye strain",
+            "poor posture", "stress", "sikip ang ulo", "sikip ang noo",
+            "around my head", "around the head", "kabug atan sa ulo",
+        ],
         otc_safe_if_isolated=True,
         prefer_categories=["pain & fever", "pain & inflammation"],
         safety_note_en="OTC pain relievers: Acetaminophen, Ibuprofen, Naproxen, or Aspirin.",
@@ -92,6 +107,20 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Sinus congestion", "Allergies", "Cold", "Hay fever"],
         common_causes_tl=["Sinus congestion", "Allergy", "Sipon", "Hay fever"],
         common_causes_ceb=["Sinus congestion", "Allergy", "Sip-on", "Hay fever"],
+        tags_strong=[
+            "sinus", "sinusitis", "sinus infection", "sinus congestion",
+            "sinus pressure", "sinus problem", "sinus headache", "sinus issues",
+            "behind cheeks", "behind my cheeks", "behind the cheeks",
+            "behind eyes", "behind my eyes", "forehead pressure",
+            "pressure in my face", "face pressure",
+            "cheek pain", "cheeks hurt", "pressure between eyes",
+        ],
+        tags_weak=[
+            "cheeks", "aping", "pressure sa noo", "pressure sa agtang",
+            "sakit sa aping", "presyon sa aping", "congestion",
+            "runny nose with headache", "stuffy nose with headache",
+            "sipon na may sakit sa ulo",
+        ],
         otc_safe_if_isolated=True,
         prefer_categories=["pain & fever", "pain & inflammation", "cold", "cold & flu"],
         safety_note_en="Decongestants + Pain Relievers: Pseudoephedrine or Phenylephrine combined with Ibuprofen or Acetaminophen.",
@@ -112,6 +141,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Menstruation", "Hormonal fluctuation", "Estrogen drop"],
         common_causes_tl=["Menstruation", "Pagbabago ng hormone", "Pagbaba ng estrogen"],
         common_causes_ceb=["Regla", "Pag-usab sa hormone", "Pag-ubos sa estrogen"],
+        tags_strong=[
+            "menstrual", "menstruation", "regla", "period headache",
+            "monthly period", "before my period", "during my period",
+            "menstrual migraine", "hormonal", "hormone", "estrogen",
+            "menopause",
+        ],
+        tags_weak=[
+            "monthly headache", "sakit sa ulo pag regla", "sakit sa ulo kada regla",
+            "bago ang regla", "atol sa regla", "pagka regla", "siklo",
+        ],
         otc_safe_if_isolated=True,
         prefer_categories=["pain & inflammation", "pain & fever"],
         safety_note_en="OTC NSAIDs: Naproxen sodium or Ibuprofen taken right at symptom onset.",
@@ -136,6 +175,20 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Genetics", "Hormonal changes", "Stress", "Certain foods", "Sensory triggers"],
         common_causes_tl=["Genetics", "Pagbabago ng hormone", "Stress", "Ilang pagkain", "Sensory triggers"],
         common_causes_ceb=["Genetics", "Pag-usab sa hormone", "Stress", "Pipila ka pagkaon", "Sensory triggers"],
+        tags_strong=[
+            "migraine", "migraine headache", "migraine with aura", "aura",
+            "one sided", "one side of my head", "left side of my head",
+            "right side of my head", "behind one eye", "sensitivity to light",
+            "sensitive to light", "sensitive to sound", "photophobia",
+            "phonophobia", "blurry vision", "blind spot", "flashing lights",
+            "kumikislap ang pananaw", "kislap", "nausea with headache",
+            "vomiting with headache", "pulsating on one side",
+            "throbbing on one side",
+        ],
+        tags_weak=[
+            "throbbing", "pulsing", "nahihilo", "nausea", "liwanag", "siga",
+            "kasukaon", "sensitive sa kahayag", "sensitive sa tunog",
+        ],
         red_flags_en=[
             "If frequent or severe: Consult a Doctor for prescription Triptans.",
             "OTC may help mild cases only.",
@@ -169,6 +222,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Unknown (triggers: alcohol, smoking, strong smells)"],
         common_causes_tl=["Hindi alam (triggers: alcohol, paninigarilyo, matatapang na amoy)"],
         common_causes_ceb=["Wala mahibal-i (triggers: alcohol, pagpanigarilyo, kusog nga baho)"],
+        tags_strong=[
+            "cluster", "cluster headache", "around one eye", "around my eye",
+            "behind the eye", "around the eye", "pain around the eye",
+            "red tearing eye", "watery eye", "droopy eyelid",
+            "stuffy nose on one side", "cyclical", "bursts of pain",
+            "libot sa mata", "usa ka mata",
+        ],
+        tags_weak=[
+            "tearing", "eye pain with headache", "sakit libot sa mata",
+        ],
         red_flags_en=[
             "Do Not Rely on OTC — fast-onset pain makes OTCs ineffective.",
             "Consult a Doctor: Requires prescription oxygen therapy or Triptans.",
@@ -202,6 +265,18 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Overuse of OTC pain relievers (more than 10-15 days per month)"],
         common_causes_tl=["Labis na paggamit ng OTC pain relievers (higit 10-15 araw bawat buwan)"],
         common_causes_ceb=["Sobra nga paggamit sa OTC pain relievers (kapin 10-15 ka adlaw kada bulan)"],
+        tags_strong=[
+            "rebound", "medication overuse", "painkiller overuse",
+            "overuse of pain relievers", "overusing painkillers",
+            "daily headache", "every day headache", "every day",
+            "too much medicine", "sobra sa tambal", "sobra nga tambal",
+            "palaging umiinom ng gamot", "taking pain relievers too often",
+            "umiinom ng gamot araw araw", "painkiller everyday",
+        ],
+        tags_weak=[
+            "every morning headache", "adlaw adlaw nga sakit sa ulo",
+            "araw araw na sakit ng ulo",
+        ],
         red_flags_en=[
             "Stop OTC Usage — continued OTC meds will worsen it.",
             "Consult a Doctor: Requires guided tapering off pain medication.",
@@ -235,6 +310,14 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Unknown (responds specifically to Indomethacin)"],
         common_causes_tl=["Hindi alam (tumutugon lamang sa Indomethacin)"],
         common_causes_ceb=["Wala mahibal-i (motubag lamang sa Indomethacin)"],
+        tags_strong=[
+            "hemicrania", "hemicrania continua", "indomethacin", "never stops",
+            "continuous one sided", "always present", "dili mohunong",
+        ],
+        tags_weak=[
+            "continuous headache", "constant headache", "patuloy na sakit",
+            "padayon nga sakit", "constant ache",
+        ],
         red_flags_en=[
             "OTC Ineffective — strictly responds to prescription Indomethacin.",
             "Consult a Doctor for proper diagnosis and treatment.",
@@ -268,6 +351,19 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Unknown (benign, short duration)"],
         common_causes_tl=["Hindi alam (benign, maikling tagal)"],
         common_causes_ceb=["Wala mahibal-i (benign, mubo nga gidugayon)"],
+        tags_strong=[
+            "ice pick", "icepick", "stabbing headache", "stabbing pain",
+            "sharp headache", "sharp pain", "sharp jab",
+            "sharp stabbing", "brief stabbing", "needle like",
+            "lightning bolt", "short sharp", "sudden sharp pain",
+            "matalim na kirot", "mahait nga kirot", "tusok tusok",
+            "tusok tusok sa ulo", "nagtusok", "natusok", "tinutusok",
+            "parang tinutusok", "tusok sa ulo", "susok susok",
+        ],
+        tags_weak=[
+            "stabbing", "seconds long", "a few seconds", "seconds only",
+            "tusok", "dunggab", "piercing",
+        ],
         red_flags_en=[
             "Attacks too short (<5 seconds) for OTC meds to act.",
             "Consult a Doctor if frequent episodes occur.",
@@ -304,6 +400,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Brain hemorrhage", "Aneurysm", "Stroke"],
         common_causes_tl=["Brain hemorrhage", "Aneurysm", "Stroke"],
         common_causes_ceb=["Brain hemorrhage", "Aneurysm", "Stroke"],
+        tags_strong=[
+            "thunderclap", "worst headache of my life", "worst headache ever",
+            "most severe headache", "instant severe", "reaches maximum instantly",
+            "sudden severe headache", "peak in seconds",
+            "grabe nga sakit sa ulo kalit", "kalit lang nga grabe",
+            "pinakamasakit na ulo", "biglaang pinakamasakit",
+        ],
+        tags_weak=[
+            "sudden onset", "kurat kaayo nga sakit", "biglaang sakit ng ulo",
+        ],
         red_flags_en=[
             "EMERGENCY — Call 911 / Go to ER immediately.",
             "Potential brain hemorrhage, aneurysm, or stroke.",
@@ -337,6 +443,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Head injury", "Concussion", "Whiplash"],
         common_causes_tl=["Head injury", "Concussion", "Whiplash"],
         common_causes_ceb=["Head injury", "Concussion", "Whiplash"],
+        tags_strong=[
+            "post traumatic", "post trauma", "after head injury", "head injury",
+            "concussion", "hit my head", "bumped my head", "bangga", "accident",
+            "car accident", "nahulog", "natamaan ang ulo", "nasapol",
+            "human sa bangga", "banggaan", "whiplash", "pagka bangga",
+            "nagbangga",
+        ],
+        tags_weak=[
+            "after my accident", "mga adlaw human sa bangga",
+        ],
         red_flags_en=[
             "Seek medical evaluation — rule out brain trauma or internal bleeding.",
             "Avoid blood-thinning OTCs (Aspirin, Ibuprofen) until cleared by a doctor.",
@@ -370,6 +486,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Spinal fluid leak after lumbar puncture or epidural"],
         common_causes_tl=["Spinal fluid leak pagkatapos ng lumbar puncture o epidural"],
         common_causes_ceb=["Spinal fluid leak human sa lumbar puncture o epidural"],
+        tags_strong=[
+            "spinal", "spinal tap", "lumbar puncture", "epidural",
+            "spinal fluid", "after spinal tap", "worse when sitting",
+            "worse when standing", "worse upright", "better when lying",
+            "better lying down", "worse when i stand", "sakit pagtindog",
+            "mograbe paglingkod", "mograbe pagtindog",
+        ],
+        tags_weak=[
+            "positional headache", "changes with position",
+        ],
         red_flags_en=[
             "Seek medical care — results from spinal fluid leak.",
             "Requires clinical fluid replacement or a blood patch procedure.",
@@ -405,6 +531,16 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Caffeine withdrawal", "Caffeine overuse", "Skipping morning coffee"],
         common_causes_tl=["Caffeine withdrawal", "Labis na caffeine", "Hindi pag-inom ng kape"],
         common_causes_ceb=["Caffeine withdrawal", "Sobra nga caffeine", "Walay kape sa buntag"],
+        tags_strong=[
+            "caffeine", "coffee withdrawal", "no coffee", "missed my coffee",
+            "skipped coffee", "skipped my coffee", "not had coffee",
+            "withdrawal from coffee", "energy drink", "walay kape",
+            "wala nainom og kape", "hindi uminom ng kape", "kape",
+        ],
+        tags_weak=[
+            "too much coffee", "sobra nga kape",
+            "sakit sa ulo kung walang kape",
+        ],
         otc_safe_if_isolated=True,
         prefer_categories=["pain & fever", "pain & inflammation"],
         safety_note_en="Hydration + Mild OTC Pain Relievers: Ibuprofen or Acetaminophen. Advise gradual caffeine reduction.",
@@ -425,6 +561,14 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Uncontrolled hypertension", "Hypertensive crisis"],
         common_causes_tl=["Hindi kontroladong altapresyon", "Hypertensive crisis"],
         common_causes_ceb=["Dili kontrolado nga alta presyon", "Hypertensive crisis"],
+        tags_strong=[
+            "high blood", "high blood pressure", "hypertension", "hypertensive",
+            "blood pressure", "altapresyon", "alta presyon", "high bp",
+            "hypertensive crisis", "taas presyon",
+        ],
+        tags_weak=[
+            "sakit sa ulo tungod sa presyon", "sakit ng ulo dahil sa presyon",
+        ],
         red_flags_en=[], red_flags_tl=[], red_flags_ceb=[],
         otc_safe_if_isolated=False,
         prefer_categories=[],
@@ -447,6 +591,18 @@ HEADACHE_TYPES: List[HeadacheType] = [
         common_causes_en=["Heavy exercise", "Weightlifting", "Coughing fits", "Straining"],
         common_causes_tl=["Matinding ehersisyo", "Weightlifting", "Matinding ubo", "Pagpupuwersa"],
         common_causes_ceb=["Bug-at nga ehersisyo", "Weightlifting", "Kusog nga ubo", "Pagpugos"],
+        tags_strong=[
+            "exertion", "exertional", "after exercising", "after exercise",
+            "after workout", "after a workout", "after running", "after the gym",
+            "weightlifting", "lifting weights", "heavy lifting",
+            "after heavy lifting", "after playing sports", "after intense exercise",
+            "after gym", "after training", "human sa ehersisyo",
+            "pagkatapos mag exercise", "pagkatapos mag ehersisyo",
+            "human sa bug at nga ehersisyo",
+        ],
+        tags_weak=[
+            "when i cough hard", "after coughing hard", "straining",
+        ],
         red_flags_en=[], red_flags_tl=[], red_flags_ceb=[],
         otc_safe_if_isolated=True,
         prefer_categories=["pain & fever", "pain & inflammation"],

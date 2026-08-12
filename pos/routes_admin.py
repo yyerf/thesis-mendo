@@ -33,6 +33,7 @@ from mendo_core.interaction_logger import (
     export_research_jsonl,
     get_aggregate_metrics,
     get_operational_summary,
+    get_semantic_stats,
     get_session_trace,
     get_sessions,
     research_manifest,
@@ -496,8 +497,16 @@ def api_audit_metrics(current_user=None):
             "synthetic": _load_synthetic_benchmark(),
             "field_validation": get_aggregate_metrics(),
             "operational": get_operational_summary(),
+            "semantic": get_semantic_stats(),
         }
     )
+
+
+@admin_bp.route("/api/audit/semantic-stats", methods=["GET"])
+@reviewer_required
+def api_audit_semantic_stats(current_user=None):
+    """Aggregate cosine-similarity statistics (selected score means per symptom)."""
+    return jsonify(get_semantic_stats())
 
 
 @admin_bp.route("/api/audit/export/research.jsonl", methods=["GET"])

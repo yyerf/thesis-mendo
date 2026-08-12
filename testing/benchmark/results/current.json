@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-27T18:15:25",
+  "generated_at": "2026-08-05T09:31:55",
   "status": "generated",
   "provenance": "researcher_and_llm_created_synthetic_cases",
   "dataset": "testing/benchmark/testing.csv",
-  "dataset_sha256": "81fac0d8d2130ce7ead91ce670e6a9f8d4552bcff6d7aae64c5eec4c9a461f84",
+  "dataset_sha256": "0df56542cbd2086e7dc4dfa1d6fbe89d8863e5800c191804d1b44140d87849b7",
   "engine_id": "mendo-expert-minilm-v3.2",
   "medicine_catalog_version": "mendo-hardware-catalog-v1-2026-07",
   "trace_version": 2,
