@@ -1,0 +1,26 @@
+[Unit]
+Description=MendoVendo hardware controller daemon
+After=dev-mendo-uno.device
+BindsTo=dev-mendo-uno.device
+
+[Service]
+Type=simple
+User=mendo-hardware
+Group=dialout
+SupplementaryGroups=dialout
+WorkingDirectory=/opt/mendo
+Environment=MENDO_HARDWARE_MODE=real
+Environment=MENDO_HARDWARE_SOCKET=/run/mendo/hardware.sock
+Environment=MENDO_SERIAL_DEVICE=/dev/mendo-uno
+ExecStart=/usr/bin/python3 -m hardware.daemon_main
+Restart=on-failure
+RestartSec=2
+UMask=007
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/run/mendo
+
+[Install]
+WantedBy=multi-user.target

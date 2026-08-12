@@ -13,7 +13,11 @@ const POS = (() => {
     const defaults = {
       headers: { 'Content-Type': 'application/json' },
     };
-    const res = await fetch(url, { ...defaults, ...opts });
+    const res = await fetch(url, {
+      ...defaults,
+      ...opts,
+      headers: { ...defaults.headers, ...(opts.headers || {}) },
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.error || `Request failed (${res.status})`);
@@ -61,6 +65,7 @@ const POS = (() => {
   // Close modals on overlay click
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('active')) {
+      if (e.target.id === 'hardwarePaymentModal') return;
       e.target.classList.remove('active');
       document.body.style.overflow = '';
     }
@@ -70,6 +75,7 @@ const POS = (() => {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.modal-overlay.active').forEach(m => {
+        if (m.id === 'hardwarePaymentModal') return;
         m.classList.remove('active');
       });
       document.body.style.overflow = '';
@@ -83,6 +89,9 @@ const POS = (() => {
   const shop = {
     products: [],
     cart: { items: [], total: 0, item_count: 0 },
+    activeOrder: null,
+    paymentPoll: null,
+    checkoutKey: null,
 
     init() {
       this.loadProducts();
@@ -103,10 +112,6 @@ const POS = (() => {
         checkoutBtn.addEventListener('click', () => this.checkout());
       }
 
-      const amountInput = document.getElementById('amountTendered');
-      if (amountInput) {
-        amountInput.addEventListener('input', () => this.updateChange());
-      }
     },
 
     async loadProducts() {
@@ -128,15 +133,15 @@ const POS = (() => {
       }
 
       grid.innerHTML = items.map(p => `
-        <div class="product-card ${p.stock_quantity <= 0 ? 'product-card--oos' : ''}"
-             onclick="${p.stock_quantity > 0 ? `POS.shop.addToCart(${p.id})` : ''}"
+        <div class="product-card ${p.available_quantity <= 0 ? 'product-card--oos' : ''}"
+             onclick="${p.available_quantity > 0 ? `POS.shop.addToCart(${p.id})` : ''}"
              title="${p.generic_name || ''}">
           <div class="text-xs text-muted">Hardware slot #${p.hardware_slot}</div>
           <div class="product-card__name">${p.brand}</div>
           <div class="product-card__generic">${p.generic_name || ''}</div>
           <div class="product-card__meta">
             <span class="product-card__price">${fmt(p.unit_price)}</span>
-            <span class="product-card__stock ${p.stock_quantity <= 0 ? 'text-danger' : p.stock_quantity <= p.min_stock_level ? 'text-warning' : ''}">${p.stock_quantity <= 0 ? 'Out of stock' : p.stock_quantity + ' in stock'}</span>
+            <span class="product-card__stock ${p.available_quantity <= 0 ? 'text-danger' : p.available_quantity <= p.min_stock_level ? 'text-warning' : ''}">${p.available_quantity <= 0 ? 'Out of stock' : p.available_quantity + ' available'}</span>
           </div>
           ${p.category ? `<span class="product-card__cat">${p.category}</span>` : ''}
         </div>
@@ -273,38 +278,124 @@ const POS = (() => {
     },
 
     async checkout() {
-      const amountInput = document.getElementById('amountTendered');
-      const tendered = parseFloat(amountInput?.value) || 0;
-
       if (!this.cart.items.length) {
         showToast('Cart is empty', 'warning');
         return;
       }
-      if (tendered < this.cart.total) {
-        showToast('Insufficient payment amount', 'error');
-        return;
-      }
-      if (!confirm(`Complete sale for ${fmt(this.cart.total)}?`)) return;
+      if (!confirm(`Start the cash acceptor for ${fmt(this.cart.total)}? This machine gives no change.`)) return;
 
       try {
+        if (!this.checkoutKey) {
+          this.checkoutKey = `cashier-ui-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        }
         const result = await api('/shop/api/checkout', {
           method: 'POST',
+          headers: { 'Idempotency-Key': this.checkoutKey },
           body: JSON.stringify({
             payment_method: 'cash',
-            amount_tendered: tendered,
+            no_change_consent: true,
           }),
         });
-        this.showReceipt(result);
-        if (amountInput) amountInput.value = '';
-        this.loadProducts(); // refresh stock counts
+        this.activeOrder = result.order || result;
+        this.renderHardwarePayment(this.activeOrder, result.hardware || {});
+        openModal('hardwarePaymentModal');
+        clearInterval(this.paymentPoll);
+        this.paymentPoll = setInterval(() => this.pollHardwarePayment(false), 750);
+        this.pollHardwarePayment(false);
       } catch (err) {
         showToast('Checkout failed: ' + err.message, 'error');
+      }
+    },
+
+    renderHardwarePayment(order, fallbackHardware = {}) {
+      if (!order) return;
+      const hardware = order.hardware || fallbackHardware || {};
+      const due = document.getElementById('hardwareAmountDue');
+      const inserted = document.getElementById('hardwareAmountInserted');
+      const remaining = document.getElementById('hardwareAmountRemaining');
+      const state = document.getElementById('hardwarePaymentState');
+      const cancel = document.getElementById('hardwareCancelBtn');
+      const simulator = document.getElementById('hardwareSimulatorControls');
+      if (due) due.textContent = order.amount_due_display || fmt(order.amount_due || 0);
+      if (inserted) inserted.textContent = order.received_cash_display || fmt(order.received_cash || 0);
+      if (remaining) remaining.textContent = order.remaining_display || fmt(order.remaining || 0);
+      if (simulator) simulator.style.display = hardware.simulator ? 'block' : 'none';
+      if (cancel) cancel.style.display = Number(order.received_cash_centavos || 0) === 0 && order.payment_state === 'awaiting_cash' ? '' : 'none';
+      if (state) {
+        const label = hardware.mode_label || (hardware.simulator ? 'SIMULATOR' : 'REAL CONTROLLER');
+        const eventCount = (order.cash_events || []).length;
+        if (order.payment_state === 'manual_review' || order.fulfillment_state === 'manual_review') {
+          state.innerHTML = `<strong style="color:#9a3e2f">Staff review required</strong><br>${order.failure_reason || 'The pulse evidence could not be credited safely.'}`;
+        } else if (order.fulfillment_state === 'completed') {
+          state.innerHTML = `<strong style="color:#23643d">Payment successful — stock updated</strong><br>${label} · ${eventCount} cash event${eventCount === 1 ? '' : 's'} recorded · no motor command sent`;
+        } else {
+          state.innerHTML = `<strong>Waiting for coins or bills…</strong><br>${label} · ${eventCount} cash event${eventCount === 1 ? '' : 's'} recorded`;
+        }
+      }
+    },
+
+    async pollHardwarePayment(showError = false) {
+      if (!this.activeOrder?.order_ref) return;
+      try {
+        const order = await api(`/checkout/api/orders/${encodeURIComponent(this.activeOrder.order_ref)}`);
+        this.activeOrder = order;
+        this.renderHardwarePayment(order);
+        if (order.fulfillment_state === 'completed') {
+          clearInterval(this.paymentPoll);
+          this.paymentPoll = null;
+          await api('/shop/api/cart/clear', { method: 'POST' });
+          closeModal('hardwarePaymentModal');
+          this.showReceipt(order);
+          this.cart = { items: [], total: 0, item_count: 0 };
+          this.checkoutKey = null;
+          this.loadCart();
+          this.loadProducts();
+        } else if (order.payment_state === 'manual_review' || order.fulfillment_state === 'manual_review') {
+          clearInterval(this.paymentPoll);
+          this.paymentPoll = null;
+        }
+      } catch (err) {
+        if (showError) showToast(err.message, 'error');
+      }
+    },
+
+    async simulateCash(centavos, source) {
+      if (!this.activeOrder?.order_ref) return;
+      try {
+        const order = await api(`/checkout/api/orders/${encodeURIComponent(this.activeOrder.order_ref)}/cash/simulate`, {
+          method: 'POST',
+          body: JSON.stringify({ centavos, source }),
+        });
+        this.activeOrder = order;
+        this.renderHardwarePayment(order);
+        await this.pollHardwarePayment(false);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    },
+
+    async cancelHardwarePayment() {
+      if (!this.activeOrder?.order_ref) return;
+      try {
+        await api(`/checkout/api/orders/${encodeURIComponent(this.activeOrder.order_ref)}/cash/cancel`, { method: 'POST' });
+        clearInterval(this.paymentPoll);
+        this.paymentPoll = null;
+        closeModal('hardwarePaymentModal');
+        this.activeOrder = null;
+        this.checkoutKey = null;
+        this.loadProducts();
+        showToast('Cash payment cancelled; no stock was deducted.', 'info');
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     },
 
     showReceipt(txn) {
       const el = document.getElementById('receiptContent');
       if (!el) return;
+
+      const order = txn.order || txn;
+      const receiptItems = order.items || [];
 
       const now = new Date();
       const dateStr = now.toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -315,16 +406,16 @@ const POS = (() => {
           <h4>MENDO VENDO</h4>
           <p>OTC Medicine Vending System</p>
           <p class="receipt-date">${dateStr} ${timeStr}</p>
-          <p class="receipt-ref">Ref: ${txn.transaction_ref}</p>
+          <p class="receipt-ref">Ref: ${order.transaction_ref || txn.transaction_ref || order.order_ref}</p>
         </div>
         <div class="receipt-divider"></div>
         <table class="receipt-items">
           <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
           <tbody>
-            ${(txn.items || []).map(i => `
+            ${receiptItems.map(i => `
               <tr>
                 <td>${i.brand}</td>
-                <td class="text-center">${i.quantity}</td>
+                <td class="text-center">${i.quantity_ordered || i.quantity}</td>
                 <td class="text-right">${fmt(i.unit_price)}</td>
                 <td class="text-right">${fmt(i.subtotal)}</td>
               </tr>
@@ -334,17 +425,17 @@ const POS = (() => {
         <div class="receipt-divider"></div>
         <div class="receipt-totals">
           <div class="receipt-total-row">
-            <span>Total</span><strong>${fmt(txn.total_amount)}</strong>
+            <span>Total</span><strong>${fmt(order.amount_due || order.total_amount)}</strong>
           </div>
           <div class="receipt-total-row">
-            <span>Tendered</span><span>${fmt(txn.amount_tendered)}</span>
+            <span>Inserted</span><span>${fmt(order.received_cash || 0)}</span>
           </div>
           <div class="receipt-total-row receipt-change">
-            <span>Change</span><strong>${fmt(txn.change_amount)}</strong>
+            <span>Overpayment (no change)</span><strong>${fmt(order.overpayment || 0)}</strong>
           </div>
         </div>
         <div class="receipt-divider"></div>
-        <p class="receipt-footer">Thank you for your purchase!<br>Get well soon 💊</p>
+        <p class="receipt-footer">Payment recorded · inventory updated<br>No medicine motor was activated in this test.</p>
       `;
       openModal('receiptModal');
     },

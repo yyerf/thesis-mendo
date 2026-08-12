@@ -1,0 +1,20 @@
+# Copy to a protected deployment location and set MENDO_HARDWARE_MODE.
+# Simulator is the only safe default until Phase-0 physical evidence exists.
+mode = "simulator"
+socket_path = "/run/mendo/hardware.sock"
+serial_device = "/dev/mendo-uno"
+protocol_version = "1"
+firmware_identity = "mendo-controller-v1"
+
+# MEASURED on the 2026-08-03 bench, not inferred: TB74-PH6 at 1 pulse / PHP 10
+# (10-way SW1-3 = OFF/OFF/OFF), Fast timing (SW4 = ON), 50 ms LOW / 150 ms
+# period. PHP 20/50/100 gave exactly 2/5/10 validated pulses.
+# See docs/architecture/tb74-pulse-protocol-analysis.md.
+#
+# PHP 200/500/1000 (20/50/100 pulses) are intentionally omitted: they are
+# disabled at the acceptor DIP bank because the kiosk gives no change, so an
+# unmapped long train correctly routes to manual review.
+[simulator.bill_pulses]
+"2" = 2000
+"5" = 5000
+"10" = 10000

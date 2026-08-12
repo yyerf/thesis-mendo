@@ -1,0 +1,25 @@
+{
+  "rotor_od_mm": 172.0,
+  "root_diameter_mm": 163.0,
+  "pitch_diameter_mm": 168.0,
+  "module_mm": 2.0,
+  "teeth": 84,
+  "pressure_angle_deg": 20.0,
+  "thickness_mm": 16.0,
+  "recommended_pocket_mm": [
+    35.8,
+    20.8
+  ],
+  "nominal_container_mm": [
+    35.0,
+    20.0
+  ],
+  "pocket_count": 9,
+  "pocket_center_radius_mm": 57.0,
+  "center_bore_mm": 8.2,
+  "bolt_holes": {
+    "count": 4,
+    "diameter_mm": 4.3,
+    "pcd_mm": 28.0
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "container_length": 35.0,
+  "container_width": 20.0,
+  "container_closed_height": 15.0,
+  "container_outer_radius": 2.0,
+  "body_height": 13.8,
+  "wall": 1.2,
+  "bottom": 1.2,
+  "lid_top_thickness": 1.2,
+  "lid_plug_depth": 1.4,
+  "lid_top_length": 34.6,
+  "lid_top_width": 19.6,
+  "lid_normal_clearance_each_side": 0.3,
+  "lid_loose_clearance_each_side": 0.4,
+  "lid_tight_clearance_each_side": 0.2,
+  "rotor_pocket_length": 35.8,
+  "rotor_pocket_width": 20.8,
+  "rotor_thickness": 16.0,
+  "tube_inner_length": 36.2,
+  "tube_inner_width": 21.2,
+  "tube_inner_radius": 2.4,
+  "tube_wall": 2.4,
+  "tube_height_long": 180.0,
+  "tube_height_short": 90.0,
+  "flange_length": 58.0,
+  "flange_width": 42.0,
+  "flange_radius": 5.0,
+  "flange_thickness": 4.0,
+  "flange_hole_d": 4.5,
+  "flange_hole_spacing_x": 46.0,
+  "flange_hole_spacing_y": 30.0,
+  "cap_top_length": 42.0,
+  "cap_top_width": 27.0,
+  "cap_top_thickness": 2.0,
+  "cap_plug_depth": 3.0,
+  "cap_plug_clearance_each_side": 0.2,
+  "dummy_blister_length": 30.0,
+  "dummy_blister_width": 15.0,
+  "dummy_blister_height": 8.0,
+  "container_internal_cavity_mm": [
+    32.6,
+    17.6,
+    11.200000000000001
+  ],
+  "tube_outer_cross_section_mm": [
+    41.0,
+    26.0
+  ],
+  "estimated_geometric_capacity_long": 12,
+  "estimated_geometric_capacity_short": 6,
+  "mesh_checks": [
+    {
+      "name": "container body",
+      "extents_mm": [
+        35.0,
+        20.0,
+        13.8
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 2389.74,
+      "faces": 412,
+      "vertices": 208
+    },
+    {
+      "name": "lid normal",
+      "extents_mm": [
+        34.6,
+        19.6,
+        2.6
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 1571.72,
+      "faces": 412,
+      "vertices": 208
+    },
+    {
+      "name": "lid loose",
+      "extents_mm": [
+        34.6,
+        19.6,
+        2.6
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 1558.05,
+      "faces": 412,
+      "vertices": 208
+    },
+    {
+      "name": "lid tight",
+      "extents_mm": [
+        34.6,
+        19.6,
+        2.6
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 1585.36,
+      "faces": 412,
+      "vertices": 208
+    },
+    {
+      "name": "dummy container",
+      "extents_mm": [
+        35.0,
+        20.0,
+        15.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 10447.96,
+      "faces": 204,
+      "vertices": 104
+    },
+    {
+      "name": "dummy blister",
+      "extents_mm": [
+        30.0,
+        15.0,
+        8.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 3515.0,
+      "faces": 204,
+      "vertices": 104
+    },
+    {
+      "name": "tube 180",
+      "extents_mm": [
+        58.0,
+        42.0,
+        184.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 57396.05,
+      "faces": 2792,
+      "vertices": 1388
+    },
+    {
+      "name": "tube 90",
+      "extents_mm": [
+        58.0,
+        42.0,
+        94.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 31874.58,
+      "faces": 2792,
+      "vertices": 1388
+    },
+    {
+      "name": "tube cap",
+      "extents_mm": [
+        42.0,
+        27.0,
+        5.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 1,
+      "volume_mm3": 4461.57,
+      "faces": 412,
+      "vertices": 208
+    },
+    {
+      "name": "tube gauge",
+      "extents_mm": [
+        131.0,
+        26.4,
+        15.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "components": 3,
+      "volume_mm3": 12779.47,
+      "faces": 1248,
+      "vertices": 624
+    }
+  ]
+}

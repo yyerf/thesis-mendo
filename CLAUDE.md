@@ -49,13 +49,13 @@ One Flask app. `app.py` → `web/app.py` (creates `app`, pre-warms model, regist
 | Prefix | File | Purpose |
 |--------|------|---------|
 | `/consult` | `pos/routes_consultation.py` | Kiosk UI; `/api/analyze`, `/api/clarify`, `/api/context-clarify`, `/api/duration-check`, `/api/transcribe` (STT) |
-| `/checkout` | `pos/routes_checkout.py` | Cart + Xendit cashless payment (`/api/pay/xendit`, `/api/pay/verify`, webhook). Anti-hoarding caps: 3 units/item, 5 distinct items. |
+| `/checkout` | `pos/routes_checkout.py` | Durable order/cart, simulator cash, Xendit payment (`/api/pay/xendit`, `/api/pay/verify`, webhook), reservation, and dispensing APIs. Anti-hoarding caps: 3 units/item, 5 distinct items. Real hardware remains behind the Phase 0 evidence gate. |
 | `/shop` | `pos/routes_shop.py` | Retail catalog/cart |
-| `/admin` | `pos/routes_admin.py` | Staff dashboard (inventory, transactions, users); login decorator in `pos/auth.py` |
+| `/admin` | `pos/routes_admin.py` | Staff dashboard (inventory, transactions, users, hardware health, accounting, cashbox, and recovery); login decorator in `pos/auth.py` |
 
 - `pos/__init__.py` exposes `init_pos(app)`.
 - Templates: `web/templates/pos/` (main UI is `consultation.html`).
-- DB: `pos/db.py` → SQLite at `data/mendo_pos.db` (WAL). Tables: `admin_users`, `inventory`, `transactions`, `transaction_items`, `stock_logs`. `init_db()` seeds default admin `admin / mendo2026`.
+- DB: `pos/db.py` → SQLite at `data/mendo_pos.db` (WAL). Legacy tables remain (`admin_users`, `inventory`, `transactions`, `transaction_items`, `stock_logs`); additive order tables include `orders`, `order_items`, `cash_payment_sessions`, `cash_events`, `payment_attempts`, `motion_profiles`, `dispense_jobs`, `cashbox_sessions`, and `order_audit_events`. `init_db()` seeds default admin `admin / mendo2026`.
 
 ## Data files
 
@@ -94,6 +94,7 @@ The structured benchmark is **319 cases across 5 tiers**, all reproducible:
 ## Project notes
 
 - **Fingerprint/biometric (AS608) was removed** by decision (checkout went 3 steps → 2: Cart → Payment). Do not reintroduce. The thesis does not include biometrics; the no-biometric design is now *defended* in the paper ("On User Verification and Anonymity" — RA 10173 / accessibility) in response to Emberda's panel comment. (Branch `latest-experiment-with-biometrics` is misnamed; no biometric code exists.)
+- **Payment-only hardware phase:** read `CHECKPOINT.md`, `hardware/README.md`, and `docs/architecture/cash-order-integration.md` before changing hardware behavior. The measured D2/D3 cash paths can drive supervised real POS payment tests; payment atomically commits stock and never creates a dispense job. Medicine motors are compile-time disabled and PCA OE is held HIGH. Do not connect powered servos or route checkout back through `_dispatch_order` until motion receives its own calibration and approval.
 - **June-30 defense revision (consultation UI):** added OLDCARTS safety-screening features in `consultation.html` — a clickable headache **head-map** (occipital/thunderclap → Emergency Triage), a rash **"difficulty breathing?"** screen → Emergency, a stomachache **before/after-eating** selector (maps to the existing acid-vs-cramp therapy split), and a **"Who is this for? (self/other)"** proxy-purchase step on the age panel (patient age flows to the age filter; `purchase_for` logged). These run as a flag-gated `startSafetyScreening()` phase before the duration flow.
 - **Defense deliverables (repo root, June-30):** `RPIC-Latest (Revised - Highlighted).docx` = the revised thesis with all changes highlighted **yellow** for copy-paste (the 208 pre-existing highlights are invisible `white`); `Thesis (Comments_Suggestions) - Synced.docx` = the routing form with Diapana/Emberda actions filled and the diarrhea/runny-nose claims corrected. Built by scripts in the session scratchpad.
 - `_For-Mendo/` is an archived copy of the old v1/v2 system — **legacy, gitignored, not the live code.** Ignore it.

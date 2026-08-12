@@ -2,23 +2,19 @@
 
 from __future__ import annotations
 
+import uuid
+
 from flask import (
     Blueprint, render_template, request, session, jsonify,
 )
 
 from .auth import login_required
 from .db import (
-    list_inventory, get_inventory_item, create_transaction,
-    get_transaction,
+    list_inventory, get_inventory_item,
 )
-
-# Optional hardware bridge (Arduino dispensing)
-_VEND_BRIDGE = None
-try:
-    from hardware.serial_bridge import VendoBridge
-    _VEND_BRIDGE = VendoBridge()
-except Exception:
-    _VEND_BRIDGE = None
+from .order_service import ConsentRequired, InvalidTransition, OrderService, OrderError
+from hardware.interface import HardwareFault
+from hardware.service import get_hardware_service
 
 shop_bp = Blueprint(
     "shop",
@@ -50,7 +46,10 @@ def api_products(current_user=None):
             "category": it["category"],
             "dosage_form": it["dosage_form"],
             "unit_price": it["unit_price"],
+            "unit_price_centavos": int(it.get("unit_price_centavos") or round(float(it["unit_price"]) * 100)),
             "stock_quantity": it["stock_quantity"],
+            "reserved_quantity": it.get("reserved_quantity", 0),
+            "available_quantity": it.get("available_quantity", it["stock_quantity"]),
             "min_stock_level": it.get("min_stock_level", 5),
         }
         for it in items
@@ -72,25 +71,30 @@ def _set_cart(cart: list) -> None:
 def api_get_cart(current_user=None):
     cart = _get_cart()
     enriched = []
-    total = 0.0
+    total_centavos = 0
     for ci in cart:
         item = get_inventory_item(ci["inventory_id"])
         if item and item["is_active"] and item.get("hardware_slot") is not None:
-            subtotal = round(item["unit_price"] * ci["quantity"], 2)
-            total += subtotal
+            unit_price_centavos = int(item.get("unit_price_centavos") or round(float(item["unit_price"]) * 100))
+            subtotal_centavos = unit_price_centavos * ci["quantity"]
+            total_centavos += subtotal_centavos
             enriched.append({
                 "inventory_id": item["id"],
                 "hardware_slot": item.get("hardware_slot"),
                 "brand": item["brand"],
                 "generic_name": item.get("generic_name", ""),
-                "unit_price": item["unit_price"],
+                "unit_price": unit_price_centavos / 100,
+                "unit_price_centavos": unit_price_centavos,
                 "quantity": ci["quantity"],
                 "stock_available": item["stock_quantity"],
-                "subtotal": subtotal,
+                "available_quantity": item.get("available_quantity", item["stock_quantity"]),
+                "subtotal": subtotal_centavos / 100,
+                "subtotal_centavos": subtotal_centavos,
             })
     return jsonify({
         "items": enriched,
-        "total": round(total, 2),
+        "total": total_centavos / 100,
+        "total_centavos": total_centavos,
         "item_count": sum(item["quantity"] for item in enriched),
     })
 
@@ -115,13 +119,13 @@ def api_cart_add(current_user=None):
     for ci in cart:
         if ci["inventory_id"] == inv_id:
             new_qty = ci["quantity"] + qty
-            if new_qty > item["stock_quantity"]:
-                return jsonify({"error": f"Not enough stock (available: {item['stock_quantity']})"}), 400
+            if new_qty > item.get("available_quantity", item["stock_quantity"]):
+                return jsonify({"error": f"Not enough stock (available: {item.get('available_quantity', item['stock_quantity'])})"}), 400
             ci["quantity"] = new_qty
             _set_cart(cart)
             return jsonify({"success": True, "message": f"{item['brand']} updated in cart"})
-    if qty > item["stock_quantity"]:
-        return jsonify({"error": f"Not enough stock (available: {item['stock_quantity']})"}), 400
+    if qty > item.get("available_quantity", item["stock_quantity"]):
+        return jsonify({"error": f"Not enough stock (available: {item.get('available_quantity', item['stock_quantity'])})"}), 400
     cart.append({"inventory_id": inv_id, "quantity": qty})
     _set_cart(cart)
     return jsonify({"success": True, "message": f"{item['brand']} added to cart"})
@@ -138,8 +142,8 @@ def api_cart_update(current_user=None):
         cart = [c for c in cart if c["inventory_id"] != inv_id]
     else:
         item = get_inventory_item(inv_id)
-        if item and qty > item["stock_quantity"]:
-            return jsonify({"error": f"Not enough stock (available: {item['stock_quantity']})"}), 400
+        if item and qty > item.get("available_quantity", item["stock_quantity"]):
+            return jsonify({"error": f"Not enough stock (available: {item.get('available_quantity', item['stock_quantity'])})"}), 400
         for ci in cart:
             if ci["inventory_id"] == inv_id:
                 ci["quantity"] = qty
@@ -162,6 +166,7 @@ def api_cart_remove(current_user=None):
 @login_required
 def api_cart_clear(current_user=None):
     _set_cart([])
+    session.pop("pos_order_ref", None)
     return jsonify({"success": True})
 
 
@@ -170,43 +175,75 @@ def api_cart_clear(current_user=None):
 @shop_bp.route("/api/checkout", methods=["POST"])
 @login_required
 def api_checkout(current_user=None):
+    """Start the physical cash acceptor for the cashier's current cart.
+
+    Completion is driven by the same durable order polling endpoint as the
+    kiosk. No counted-tender shortcut and no medicine-motor command is used in
+    this payment-hardware test phase.
+    """
     try:
         data = request.get_json(force=True)
         cart = _get_cart()
         if not cart:
             return jsonify({"error": "Cart is empty"}), 400
 
-        payment_method = data.get("payment_method", "cash")
-        amount_tendered = float(data.get("amount_tendered", 0))
-
-        result = create_transaction(
-            items=cart,
-            payment_method=payment_method,
-            amount_tendered=amount_tendered,
-            cashier_id=current_user["id"],
-            customer_age=data.get("customer_age"),
-            customer_note=data.get("customer_note", ""),
-        )
-
-        # Optional: dispense items via hardware
-        dispense_results = []
-        if _VEND_BRIDGE:
+        if not data.get("no_change_consent"):
+            raise ConsentRequired(
+                "Confirm that the machine gives no change before starting payment"
+            )
+        hardware = get_hardware_service()
+        if not hardware.ready_for_cash():
+            return jsonify({
+                "error": "Cash acceptor controller is unhealthy or disconnected",
+                "hardware": hardware.status(),
+            }), 503
+        service = OrderService()
+        order = None
+        existing_ref = str(session.get("pos_order_ref") or "")
+        if existing_ref:
             try:
-                if not _VEND_BRIDGE.is_connected():
-                    _VEND_BRIDGE.connect()
-                for li in result.get("items", []):
-                    try:
-                        ok = _VEND_BRIDGE.dispense_by_brand(li["brand"])
-                        dispense_results.append({"brand": li["brand"], "dispensed": ok})
-                    except Exception as e:
-                        dispense_results.append({"brand": li["brand"], "dispensed": False, "error": str(e)})
-            except Exception as e:
-                dispense_results.append({"brand": "__hardware__", "dispensed": False, "error": str(e)})
+                existing = service.get_order(existing_ref)
+            except OrderError:
+                session.pop("pos_order_ref", None)
+            else:
+                if existing["payment_state"] in {"unpaid", "awaiting_cash", "paid"}:
+                    order = existing
+                else:
+                    session.pop("pos_order_ref", None)
+        if order is None:
+            key = request.headers.get("Idempotency-Key") or data.get("idempotency_key") or f"cashier-{current_user['id']}-{uuid.uuid4().hex}"
+            order = service.create_order(
+                cart, idempotency_key=key, source="cashier", payment_method="cash"
+            )
+            session["pos_order_ref"] = order["order_ref"]
+        if order["payment_state"] == "paid":
+            order = service.finalize_payment_only_sale(
+                order["order_ref"], actor=f"cashier:{current_user['id']}"
+            )
+        elif order["payment_state"] in {"unpaid", "awaiting_cash"}:
+            started = service.start_cash(order["order_ref"], no_change_consent=True)
+            try:
+                hardware.start_cash(started["session_ref"], order["total_centavos"])
+            except Exception:
+                if order["payment_state"] == "unpaid":
+                    service.reset_cash_start(order["order_ref"])
+                raise
+            order = service.get_order(order["order_ref"])
+        else:
+            raise InvalidTransition(
+                f"Order cannot collect cash in state {order['payment_state']}"
+            )
+        return jsonify({
+            "success": True,
+            "order": order,
+            "transaction_ref": order.get("transaction_ref"),
+            "amount_due": order["amount_due"],
+            "hardware": hardware.status(),
+        })
 
-        _set_cart([])
-        return jsonify({**result, "dispense_results": dispense_results})
-
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+    except (OrderError, ValueError) as e:
+        return jsonify({"error": str(e)}), 409
+    except HardwareFault as e:
+        return jsonify({"error": f"Cash controller error: {e}"}), 503
     except Exception as e:
         return jsonify({"error": f"Checkout failed: {e}"}), 500

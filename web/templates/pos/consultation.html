@@ -1610,6 +1610,7 @@
       transition: all 0.2s;
     }
     .checkout-close:hover { background: var(--zinc-100); color: var(--zinc-800); }
+    .checkout-close[hidden] { display: none; }
 
     .checkout-body {
       flex: 1; overflow-y: auto; padding: 20px 24px;
@@ -1685,7 +1686,7 @@
       font-size: 11px; color: var(--zinc-400); margin-top: 8px; text-align: center;
     }
 
-    /* Fingerprint auth */
+    /* Legacy verification styling retained only for old cached markup */
     .auth-section { text-align: center; padding: 20px 0; }
     .auth-icon {
       width: 80px; height: 80px; border-radius: 50%;
@@ -1713,18 +1714,47 @@
     .auth-status.fail { color: var(--danger); }
 
     /* Payment method */
-    .payment-section { padding: 10px 0; }
-    .payment-title { font-size: 18px; font-weight: 800; color: var(--zinc-800); text-align: center; margin-bottom: 16px; }
+    .checkout-modal--payment { max-width: 580px; }
+    .checkout-modal--payment .checkout-body { padding: 24px 28px 28px; }
+    .checkout-modal--payment .checkout-footer { padding: 18px 28px; }
+
+    .payment-section { padding: 0; }
+    .payment-summary {
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      padding: 18px 20px; margin-bottom: 26px;
+      border: 1px solid var(--zinc-200); border-radius: 14px;
+      background: var(--zinc-50);
+    }
+    .payment-summary-label {
+      display: block; margin-bottom: 4px;
+      color: var(--zinc-500); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .payment-summary-note { color: var(--zinc-500); font-size: 12px; line-height: 1.45; }
+    .payment-summary-amount {
+      flex-shrink: 0; color: var(--zinc-900); font-size: 26px;
+      font-weight: 850; letter-spacing: -0.03em;
+    }
+    .payment-heading { margin-bottom: 15px; }
+    .payment-title {
+      color: var(--zinc-900); font-size: 18px; font-weight: 800;
+      line-height: 1.25; margin-bottom: 5px;
+    }
+    .payment-subtitle { color: var(--zinc-500); font-size: 13px; line-height: 1.5; }
     .payment-options { display: flex; flex-direction: column; gap: 10px; }
     .payment-option {
-      padding: 18px; border: 2px solid var(--zinc-200);
-      border-radius: 14px; background: var(--white);
+      width: 100%; padding: 16px; border: 1px solid var(--zinc-200);
+      border-radius: 14px; background: var(--white); color: inherit;
       cursor: pointer; transition: all 0.2s;
       display: flex; align-items: center; gap: 14px;
-      position: relative;
+      position: relative; font-family: var(--font); text-align: left;
     }
-    .payment-option:hover { border-color: var(--blue-300); }
-    .payment-option.selected { border-color: var(--blue-500); background: var(--blue-50); }
+    .payment-option:hover { border-color: var(--blue-300); background: #fbfdff; }
+    .payment-option:focus-visible { outline: 3px solid var(--blue-100); border-color: var(--blue-500); }
+    .payment-option.selected {
+      border-color: var(--blue-500); background: var(--blue-50);
+      box-shadow: 0 0 0 1px var(--blue-500);
+    }
     .payment-option.disabled {
       opacity: 0.45; cursor: not-allowed;
       pointer-events: none;
@@ -1735,16 +1765,134 @@
       font-size: 20px; flex-shrink: 0;
     }
     .payment-option .po-icon.cashless { background: var(--blue-100); color: var(--blue-600); }
-    .payment-option .po-icon.cash { background: var(--zinc-100); color: var(--zinc-500); }
-    .payment-option .po-info { flex: 1; }
-    .payment-option .po-label { font-size: 15px; font-weight: 700; color: var(--zinc-800); }
-    .payment-option .po-desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .payment-option .po-icon.cash { background: var(--white); border: 1px solid var(--zinc-200); color: var(--zinc-600); }
+    .payment-option.selected .po-icon.cash { border-color: var(--blue-200); color: var(--blue-600); }
+    .payment-option .po-info { flex: 1; min-width: 0; }
+    .payment-option .po-label { display: block; font-size: 15px; font-weight: 700; color: var(--zinc-800); }
+    .payment-option .po-desc { display: block; font-size: 12px; color: var(--zinc-500); line-height: 1.45; margin-top: 3px; }
+    .payment-option .po-check {
+      width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
+      border: 1px solid var(--zinc-300); background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      color: transparent; font-size: 10px;
+    }
+    .payment-option.selected .po-check {
+      border-color: var(--blue-500); background: var(--blue-500); color: var(--white);
+    }
     .payment-option .coming-soon-badge {
       position: absolute; top: 10px; right: 10px;
       padding: 3px 10px; border-radius: 999px;
       background: var(--warning-light); color: var(--warning);
       font-size: 10px; font-weight: 800; text-transform: uppercase;
       letter-spacing: 0.05em;
+    }
+
+    .payment-policy {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-top: 18px; padding: 16px;
+      border: 1px solid #d9e4d8; border-radius: 14px;
+      background: #f7faf6; color: #35463a; cursor: pointer;
+    }
+    .payment-policy input {
+      width: 18px; height: 18px; flex: 0 0 auto; margin: 2px 0 0;
+      accent-color: var(--blue-600); cursor: pointer;
+    }
+    .payment-policy-title { display: block; margin-bottom: 3px; font-size: 13px; font-weight: 800; }
+    .payment-policy-copy { display: block; color: #5c6c60; font-size: 12px; line-height: 1.5; }
+
+    /* Active cash payment */
+    .cash-payment { padding: 0; }
+    .cash-prompt {
+      padding: 26px 24px 22px; text-align: center;
+      border: 1px solid var(--blue-200); border-radius: 18px;
+      background: var(--blue-50);
+    }
+    .cash-prompt-icon {
+      width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--white); border: 1px solid var(--blue-200);
+      color: var(--blue-600); font-size: 21px;
+      box-shadow: 0 0 0 7px rgba(14, 165, 233, 0.08);
+      animation: cash-ready-pulse 2.4s ease-in-out infinite;
+    }
+    .cash-prompt-kicker {
+      margin-bottom: 6px; color: var(--blue-700); font-size: 11px;
+      font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .cash-prompt h4 {
+      margin: 0; color: var(--zinc-900); font-size: 25px;
+      font-weight: 850; letter-spacing: -0.025em; line-height: 1.2;
+    }
+    .cash-prompt p {
+      max-width: 420px; margin: 8px auto 0; color: var(--zinc-600);
+      font-size: 13px; line-height: 1.55;
+    }
+    .cash-amount-due {
+      display: flex; align-items: baseline; justify-content: center; gap: 9px;
+      margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--blue-200);
+    }
+    .cash-amount-due span { color: var(--zinc-500); font-size: 13px; font-weight: 600; }
+    .cash-amount-due strong { color: var(--zinc-900); font-size: 28px; font-weight: 900; letter-spacing: -0.03em; }
+    .cash-progress { height: 8px; margin: 18px 2px 0; overflow: hidden; border-radius: 999px; background: var(--zinc-200); }
+    .cash-progress-bar {
+      height: 100%; min-width: 0; border-radius: inherit; background: var(--blue-500);
+      transition: width 0.35s ease;
+    }
+    .cash-summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
+    .cash-summary-card {
+      padding: 15px 16px; border: 1px solid var(--zinc-200);
+      border-radius: 13px; background: var(--white);
+    }
+    .cash-summary-card span {
+      display: block; margin-bottom: 5px; color: var(--zinc-500);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .cash-summary-card strong { color: var(--zinc-900); font-size: 19px; font-weight: 850; }
+    .cash-summary-card--remaining strong { color: var(--blue-700); }
+    .cash-overpayment {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; padding: 12px 15px; border-radius: 12px;
+      background: var(--warning-light); color: #765318; font-size: 12px;
+    }
+    .cash-overpayment strong { font-size: 14px; }
+    .cash-advisory {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 16px;
+      color: var(--zinc-500); font-size: 12px; line-height: 1.5;
+    }
+    .cash-advisory i { margin-top: 2px; color: var(--zinc-400); }
+    .cash-failure {
+      margin-top: 14px; padding: 12px 14px; border: 1px solid #f4c9bf;
+      border-radius: 12px; background: #fff1ed; color: #8a3427; font-size: 12px; line-height: 1.5;
+    }
+    .cash-live-status {
+      display: inline-flex; align-items: center; gap: 8px; margin-left: auto;
+      color: var(--zinc-500); font-size: 12px; font-weight: 600;
+    }
+    .cash-live-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+      box-shadow: 0 0 0 4px var(--success-light);
+      animation: cash-live-blink 1.8s ease-in-out infinite;
+    }
+    .cash-live-status--paused { color: #8a3427; }
+    .cash-live-status--paused .cash-live-dot {
+      background: var(--danger); box-shadow: 0 0 0 4px var(--danger-light); animation: none;
+    }
+    .cash-simulator {
+      margin-top: 18px; padding: 14px; border: 1px dashed #d5a755;
+      border-radius: 14px; background: #fff9eb;
+    }
+    .cash-simulator-title { color: #765318; font-size: 11px; font-weight: 800; letter-spacing: 0.07em; }
+    .cash-simulator-note { margin: 5px 0 10px; color: #765318; font-size: 12px; }
+    .cash-simulator-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    @keyframes cash-ready-pulse {
+      0%, 100% { box-shadow: 0 0 0 7px rgba(14, 165, 233, 0.08); }
+      50% { box-shadow: 0 0 0 11px rgba(14, 165, 233, 0.03); }
+    }
+    @keyframes cash-live-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cash-prompt-icon, .cash-live-dot { animation: none; }
     }
 
     /* Processing */
@@ -1765,6 +1913,9 @@
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 16px; font-size: 32px; color: var(--success);
     }
+    .success-icon.cancelled {
+      background: var(--zinc-100); border-color: var(--zinc-300); color: var(--zinc-500);
+    }
     .success-title { font-size: 22px; font-weight: 800; color: var(--zinc-800); margin-bottom: 8px; }
     .success-ref { font-size: 14px; color: var(--zinc-500); margin-bottom: 16px; }
     .success-items {
@@ -1783,6 +1934,7 @@
       border-top: 1px solid var(--zinc-200);
       font-size: 15px; font-weight: 800; color: var(--zinc-800);
     }
+    .success-total-row--single { padding-top: 0; margin-top: 0; border-top: 0; }
 
     /* ── Responsive ── */
     @media (max-width: 600px) {
@@ -1849,6 +2001,24 @@
       .kiosk-steps { gap: 2px; }
       .kiosk-step { padding: 6px 10px; }
       .kiosk-step-divider { width: 14px; }
+
+      .checkout-modal {
+        width: calc(100% - 20px); max-height: calc(100vh - 20px);
+        border-radius: 18px;
+      }
+      .checkout-header { padding: 16px 18px; }
+      .checkout-body,
+      .checkout-modal--payment .checkout-body { padding: 18px; }
+      .checkout-footer,
+      .checkout-modal--payment .checkout-footer { padding: 14px 18px; }
+      .payment-summary { align-items: flex-end; padding: 15px 16px; margin-bottom: 22px; }
+      .payment-summary-note { display: none; }
+      .payment-summary-amount { font-size: 23px; }
+      .payment-option { padding: 14px; }
+      .cash-prompt { padding: 22px 18px 18px; }
+      .cash-prompt h4 { font-size: 22px; }
+      .cash-amount-due strong { font-size: 25px; }
+      .cash-live-status { margin-left: 0; }
     }
   </style>
 </head>
@@ -4439,7 +4609,7 @@
   // ══════════════════════════════
   let kioskCart = [];           // [{brand, quantity, inventory_id, unit_price, generic_name}]
   let checkoutStep = 1;        // 1=Cart, 2=Auth, 3=Payment, 4=Processing, 5=Success
-  let kioskAuthenticated = false;
+  let orderStepReady = false;
   let currentInvoiceId = null;
   let paymentCheckInterval = null;
   let paymentPollFailures = 0;
@@ -4495,7 +4665,7 @@
   // ── Checkout Modal ──
   window.openCheckoutModal = async function() {
     checkoutStep = 1;
-    kioskAuthenticated = false;
+    orderStepReady = false;
     currentInvoiceId = null;
     paymentPollFailures = 0;
     await refreshKioskCart();
@@ -4569,25 +4739,24 @@
       footer.innerHTML = kioskCart.length ? `
         <button class="btn" onclick="closeCheckoutModal()">Continue Shopping</button>
         <button class="btn btn--primary" onclick="goToCheckoutStep(2)">
-          Authenticate <i class="fa-solid fa-arrow-right"></i>
+          Review payment <i class="fa-solid fa-arrow-right"></i>
         </button>` : `
         <button class="btn" onclick="closeCheckoutModal()">Close</button>`;
 
     } else if (checkoutStep === 2) {
-      title.textContent = 'Identity Verification';
+      title.textContent = 'Payment';
       body.innerHTML = `
         ${stepsHtml}
         <div class="auth-section">
           <div class="auth-icon" id="authIcon">
-            <i class="fa-solid fa-fingerprint"></i>
+            <i class="fa-solid fa-coins"></i>
           </div>
-          <div class="auth-title">Fingerprint Scan</div>
+          <div class="auth-title">Payment readiness</div>
           <div class="auth-subtitle">
-            Please place your finger on the AS608 sensor to verify your identity,<br>
-            or tap the button below to authenticate.
+            Review the order amount and choose a payment method.
           </div>
-          <button class="btn btn--primary" id="authBtn" onclick="doFingerprintAuth()">
-            <i class="fa-solid fa-fingerprint"></i> Authenticate
+          <button class="btn btn--primary" id="authBtn" onclick="orderStepReady=true; goToCheckoutStep(3)">
+            <i class="fa-solid fa-coins"></i> Continue
           </button>
           <div class="auth-status" id="authStatus"></div>
         </div>`;
@@ -4737,45 +4906,10 @@
     }
   };
 
-  window.doFingerprintAuth = async function() {
-    const btn = document.getElementById('authBtn');
-    const icon = document.getElementById('authIcon');
-    const status = document.getElementById('authStatus');
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning...';
-
-    try {
-      await new Promise(r => setTimeout(r, 1200));
-
-      const res = await fetch('/checkout/api/auth/fingerprint', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        kioskAuthenticated = true;
-        icon.classList.add('authenticated');
-        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-        btn.classList.replace('btn--primary', 'btn--success');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified';
-        status.className = 'auth-status show ok';
-        status.textContent = 'Identity verified successfully!';
-        document.getElementById('toPaymentBtn').disabled = false;
-        setTimeout(() => goToCheckoutStep(3), 800);
-      } else {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
-        status.className = 'auth-status show fail';
-        status.textContent = 'Verification failed. Please try again.';
-      }
-    } catch (err) {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> Try Again';
-      status.className = 'auth-status show fail';
-      status.textContent = 'Error: ' + err.message;
-    }
+  window.doLegacyPaymentStep = function() {
+    // Kept only so stale cached markup cannot call a removed biometric flow.
+    orderStepReady = true;
+    goToCheckoutStep(3);
   };
 
   window.processPayment = async function() {
@@ -4860,7 +4994,7 @@
     } catch (err) {
       paymentPollFailures += 1;
       if (showPendingToast || paymentPollFailures >= 2) {
-        showToast('Verification failed: ' + err.message, 'warning');
+        showToast('Payment confirmation failed: ' + err.message, 'warning');
       }
     }
   };
@@ -4907,7 +5041,7 @@
   window.resetAll = function() {
     fetch('/checkout/api/cart/clear', { method: 'POST' }).catch(() => {});
     kioskCart = [];
-    kioskAuthenticated = false;
+    orderStepReady = false;
     updateCheckoutFab();
     _origResetAll();
   };
@@ -4916,5 +5050,6 @@
 
 })();
 </script>
+<script src="{{ url_for('static', filename='js/kiosk-checkout.js') }}?v=20260805-payment4"></script>
 </body>
 </html>

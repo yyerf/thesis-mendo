@@ -15,6 +15,8 @@ but these files are not the current thesis source.
 
 ## Research material
 
+- `architecture/cash-order-integration.md` — current durable order, hardware
+  daemon, accounting, and recovery boundary
 - `research/audits/` — architecture reviews, benchmark verification,
   methodology notes, and implementation proposals
 - `research/diagrams/` — conceptual-framework HTML diagrams
