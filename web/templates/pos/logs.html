@@ -282,9 +282,20 @@
     const semanticRows = (semantic.scores || []).slice(0,8).map(row =>
       `<div class="trace-row${row.vetoed ? ' trace-row--vetoed' : ''}"><strong>${esc(row.symptom)}</strong><div><div class="score-track"><div class="score-fill" style="width:${pct(row.score)}%"></div></div><span class="muted">${esc(row.best_anchor || '')}</span></div><span>${Number(row.score || 0).toFixed(4)}${row.vetoed ? '<span class="veto-chip" title="Rejected by keyword guard / safety filter">vetoed</span>' : ''}</span></div>`
     ).join('') || `<span class="muted">${semantic.available === false ? 'Semantic component unavailable for this event.' : 'No semantic scores retained.'}</span>`;
+    const engine = trace.engine || {};
+    const engineLabel = {
+      'mendo-expert-minilm-finetuned-v1': 'Fine-tuned MiniLM classifier',
+      'mendo-expert-minilm-v3.2': 'MiniLM cosine similarities (zero-shot anchors)',
+      'mendo-expert-sailor2-v1': 'Sailor2 local LLM',
+    }[engine.engine_id] || (engine.semantic_model_id || 'legacy/unrecorded');
+    const scoreDesc = {
+      sigmoid_probability: 'Sigmoid probabilities from the fine-tuned 13-label head — not cosine similarities.',
+      cosine_similarity: 'Cosine similarities vs anchor sentences — not confidence probabilities.',
+      constrained_decode_emission: 'Deterministic closed-vocabulary LLM decode — emission 1.0 if emitted, 0.0 otherwise.',
+    }[engine.semantic_score_type] || 'Score format: legacy/unrecorded.';
     return `<div class="trace-tabs">
       <details class="trace-block"><summary>Dictionary evidence · matched / negated / suppressed</summary><div class="trace-content">${dictionaryRows}</div></details>
-      <details class="trace-block"><summary>MiniLM cosine similarities · threshold ${esc(semantic.threshold ?? trace.engine?.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(trace.engine?.semantic_model_id || 'legacy/unrecorded')}. Scores are cosine similarity, not confidence probabilities.<br>Medicine catalog: ${esc(trace.engine?.medicine_catalog_version || 'legacy/unrecorded')}.</p>${semanticRows}</div></details>
+      <details class="trace-block"><summary>${esc(engineLabel)} · threshold ${esc(semantic.threshold ?? engine.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(engine.semantic_model_id || 'legacy/unrecorded')}. ${esc(scoreDesc)}<br>Medicine catalog: ${esc(engine.medicine_catalog_version || 'legacy/unrecorded')}.</p>${semanticRows}</div></details>
       <details class="trace-block"><summary>Final transformations and action</summary><div class="trace-content"><pre style="white-space:pre-wrap;margin:0">${esc(JSON.stringify({transformations:trace.transformations || [], final:trace.final || {}, decision:trace.decision || {}}, null, 2))}</pre></div></details>
     </div>`;
   }

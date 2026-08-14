@@ -255,6 +255,75 @@ def test_no_collision_tension_vs_hormone_stress():
     assert _key("stress headache") == "tension"
 
 
+# ── Composite red-flag scenarios (2026-08-14) ──────────────────────────────
+# Meningeal, stroke-like, sudden visual loss, syncope, and pregnancy+headache
+# are multi-feature presentations that no single type tag could express. All
+# must resolve to red_flag so the kiosk refers instead of self-treating.
+
+def _red(text):
+    out = classify_headache_text(text)
+    assert out["matched"], text
+    assert out["danger"] == "red_flag", (text, out["danger"])
+    assert out["resolution"] == "red_zone", (text, out["resolution"])
+    return out["key"]
+
+
+def test_meningeal_stiff_neck_fever_tl():
+    assert _red("masakit ulo ko at matigas ang leeg ko at nilalagnat ako") == "meningeal"
+
+
+def test_meningeal_stiff_neck_fever_ceb():
+    assert _red("sakit sa ulo ug gahi ang liog ug hilanat") == "meningeal"
+
+
+def test_meningeal_chin_to_chest():
+    assert _red("headache and i cannot touch my chin to my chest") == "meningeal"
+
+
+def test_stroke_like_weakness_en():
+    assert _red("headache with one sided weakness and slurred speech") == "stroke_like"
+
+
+def test_stroke_like_numb_arm_tl():
+    assert _red("masakit ulo at manhid ang isang kamay at hirap magsalita") == "stroke_like"
+
+
+def test_visual_loss_double_vision_tl():
+    assert _red("masakit ulo ko tapos doble ang nakikita ko") == "visual_loss"
+
+
+def test_visual_loss_sudden_loss_ceb():
+    assert _red("kalit nga nawala ang akong panan-aw ug sakit sa ulo") == "visual_loss"
+
+
+def test_syncope_fainted_tl():
+    assert _red("nahimatay ako tapos sumasakit ulo ko") == "syncope"
+
+
+def test_syncope_passed_out_en():
+    assert _red("i passed out and now my head hurts") == "syncope"
+
+
+def test_pregnancy_headache_tl():
+    assert _red("buntis ako at masakit ang ulo ko") == "pregnancy"
+
+
+def test_pregnancy_headache_ceb():
+    assert _red("buntis ko ug labad ang ulo") == "pregnancy"
+
+
+def test_pregnancy_bare_does_not_promote():
+    # "buntis ako" alone must NOT manufacture a headache consult.
+    assert promote_bare_headache_cue("buntis ako") is None
+
+
+def test_pregnancy_headache_promotes():
+    out = promote_bare_headache_cue("buntis ako at masakit ang ulo ko")
+    assert out is not None
+    assert out["key"] == "pregnancy"
+    assert out["danger"] == "red_flag"
+
+
 # ── Run mode ────────────────────────────────────────────────────────────────
 
 def _run_all():

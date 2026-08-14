@@ -830,8 +830,8 @@
       margin: 0;
       padding: 48px 28px;
       border-radius: 0;
-      background: linear-gradient(160deg, #b91c1c 0%, #991b1b 55%, #7f1d1d 100%);
-      color: var(--white);
+      background: linear-gradient(165deg, #fff7ed 0%, #fef2f2 55%, #fdf2f8 100%);
+      color: var(--zinc-800);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -985,21 +985,33 @@
     .referral-banner {
       width: 100%;
       max-width: 640px;
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-left: 4px solid #dc2626;
-      border-radius: 12px;
-      padding: 20px 24px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.92);
+      border-radius: 24px;
+      padding: 28px 24px;
       text-align: center;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.06);
+    }
+    .referral-banner .icon-circle {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #b45309;
+      background: #fef3c7;
+      border-radius: 50%;
     }
     .referral-banner h3 {
-      font-size: 17px; font-weight: 700; color: #991b1b; margin-bottom: 6px;
+      font-size: 22px; font-weight: 800; color: #92400e; margin-bottom: 6px;
     }
     .referral-banner p { font-size: 14px; color: #6b7280; line-height: 1.6; margin: 0; }
     .referral-banner .severity-badge {
       display: inline-flex; padding: 4px 12px; border-radius: 100px;
       font-size: 12px; font-weight: 700;
-      background: #fee2e2; color: #dc2626; margin-top: 12px;
+      background: #fef3c7; color: #b45309; margin-top: 12px;
     }
     .referral-note {
       font-size: 12px; color: var(--zinc-400); margin-top: 10px;
@@ -1010,110 +1022,149 @@
       margin-top: 16px;
     }
     .referral-cta {
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: rgba(220, 38, 38, 0.07);
-      color: #991b1b;
+      margin-top: 16px;
+      padding: 14px 20px;
+      border-radius: 16px;
+      background: #fee2e2;
+      color: #9f1239;
       font-size: 14px;
       font-weight: 700;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     .triage-banner {
       width: 100%;
-      max-width: 900px;
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 0;
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.92);
+      border-radius: 24px;
+      padding: 32px 28px;
       text-align: center;
-      box-shadow: none;
-      margin: 0;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.06);
     }
     .triage-banner .icon {
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 12px;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      color: var(--white);
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.28);
+      font-size: 28px;
+      color: #b91c1c;
+      background: #fee2e2;
       border-radius: 50%;
     }
-    .triage-banner h3 { font-size: 42px; font-weight: 800; color: var(--white); margin-bottom: 12px; }
-    .triage-banner p { font-size: 20px; color: rgba(255,255,255,0.96); line-height: 1.6; }
+    .triage-banner h3 { font-size: 26px; font-weight: 800; color: #9f1239; margin-bottom: 10px; }
+    .triage-banner p { font-size: 15px; color: #6b7280; line-height: 1.6; margin: 0; }
     .triage-banner .flag-list {
-      list-style: none; padding: 0; margin: 16px auto; max-width: 640px; text-align: center;
+      list-style: none; padding: 0; margin: 14px auto; max-width: 560px;
+      text-align: center; display: flex; flex-direction: column; gap: 8px;
     }
     .triage-banner .flag-list li {
-      padding: 6px 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--white);
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #fef2f2;
+      font-size: 14px;
+      font-weight: 600;
+      color: #991b1b;
+      text-align: left;
     }
     .triage-banner .triage-note {
-      font-size: 17px; color: rgba(255,255,255,0.9); margin-top: 18px;
-    }
-    .triage-banner .referral-cta {
-      margin-top: 14px;
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      color: var(--white);
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1.3;
+      font-size: 12.5px; color: var(--zinc-400); margin-top: 14px;
     }
 
     /* ── Duration Safeguard — doctor referral banner ── */
     .duration-referral-banner {
       width: 100%;
-      max-width: 900px;
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 0;
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.92);
+      border-radius: 24px;
+      padding: 32px 28px;
       text-align: center;
-      box-shadow: none;
-      color: var(--white);
-      margin: 0;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.06);
     }
     .duration-referral-banner .icon {
-      width: 56px;
-      height: 56px;
+      width: 60px;
+      height: 60px;
       margin: 0 auto 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      color: var(--white);
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.28);
+      font-size: 26px;
+      color: #b45309;
+      background: #fef3c7;
       border-radius: 50%;
     }
     .duration-referral-banner h3 {
-      font-size: 42px; font-weight: 800; color: var(--white); margin-bottom: 12px;
+      font-size: 24px; font-weight: 800; color: #92400e; margin-bottom: 10px;
     }
     .duration-referral-banner .duration-detail {
-      font-size: 22px; color: rgba(255,255,255,0.96); line-height: 1.6; margin-bottom: 12px;
+      font-size: 15px; color: #6b7280; line-height: 1.6; margin-bottom: 8px;
     }
     .duration-referral-banner .referral-action {
-      font-size: 30px;
-      font-weight: 800;
-      color: var(--white);
-      line-height: 1.35;
-      margin-top: 16px;
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      color: #b45309;
+      line-height: 1.6;
+      margin-top: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: #fffbeb;
     }
     .duration-referral-banner .referral-note {
-      font-size: 17px; color: rgba(255,255,255,0.9); margin-top: 18px;
+      font-size: 12.5px; color: var(--zinc-400); margin-top: 14px;
+    }
+
+    /* ── No-match cards: polite, distinct reasons (not "input not recognized") ── */
+    .nomatch-card {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.92);
+      border-radius: 24px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.06);
+    }
+    .nomatch-card .icon-circle {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border-radius: 50%;
+    }
+    .nomatch-card .icon-circle--green { color: #15803d; background: #dcfce7; }
+    .nomatch-card .icon-circle--amber { color: #b45309; background: #fef3c7; }
+    .nomatch-card .icon-circle--blue  { color: #1d4ed8; background: #dbeafe; }
+    .nomatch-card h3 { font-size: 24px; font-weight: 800; color: var(--zinc-800); margin-bottom: 10px; }
+    .nomatch-card p { font-size: 14px; color: #6b7280; line-height: 1.65; margin: 0 0 8px; }
+    .nomatch-card .nomatch-note { font-size: 12.5px; color: var(--zinc-400); margin-top: 12px; }
+    .nomatch-examples {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .nomatch-example {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--zinc-200);
+      background: var(--white);
+      color: var(--zinc-700);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .nomatch-example:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
     }
 
     /* ── Duration question — progress indicator ── */
@@ -1867,9 +1918,9 @@
   </div>
   <div class="home-top-right">
     <div class="home-lang-switch" onclick="event.stopPropagation()">
-      <button class="home-lang-btn" data-home-lang="en" onclick="setLanguage('en', event)">EN</button>
-      <button class="home-lang-btn" data-home-lang="ceb" onclick="setLanguage('ceb', event)">BSYA/CBU</button>
-      <button class="home-lang-btn" data-home-lang="tl" onclick="setLanguage('tl', event)">TGL</button>
+      <button class="home-lang-btn" data-home-lang="en" onclick="pickLanguage('en', event)">EN</button>
+      <button class="home-lang-btn" data-home-lang="ceb" onclick="pickLanguage('ceb', event)">BSYA/CBU</button>
+      <button class="home-lang-btn" data-home-lang="tl" onclick="pickLanguage('tl', event)">TGL</button>
     </div>
     <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
   </div>
@@ -1942,6 +1993,11 @@
       Our AI understands multiple Philippine languages. You can describe
       your symptoms in any of the following:
     </p>
+    <div class="lang-pick-row" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0;">
+      <button class="home-lang-btn" data-modal-lang="en" onclick="pickLanguage('en', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">English</button>
+      <button class="home-lang-btn" data-modal-lang="tl" onclick="pickLanguage('tl', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">Tagalog</button>
+      <button class="home-lang-btn" data-modal-lang="ceb" onclick="pickLanguage('ceb', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">Bisaya / Cebuano</button>
+    </div>
     <p>
       <strong>English</strong> — "I have a headache and cough"<br>
       <strong>Tagalog</strong> — "Masakit ulo ko, may ubo"<br>
@@ -2118,18 +2174,8 @@
         <!-- Per-symptom severity container (dynamically rendered) -->
         <div id="perSymptomSeverity"></div>
 
-        <!-- Fallback: no symptoms detected -->
-        <div id="noSymptomsStep3" class="hidden" style="text-align:center;padding:40px 20px;">
-          <div style="margin-bottom:12px;color:var(--zinc-400);display:flex;justify-content:center;">
-            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <circle cx="12" cy="16" r="0.7" fill="currentColor" stroke="none"></circle>
-            </svg>
-          </div>
-          <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">Input not recognized</h3>
-          <p style="color:var(--zinc-500);font-size:14px;">Your description may be outside the symptom scope supported by this system. Please go back and enter a short, common symptom description.</p>
-        </div>
+        <!-- Fallback: no symptoms detected (reason-aware card rendered here) -->
+        <div id="noSymptomsStep3" class="hidden" style="width:100%;"></div>
       </div>
       <div class="panel-footer">
         <button class="btn" onclick="goToStep(2)">Back</button>
@@ -2211,6 +2257,8 @@
   let analysisData = null;
   let showingRecs = false;
   let selectedLanguage = 'en';
+  let languagePickedExplicitly = false;   // once the user picks a language,
+                                          // typed text must NOT flip it back
   let consultInputMode = 'text';
   let idleWarningTimer = null;
   let idleResetTimer = null;
@@ -2630,6 +2678,9 @@
     document.querySelectorAll('[data-home-lang]').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.homeLang === selectedLanguage);
     });
+    document.querySelectorAll('[data-modal-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.modalLang === selectedLanguage);
+    });
     document.getElementById('assessAgainBtn').textContent = t('assessAgain');
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
@@ -2935,6 +2986,14 @@
     }
   };
 
+  // Explicit user choice (home buttons / modal): stays sticky for the whole
+  // session, unlike the passive auto-detect from typed text.
+  window.pickLanguage = function(lang, event) {
+    if (event) event.stopPropagation();
+    languagePickedExplicitly = true;
+    setLanguage(lang, event);
+  };
+
   window.handleLanguageSelectChange = function(lang) {
     setLanguage(lang);
   };
@@ -3068,6 +3127,11 @@
     currentStep = n;
     showingRecs = false;
 
+    // The headache-location "Confirm" belongs only to the active headache
+    // flow; leaving it visible between flows produced duplicate footer
+    // buttons (e.g. Confirm + Magpatuloy on a plain rash consult).
+    document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+
     document.querySelectorAll('.kiosk-panel').forEach(p => p.classList.remove('active'));
     const panel = document.getElementById(`panel${n}`);
     if (panel) panel.classList.add('active');
@@ -3157,9 +3221,13 @@
   symptomInput.addEventListener('input', () => {
     consultInputMode = 'text';
     toStep3Btn.disabled = !symptomInput.value.trim();
-    const detected = detectLanguageFromText(symptomInput.value);
-    if (detected && detected !== selectedLanguage) {
-      setLanguage(detected);
+    // Passive auto-detect only helps when the user never chose a language;
+    // an explicit pick (home button / modal) stays sticky.
+    if (!languagePickedExplicitly) {
+      const detected = detectLanguageFromText(symptomInput.value);
+      if (detected && detected !== selectedLanguage) {
+        setLanguage(detected);
+      }
     }
   });
 
@@ -3257,7 +3325,7 @@
       }
 
       if (preDetectedSymptoms.length === 0) {
-        document.getElementById('noSymptomsStep3').classList.remove('hidden');
+        showNoMatchStep3(data.no_match_reason || 'vague');
         return;
       }
 
@@ -3503,6 +3571,95 @@
     }
   };
 
+  // ══════════════════════════════
+  //  NO-MATCH CARDS — four distinct, polite reasons instead of one
+  //  vague "Input not recognized" page.
+  // ══════════════════════════════
+  const NO_MATCH_COPY = {
+    negated_only: {
+      icon: 'fa-solid fa-face-smile',
+      circle: 'icon-circle--green',
+      title: { en: 'No symptoms to treat yet', tl: 'Wala pang sintomas na gagamutin', ceb: 'Wala pay sintomas nga tambalan' },
+      body: {
+        en: 'You mentioned that you do NOT have these symptoms. If you still feel unwell, try describing what you actually feel — or ask our pharmacist for advice.',
+        tl: 'Sinabi mo na WALA kang ganyang sintomas. Kung masama pa rin ang pakiramdam mo, subukang ilarawan ang talagang nararamdaman mo — o magtanong sa aming pharmacist.',
+        ceb: 'Gikomento nimo nga WALA ka ni nga sintomas. Kung dili gihapon maayo ang imong pamati, sulayi gihulagway kung unsa gyud ang imong gibati — o pangutana sa among pharmacist.',
+      },
+    },
+    out_of_scope: {
+      icon: 'fa-solid fa-user-doctor',
+      circle: 'icon-circle--amber',
+      title: { en: 'Outside what we can treat', tl: 'Wala sa kayang gamutin ng kiosk', ceb: 'Gawas sa among matambalan' },
+      body: {
+        en: 'What you described is not something this kiosk can treat with over-the-counter medicine. A doctor or pharmacist can help you best.',
+        tl: 'Ang iyong inilarawan ay hindi kayang gamutin ng kiosk na ito sa pamamagitan ng over-the-counter na gamot. Ang doktor o pharmacist ang pinakamakatutulong sa iyo.',
+        ceb: 'Ang imong gihulagway dili matambalan sa kiosk gamit ang over-the-counter nga tambal. Ang doktor o pharmacist ang makahatag kanimo og labing maayong tabang.',
+      },
+    },
+    nonsense: {
+      icon: 'fa-solid fa-comments',
+      circle: 'icon-circle--blue',
+      title: { en: 'We could not understand that', tl: 'Hindi namin ito maintindihan', ceb: 'Wala mi kasabot ani' },
+      body: {
+        en: 'Try describing your symptoms with simple words, like one of these:',
+        tl: 'Subukang ilarawan ang iyong sintomas sa simpleng salita, gaya ng isa sa mga ito:',
+        ceb: 'Sulayi gihulagway ang imong sintomas sa yano nga mga pulong, sama sa usa sa mga mosunod:',
+      },
+      examples: true,
+    },
+    vague: {
+      icon: 'fa-solid fa-circle-question',
+      circle: 'icon-circle--blue',
+      title: { en: 'We could not recognize a symptom', tl: 'Hindi namin nakilala ang sintomas', ceb: 'Wala mi makaila og sintomas' },
+      body: {
+        en: 'Your description is a bit too vague for us to recognize a symptom. Try using common words, like one of these:',
+        tl: 'Medyo malabo ang iyong paglalarawan para makilala namin ang sintomas. Subukang gumamit ng karaniwang salita, gaya ng isa sa mga ito:',
+        ceb: 'Gamay ra kaayo ang detalye sa imong gihulagway aron makaila kami og sintomas. Sulayi ang kasagarang mga pulong, sama sa usa sa mosunod:',
+      },
+      examples: true,
+    },
+  };
+  const NO_MATCH_EXAMPLES = [
+    'Masakit ulo ko',
+    'May lagnat ako',
+    'May ubo ako',
+    'Sakit akong tiyan',
+    'Sipon',
+    'Pantal sa katawan',
+  ];
+
+  function renderNoMatchCard(reason, options = {}) {
+    const copy = NO_MATCH_COPY[reason] || NO_MATCH_COPY.vague;
+    const lang = selectedLanguage || 'en';
+    const pick = (o) => o[lang] || o.en || o;
+    const examplesHtml = copy.examples
+      ? `<div class="nomatch-examples">${NO_MATCH_EXAMPLES
+          .map(e => `<button class="nomatch-example" onclick="useExamplePhrase('${e.replace(/'/g, "\\'")}')">${e}</button>`)
+          .join('')}</div>`
+      : '';
+    return `
+      <div class="nomatch-card">
+        <div class="icon-circle ${copy.circle}"><i class="${copy.icon}"></i></div>
+        <h3>${pick(copy.title)}</h3>
+        <p>${pick(copy.body)}</p>
+        ${examplesHtml}
+        <p class="nomatch-note">${t('emergencyNote')}</p>
+      </div>`;
+  }
+
+  window.useExamplePhrase = function(phrase) {
+    symptomInput.value = phrase;
+    consultInputMode = 'text';
+    toStep3Btn.disabled = false;
+    triggerPreDetect();
+  };
+
+  function showNoMatchStep3(reason) {
+    const box = document.getElementById('noSymptomsStep3');
+    box.innerHTML = renderNoMatchCard(reason);
+    box.classList.remove('hidden');
+  }
+
   function renderAnalysis(data) {
     completeLoadingProgress('analysis');
     document.getElementById('analysisLoading').classList.add('hidden');
@@ -3526,7 +3683,7 @@
       const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
       container.innerHTML = `
         <div class="triage-banner">
-          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="icon"><i class="fa-solid fa-stethoscope"></i></div>
           <h3>${t('emergencyTitle')}</h3>
           <p>${t('emergencySub')}</p>
           <ul class="flag-list">${flagItems}</ul>
@@ -3540,21 +3697,7 @@
 
     // No symptoms
     if (!symptoms.length) {
-      container.innerHTML = `
-        <div class="no-symptoms">
-          <div class="icon" style="display:flex;justify-content:center;color:var(--zinc-400);">
-            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <circle cx="12" cy="16" r="0.7" fill="currentColor" stroke="none"></circle>
-            </svg>
-          </div>
-          <h3 style="font-size:22px;font-weight:800;margin:12px 0 8px;">${t('noScopeTitle')}</h3>
-          <p>${t('noScopeSub')}</p>
-          <p style="margin-top:10px;font-size:13px;color:var(--zinc-400);">
-            ${t('noScopeHint')}
-          </p>
-        </div>`;
+      container.innerHTML = renderNoMatchCard(data.no_match_reason || 'vague');
       document.getElementById('assessAgainBtn').classList.remove('hidden');
       document.getElementById('exitBtn').classList.remove('hidden');
       return;
@@ -3995,7 +4138,7 @@
 
     container.innerHTML = `
       <div class="duration-referral-banner">
-        <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="icon"><i class="fa-solid fa-hourglass-half"></i></div>
         <h3>${t('durationTitle')}</h3>
         <p class="duration-detail">
           ${durationText[lang] || durationText.en}
@@ -4222,6 +4365,7 @@
       container.classList.add('center-stage');
       html += `
         <div class="referral-banner" style="margin-bottom:12px;">
+          <div class="icon-circle"><i class="fa-solid fa-user-doctor"></i></div>
           <h3>${t('professionalHelpTitle')}</h3>
           <p>${t('professionalHelpSub')}</p>
           <div class="severity-badge">${t('pain')}: ${referral.severity}/10</div>
@@ -4390,6 +4534,18 @@
     durationClarificationData = {};
     durationBySymptom = {};
 
+    // Clean up step-3 leftovers so a fresh flow never shows stale buttons
+    // (headache Confirm) or stale cards ("Input not recognized").
+    document.getElementById('confirmHeadLocFooter').classList.add('hidden');
+    document.getElementById('analyzeBtn').classList.add('hidden');
+    document.getElementById('perSymptomSeverity').innerHTML = '';
+    document.getElementById('noSymptomsStep3').classList.add('hidden');
+    document.getElementById('noSymptomsStep3').innerHTML = '';
+    headacheLocationConfirmed = false;
+    selectedHeadacheLocation = null;
+    const hlc = document.getElementById('headacheLocationSelector');
+    if (hlc) { hlc.classList.add('hidden'); hlc.innerHTML = ''; }
+
     kioskMain.classList.add('hidden');
     screenHome.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -4422,9 +4578,11 @@
       symptomInput.value = transcript;
       consultInputMode = 'voice';
       toStep3Btn.disabled = !transcript.trim();
-      const detected = detectLanguageFromText(transcript);
-      if (detected && detected !== selectedLanguage) {
-        setLanguage(detected);
+      if (!languagePickedExplicitly) {
+        const detected = detectLanguageFromText(transcript);
+        if (detected && detected !== selectedLanguage) {
+          setLanguage(detected);
+        }
       }
     };
 

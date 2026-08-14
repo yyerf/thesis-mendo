@@ -294,10 +294,91 @@ def api_research_consent():
     )
 
 
+_NO_MATCH_NEGATION_RX = re.compile(
+    r"\b(wala|walang|walay|waley|no|not|without|never|none|neither|nor|"
+    r"isnt|arent|dili|di|hindi|hnd|wara|wa)\b"
+)
+
+# Symptom-family words the dictionary covers (negation-only statements are
+# honest no-treat cases, not "input not recognized" failures).
+_NO_MATCH_SYMPTOM_WORDS = [
+    "lagnat", "hilanat", "fever", "sinat", "ubo", "cough", "sipon", "sip-on",
+    "runny", "ulo", "headache", "head ache", "tiyan", "sikmura", "stomach",
+    "tutunlan", "lalamunan", "throat", "pantal", "rash", "hives", "butlig",
+    "pagtatae", "kalibang", "diarrhea", "barado", "congestion", "plema",
+    "allergy", "katawan", "lawas", "body ache", "naalibadbad",
+]
+
+# Health words the kiosk does NOT treat OTC — these deserve a polite
+# "outside our scope, see a doctor/pharmacist" card, not "unrecognized".
+_NO_MATCH_OUT_OF_SCOPE_WORDS = [
+    "dibdib", "chest", "tenga", "ear", "mata", "eye", "mata ko", "ngipin",
+    "ngipon", "tooth", "teeth", "tuhod", "knee", "siko", "elbow", "lutahan",
+    "joint", "sugat", "wound", "hiwa", "dugo", "blood", "ihi", "urine",
+    "pag-ihi", "peklat", "scar", "bukol", "lump", "pamamanhid", "numb",
+    "manhid", "hilo-hilo", "hirap huminga", "nahihirapang huminga",
+    "dili makahinga", "lisod makaginhawa", "short of breath", "breath",
+    "hininga", "ginhawa", "paminaw", "paminawon", "tunog", "pandinig",
+]
+
+# Greeting / chit-chat / commerce phrases: nothing health-related at all.
+_NO_MATCH_NONSENSE_WORDS = [
+    "hello", "hi ", "kamusta", "kumusta", "musta", "good morning",
+    "good afternoon", "good evening", "magandang", "maayong", "salamat",
+    "thanks", "thank you", "magkano", "pila", "pila ang", "how much",
+    "how much is", "biogesic", "paracetamol", "gamot", "tabang", "help me",
+]
+
+
+def classify_no_match(user_text: str) -> str:
+    """Tag an empty-detection input so the kiosk can show a helpful page.
+
+    Returns one of:
+      "negated_only" — symptom words are explicitly denied ("wala akong
+                       lagnat"); nothing to treat, no failure to explain.
+      "out_of_scope" — a real health complaint that is outside the 13 OTC
+                       labels (chest, ear, tooth, wound, ...); polite
+                       referral, not "unrecognized".
+      "nonsense"     — greeting / chit-chat / shopping words, or very short
+                       text with no health content at all.
+      "vague"        — fallback: some text but no health signal we can map.
+
+    Deterministic by design (matches the precision-first architecture).
+    """
+    text = (user_text or "").strip()
+    low = text.lower()
+
+    def has(words):
+        for w in words:
+            if re.search(rf"\b{re.escape(w)}\b", low):
+                return True
+        return False
+
+    if not text or len(low) < 3:
+        return "nonsense"
+
+    has_symptom_word = has(_NO_MATCH_SYMPTOM_WORDS)
+
+    # A wholly negated statement ("wala akong lagnat", "no fever at all") is
+    # an honest "no symptoms to treat" — the words were understood.
+    if has_symptom_word and _NO_MATCH_NEGATION_RX.search(low):
+        return "negated_only"
+
+    if has(_NO_MATCH_OUT_OF_SCOPE_WORDS):
+        return "out_of_scope"
+
+    if has(_NO_MATCH_NONSENSE_WORDS):
+        return "nonsense"
+
+    if has_symptom_word or len(low.split()) >= 4:
+        return "vague"
+
+    return "nonsense"
+
+
 @consultation_bp.route("/api/pre-detect", methods=["POST"])
 def api_pre_detect():
     """Lightweight symptom detection — called before the pain scale step
-    so the UI can ask per-symptom severity.
 
     Request JSON:
         { "text": "gi ubo ko and sakit kaayo akong ulo" }
@@ -332,6 +413,7 @@ def api_pre_detect():
             "severity_hints": severity_hints,
             "red_flags": red_flags,
             "headache_intake": headache_intake,
+            "no_match_reason": classify_no_match(user_text) if not symptoms else None,
             "engine": report.get("engine"),
             "trace_version": report.get("trace_version"),
         })
@@ -598,6 +680,7 @@ def api_analyze():
             "recommendation_filtering": recommendation_filtering,
             "engine": report.get("engine"),
             "trace_version": TRACE_SCHEMA_VERSION,
+            "no_match_reason": classify_no_match(user_text) if not symptoms else None,
         }
         if user_age is not None:
             resp["age"] = user_age

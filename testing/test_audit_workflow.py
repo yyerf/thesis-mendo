@@ -151,11 +151,19 @@ class PredictionTraceTests(unittest.TestCase):
         semantic = next(
             stage for stage in report["stages"] if stage["stage"] == "semantic"
         )
-        if semantic.get("available"):
-            self.assertTrue(semantic["scores"])
-            self.assertEqual(
-                semantic["scores"][0]["score_type"], "cosine_similarity"
-            )
+        # Precision-first: a dictionary hit skips the semantic stage entirely.
+        self.assertEqual(semantic["used"], False)
+        self.assertEqual(semantic["skipped_reason"], "dictionary_hit_precision_first")
+        # On a dictionary miss the semantic stage runs and records scores.
+        report = predict_symptoms("nasusunog ako sa init ng panahon")
+        semantic = next(
+            stage for stage in report["stages"] if stage["stage"] == "semantic"
+        )
+        self.assertTrue(semantic["used"])
+        self.assertTrue(semantic["scores"])
+        self.assertEqual(
+            semantic["scores"][0]["score_type"], "cosine_similarity"
+        )
 
 
 class AuditStoreTests(unittest.TestCase):
@@ -201,7 +209,8 @@ class AuditStoreTests(unittest.TestCase):
 
     def test_legacy_exclusion_review_and_adjudicated_export(self):
         consented_id = self._log(consent=True)
-        with sqlite3.connect(self.db_path) as conn:
+        conn = sqlite3.connect(self.db_path)
+        try:
             conn.execute(
                 """
                 INSERT INTO interaction_logs
@@ -210,6 +219,8 @@ class AuditStoreTests(unittest.TestCase):
                 """
             )
             conn.commit()
+        finally:
+            conn.close()
 
         with self.assertRaisesRegex(ValueError, "not review-eligible"):
             interaction_logger.submit_review(

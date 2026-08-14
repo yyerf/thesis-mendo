@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -857,9 +858,22 @@ def _normalize(text: str) -> str:
             }
         )
     )
+    # Apostrophes are stripped entirely (not replaced by space) so English
+    # contractions match the neg-word lists: "isn't" -> "isnt", "don't" -> "dont".
+    text = text.replace("'", "")
     text = re.sub(r"[^a-z0-9ñ\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
+
+
+# Shared negation word set (normalized: apostrophes stripped, so "isn't"
+# becomes "isnt" and matches "isnt"). Window is up to 4 filler words.
+_NEG_RX = (
+    r"(?:wala|walang|walay|waley|no|not|without|never|none|neither|nor|"
+    r"no\s+more|dont|doesnt|didnt|isnt|arent|wasnt|werent|havent|hasnt|"
+    r"cant|wont|dili|di|dli|hindi|hnd|wara|wa)"
+)
+_NEG_WINDOW = 4
 
 
 def _explicitly_negates_fever(user_input: str, _nt: str = "") -> bool:
@@ -867,12 +881,12 @@ def _explicitly_negates_fever(user_input: str, _nt: str = "") -> bool:
     # Handle common mixed-language patterns like:
     # - "wala akong fever" / "walang fever" / "no fever"
     # - "wala akong lagnat" / "walang lagnat" / "walay hilanat"
+    # - "i dont have a fever" (contractions)
     return (
-        re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\bfever\b", nt)
-        is not None
-        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\blagnat\b", nt)
-        is not None
-        or re.search(r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b(?:\s+\w+){0,2}\s+\b(hilanat)\b", nt)
+        re.search(
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(fever|lagnat|sinat|hilanat|hilantan)\b",
+            nt,
+        )
         is not None
     )
 
@@ -883,57 +897,95 @@ def _explicitly_negates_headache(user_input: str, _nt: str = "") -> bool:
     # - "no headache" / "not headache"
     # - "not sakit ulo" / "walang sakit ulo" / "dili sakit ulo"
     # - "wala akong headache" / "wala koy sakit ulo"
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
-        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(headache|head|ulo)\b", nt) is not None
-        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+sakit\s+ulo\b", nt) is not None
-        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+labad\b(?:\s+\w+){{0,2}}\s+\b(head|ulo)\b", nt)
+        re.search(rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(headache|head|ulo)\b", nt) is not None
+        or re.search(rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+sakit\s+ulo\b", nt) is not None
+        or re.search(
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+labad\b(?:\s+\w+){{0,2}}\s+\b(head|ulo)\b",
+            nt,
+        )
         is not None
     )
 
 
 def _explicitly_negates_cough(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
-    matches = re.finditer(
-        r"\b(wala|walang|walay|no|not|without|dili|di|hindi|hnd)\b((?:\s+\w+){0,2})\s+\b(ubo|cough|coughing|umuubo|inuubo)\b",
+    # The negation must live in the SAME clause as the cough: split on
+    # contrast / consequence / assertion words so "hindi ako nilalagnat pero
+    # may ubo ako" never negates the cough across the "pero".
+    for clause in re.split(
+        r"\b(?:pero|but|apan|kundi|gawas|maliban|kaso|dahil|because|so|"
+        r"however|though|kung|tapos|then|unya|mao|busa|bisan|bisag|naa|"
+        r"naay|may|meron|mayroon)\b",
         nt,
-    )
-    for m in matches:
-        filler_tokens = m.group(2).split()
-        if any(tok in {"plema", "phlegm", "mucus"} for tok in filler_tokens):
-            continue
-        return True
+    ):
+        matches = re.finditer(
+            rf"\b{_NEG_RX}\b((?:\s+\w+){{0,{_NEG_WINDOW}}})\s+\b(ubo|cough|coughing|umuubo|inuubo|gihubo|nagubo|nahubo|mihubo)\b",
+            clause,
+        )
+        for m in matches:
+            filler_tokens = m.group(1).split()
+            # "no plema ... coughing" negates plema, not cough; "isn't a dry
+            # cough" negates DRY, not the cough itself; "dili mawala akong ubo"
+            # negates MAWALA (won't stop), so the cough persists.
+            if any(tok in {"plema", "phlegm", "mucus", "dry", "wet", "tuyo",
+                           "tuyong", "uga", "basa", "basang", "productive",
+                           "tickly", "mawala", "nawawala", "nawala", "nawagtang",
+                           "mohunong", "hunong", "huminto", "tigil", "hinto",
+                           "stop", "undang", "naundang"}
+                   for tok in filler_tokens):
+                continue
+            return True
     return False
 
 
 def _explicitly_negates_diarrhea(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
-    return re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(diarrhea|lbm|pagtatae|nagtatae|kalibang)\b", nt) is not None
+    return re.search(
+        rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+        r"\b(diarrhea|lbm|pagtatae|nagtatae|kalibang|loose\s+stools?|watery\s+stools?)\b",
+        nt,
+    ) is not None
 
 
 def _explicitly_negates_sore_throat(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
-        re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sore\s+throat|throat\s+pain|lalamunan|tutunlan|tilaok)\b", nt)
+        re.search(
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+            r"\b(sore\s+throat|throat\s+pain|lalamunan|tutunlan|tilaok)\b",
+            nt,
+        )
         is not None
-        or re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+(masakit|hapdi|garas)\b(?:\s+\w+){{0,3}}\s+\b(lalamunan|tutunlan|tilaok)\b", nt)
+        or re.search(
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+(masakit|hapdi|garas)\b"
+            rf"(?:\s+\w+){{0,3}}\s+\b(lalamunan|tutunlan|tilaok)\b",
+            nt,
+        )
         is not None
     )
 
 
 def _explicitly_negates_nasal(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     decisions: List[bool] = []
     for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
-        if not re.search(r"\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion|barado|ilong|nose)\b", clause):
+        if not re.search(
+            r"\b(sipon|sip-on|runny\s+nose|stuffy\s+nose|nasal\s+congestion|barado|ilong|nose|running|dripping|tumatakbo|tumutulo|nagtulo|tulo|pagtulo)\b",
+            clause,
+        ):
             continue
         decisions.append(
-            re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(sipon|runny\s+nose|stuffy\s+nose|nasal\s+congestion)\b", clause)
+            re.search(
+                rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+                r"\b(sipon|sip-on|runny\s+nose|stuffy\s+nose|nasal\s+congestion|running|dripping|tumatakbo|tumutulo|nagtulo|tulo|pagtulo)\b",
+                clause,
+            )
             is not None
-            or re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+barado\b(?:\s+\w+){{0,3}}\s+\b(ilong|nose)\b", clause)
+            or re.search(
+                rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+barado\b(?:\s+\w+){{0,3}}\s+\b(ilong|nose)\b",
+                clause,
+            )
             is not None
         )
     return decisions[-1] if decisions else False
@@ -943,13 +995,15 @@ def _explicitly_negates_allergy(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
     if re.search(r"\b(di|hindi|dili)\s+(ko|ako)\s+alam\s+kung\b", nt):
         return False
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     decisions: List[bool] = []
     for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
         if not re.search(r"\b(allergy|allergies|allergic)\b", clause):
             continue
         decisions.append(
-            re.search(rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(allergy|allergies|allergic)\b", clause)
+            re.search(
+                rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(allergy|allergies|allergic)\b",
+                clause,
+            )
             is not None
         )
     return decisions[-1] if decisions else False
@@ -957,13 +1011,15 @@ def _explicitly_negates_allergy(user_input: str, _nt: str = "") -> bool:
 
 def _explicitly_negates_rash(user_input: str, _nt: str = "") -> bool:
     nt = _nt or _normalize(user_input)
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     decisions: List[bool] = []
     for clause in re.split(r"\b(?:pero|but|kaso|however|though)\b", nt):
         if not re.search(r"\b(pantal|rash|rashes|hives|butlig)\b", clause):
             continue
         decisions.append(
-            re.search(rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(pantal|rash|rashes|hives|butlig)\b", clause)
+            re.search(
+                rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(pantal|rash|rashes|hives|butlig)\b",
+                clause,
+            )
             is not None
         )
     return decisions[-1] if decisions else False
@@ -972,20 +1028,67 @@ def _explicitly_negates_rash(user_input: str, _nt: str = "") -> bool:
 def _explicitly_negates_body_aches(user_input: str, _nt: str = "") -> bool:
     """Recognize common English, Tagalog, and Cebuano body-pain negations."""
     nt = _nt or _normalize(user_input)
-    neg = r"(wala|walang|walay|no|not|without|dili|di|hindi|hnd)"
     return (
         re.search(
-            rf"\b{neg}\b(?:\s+\w+){{0,3}}\s+\b(body\s*aches?|body\s*pain|katawan|lawas|kalamnan|muscle)\b",
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+            r"\b(body\s*aches?|body\s*pain|katawan|lawas|kalamnan|muscle|muscles)\b",
             nt,
         )
         is not None
         or re.search(
-            rf"\b{neg}\b(?:\s+\w+){{0,2}}\s+\b(sakit|masakit|pain|ache)\b"
+            rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(sakit|masakit|pain|ache)\b"
             rf"(?:\s+\w+){{0,2}}\s+\b(katawan|body|lawas|kalamnan|muscle)\b",
             nt,
         )
         is not None
     )
+
+
+def _explicitly_negates_stomach_ache(user_input: str, _nt: str = "") -> bool:
+    """Recognize English, Tagalog, and Cebuano stomach-pain negations, in
+    both word orders ("my stomach doesn't hurt" / "walang sakit ang tiyan").
+
+    Clause-scoped: the negation must sit in the same clause as the stomach
+    word ("stomach pain, but there is no pain in my head" keeps the ache).
+    Wellness words consume the negation ("dili maayo akong paminaw sa tiyan"
+    means the stomach is NOT fine = the symptom is present, not negated).
+    """
+    nt = _nt or _normalize(user_input)
+    wellness = frozenset({
+        "maayo", "maayos", "ok", "okay", "okey", "ayos", "normal", "fine",
+        "mauli", "tarong", "taas", "ubos",
+    })
+    clauses = re.split(
+        r"\b(pero|but|kaso|however|though|although)\b", nt
+    )
+    for clause in clauses:
+        neg_pat = rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+        if re.search(
+            rf"{neg_pat}\b(stomach|tummy|belly|abdomen|tiyan|tyan|sikmura)\b",
+            clause,
+        ):
+            m = re.search(
+                rf"\b({_NEG_RX})\b((?:\s+\w+){{0,{_NEG_WINDOW}}})\s+"
+                r"\b(stomach|tummy|belly|abdomen|tiyan|tyan|sikmura)\b",
+                clause,
+            )
+            if m and not any(tok in wellness for tok in m.group(2).split()):
+                return True
+        if re.search(
+            rf"{neg_pat}\b(sakit|masakit|pain|ache|sumasakit)\b"
+            rf"(?:\s+\w+){{0,2}}\s+\b(tiyan|stomach|sikmura|tummy|tyan|belly|abdomen)\b",
+            clause,
+        ):
+            return True
+        if re.search(
+            rf"\b(stomach|tummy|belly|abdomen|tiyan|tyan|sikmura)\b"
+            rf"(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
+            rf"{neg_pat}"
+            r"\b(hurt|hurts|pain|ache|aches|sakit|masakit)\b",
+            clause,
+        ):
+            return True
+    return False
 
 
 def _has_any(normalized_text: str, keywords: List[str]) -> bool:
@@ -1045,6 +1148,9 @@ def _apply_semantic_safety_filters(
 
     if _explicitly_negates_body_aches(user_input, _nt=nt):
         _drop({"BODY_ACHES"})
+
+    if _explicitly_negates_stomach_ache(user_input, _nt=nt):
+        _drop({"STOMACH_ACHE"})
 
     if _explicitly_negates_rash(user_input, _nt=nt):
         _drop({"RASHES"})
@@ -1205,6 +1311,7 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "binat",
         "ginahilanat",
         "nililagnat",
+        "sinat",
     ]
 
     headache_keywords = [
@@ -1257,6 +1364,7 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "giniginaw",
         "nanlalambot",
         "ngalay",
+        "nangangalay",
         "buto",
         "bugat",
         "bug at",
@@ -1474,14 +1582,29 @@ _SEMANTIC_EXTRACTOR = None
 
 
 def _get_semantic_extractor():
-    """Lazy singleton to avoid re-loading the transformer every request."""
+    """Lazy singleton factory for the semantic fallback backend.
+
+    MENDO_SEMANTIC_BACKEND selects the engine:
+      - "minilm" (default) → sentence-transformers embeddings, cosine
+        similarity vs. the curated anchor sentences (step2.py)
+      - "sailor"            → local LLM (Sailor2) via Ollama (sailor_semantic.py)
+
+    All backends expose the same analyze() protocol, so nothing else in
+    the pipeline changes when the engine is swapped.
+    """
     global _SEMANTIC_EXTRACTOR
     if _SEMANTIC_EXTRACTOR is not None:
         return _SEMANTIC_EXTRACTOR
 
-    from .step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
+    backend = os.getenv("MENDO_SEMANTIC_BACKEND", "minilm").strip().lower()
+    if backend == "minilm":
+        from .step2 import EmbeddingSymptomExtractor, SYMPTOM_ANCHORS
 
-    _SEMANTIC_EXTRACTOR = EmbeddingSymptomExtractor(SYMPTOM_ANCHORS)
+        _SEMANTIC_EXTRACTOR = EmbeddingSymptomExtractor(SYMPTOM_ANCHORS)
+    else:
+        from .sailor_semantic import LLMSymptomExtractor
+
+        _SEMANTIC_EXTRACTOR = LLMSymptomExtractor()
     return _SEMANTIC_EXTRACTOR
 
 
@@ -1598,6 +1721,23 @@ def extract_symptoms_hybrid_report(
     # transformer can correct dictionary false positives (e.g. "ngipon" → RUNNY_NOSE).
     try:
         extractor = _get_semantic_extractor()
+        if getattr(extractor, "fallback_only", False) and dict_symptoms:
+            # Precision-first for LLM backends: generation costs seconds per
+            # query, so the LLM runs only when the deterministic dictionary
+            # found nothing. The rules never need the LLM to correct them.
+            report["stages"].append(
+                {
+                    "stage": "semantic",
+                    "used": False,
+                    "available": True,
+                    "skipped_reason": "dictionary_hit_precision_first",
+                }
+            )
+            report["final"]["symptoms"] = dict_symptoms
+            report["final"]["conditions"] = dict_conditions
+            report["final"]["source"] = "dictionary" if dict_symptoms else "none"
+            return report
+
         semantic_detected, diag = extractor.analyze(user_input, threshold=semantic_threshold)
         semantic_detected = _semantic_lexical_guard(user_input, semantic_detected)
         diag_sorted = sorted(

@@ -1,0 +1,123 @@
+% MendoVendo v3.0 — references.bib
+% Works actually used by the deployed system and its evaluation.
+% Style agnostic (works with natbib / biblatex); trim per journal guide.
+
+@inproceedings{reimers2019sentence,
+  author    = {Reimers, Nils and Gurevych, Iryna},
+  title     = {Sentence-{BERT}: Sentence Embeddings using Siamese {BERT}-Networks},
+  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural
+               Language Processing (EMNLP)},
+  pages     = {3982--3992},
+  year      = {2019},
+  doi       = {10.18653/v1/D19-1410},
+  note      = {Foundation of the sentence-transformers library used for the
+               kiosk's semantic stage}
+}
+
+@inproceedings{wang2020minilmv2,
+  author    = {Wang, Wenhui and Bao, Hangbo and Huang, Shaohan and Dong, Li
+               and Wei, Furu},
+  title     = {{MiniLMv2}: Multi-Head Self-Attention Relation Distillation
+               for Compressed Pretrained Language Models},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in
+               Natural Language Processing (EMNLP)},
+  pages     = {2140--2151},
+  year      = {2020},
+  doi       = {10.18653/v1/2020.emnlp-main.173}
+}
+
+@inproceedings{feng2022mminilm,
+  author    = {Feng, Fangxiaoyu and Yang, Yinfei and Cer, Daniel
+               and Arivazhagan, Naveen and Wang, Wei},
+  title     = {Language-agnostic {BERT} Sentence Embedding},
+  booktitle = {Proceedings of the 60th Annual Meeting of the Association for
+               Computational Linguistics (ACL)},
+  pages     = {878--891},
+  year      = {2022},
+  doi       = {10.18653/v1/2022.acl-long.62},
+  note      = {Paraphrase-multilingual-MiniLM-L12-v2 training corpus lineage}
+}
+
+@inproceedings{loshchilov2019adamw,
+  author    = {Loshchilov, Ilya and Hutter, Frank},
+  title     = {Decoupled Weight Decay Regularization},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019},
+  url       = {https://openreview.net/forum?id=Bkg6RiCqY7}
+}
+
+@article{levenshtein1966,
+  author    = {Levenshtein, Vladimir I.},
+  title     = {Binary Codes Capable of Correcting Deletions, Insertions,
+               and Reversals},
+  journal   = {Soviet Physics Doklady},
+  volume    = {10},
+  number    = {8},
+  pages     = {707--710},
+  year      = {1966}
+}
+
+@article{tsoumakas2007multilabel,
+  author    = {Tsoumakas, Grigorios and Katakis, Ioannis},
+  title     = {Multi-Label Classification: An Overview},
+  journal   = {International Journal of Data Warehousing and Mining},
+  volume    = {3},
+  number    = {3},
+  pages     = {1--13},
+  year      = {2007},
+  doi       = {10.4018/jdwm.2007070101},
+  note      = {Micro/macro precision-recall and Hamming-loss definitions used
+               in the evaluation}
+}
+
+@misc{dpa2012,
+  author       = {{Congress of the Philippines}},
+  title        = {Republic Act No. 10173 — Data Privacy Act of 2012},
+  year         = {2012},
+  howpublished = {Official Gazette, Republic of the Philippines},
+  url          = {https://www.officialgazette.gov.ph/2012/08/15/republic-act-no-10173/}
+}
+
+@misc{pharmacyact2016,
+  author       = {{Congress of the Philippines}},
+  title        = {Republic Act No. 10918 — Pharmacy Act of 2016},
+  year         = {2016},
+  howpublished = {Official Gazette, Republic of the Philippines},
+  url          = {https://www.officialgazette.gov.ph/2016/07/21/republic-act-no-10918/}
+}
+
+@misc{sentencetransformers,
+  author       = {Reimers, Nils},
+  title        = {sentence-transformers: Multilingual Sentence, Image, and
+                  Text Embeddings (Python library)},
+  year         = {2019},
+  howpublished = {\url{https://www.sbert.net}},
+  note         = {Encoder + pooling implementation used at inference}
+}
+
+@misc{pytorch,
+  author       = {{PyTorch Contributors}},
+  title        = {PyTorch (deep learning framework)},
+  year         = {2019},
+  howpublished = {\url{https://pytorch.org}},
+  note         = {Training/inference runtime (CPU)}
+}
+
+@misc{ollama,
+  author       = {Ollama},
+  title        = {Ollama — run large language models locally},
+  year         = {2024},
+  howpublished = {\url{https://ollama.com}},
+  note         = {Optional local-LLM backend host (Sailor2 path, not deployed)}
+}
+
+@inproceedings{aosailor2,
+  author    = {Ao, Junting and others},
+  title     = {Sailor2: A Suite of Scalable Open Multilingual Generalist
+               {SEA} LLMs},
+  booktitle = {Proceedings of the 4th International Workshop on Southeast
+               Asian Language Processing at COLING},
+  year      = {2025},
+  note      = {Optional selectable local-LLM semantic backend (1B model,
+               not deployed by default)}
+}

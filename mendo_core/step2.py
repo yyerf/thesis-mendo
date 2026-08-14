@@ -29,10 +29,7 @@ from typing import Dict, Iterable, List, Tuple
 
 
 # ---------------------------------------------------------------------------
-# 1) ANCHORS: symptom label -> a few "gold standard" example sentences
-# ---------------------------------------------------------------------------
-# Keep these short and clear. Add more anchors to improve recall.
-# Tip: include variations across languages + common student slang.
+# 1) ANCHORS:
 
 SYMPTOM_ANCHORS: Dict[str, List[str]] = {
     "HEADACHE": [
@@ -48,6 +45,20 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "labad ang ulo",
         "sakit ulo",
         "labad akong ulo",
+        "my head is squeezed by a tight band",
+        "pressure band squeezing my skull",
+        "parang pinipiga ang ulo ko nang mahigpit",
+        "my head is pounding",
+        "I have a splitting headache",
+        "my head hurts so much",
+        "grabe ang sakit ng ulo ko",
+        "sakit kaayo akong ulo",
+        "nasakit akong ulo",
+        "ang sakit ng ulo ko",
+        "parang may pumipintig sa ulo ko",
+        "may migraine ako",
+        "migraine attack",
+        "nagmimigraine ako",
     ],
     "COUGH_DRY": [
         "I have a dry cough",
@@ -57,6 +68,13 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "walay plema",
         "tuyong ubo",
         "uga nga ubo",
+        "hacking dry cough",
+        "tickling cough",
+        "dry ubo na walang plema",
+        "ubo na tuyo",
+        "uga nga ubo nga walay plema",
+        "coughing without phlegm",
+        "irritating cough with nothing coming out",
     ],
     "COUGH_PRODUCTIVE": [
         "I have a cough with phlegm",
@@ -71,6 +89,14 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "naay plema",
         "basang ubo",
         "ubo na naay plema",
+        "ubo na may plema",
+        "coughing up phlegm",
+        "may lumalabas na plema kapag umuubo ako",
+        "naay mogawas nga plema kung mag ubo ko",
+        "chesty cough",
+        "ubo nga basa",
+        "ubo na basa",
+        "phlegm in my chest",
     ],
     "COUGH_GENERAL": [
         "I have a cough",
@@ -78,6 +104,14 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "inuubo ako",
         "may ubo ako",
         "gi ubo ko",
+        "ubo ako",
+        "hindi ko mapigilan ang pag ubo",
+        "naa koy ubo",
+        "mga ubo",
+        "I can't stop coughing",
+        "coughing all day",
+        "parati akong umuubo",
+        "naga ubo ko",
     ],
     "FEVER": [
         "I have a high temperature",
@@ -94,6 +128,18 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "gihilanat ko",
         "init akong lawas",
         "init kaayo akong lawas",
+        "my body is hot and i sweat easily",
+        "I have a fever",
+        "lagnat ako",
+        "may lagnat ako",
+        "naa koy hilanat",
+        "init ang lawas ko",
+        "hilanat",
+        "feeling hot",
+        "chills and fever",
+        "nanginginig at nilalagnat",
+        "high temperature",
+        "mainit ang pakiramdam ko",
     ],
     "BODY_ACHES": [
         "my body aches",
@@ -109,6 +155,21 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "sakit lawas",
         "ngalay ang katawan",
         "pagod na pagod ako",
+        "sumasakit ang likod ko paggising sa umaga",
+        "sakit akong lawas",
+        "masakit ang buong katawan ko",
+        "my whole body is sore",
+        "muscles ache all over",
+        "ngalay ang buong katawan",
+        "masakit ang katawan at nanghihina",
+        "kapoy kaayo akong lawas",
+        "bali bali ang katawan ko",
+        "my body feels heavy and weak",
+        "sore body",
+        "my body has been aching",
+        "nangangalay ang katawan ko",
+        "nangangalay ang aking katawan",
+        "nangangalay akong katawan",
     ],
     "NASAL_CONGESTION": [
         "my nose is blocked",
@@ -118,6 +179,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "bara ang ilong",
         "weird ang ilong ko",
         "weird akong ilong",
+        "walang hangin ang ilong ko at hindi ako makaamoy",
+        "I can't breathe through my nose",
+        "blocked nose",
+        "clogged nose",
+        "baradong ilong ko",
+        "hindi makahinga ang ilong ko",
+        "stuffy ang ilong ko",
+        "barado akong ilong",
+        "nakabara ang ilong ko",
     ],
     "RUNNY_NOSE": [
         "runny nose",
@@ -125,6 +195,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "sipon",
         "tumutulo ilong",
         "nagatulo akong ilong",
+        "nagsipon ako",
+        "may sipon ako",
+        "tulo akong ilong",
+        "tumutulo ang sipon ko",
+        "nagatulo ang akong ilong",
+        "my nose keeps dripping",
+        "runny ang ilong ko",
+        "sipon na dumadaloy",
+        "my nose is watery",
     ],
     "ALLERGIC_RHINITIS": [
         "I have allergies and keep sneezing",
@@ -134,6 +213,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "makati ilong",
         "katol ilong",
         "makati ang ilong at mata",
+        "I keep sneezing",
+        "sneezing a lot",
+        "bahing ako nang bahing",
+        "allergic rhinitis",
+        "my allergies act up",
+        "sneezing and itchy eyes",
+        "makati ang ilong at mata ko",
+        "bumabahing ako lagi",
+        "sneezing fits",
     ],
     "RASHES": [
         "I have skin rashes",
@@ -148,6 +236,16 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "my body is itchy",
         "my skin is red and itchy",
         "nagpula akong panit unya katol siya",
+        "may pantal sa balat ko",
+        "skin rashes all over",
+        "nagkalat ang pantal ko",
+        "pantal sa katawan",
+        "red bumps on my skin",
+        "nagbutlig ang balat ko",
+        "hives",
+        "urticaria",
+        "namumula ang balat ko at makati",
+        "rashes on my arms and legs",
     ],
     "DIARRHEA": [
         "I have diarrhea",
@@ -158,6 +256,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "purely liquid stool",
         "nagtatae ako",
         "nagkalibang ko",
+        "diarrhea",
+        "LBM",
+        "loose bowel movement",
+        "pagtatatae",
+        "dumi akong maluwag",
+        "tumatae ako ng paulit ulit",
+        "luag nga dumi",
+        "may diarrhea ako",
+        "nagkalibang",
     ],
     "STOMACH_ACHE": [
         "I have a stomach ache",
@@ -180,6 +287,19 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "kabag",
         "masakit ang puson ko",
         "sakit puson",
+        "may mainit na likido na umaakyat sa dibdib ko",
+        "burning rising in my chest after eating",
+        "masakit ang sikmura ko kapag umiinom ng gatas",
+        "my stomach is cramping",
+        "stomach cramps",
+        "masakit ang tiyan ko pagkatapos kumain",
+        "nagkabag ako",
+        "sinisikmura ako",
+        "acid reflux",
+        "heartburn",
+        "parang tinutusok ang tiyan ko",
+        "masikip ang sikmura ko",
+        "sakit sa sikmura",
     ],
     "SORE_THROAT": [
         "I have a sore throat",
@@ -194,6 +314,19 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "masakit tutunlan",
         "sakit tutunlan",
         "di katulon",
+        "parang may nakabara sa lalamunan ko",
+        "something stuck in my throat",
+        "masakit ang lalamunan ko",
+        "my throat is sore",
+        "sakit sa lalamunan",
+        "masakit ang tutunlan ko",
+        "namamagang lalamunan",
+        "sakit lumunok",
+        "masakit lumunok",
+        "my throat hurts when I swallow",
+        "garas ang akong tutunlan",
+        "parang may gasgas ang lalamunan ko",
+        "masakit akong tutunlan",
     ],
 }
 
@@ -210,7 +343,14 @@ class SemanticMatch:
 
 
 class EmbeddingSymptomExtractor:
-    """Semantic symptom extractor using cosine similarity against anchors."""
+    """Semantic symptom extractor using cosine similarity against anchors.
+
+    Precision-first: like every deployed backend, this extractor fires only
+    when the dictionary stage returns nothing (fallback_only=True), so it
+    can never override a deterministic dictionary decision.
+    """
+
+    fallback_only = True
 
     def __init__(
         self,

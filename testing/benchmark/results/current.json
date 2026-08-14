@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T09:31:55",
+  "generated_at": "2026-08-14T19:18:41",
   "status": "generated",
   "provenance": "researcher_and_llm_created_synthetic_cases",
   "dataset": "testing/benchmark/testing.csv",
@@ -20,10 +20,10 @@
   "metrics": {
     "raw_input": {
       "case_count": 288,
-      "micro_precision": 0.8559322033898306,
+      "micro_precision": 0.8487394957983193,
       "micro_recall": 0.8487394957983193,
-      "micro_f1": 0.8523206751054853,
-      "macro_f1": 0.8203026481715006,
+      "micro_f1": 0.8487394957983193,
+      "macro_f1": 0.8197115384615384,
       "exact_match_rate": 0.8125
     },
     "guided_workflow": {

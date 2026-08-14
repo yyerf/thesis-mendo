@@ -845,5 +845,153 @@ class DurationSafeguardTests(unittest.TestCase):
         self.assertGreaterEqual(len(DURATION_THRESHOLDS), 13)
 
 
+# ===================================================================
+# SCOPED (ACCUMULATED) NEGATION — REGRESSION TESTS
+# ===================================================================
+# A negation word covers its whole clause: "wala koy gibati na sakit akong
+# tiyan ug sakit sa ulo" negates both, while "pero gi ubo ko" is positive.
+
+class ScopedNegationTests(unittest.TestCase):
+    def _run(self, text):
+        report = extract_symptoms_hybrid_report(
+            text,
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=3,
+            enable_semantic_fallback=True,
+        )
+        return sorted(report.get("final", {}).get("symptoms", []))
+
+    def test_coordinate_list_fully_negated(self):
+        cases = [
+            ("wala akong ubo at sipon", []),
+            ("wala koy ubo ug sipon", []),
+            ("wala akong lagnat at ubo", []),
+            ("no fever or cough", []),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_accumulated_negation_then_contrast_clause(self):
+        cases = [
+            (
+                "wala koy gibati na sakit akong tiyan kay okay ra ug sakit sa ulo, pero gi ubo ko",
+                ["COUGH_GENERAL"],
+            ),
+            ("wala koy sakit akong tiyan ug sakit sa ulo pero gi ubo ko", ["COUGH_GENERAL"]),
+            ("wala akong lagnat at ubo pero masakit ulo ko", ["HEADACHE"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_negation_does_not_cross_contrast_or_assertion(self):
+        cases = [
+            ("hindi ako nilalagnat pero may ubo ako", ["COUGH_GENERAL"]),
+            ("walang ubo pero may sipon", ["RUNNY_NOSE"]),
+            ("wala koy ubo, naa koy sipon", ["RUNNY_NOSE"]),
+            ("wala akong ubo may sipon ako", ["RUNNY_NOSE"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_consumed_negation_preserved(self):
+        cases = [
+            ("hindi pala ubo sipon", ["RUNNY_NOSE"]),
+            ("wala koy ubo sipon", ["RUNNY_NOSE"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_trap_verbs_leave_symptom_positive(self):
+        cases = [
+            ("hindi na ako makagalaw dahil sa sakit ng katawan", ["BODY_ACHES"]),
+            ("hindi ako makahinga dahil sa barado ilong", ["NASAL_CONGESTION"]),
+            ("dili mawala akong ubo", ["COUGH_GENERAL"]),
+            ("hindi na ako makatulog dahil sa sobrang ubo", ["COUGH_GENERAL"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+
+class FuzzyRescueTests(unittest.TestCase):
+    """Generic typo rescue: any misspelled symptom word maps to its label."""
+
+    def _run(self, text):
+        report = extract_symptoms_hybrid_report(
+            text,
+            semantic_threshold=0.65,
+            semantic_top_margin=0.08,
+            semantic_max_symptoms=3,
+            enable_semantic_fallback=False,
+        )
+        return sorted(report.get("final", {}).get("symptoms", []))
+
+    def test_misspelled_english_words_detected(self):
+        cases = [
+            ("hedache", ["HEADACHE"]),
+            ("headeche", ["HEADACHE"]),
+            ("headach", ["HEADACHE"]),
+            ("grabeng hedache nako", ["HEADACHE"]),
+            ("totache", ["TOOTHACHE"]),
+            ("toothach", ["TOOTHACHE"]),
+            ("stomachake", ["STOMACH_ACHE"]),
+            ("stomak pain", ["STOMACH_ACHE"]),
+            ("my tummi hurts", ["STOMACH_ACHE"]),
+            ("couhg", ["COUGH_GENERAL"]),
+            ("diahrea", ["DIARRHEA"]),
+            ("noze barado", ["RUNNY_NOSE"]),
+            ("itchy skin rsh", ["RASHES"]),
+            ("trout hurts", ["SORE_THROAT"]),
+            ("sore troat", ["SORE_THROAT"]),
+            ("may sorethroat ako", ["SORE_THROAT"]),
+            ("alerdyi sa pollen", ["ALLERGIC_RHINITIS"]),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_misspelled_words_respect_negation(self):
+        cases = [
+            ("wala koy hedache", []),
+            ("wala akong trhot problem", []),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self._run(text), expected)
+
+    def test_accumulated_negation_then_contrast_still_works_with_typos(self):
+        self.assertEqual(
+            self._run("wala koy hedache ug totache pero gi ubo ko"),
+            ["COUGH_GENERAL"],
+        )
+
+    def test_near_miss_words_do_not_fire(self):
+        # 1-2 edit words that are NOT symptom typos must never fire.
+        cases = [
+            "worst headache ever",
+            "i never get headaches",
+            "boses ko",
+            "isang ngipin ko",
+            "masakit ang ulo ko simula kahapon",
+            "tuloy tuloy ang sipon ko",
+            "naa koy iring sa balay",
+            "my nose keeps leaking even though i feel okay",
+            "there is a pain that won't go away",
+        ]
+        for text in cases:
+            with self.subTest(text=text):
+                symptoms = self._run(text)
+                self.assertTrue(set(symptoms) <= {"HEADACHE", "RUNNY_NOSE"})
+                self.assertNotIn("FEVER", symptoms)
+                self.assertNotIn("COUGH_GENERAL", symptoms)
+                self.assertNotIn("SORE_THROAT", symptoms)
+                self.assertNotIn("STOMACH_ACHE", symptoms)
+
+
 if __name__ == "__main__":
     unittest.main()

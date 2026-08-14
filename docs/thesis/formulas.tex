@@ -1,0 +1,99 @@
+% MendoVendo v3.0 — Formula sheet (standalone, compiles with pdflatex)
+% All formulas referenced from docs/thesis/final-methods-2026-08-14.md
+\documentclass[11pt]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage[colorlinks]{hyperref}
+\title{MendoVendo v3.0 — Formula Sheet\\ \large Deterministic + semantic symptom detection metrics and methods}
+\author{Software Revision 2026-08-14}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Semantic similarity (Stage 2)}
+Cosine similarity between a sentence embedding $\mathbf{a}$ and an anchor
+$\mathbf{b}$, both 384-d mean-pooled outputs of
+paraphrase-multilingual-MiniLM-L12-v2:
+\begin{equation}
+\mathbf{e}(s) = \frac{1}{n}\sum_{k=1}^{n}\mathbf{h}_k
+\quad\text{(mean pooling)}
+\end{equation}
+\begin{equation}
+\cos(\mathbf{a},\mathbf{b}) = \frac{\mathbf{a}\cdot\mathbf{b}}
+{\|\mathbf{a}\|\;\|\mathbf{b}\|}
+\end{equation}
+Anchor-based label score and firing rule (default backend
+\texttt{mendo-expert-minilm-v3.2}, 270 anchor sentences, no trained head):
+\begin{equation}
+s_L = \max_{a \in A_L} \cos\big(\mathbf{e}(u), \mathbf{e}(a)\big),
+\qquad \text{fire } L \iff s_L \geq \tau = 0.65
+\end{equation}
+
+\section{Text normalization (Stage 1)}
+Deterministic leetspeak/jejemon decode applied before any matching:
+\begin{equation}
+\begin{array}{l}
+@\to a,\; 0\to o,\; 1\to i,\; 3\to e,\; 4\to a,\; 5\to s,\; 7\to t,\; 8\to b,\\
+\$\to s,\; !\to i,\; |\to i,\qquad \text{apostrophes stripped}
+\end{array}
+\end{equation}
+
+\section{Multi-label evaluation metrics}
+Let $TP_l, FP_l, FN_l$ be the label-$l$ counts; $L$ the label set, $N$ rows:
+\begin{equation}
+P_{\mathrm{micro}} = \frac{\sum_l TP_l}{\sum_l TP_l + \sum_l FP_l},
+\qquad
+R_{\mathrm{micro}} = \frac{\sum_l TP_l}{\sum_l TP_l + \sum_l FN_l},
+\qquad
+F_1 = \frac{2 P R}{P + R}
+\end{equation}
+\begin{equation}
+\mathrm{Macro\text{-}F_1} = \frac{1}{|L|}\sum_{l\in L} F_{1,l},
+\qquad
+\mathrm{Hamming} = \frac{1}{N|L|}\sum_{i=1}^{N}\sum_{l\in L}
+\big[\hat{y}_{il} \neq y_{il}\big]
+\end{equation}
+Exact match (per row): $\big[\hat{\mathbf{y}}_i = \mathbf{y}_i\big]$.
+
+\section{Duration safeguard (Stage 4)}
+Refer when the reported duration exceeds the clinical threshold:
+\begin{equation}
+\text{refer iff } \text{days} > D_{\text{label}},
+\qquad
+D = \begin{cases}
+3 & \text{fever}\\
+2 & \text{diarrhea}\\
+5 & \text{sore throat}\\
+7 & \text{stomachache, headache, body aches, rashes, allergy, nasal, runny nose}\\
+14 & \text{cough}
+\end{cases}
+\end{equation}
+
+\section{Levenshtein fuzzy rescue (Stage 1)}
+Typo tolerance for dictionary misses: token $t$ matches target $\tau$ iff
+$\mathrm{lev}(t,\tau) \leq d$ with $d\in\{1,2\}$ per rescue rule, where
+\begin{equation}
+\mathrm{lev}(a,b) = \begin{cases}
+|a| & b = \varepsilon\\
+|b| & a = \varepsilon\\
+\mathrm{lev}(a[1:],b[1:]) & a_0 = b_0\\
+1 + \min\!\Big(\mathrm{lev}(a[1:],b),\ \mathrm{lev}(a,b[1:]),\
+\mathrm{lev}(a[1:],b[1:])\Big) & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\section{Headache red-flag priority}
+Red-zone types dominate in fixed priority order (2026-08-14 revision in
+bold):
+\begin{equation}
+\begin{array}{l}
+\texttt{thunderclap} > \texttt{meningeal} > \texttt{stroke\_like} >
+\texttt{visual\_loss} > \texttt{syncope} > \texttt{pregnancy} > \\
+\qquad \texttt{hypertension} > \texttt{spinal} > \texttt{post\_traumatic} >
+\texttt{exertion}
+\end{array}
+\end{equation}
+
+\end{document}

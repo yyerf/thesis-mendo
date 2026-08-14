@@ -1,0 +1,20 @@
+{"text": "magkano ang biogesic", "expected": [], "note": "price question"}
+{"text": "salamat po", "expected": [], "note": "gratitude"}
+{"text": "ano oras na ba", "expected": [], "note": "time question"}
+{"text": "pwede po bang magbayad ng gcash", "expected": [], "note": "payment question"}
+{"text": "nasaan ang cr", "expected": [], "note": "facility question"}
+{"text": "hello po", "expected": [], "note": "greeting"}
+{"text": "salamat sa tulong niyo", "expected": [], "note": "gratitude"}
+{"text": "gusto ko ng burger", "expected": [], "note": "food request"}
+{"text": "ang ganda ng araw ngayon", "expected": [], "note": "small talk"}
+{"text": "paano mag register dito", "expected": [], "note": "registration question"}
+{"text": "saan po ang pila", "expected": [], "note": "queue question"}
+{"text": "ano pangalan mo", "expected": [], "note": "personal question"}
+{"text": "may libreng wifi ba dito", "expected": [], "note": "wifi question"}
+{"text": "bukas na lang ako babalik", "expected": [], "note": "return statement"}
+{"text": "san po ang botika", "expected": [], "note": "pharmacy location"}
+{"text": "wala po akong tanong", "expected": [], "note": "no question"}
+{"text": "12345", "expected": [], "note": "gibberish"}
+{"text": "okay lang po ako", "expected": [], "note": "i am fine"}
+{"text": "kumusta ang panahon", "expected": [], "note": "weather small talk"}
+{"text": "pasensya na po", "expected": [], "note": "apology"}

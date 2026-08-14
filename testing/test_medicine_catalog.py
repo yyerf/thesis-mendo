@@ -161,25 +161,30 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
             app = Flask(__name__)
             try:
                 with app.app_context():
-                    pos_db.init_db()
-                    db = pos_db.get_db()
-                    rows = db.execute(
-                        """
-                        SELECT hardware_slot,brand,is_active
-                        FROM inventory ORDER BY hardware_slot
-                        """
-                    ).fetchall()
-                    self.assertEqual(len(rows), 10)
-                    self.assertEqual([row["brand"] for row in rows], list(EXPECTED_CATALOG))
-                    self.assertEqual(
-                        [row["hardware_slot"] for row in rows],
-                        list(range(1, 11)),
-                    )
-                    self.assertTrue(all(row["is_active"] for row in rows))
-                    self.assertEqual(
-                        db.execute("PRAGMA integrity_check").fetchone()[0],
-                        "ok",
-                    )
+                    try:
+                        pos_db.init_db()
+                        db = pos_db.get_db()
+                        rows = db.execute(
+                            """
+                            SELECT hardware_slot,brand,is_active
+                            FROM inventory ORDER BY hardware_slot
+                            """
+                        ).fetchall()
+                        self.assertEqual(len(rows), 10)
+                        self.assertEqual(
+                            [row["brand"] for row in rows], list(EXPECTED_CATALOG)
+                        )
+                        self.assertEqual(
+                            [row["hardware_slot"] for row in rows],
+                            list(range(1, 11)),
+                        )
+                        self.assertTrue(all(row["is_active"] for row in rows))
+                        self.assertEqual(
+                            db.execute("PRAGMA integrity_check").fetchone()[0],
+                            "ok",
+                        )
+                    finally:
+                        pos_db.close_db()
             finally:
                 pos_db.DB_PATH = original_path
 
@@ -255,20 +260,23 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
             app = Flask(__name__)
             try:
                 with app.app_context():
-                    pos_db.init_db()
-                    db = pos_db.get_db()
-                    cursor = db.execute(
-                        """
-                        INSERT INTO inventory
-                            (brand,unit_price,stock_quantity,is_active,hardware_slot)
-                        VALUES ('Legacy Product',10,1,1,NULL)
-                        """
-                    )
-                    db.commit()
-                    with self.assertRaisesRegex(ValueError, "hardware catalog"):
-                        pos_db.create_transaction(
-                            [{"inventory_id": cursor.lastrowid, "quantity": 1}]
+                    try:
+                        pos_db.init_db()
+                        db = pos_db.get_db()
+                        cursor = db.execute(
+                            """
+                            INSERT INTO inventory
+                                (brand,unit_price,stock_quantity,is_active,hardware_slot)
+                            VALUES ('Legacy Product',10,1,1,NULL)
+                            """
                         )
+                        db.commit()
+                        with self.assertRaisesRegex(ValueError, "hardware catalog"):
+                            pos_db.create_transaction(
+                                [{"inventory_id": cursor.lastrowid, "quantity": 1}]
+                            )
+                    finally:
+                        pos_db.close_db()
             finally:
                 pos_db.DB_PATH = original_path
 

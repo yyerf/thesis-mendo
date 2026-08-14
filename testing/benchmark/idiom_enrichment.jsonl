@@ -1,0 +1,43 @@
+{"input": "parang may sinturon na pumipisil sa ulo ko buong araw", "expected": "Headache"}
+{"input": "hinigpitan ang buong ulo ko parang may pumipiga", "expected": "Headache"}
+{"input": "parang may nakapaligid na pambalot sa ulo ko na humihigpit", "expected": "Headache"}
+{"input": "ang ulo ko ay parang pinipiga ng mahigpit na banda", "expected": "Headache"}
+{"input": "naghuot ang akong ulo murag gipislit sa benda", "expected": "Headache"}
+{"input": "my head is being squeezed in a tight band all morning", "expected": "Headache"}
+{"input": "the pressure around my head feels like a vice", "expected": "Headache"}
+{"input": "may nasusunog sa loob ng dibdib ko pagkatapos kumain", "expected": "Stomachache"}
+{"input": "parang may mainit na likido na umaakyat sa dibdib ko tuwing gabi", "expected": "Stomachache"}
+{"input": "nasusunog ang sikmura ko kapag kumakain ng maanghang", "expected": "Stomachache"}
+{"input": "heartburn ako lagi pagkatapos kumain ng marami", "expected": "Stomachache"}
+{"input": "mo-init ang akong dughan human mokaon", "expected": "Stomachache"}
+{"input": "mag-init ang akong tiyan nga murag nagsiga human mokaon", "expected": "Stomachache"}
+{"input": "acid is rising in my chest after every meal", "expected": "Stomachache"}
+{"input": "sumasakit ang sikmura ko kapag umiinom ng gatas", "expected": "Stomachache"}
+{"input": "hindi ko matunaw ang gatas, sumasakit agad ang tiyan ko", "expected": "Stomachache"}
+{"input": "every time i drink milk my stomach hurts right away", "expected": "Stomachache"}
+{"input": "nasusuka ako at sumasakit ang tiyan pagkatapos uminom ng gatas", "expected": "Stomachache"}
+{"input": "sakit akong tiyan basta moinom ug gatas", "expected": "Stomachache"}
+{"input": "gisakit ang akong tiyan human inom og gatas", "expected": "Stomachache"}
+{"input": "palaging mainit ang katawan ko at madaling pagpawisan", "expected": "Fever"}
+{"input": "mainit ang pakiramdam ko kahit wala naman akong ginagawa", "expected": "Fever"}
+{"input": "napapawis ako nang labis at mainit ang katawan ko", "expected": "Fever"}
+{"input": "init akong lawas ug dali kong singoton bisan walay buhat", "expected": "Fever"}
+{"input": "my body feels hot and i sweat easily all day", "expected": "Fever"}
+{"input": "mainit ang katawan ko tuwing hapon at nagpapawis ako", "expected": "Fever"}
+{"input": "parang may nakabara sa lalamunan ko na ayaw maipasa", "expected": "Sore Throat"}
+{"input": "parang may matigas na bagay na naiipit sa lalamunan ko", "expected": "Sore Throat"}
+{"input": "feeling ko may bara sa throat ko na hindi ko malunok", "expected": "Sore Throat"}
+{"input": "naay murag nakabara sa akong tutunlan nga lisod lunukon", "expected": "Sore Throat"}
+{"input": "there is something stuck in my throat that will not go down", "expected": "Sore Throat"}
+{"input": "masakit lunukin parang may nakasaksak sa lalamunan ko", "expected": "Sore Throat"}
+{"input": "sumasakit ang likod ko paggising ko sa umaga", "expected": "Bodyache"}
+{"input": "masakit ang bewang ko pagkatapos tumayo ng matagal", "expected": "Bodyache"}
+{"input": "sakit ang akong likod sukad kagabii", "expected": "Bodyache"}
+{"input": "my lower back is sore when i wake up", "expected": "Bodyache"}
+{"input": "nananakit ang likod at balikat ko buong araw", "expected": "Bodyache"}
+{"input": "walang hangin ang ilong ko at hindi ko maamoy ang pagkain", "expected": "Nasal Congestion"}
+{"input": "madalas akong umihi lalo na sa gabi", "expected": "NONE"}
+{"input": "laging nauuhaw kahit uminom ako ng maraming tubig", "expected": "NONE"}
+{"input": "parang may kumakaluskos sa tenga ko pag gumagalaw ako", "expected": "NONE"}
+{"input": "kumikirot ang tuhod ko pag umaakyat ng hagdan", "expected": "NONE"}
+{"input": "namamaga ang gums ko at masakit ngumunguya", "expected": "NONE"}

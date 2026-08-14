@@ -29,6 +29,11 @@ from .headache_locations import HEADACHE_TYPES, get_location
 # Red-zone types; earlier entry wins when several match at once.
 RED_PRIORITY: List[str] = [
     "thunderclap",
+    "meningeal",
+    "stroke_like",
+    "visual_loss",
+    "syncope",
+    "pregnancy",
     "hypertension",
     "spinal",
     "post_traumatic",
@@ -115,6 +120,13 @@ def promote_bare_headache_cue(user_input: str) -> Optional[Dict[str, object]]:
     if not probe.get("matched"):
         return None
     if probe.get("resolution") not in ("strong_match", "red_zone"):
+        return None
+    # Guard: the pregnancy type must never promote a headache consult from a
+    # bare "buntis ako" with no headache word — the kiosk would inject HEADACHE
+    # into a consult the user never reported.
+    if probe.get("key") == "pregnancy" and not re.search(
+        r"\b(ulo|head|headache|labad|sakit|sakit sa ulo)\b", _normalize(user_input)
+    ):
         return None
     return probe
 

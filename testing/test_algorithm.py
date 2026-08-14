@@ -35,9 +35,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from mendo_core.evaluation import aggregate_metrics
 from mendo_core.medicine_catalog import MEDICINE_CATALOG_VERSION
 from mendo_core.prediction_pipeline import (
-    ENGINE_ID,
     TRACE_SCHEMA_VERSION,
     predict_symptoms,
+    _semantic_backend_info,
 )
 from mendo_core.step4_recommend import load_mendo_dataset, recommend_from_dataset, DATASET_DEFAULT
 
@@ -398,7 +398,7 @@ class AlgorithmTester:
             'dataset_sha256': hashlib.sha256(
                 (Path(__file__).parent / "benchmark" / "testing.csv").read_bytes()
             ).hexdigest(),
-            'engine_id': ENGINE_ID,
+            'engine_id': _semantic_backend_info()["engine_id"],
             'medicine_catalog_version': MEDICINE_CATALOG_VERSION,
             'trace_version': TRACE_SCHEMA_VERSION,
             'automatic_production_training': False,

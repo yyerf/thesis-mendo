@@ -66,8 +66,14 @@ def _preload_semantic_model():
     try:
         from mendo_core.step3_hybrid import _get_semantic_extractor
         ext = _get_semantic_extractor()
-        # Warm up PyTorch buffers with a throwaway encode
-        ext.analyze("warmup", threshold=0.99)
+        warmup = getattr(ext, "warmup", None)
+        if warmup is not None:
+            # LLM backends (Sailor2 via Ollama): probe the endpoint and force
+            # the model weights to load without generating on a fake input.
+            warmup()
+        else:
+            # Embedding backends: warm up PyTorch buffers with a throwaway encode.
+            ext.analyze("warmup", threshold=0.99)
         log.info("Semantic model preloaded and warmed up")
     except Exception as e:
         log.warning("Semantic model preload failed (will retry on first query): %s", e)

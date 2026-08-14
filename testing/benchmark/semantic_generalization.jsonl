@@ -1,0 +1,16 @@
+{"text": "my stomach is burning like acid reflux after eating", "expected": ["STOMACH_ACHE"], "note": "English paraphrase"}
+{"text": "head feels like a tight band squeezing", "expected": ["HEADACHE"], "note": "English tension-type paraphrase"}
+{"text": "cramping sa tiyan pagkatapos kumain", "expected": ["STOMACH_ACHE"], "note": "Bisaya Taglish paraphrase"}
+{"text": "naalibadbad ang aking katawan buong gabi", "expected": ["BODY_ACHE"], "note": "deep Tagalog paraphrase"}
+{"text": "masakit ang aking likod kagabi paggising", "expected": ["BODY_ACHE"], "note": "deep Tagalog paraphrase"}
+{"text": "parang may bato sa lalamunan ko na hindi ko mailunok", "expected": ["SORE_THROAT"], "note": "figurative sore-throat"}
+{"text": "my nose is completely blocked and i cant smell anything", "expected": ["NASAL_CONGESTION"], "note": "English paraphrase"}
+{"text": "parang may mainit na bagay na umaakyat sa dibdib ko tuwing kumakain", "expected": ["STOMACH_ACHE"], "note": "GERD-like figurative"}
+{"text": "parang may kumakaskas sa loob ng tenga ko", "expected": [], "note": "true negative out-of-dictionary"}
+{"text": "mabilis akong pawisin at mainit lagi ang katawan ko sa hapon", "expected": ["FEVER"], "note": "indirect fever phrasing"}
+{"text": "matigas ang tiyan ko at parang busog kahit hindi pa kumakain", "expected": ["STOMACH_ACHE"], "note": "bloating stomach phrasing"}
+{"text": "may makati na pulang patse sa braso ko na kumalat", "expected": ["RASHES"], "note": "rash paraphrase"}
+{"text": "napapadalas ang pag-ihi ko at parang laging nauuhaw", "expected": [], "note": "true negative out-of-dictionary"}
+{"text": "sumasakit ang sikmura ko tuwing umiinom ako ng gatas", "expected": ["STOMACH_ACHE"], "note": "lactose-style trigger"}
+{"text": "nahihilo ako at parang lutang ang ulo ko", "expected": ["HEADACHE"], "note": "dizzy lightheaded paraphrase"}
+{"text": "ang lalamunan ko ay tila may nakabara na bara", "expected": ["SORE_THROAT"], "note": "throat obstruction figurative"}
