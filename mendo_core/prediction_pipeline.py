@@ -163,6 +163,7 @@ def _attach_semantic_summary(trace: Dict[str, Any], backend: Optional[Dict[str, 
     is_minilm = backend["engine_id"] == ENGINE_ID
     trace["semantic"] = {
         "used": True,
+        "observational_only": semantic_stage.get("observational_only", False),
         "score_type": backend["semantic_score_type"],
         "comparison": (
             "user_input_embedding_vs_symptom_anchor_sentences"

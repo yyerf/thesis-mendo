@@ -897,6 +897,17 @@ def _explicitly_negates_headache(user_input: str, _nt: str = "") -> bool:
     # - "no headache" / "not headache"
     # - "not sakit ulo" / "walang sakit ulo" / "dili sakit ulo"
     # - "wala akong headache" / "wala koy sakit ulo"
+    # Guard: "dili mawala ang sakit sakong ulo" (won't go away) is NOT a
+    # negation of headache — the neg word targets the trap verb, not the symptom.
+    _TRAP_RX = (
+        r"(?:mawala|nawawala|nawala|nawagtang|mohunong|hunong|huminto|"
+        r"tigil|hinto|stop|undang|naundang)"
+    )
+    has_trap = re.search(
+        rf"\b{_NEG_RX}\b(?:\s+\w+){{0,3}}\s+\b{_TRAP_RX}\b", nt
+    ) is not None
+    if has_trap:
+        return False
     return (
         re.search(rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+\b(headache|head|ulo)\b", nt) is not None
         or re.search(rf"\b{_NEG_RX}\b(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+sakit\s+ulo\b", nt) is not None
@@ -1407,13 +1418,7 @@ def _semantic_lexical_guard(user_input: str, semantic_detected: List[str]) -> Li
         "heartburn",
         "maasim",
         "cramping",
-        # Nausea / vomiting
-        "nauseous",
-        "nausea",
-        "nasusuka",
-        "nagsusuka",
-        "suka",
-        "magsuka",
+        # Digestive discomfort
         "gastric",
     ]
 
@@ -1581,6 +1586,120 @@ def _dictionary_matches(user_input: str) -> List[dict]:
 _SEMANTIC_EXTRACTOR = None
 
 
+# ---------------------------------------------------------------------------
+# Anchor-based token spell correction for semantic input
+# ---------------------------------------------------------------------------
+# Before passing text to MiniLM, replace tokens that are misspelled versions
+# of the 18 English fuzzy anchors with their correct forms. This dramatically
+# improves semantic scores on inputs like "throbing hedache" -> "throbbing headache".
+# Only English anchor tokens are corrected; Tagalog/Bisaya tokens are untouched.
+
+from .step1 import (
+    _FUZZY_ANCHORS,
+    _levenshtein_within,
+    _dictionary_word_set,
+    _FUZZY_EXCLUDE,
+    _NEG_WORDS as _STEP1_NEG_WORDS,
+    _NEG_SCOPE_END as _STEP1_NEG_SCOPE_END,
+)
+
+# Canonical correction map: anchor word -> correct English spelling to substitute
+_ANCHOR_CORRECTIONS: dict = {
+    "headache": "headache",
+    "toothache": "toothache",
+    "stomachache": "stomachache",
+    "stomach": "stomach",
+    "tummy": "tummy",
+    "diarrhea": "diarrhea",
+    "fever": "fever",
+    "cough": "cough",
+    "throat": "throat",
+    "sorethroat": "sore throat",
+    "nose": "nose",
+    "rash": "rash",
+    "itchy": "itchy",
+    "sneeze": "sneeze",
+    "allergy": "allergy",
+    "allergic": "allergic",
+    "body": "body",
+    "runny": "runny",
+}
+
+# Tokens that must never be "corrected" — real words, negators, Filipino terms.
+# Reuse the same exclusion sets as fuzzy rescue.
+_CORRECTION_SKIP: frozenset = frozenset(
+    set(_STEP1_NEG_WORDS) | _FUZZY_EXCLUDE | set(_STEP1_NEG_SCOPE_END)
+)
+
+
+def _correct_for_semantic(user_input: str) -> str:
+    """Replace misspelled English anchor tokens with their canonical forms.
+
+    This is called only when the semantic stage is about to run — it gives
+    MiniLM clean embeddings for tokens that fuzzy rescue already mapped to
+    the right label, but which the raw subword tokenizer struggles with.
+
+    Rules (same as fuzzy rescue for safety):
+    - Only alphabetic tokens >= 4 chars within |len_diff| <= 2 of an anchor
+    - Skips tokens already in the dictionary, negation set, or exclusion set
+    - Skips known Tagalog/Bisaya tokens (not in the anchor set)
+    - Each token is corrected at most once (first matching anchor wins)
+    """
+    from .step1 import _normalize as _n1, _KNOWN_LOCAL_TOKENS
+    
+    # Try to use advanced fuzzy matching if available
+    try:
+        from .advanced_fuzzy import advanced_fuzzy_match, _ADVANCED_ANCHORS
+        use_advanced = True
+    except ImportError:
+        use_advanced = False
+
+    dict_words = _dictionary_word_set()
+    skip = _CORRECTION_SKIP | dict_words
+
+    tokens = user_input.split()
+    corrected = []
+    for tok in tokens:
+        bare = tok.lower().strip(".,;:!?()'\"")
+        # Skip: short, non-alpha, known-good, negators, Filipino words
+        if (
+            len(bare) < 3  # Lower threshold for advanced matching
+            or not bare.isalpha()
+            or bare in skip
+            or bare in _KNOWN_LOCAL_TOKENS
+        ):
+            corrected.append(tok)
+            continue
+        
+        replaced = False
+        
+        # Try advanced matching first
+        if use_advanced:
+            for anchor, label, max_dist, variants in _ADVANCED_ANCHORS:
+                if abs(len(bare) - len(anchor)) > 3:
+                    continue
+                matched = advanced_fuzzy_match(bare, anchor, label, max_dist, variants, min_ngram_score=0.55)
+                if matched:
+                    corrected.append(anchor)  # Use canonical anchor form
+                    replaced = True
+                    break
+        
+        # Fall back to legacy matching
+        if not replaced:
+            for anchor, label, max_dist in _FUZZY_ANCHORS:
+                if abs(len(bare) - len(anchor)) > 2:
+                    continue
+                if _levenshtein_within(bare, anchor, max_dist):
+                    corrected.append(_ANCHOR_CORRECTIONS.get(anchor, anchor))
+                    replaced = True
+                    break
+        
+        if not replaced:
+            corrected.append(tok)
+    
+    return " ".join(corrected)
+
+
 def _get_semantic_extractor():
     """Lazy singleton factory for the semantic fallback backend.
 
@@ -1721,24 +1840,16 @@ def extract_symptoms_hybrid_report(
     # transformer can correct dictionary false positives (e.g. "ngipon" → RUNNY_NOSE).
     try:
         extractor = _get_semantic_extractor()
-        if getattr(extractor, "fallback_only", False) and dict_symptoms:
-            # Precision-first for LLM backends: generation costs seconds per
-            # query, so the LLM runs only when the deterministic dictionary
-            # found nothing. The rules never need the LLM to correct them.
-            report["stages"].append(
-                {
-                    "stage": "semantic",
-                    "used": False,
-                    "available": True,
-                    "skipped_reason": "dictionary_hit_precision_first",
-                }
-            )
-            report["final"]["symptoms"] = dict_symptoms
-            report["final"]["conditions"] = dict_conditions
-            report["final"]["source"] = "dictionary" if dict_symptoms else "none"
-            return report
+        observational_only = getattr(extractor, "fallback_only", False) and bool(dict_symptoms)
+        # When the dictionary already hit, MiniLM still runs to produce audit
+        # scores (visible in the admin logs), but its output does NOT influence
+        # the final decision — the dictionary result is authoritative.
 
-        semantic_detected, diag = extractor.analyze(user_input, threshold=semantic_threshold)
+        # Spell-correct English anchor tokens before encoding — "throbing hedache"
+        # -> "throbbing headache" gives MiniLM a clean embedding instead of
+        # broken subword pieces. Tagalog/Bisaya tokens are never touched.
+        semantic_input = _correct_for_semantic(user_input)
+        semantic_detected, diag = extractor.analyze(semantic_input, threshold=semantic_threshold)
         semantic_detected = _semantic_lexical_guard(user_input, semantic_detected)
         diag_sorted = sorted(
             [
@@ -1796,14 +1907,24 @@ def extract_symptoms_hybrid_report(
             "stage": "semantic",
             "used": True,
             "available": True,
+            "observational_only": observational_only,
             "threshold": semantic_threshold,
             "top_margin": semantic_top_margin,
             "max_symptoms": semantic_max_symptoms,
+            "input_corrected": semantic_input if semantic_input != user_input else None,
             "detected_raw": semantic_detected,
             "detected_selected": semantic_selected,
             "scores": diag_sorted,
         }
     )
+
+    # When the dictionary already matched, it is the authoritative source.
+    # Semantic scores are recorded for audit/display but do not alter the result.
+    if observational_only:
+        report["final"]["symptoms"] = dict_symptoms
+        report["final"]["conditions"] = dict_conditions
+        report["final"]["source"] = "dictionary"
+        return report
 
     # Merge semantic candidates with deterministic dictionary hits. Dictionary
     # phrases already pass explicit negation, idiom, and safety filters; a

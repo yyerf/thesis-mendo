@@ -279,9 +279,26 @@
     const dictionaryRows = (dictionary.details || []).map(row =>
       `<div class="trace-row"><strong>${esc(row.symptom)}</strong><span>${esc((row.matched_phrases || []).join(', '))}</span><span class="audit-chip">${esc(row.decision || 'matched')}</span></div>`
     ).join('') || '<span class="muted">No dictionary phrase matched.</span>';
+    const semanticSkipReason = semantic.skipped_reason || (trace.semantic && trace.semantic.reason) || null;
+    const observationalOnly = semantic.observational_only || (trace.semantic && trace.semantic.observational_only) || false;
+    const semanticSkipMessages = {
+      dictionary_hit_precision_first: 'Skipped — dictionary matched this input (precision-first design). MiniLM runs only when the dictionary finds nothing, so false positives from cosine similarity cannot override strong deterministic evidence.',
+      backend_unavailable: 'Semantic component unavailable for this event.',
+      skipped: 'Semantic stage was skipped for this event.',
+    };
+    const semanticFallbackMsg = semantic.available === false
+      ? 'Semantic component unavailable for this event.'
+      : (semanticSkipReason ? (semanticSkipMessages[semanticSkipReason] || `Skipped — ${semanticSkipReason}.`) : 'No semantic scores retained.');
+    const observationalNote = observationalOnly
+      ? `<p class="muted" style="border-left:3px solid #f59e0b;padding-left:8px;margin-bottom:8px">Observational — dictionary already matched. These scores did not influence the final decision.</p>`
+      : '';
+    const correctedInput = semantic.input_corrected || null;
+    const correctedNote = correctedInput
+      ? `<p class="muted" style="border-left:3px solid #0284c7;padding-left:8px;margin-bottom:8px">Spell-corrected input passed to model: <code>${esc(correctedInput)}</code></p>`
+      : '';
     const semanticRows = (semantic.scores || []).slice(0,8).map(row =>
       `<div class="trace-row${row.vetoed ? ' trace-row--vetoed' : ''}"><strong>${esc(row.symptom)}</strong><div><div class="score-track"><div class="score-fill" style="width:${pct(row.score)}%"></div></div><span class="muted">${esc(row.best_anchor || '')}</span></div><span>${Number(row.score || 0).toFixed(4)}${row.vetoed ? '<span class="veto-chip" title="Rejected by keyword guard / safety filter">vetoed</span>' : ''}</span></div>`
-    ).join('') || `<span class="muted">${semantic.available === false ? 'Semantic component unavailable for this event.' : 'No semantic scores retained.'}</span>`;
+    ).join('') || `<span class="muted">${semanticFallbackMsg}</span>`;
     const engine = trace.engine || {};
     const engineLabel = {
       'mendo-expert-minilm-finetuned-v1': 'Fine-tuned MiniLM classifier',
@@ -293,9 +310,12 @@
       cosine_similarity: 'Cosine similarities vs anchor sentences — not confidence probabilities.',
       constrained_decode_emission: 'Deterministic closed-vocabulary LLM decode — emission 1.0 if emitted, 0.0 otherwise.',
     }[engine.semantic_score_type] || 'Score format: legacy/unrecorded.';
+    const semanticSectionLabel = observationalOnly
+      ? `${esc(engineLabel)} · threshold ${esc(semantic.threshold ?? engine.semantic_threshold ?? '—')} · observational`
+      : `${esc(engineLabel)} · threshold ${esc(semantic.threshold ?? engine.semantic_threshold ?? '—')}`;
     return `<div class="trace-tabs">
       <details class="trace-block"><summary>Dictionary evidence · matched / negated / suppressed</summary><div class="trace-content">${dictionaryRows}</div></details>
-      <details class="trace-block"><summary>${esc(engineLabel)} · threshold ${esc(semantic.threshold ?? engine.semantic_threshold ?? '—')}</summary><div class="trace-content"><p class="muted">Model: ${esc(engine.semantic_model_id || 'legacy/unrecorded')}. ${esc(scoreDesc)}<br>Medicine catalog: ${esc(engine.medicine_catalog_version || 'legacy/unrecorded')}.</p>${semanticRows}</div></details>
+      <details class="trace-block"><summary>${semanticSectionLabel}</summary><div class="trace-content"><p class="muted">Model: ${esc(engine.semantic_model_id || 'legacy/unrecorded')}. ${esc(scoreDesc)}<br>Medicine catalog: ${esc(engine.medicine_catalog_version || 'legacy/unrecorded')}.</p>${observationalNote}${correctedNote}${semanticRows}</div></details>
       <details class="trace-block"><summary>Final transformations and action</summary><div class="trace-content"><pre style="white-space:pre-wrap;margin:0">${esc(JSON.stringify({transformations:trace.transformations || [], final:trace.final || {}, decision:trace.decision || {}}, null, 2))}</pre></div></details>
     </div>`;
   }

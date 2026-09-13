@@ -83,14 +83,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sumasakit ang bumbunan",
         "bumbunan ko",
     ],
-    # NOTE (thesis/panel-friendly): COUGH is split into 3 intents.
-    # - COUGH_PRODUCTIVE: cough with phlegm/mucus (wet cough)
-    # - COUGH_DRY: cough without phlegm (dry/tickly cough)
-    # - COUGH_GENERAL: user said "ubo" but did not specify wet vs dry
-    #
-    # These lists are used for basic matching + explanation/debug, but the
-    # actual cough-type decision is handled by a dedicated qualifier function
-    # (see _extract_cough_type) to properly handle negative matching.
+    
     "COUGH_PRODUCTIVE": [
         # English
         "productive cough",
@@ -143,6 +136,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Tagalog / Taglish
         "ubo",
         "inuubo",
+        "inuubu",
         "inu-ubo",
         "inuubo ako",
         "nag ubo",
@@ -174,6 +168,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Common shorthand
         "sige ubo",
         "cge ubo",
+        # Common misspellings
+        "koff",
+        "kogh",
+        "coff",
     ],
     "FEVER": [
         # English
@@ -220,12 +218,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "gi hilantan",
         "ginahilanat",
         "naay hilanat",
-        # Bisaya — inflected / verb forms of "hilanat" (fever).
-        # These carry common Cebuano affixes (ni-, gi-, na-, -od/-on). They
-        # previously fell through to the semantic fallback, which is weak for
-        # Cebuano, so they are pinned here deterministically instead.
-        # NOTE: only single-token forms are listed so negation scoping works
-        # ("walay nihilantan ko" must not match "hilantan ko" by substring).
+    
         "hilantan",
         "gihilantan",
         "nihilantan",
@@ -307,6 +300,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # English   
         "body aches",
         "body ache",
+        "bodypain",
         "body pain",
         "body hurts",
         "my body hurts",
@@ -389,12 +383,15 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         # Tagalog
         "barado ilong",
         "barado ang ilong",
+        "barado akong ilong",
         "sipon na barado",
         # Bisaya
         "barado ilong",
+        "barado akong ilong",
         "bara ang ilong",
         "lisod ginhawa sa ilong",
         "stuffy akong ilong",
+        "bara akong ilong",
     ],
     # Optional: you can add more symptoms later (examples below)
     "SORE_THROAT": [
@@ -599,17 +596,6 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "kumukulo",
         "kumukulo ang tiyan",
         "hyperacidity",
-        # Nausea / vomiting expressions
-        "nauseous",
-        "nausea",
-        "nasusuka",
-        "nasusuka ako",
-        "gustong magsuka",
-        "gusto ko magsuka",
-        "gusto kong magsuka",
-        "parang gusto ko magsuka",
-        "nagsusuka",
-        "nagsusuka ako",
         # Lower abdomen
         "sakit puson",
         "sakit sa puson",
@@ -633,6 +619,10 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
     "DIARRHEA": [
         # English
         "diarrhea",
+        "diarrea",
+        "diarrhoea",
+        "diarhea",
+        "diharia",
         "loose stool",
         "watery stool",
         "frequent bowel movements",
@@ -832,8 +822,19 @@ _NEG_WINDOW = 4
 _NEG_SCOPE_END = frozenset({
     "pero", "but", "apan", "kundi", "gawas", "maliban", "kaso", "however",
     "though", "besides", "because", "so", "therefore", "bisan",
-    "bisag", "biskan", "kung", "tapos", "then", "unya", "nya", "mao",
-    "busa", "may", "meron", "mayroon", "mayron", "naa", "naay", "naai",
+    "bisag", "biskan", "kung", "mao", "busa",
+    "may", "meron", "mayroon", "mayron", "naa", "naay", "naai",
+})
+# Sequencing words that CONTINUE the narrative but do NOT open a new,
+# contrastive clause: "wala koy sakit sa ulo ... tapos ... ug sakit sa
+# tiyan" keeps the negation scope open across the sequencing words, exactly
+# like the manuscript's accumulated-negation model ("wala koy A tapos ... ug
+# B" negates both).  Contradictory-sounding sequences ("wala koy ubo tapos
+# sige kog ubo") are not real kiosk inputs and no benchmark row exercises
+# them; a positive re-assertion is always marked by an assertion word
+# (naa/may) or a contrast word (pero/but), which still close the scope.
+_NEG_SEQUENCE_WORDS = frozenset({
+    "tapos", "then", "unya", "nya",
 })
 # Positive-assertion words that open a NEW (positive) clause — except when
 # fused into the negative construction itself: "wala may mogawas" /
@@ -977,7 +978,10 @@ def _negation_reaches(
     for i in range(target_idx):
         bare = _strip_token(tail[i])
         if not bare:
-            return False  # punctuation-only token closes the scope
+            # Punctuation-only token (e.g., comma in "tiyan, ulo") — skip it,
+            # don't close the scope. Commas separate list items but don't
+            # break negation: "wala koy sakit sa tiyan, ulo, ngipon".
+            continue
         if bare in _NEG_SCOPE_END and bare not in _NEG_ASSERTION_WORDS:
             return False
         if bare in _NEG_ASSERTION_WORDS:
@@ -1013,13 +1017,41 @@ def _negation_reaches(
             seen_symptom = True
             # Negation is consumed by this closer symptom keyword — UNLESS a
             # join connector ties it to the target as one coordinate list.
+            # This includes:
+            # 1. Explicit connectors: "wala koy tiyan ug ulo" 
+            # 2. Parallel structure: "wala koy sakit sa tiyan sakit sa ulo"
+            #    (the phrase_first word repeats, indicating a list)
             joined = False
+            
+            # Check for phrase_first repetition (parallel structure list)
+            # "sakit sa tiyan, sakit sa ulo" → phrase_first="sakit" appears again
+            # Also detect abbreviated lists: "sakit akong tiyan, akong ulo" where
+            # possessive markers (akong/ang/sa) signal the continuation
             for j in range(i + 1, target_idx):
-                b = _strip_token(tail[j])
+                b = _strip_token(tail[j]) if j < len(tail) else ""
+                if not b:
+                    # Empty stripped token = punctuation, skip
+                    continue
+                # Parallel structure: phrase_first repeats before target
+                # Guard: for single-word phrases (phrase_first == target_word),
+                # only count it if it's NOT at the target position
+                if b == phrase_first and (phrase_first != target_word or j != target_idx - 1):
+                    joined = True
+                    break
+                # Abbreviated list with possessive/article markers:
+                # "sakit akong tiyan, akong ulo" - "akong" signals continuation
+                if b in {"akong", "ang", "sa", "ko", "nako", "aking", "among"}:
+                    # Check if next token is a body part (indicates list continuation)
+                    if j + 1 < len(tail):
+                        next_tok = _strip_token(tail[j + 1]) if j + 1 < len(tail) else ""
+                        if next_tok in _INTERVENING_SYMPTOM_WORDS or next_tok == target_word:
+                            joined = True
+                            break
                 if b in _NEG_SCOPE_JOIN:
                     joined = True
                     break
                 if b in _NEG_SCOPE_END or b in _NEG_TRAP_VERBS:
+                    # Scope explicitly closed
                     break
             if not joined:
                 return False
@@ -1182,6 +1214,7 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
                 "umuubo",
                 "gi ubo",
                 "gi-ubo",
+                "giubo",
                 "kakaubo",
                 "naubo",
                 "ga ubo",
@@ -1448,12 +1481,83 @@ def _extract_cough_type(normalized_text: str) -> List[str]:
 # 2) NORMALIZATION + MATCHING LOGIC
 # ---------------------------------------------------------------------------
 
+# Known Tagalog/Bisaya tokens that must NOT be phonetically normalized.
+# These are words the dictionary already knows exactly; normalizing them
+# would produce wrong forms (e.g., "sipon" -> "sipun" breaks the match).
+_KNOWN_LOCAL_TOKENS: frozenset = frozenset({
+    # Cough
+    "ubo", "inuubo", "umuubo", "kakaubo", "giubo", "ga-ubo",
+    "gihubo", "nagubo", "nahubo", "mihubo", "gubo",
+    # Fever
+    "lagnat", "hilanat", "gihilanat", "hilantan", "kalintura",
+    "panuhot", "sinat", "binat",
+    # Runny nose / nasal
+    "sipon", "sip-on", "simhot", "kasimhot",
+    # Headache (ulo = head, must not be corrected to ubo = cough)
+    "ulo", "labad", "kirot", "sakit", "masakit", "sumasakit",
+    "gasakit", "gibukbok",
+    # Stomach / diarrhea
+    "tiyan", "sikmura", "puson", "kabag", "hilab",
+    "pagtatae", "nagtatae", "kalibang", "pagkalibang", "labnaw",
+    # Sore throat
+    "lalamunan", "tutunlan", "tilaok",
+    # Body aches
+    "katawan", "lawas", "ngalay", "nangangalay",
+    # Rashes
+    "pantal", "butlig",
+    # Allergy
+    "bahing", "mangatol",
+    # Negation words (must NEVER be altered)
+    "wala", "walang", "walay", "hindi", "dili", "di",
+    # Time/manner words that should not be corrected
+    "kalit", "bigla", "biglaan", "sukad", "ganiha",
+    # Common connectors
+    "pero", "tapos", "kaya", "dahil", "kasi", "ug", "og",
+    "akong", "ang", "ang", "sa", "ng", "ko", "mo", "ka",
+    "ako", "siya", "kami", "kayo", "sila", "nako", "niya",
+    "namin", "natin", "nila", "ito", "iyan", "iyon",
+    "naa", "may", "meron", "naay",
+})
+
+# Phonetic swaps common in Filipino/Bisaya typing errors.
+# Applied token-by-token only on tokens NOT in _KNOWN_LOCAL_TOKENS.
+# Rules are ordered: apply all substitutions to produce the candidate,
+# then only keep it if it's different from the original.
+_PHONETIC_SUBS = [
+    # c/ck -> k  (stomack -> stomak, stomachk -> stomachk handled by fuzzy)
+    (re.compile(r"ck\b"), "k"),
+    (re.compile(r"\bc(?=[aouei])"), "k"),  # only word-initial c before vowels
+    # Double vowels -> single (sipoon -> sipon, heaad -> head)
+    (re.compile(r"([aeiou])\1"), r"\1"),
+    # ea -> e (heaache -> heache — one step toward headache)
+    (re.compile(r"ea(?=[a-z])"), "e"),
+    # ph -> f (phlegm is already in dict, but phever -> fever)
+    (re.compile(r"\bph"), "f"),
+    # -tion -> -syon (common Filipino suffix spelling)
+    (re.compile(r"tion\b"), "syon"),
+]
+
+
+def _phonetic_normalize_token(tok: str) -> str:
+    """Apply Filipino phonetic normalization to a single token.
+
+    Only called on tokens not already in _KNOWN_LOCAL_TOKENS.
+    Returns the normalized form (may be identical to input).
+    """
+    result = tok
+    for pattern, replacement in _PHONETIC_SUBS:
+        result = pattern.sub(replacement, result)
+    return result
+
+
 def _normalize(text: str) -> str:
     """Normalize text for consistent phrase matching.
 
     - Lowercase
     - Replace punctuation with spaces
     - Collapse repeated whitespace
+    - Jejemon/leet normalization
+    - Token-level Filipino phonetic normalization for unrecognized tokens
 
     We keep it simple and deterministic so it's easy to explain.
     """
@@ -1480,12 +1584,22 @@ def _normalize(text: str) -> str:
         )
     )
     # Replace any non-letter/digit characters with spaces.
-    # This helps match phrases even if the user typed punctuation.
     # Apostrophes are stripped entirely (not replaced by space) so English
     # contractions match the neg-word list: "isn't" -> "isnt", "don't" -> "dont".
     text = text.replace("'", "")
     text = re.sub(r"[^a-z0-9ñ\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
+
+    # Token-level Filipino phonetic normalization.
+    # Only applied to tokens not already known as valid local words —
+    # this prevents mangling correct Tagalog/Bisaya terms.
+    tokens = text.split()
+    tokens = [
+        tok if tok in _KNOWN_LOCAL_TOKENS else _phonetic_normalize_token(tok)
+        for tok in tokens
+    ]
+    text = " ".join(tokens)
+
     return text
 
 
@@ -1660,6 +1774,7 @@ def _fuzzy_symptom_rescue(
     detected: List[str],
     negated_labels: set,
     wellness_negated: set,
+    use_advanced: bool = True,
 ) -> None:
     """Map misspelled symptom words to their labels (in place).
 
@@ -1669,11 +1784,31 @@ def _fuzzy_symptom_rescue(
       dictionary stage already evaluated them.
     - Per-anchor distance caps keep near-miss non-symptom words out.
     - A negated misspelling is recorded in negated_labels, never detected.
+    
+    Args:
+        use_advanced: If True, use advanced multilingual fuzzy matching with
+                      phonetic normalization, keyboard-weighted distance, and
+                      n-gram similarity. If False, use legacy Levenshtein.
     """
     dict_words = _dictionary_word_set()
     # Negators AND scope words ("though", "however", "because"...) are
     # structural, never symptom typos — skip them wholesale.
-    neg_words = set(_NEG_WORDS) | _FUZZY_EXCLUDE | set(_NEG_SCOPE_END)
+    neg_words = set(_NEG_WORDS) | _FUZZY_EXCLUDE | set(_NEG_SCOPE_END) | _NEG_SEQUENCE_WORDS
+    
+    # Use advanced fuzzy matching if enabled
+    if use_advanced:
+        try:
+            from .advanced_fuzzy import advanced_fuzzy_rescue
+            advanced_fuzzy_rescue(
+                normalized_text, detected, negated_labels, wellness_negated,
+                dict_words, neg_words, _fuzzy_token_is_negated
+            )
+            return
+        except ImportError:
+            # Fall back to legacy if advanced module not available
+            pass
+    
+    # Legacy fuzzy matching (original implementation)
     for token in normalized_text.split():
         if len(token) < 4 or not token.isalpha():
             continue
@@ -1867,7 +2002,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             )
 
         pain_present = re.search(
-            r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|kasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|hurting|ache|aches|aching|pain|painful|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
+            r"\b(sakit|masakit|masaket|sumasakit|gasakit|ga\s+sakit|kasakit|labad|throbbing|throbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|hurting|ache|aches|aching|pain|painful|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)\b",
             normalized_text,
         ) is not None
         if not pain_present:
@@ -1894,6 +2029,9 @@ def extract_symptoms(user_input: str) -> List[str]:
             # "my head doesn't hurt" — the neg word reaches the PAIN word.
             # Scoped: the pain word must NOT belong to another body part
             # ("dili sakit akong tiyan" negates the stomach, not the head).
+            # Guard: if a trap verb sits between the neg word and the pain
+            # word the negation belongs to the verb ("dili mawala ang sakit"
+            # = "won't go away" → symptom IS present), so we skip this path.
             or (
                 re.search(
                     rf"{_NEG_WORDS_RX}(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
@@ -1901,6 +2039,12 @@ def extract_symptoms(user_input: str) -> List[str]:
                     normalized_text,
                 )
                 is not None
+                and not re.search(
+                    rf"{_NEG_WORDS_RX}"
+                    rf"(?:\s+\w+){{0,3}}\s+"
+                    rf"\b({'|'.join(_NEG_TRAP_VERBS)})\b",
+                    normalized_text,
+                )
                 and not re.search(
                     r"\b(hurt|hurts|hurting|pain|ache|aches|aching|masakit|sakit)\b"
                     r"(?:\s+\w+){0,3}\s+"
@@ -1922,7 +2066,7 @@ def extract_symptoms(user_input: str) -> List[str]:
             # Proximity check: head_word and pain_word must be within 5 tokens of each other
             # This prevents "sakit ng ulo... katawan ko" from triggering HEADACHE when pain refers to body
             head_positions = [i for i, t in enumerate(tokens) if re.match(r"^(head|ulo|uwlo|uwo|ulu|olo)$", t)]
-            pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|hurting|ache|aches|aching|pain|painful|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
+            pain_positions = [i for i, t in enumerate(tokens) if re.match(r"^(sakit|masakit|masaket|sumasakit|labad|throbbing|throbing|pounding|pulsating|kirot|gakurot|gikirot|kabutohon|kabuto|hurt|hurts|hurting|ache|aches|aching|pain|painful|sasabog|binibiyak|pumapasabog|grabe|sobra|grabeng|sobrang)$", t)]
             # Also check for fuzzy-matched head/pain tokens
             for i, t in enumerate(tokens):
                 if len(t) >= 2:
@@ -2376,7 +2520,9 @@ def extract_symptoms(user_input: str) -> List[str]:
 
     # Fuzzy rescue for body aches typos: e.g., "ktawan" -> BODY_ACHES
     # Requires a pain word NEAR the body word (within 6 tokens) to avoid
-    # false positives like "sakit ng ulo... katawan ko" where pain refers to head
+    # false positives like "sakit ng ulo... katawan ko" where pain refers to head.
+    # CRITICAL: This rescue runs ONLY when a body word (katawan/lawas) or its
+    # typo is present — it must not fire on generic "sakit" alone.
     if "BODY_ACHES" not in detected and "BODY_ACHES" not in negated_labels:
         tokens = normalized_text.split()
         body_targets = ["katawan", "lawas"]

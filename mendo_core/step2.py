@@ -59,6 +59,7 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "may migraine ako",
         "migraine attack",
         "nagmimigraine ako",
+        "sakit akong ulo"
     ],
     "COUGH_DRY": [
         "I have a dry cough",
@@ -112,6 +113,7 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "coughing all day",
         "parati akong umuubo",
         "naga ubo ko",
+        "Nag-ubo ko"
     ],
     "FEVER": [
         "I have a high temperature",
@@ -265,6 +267,15 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "luag nga dumi",
         "may diarrhea ako",
         "nagkalibang",
+        "kalit lang ko nagkalibang",
+        "sige kog kalibang",
+        "malabnaw akong tae",
+        "tubig tubig ang tae ko",
+        "humok ug murag tubig akong tae",
+        "dili normal akong pagkalibang",
+        "grabe na gyud ang nagkalibang ko",
+        "pabalik balik ang pagtatae",
+        "walay hunong ang kalibang ko",
     ],
     "STOMACH_ACHE": [
         "I have a stomach ache",
@@ -272,12 +283,6 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "my stomach hurts badly",
         "my stomach is painful",
         "my tummy hurts",
-        "I feel nauseous",
-        "I feel like throwing up",
-        "I want to vomit",
-        "nasusuka ako",
-        "gustong magsuka",
-        "nagsusuka ako",
         "masakit ang tiyan ko",
         "masakit tiyan ko",
         "sakit tiyan",
@@ -300,6 +305,8 @@ SYMPTOM_ANCHORS: Dict[str, List[str]] = {
         "parang tinutusok ang tiyan ko",
         "masikip ang sikmura ko",
         "sakit sa sikmura",
+        "sakit sa akong tiyan",
+        "sakit akong sikmura",
     ],
     "SORE_THROAT": [
         "I have a sore throat",

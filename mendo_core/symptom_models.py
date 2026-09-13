@@ -78,13 +78,6 @@ SYMPTOM_PATTERNS: Dict[str, List[str]] = {
         r"\bduduwal\b",
         r"\bnasusuka\b",
     ],
-    "vomiting": [
-        r"\bvomit\b",
-        r"\bvomiting\b",
-        r"\bpagsusuka\b",
-        r"\bsuka\b",
-        r"\bsumusuka\b",
-    ],
     "diarrhea": [
         r"\bdiarrhea\b",
         r"\bloose stool\b",

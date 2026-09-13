@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-14T19:18:41",
+  "generated_at": "2026-08-15T09:44:47",
   "status": "generated",
   "provenance": "researcher_and_llm_created_synthetic_cases",
   "dataset": "testing/benchmark/testing.csv",
@@ -20,31 +20,31 @@
   "metrics": {
     "raw_input": {
       "case_count": 288,
-      "micro_precision": 0.8487394957983193,
-      "micro_recall": 0.8487394957983193,
-      "micro_f1": 0.8487394957983193,
-      "macro_f1": 0.8197115384615384,
-      "exact_match_rate": 0.8125
+      "micro_precision": 0.7968337730870713,
+      "micro_recall": 0.84593837535014,
+      "micro_f1": 0.8206521739130435,
+      "macro_f1": 0.8056460063886058,
+      "exact_match_rate": 0.7326388888888888
     },
     "guided_workflow": {
       "case_count": 288,
-      "micro_precision": 1.0,
+      "micro_precision": 0.937007874015748,
       "micro_recall": 1.0,
-      "micro_f1": 1.0,
-      "macro_f1": 1.0,
-      "exact_match_rate": 1.0
+      "micro_f1": 0.9674796747967479,
+      "macro_f1": 0.9433895862053565,
+      "exact_match_rate": 0.9236111111111112
     }
   },
   "overall_stats": {
     "total_tests": 288,
-    "exact_matches": 288,
-    "partial_matches": 0,
-    "failed_detections": 0,
+    "exact_matches": 266,
+    "partial_matches": 11,
+    "failed_detections": 11,
     "false_positives": 0,
     "negation_handled": 6,
     "negation_failed": 0,
-    "recommendation_success": 220,
-    "recommendation_failed": 5
+    "recommendation_success": 214,
+    "recommendation_failed": 22
   },
   "category_stats": {
     "simple_single": {
@@ -77,17 +77,17 @@
     },
     "noisy_input": {
       "total": 10,
-      "exact": 10,
-      "partial": 0,
+      "exact": 8,
+      "partial": 2,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.9333333333333332
     },
     "misspelling": {
       "total": 10,
-      "exact": 10,
-      "partial": 0,
+      "exact": 9,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.95
     },
     "alternative_phrasing": {
       "total": 10,
@@ -119,10 +119,10 @@
     },
     "temporal": {
       "total": 5,
-      "exact": 5,
-      "partial": 0,
+      "exact": 4,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.9333333333333332
     },
     "age_context": {
       "total": 5,
@@ -182,10 +182,10 @@
     },
     "run_on_realistic": {
       "total": 6,
-      "exact": 6,
-      "partial": 0,
+      "exact": 5,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.9666666666666667
     },
     "diagnostic_confusion": {
       "total": 5,
@@ -196,10 +196,10 @@
     },
     "interjection_filler": {
       "total": 7,
-      "exact": 7,
-      "partial": 0,
+      "exact": 6,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.9523809523809523
     },
     "symptom_chain": {
       "total": 5,
@@ -217,10 +217,10 @@
     },
     "polite_formal": {
       "total": 5,
-      "exact": 5,
-      "partial": 0,
+      "exact": 4,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.96
     },
     "extreme_severity": {
       "total": 5,
@@ -245,10 +245,10 @@
     },
     "heavy_code_switch": {
       "total": 6,
-      "exact": 6,
-      "partial": 0,
+      "exact": 5,
+      "partial": 1,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.9666666666666667
     },
     "pharmacy_kiosk_realistic": {
       "total": 5,
@@ -266,10 +266,10 @@
     },
     "double_misspelling": {
       "total": 5,
-      "exact": 5,
-      "partial": 0,
+      "exact": 2,
+      "partial": 3,
       "failed": 0,
-      "avg_f1": 1.0
+      "avg_f1": 0.8266666666666668
     },
     "figurative_speech": {
       "total": 5,
@@ -287,10 +287,10 @@
     },
     "adversarial_false_positive": {
       "total": 10,
-      "exact": 10,
+      "exact": 3,
       "partial": 0,
-      "failed": 0,
-      "avg_f1": 1.0
+      "failed": 7,
+      "avg_f1": 0.3
     },
     "adversarial_sore_throat": {
       "total": 3,
@@ -329,10 +329,10 @@
     },
     "adversarial_non_symptom": {
       "total": 6,
-      "exact": 6,
+      "exact": 5,
       "partial": 0,
-      "failed": 0,
-      "avg_f1": 1.0
+      "failed": 1,
+      "avg_f1": 0.8333333333333334
     },
     "adversarial_single_word": {
       "total": 6,
@@ -413,10 +413,10 @@
     },
     "triage_chest_pain": {
       "total": 4,
-      "exact": 4,
+      "exact": 3,
       "partial": 0,
-      "failed": 0,
-      "avg_f1": 1.0
+      "failed": 1,
+      "avg_f1": 0.75
     },
     "triage_breathing": {
       "total": 4,
@@ -427,10 +427,10 @@
     },
     "triage_blood": {
       "total": 4,
-      "exact": 4,
+      "exact": 2,
       "partial": 0,
-      "failed": 0,
-      "avg_f1": 1.0
+      "failed": 2,
+      "avg_f1": 0.5
     },
     "triage_consciousness": {
       "total": 3,

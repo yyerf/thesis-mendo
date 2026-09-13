@@ -52,6 +52,31 @@ from pos.auth import reviewer_required
 
 log = logging.getLogger("mendo.consultation")
 
+
+def _flow_trace(step: str, **fields) -> None:
+    """Live terminal trace of the kiosk consultation flow (dev aid).
+
+    Prints one [FLOW] line per stage so the server terminal shows the same
+    values the audit page records: detection -> severity -> clarification ->
+    duration safeguard -> recommendation (including the recommended
+    medicines). Emits BOTH via print() and via the `mendo.consultation`
+    logger so it is visible whichever console/redirect is in play. Raw
+    health text is truncated to 60 chars and can be suppressed by setting
+    MENDO_FLOW_TRACE=0.
+    """
+    try:
+        import os
+        raw = os.environ.get("MENDO_FLOW_TRACE", "1").strip().lower()
+        if raw in {"0", "false", "no", "off"}:
+            return
+        parts = [f"{k}={v}" for k, v in fields.items() if v is not None]
+        line = f"[FLOW] {step}: " + " | ".join(parts)
+        print(line, flush=True)
+        log.info("%s", line)
+    except Exception:
+        pass
+
+
 consultation_bp = Blueprint(
     "consultation",
     __name__,
@@ -408,6 +433,16 @@ def api_pre_detect():
 
         severity_hints = _extract_severity_hints(user_text, symptoms)
 
+        _flow_trace(
+            "PRE-DETECT",
+            text=user_text[:60],
+            symptoms=symptoms,
+            severity_hints=severity_hints or None,
+            red_flags=[f.get("flag") for f in red_flags] or None,
+            no_match=classify_no_match(user_text) if not symptoms else None,
+            engine=(report.get("engine") or {}).get("engine_id"),
+        )
+
         return jsonify({
             "symptoms": symptoms,
             "severity_hints": severity_hints,
@@ -505,22 +540,36 @@ def api_analyze():
         #    no other detected symptom (e.g. "sinus", "sinusitis") is
         #    promoted to a headache consult instead of a no-match. ──
         headache_intake = None
+        headache_from_intake = False
         if not headache_location:
             headache_intake = _apply_text_headache_intake(report, user_text, user_age)
             if headache_intake:
                 headache_location = headache_intake["key"]
+                headache_from_intake = True
 
         # An explicit/auto-confirmed headache location implies a headache
         # consult even when the typed text was a bare type cue ("tusok tusok
         # sa ulo", "sinus") that the dictionary could not map to HEADACHE.
+        # BUT: only add HEADACHE if it came from intake (which checks for
+        # negation and other symptoms) or if the user explicitly passed
+        # headache_location in the request (illustration click).
+        # NOTE: _apply_text_headache_intake already adds HEADACHE for bare cues,
+        # so we only need to add it here for user-clicked illustrations.
+        user_clicked_illustration = (
+            headache_location and 
+            headache_location == data.get("headache_location")
+        )
         if headache_location and "HEADACHE" not in report["final"]["symptoms"]:
-            report["final"]["symptoms"].append("HEADACHE")
-            report.setdefault("transformations", []).append({
-                "rule": "headache_location_implies_headache",
-                "input": f"headache_location:{headache_location}",
-                "output": "HEADACHE",
-                "reason": "User-confirmed headache type guarantees the headache symptom.",
-            })
+            # Only add HEADACHE if user clicked on illustration.
+            # (If headache came from intake, _apply_text_headache_intake already added it)
+            if user_clicked_illustration:
+                report["final"]["symptoms"].append("HEADACHE")
+                report.setdefault("transformations", []).append({
+                    "rule": "headache_location_implies_headache",
+                    "input": f"headache_location:{headache_location}",
+                    "output": "HEADACHE",
+                    "reason": "User clicked headache illustration.",
+                })
 
         try:
             headache = _headache_snapshot(
@@ -566,6 +615,20 @@ def api_analyze():
             ENGINE_ID,
         )
 
+        _flow_trace(
+            "DETECT",
+            text=user_text[:60],
+            session=session.get("sid"),
+            age=user_age,
+            symptoms=symptoms,
+            conditions=detected_conditions or None,
+            red_flags=[f.get("flag") for f in red_flags] or None,
+            source=source,
+            severity=severity,
+            severity_map=severity_map,
+            engine=ENGINE_ID,
+        )
+
         # ── Step 4: Recommendation ──
         from mendo_core.step4_recommend import recommend_medicine
 
@@ -603,6 +666,17 @@ def api_analyze():
                      [o.get("label") for o in (recommendation.get("options") or [])])
         elif rec_action in ("triage", "no_match"):
             log.info("  ACTION=%s message=%s", rec_action, recommendation.get("message") or recommendation.get("question"))
+
+        _flow_trace(
+            "RECOMMEND",
+            action=rec_action,
+            question=recommendation.get("question"),
+            clarify_type=recommendation.get("clarify_type"),
+            meds=[
+                f"{r.get('brand')}@{r.get('pos_price')} slot{r.get('hardware_slot')}{'' if r.get('in_stock') else ' OUT'}"
+                for r in (recommendation.get("recommendations") or [])
+            ] or None,
+        )
 
         # ── Filter by age + cross-reference POS inventory ──
         if user_age is not None:
@@ -829,6 +903,17 @@ def api_duration_check():
         reported_days = parse_duration_days(duration_value)
         result = check_duration_safety(symptom, reported_days)
 
+        _flow_trace(
+            "DURATION",
+            symptom=symptom,
+            reported=reported_days,
+            value=duration_value,
+            safe=result.get("safe"),
+            threshold=result.get("threshold_days"),
+            pending=len(pending_durations),
+            clarifications=sorted(clarification_data.keys()) if clarification_data else None,
+        )
+
         if not result["safe"]:
             # RUNNY_NOSE exceeding threshold gets a soft warning (still proceed)
             if symptom == "RUNNY_NOSE":
@@ -973,6 +1058,18 @@ def api_duration_check():
             )
         except Exception:
             pass
+
+        _flow_trace(
+            "RECOMMEND",
+            action=recommendation.get("action"),
+            meds=[
+                f"{r.get('brand')}@{r.get('pos_price')} slot{r.get('hardware_slot')}{'' if r.get('in_stock') else ' OUT'}"
+                for r in (recommendation.get("recommendations") or [])
+            ] or None,
+            safety=[
+                w[:60] for w in (recommendation.get("safety_warnings") or [])
+            ] or None,
+        )
 
         # Build display symptoms (carry over clarification-specific labels)
         display_symptoms = list(original_symptoms)
@@ -1144,6 +1241,19 @@ def api_context_clarify():
         except Exception:
             pass
 
+        _flow_trace(
+            "CONTEXT-CLARIFY",
+            clarification=clarification,
+            original=original,
+            resulting=display_symptoms,
+            pseudo_input=pseudo_input,
+            action=recommendation.get("action"),
+            meds=[
+                f"{r.get('brand')}@{r.get('pos_price')} slot{r.get('hardware_slot')}{'' if r.get('in_stock') else ' OUT'}"
+                for r in (recommendation.get("recommendations") or [])
+            ] or None,
+        )
+
         return jsonify({
             "symptoms": symptoms,
             "symptoms_display": display_symptoms,
@@ -1185,6 +1295,14 @@ def api_clarify():
         # Replace COUGH_GENERAL with the specific type
         symptoms = [clarification if s == "COUGH_GENERAL" else s for s in original]
         symptoms = list(dict.fromkeys(symptoms))
+
+        _flow_trace(
+            "CLARIFY",
+            clarification=clarification,
+            original=original,
+            resulting=symptoms,
+            age=user_age,
+        )
 
         from mendo_core.step4_recommend import recommend_medicine
         med_rows = _get_med_rows()
@@ -1247,6 +1365,18 @@ def api_clarify():
             )
         except Exception:
             pass  # logging must never break the main flow
+
+        _flow_trace(
+            "RECOMMEND",
+            action=recommendation.get("action"),
+            meds=[
+                f"{r.get('brand')}@{r.get('pos_price')} slot{r.get('hardware_slot')}{'' if r.get('in_stock') else ' OUT'}"
+                for r in (recommendation.get("recommendations") or [])
+            ] or None,
+            safety=[
+                w[:60] for w in (recommendation.get("safety_warnings") or [])
+            ] or None,
+        )
 
         return jsonify({
             "symptoms": symptoms,
