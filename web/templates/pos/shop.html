@@ -48,15 +48,50 @@
         <span class="cart-total__label">Total</span>
         <span class="cart-total__amount" id="cartTotal">₱0.00</span>
       </div>
-      <div class="cart-payment">
-        <input type="number" id="amountTendered" placeholder="Amount tendered (₱)" min="0" step="0.01">
-        <div class="cart-change">
-          Change: <span id="changeAmount">₱0.00</span>
-        </div>
+      <div class="cart-payment" style="padding:12px 14px;border:1px solid #d8e5d8;border-radius:12px;background:#f5faf4;line-height:1.45;">
+        <strong style="display:block;color:#27583e;font-size:13px;">Hardware cash payment</strong>
+        <span class="text-xs text-muted">The acceptor counts the tender. This test gives no change and sends no motor command.</span>
       </div>
       <button class="btn btn--success btn--lg btn--block" id="checkoutBtn" disabled>
-        Complete Sale
+        Start Cash Payment
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Live Hardware Payment Modal ═══ -->
+<div class="modal-overlay" id="hardwarePaymentModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <div>
+        <div class="text-xs text-muted" style="text-transform:uppercase;letter-spacing:.08em;">Cash acceptor session</div>
+        <h3 style="margin-top:3px;">Insert payment</h3>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        <div class="stat-card"><small>Due</small><strong id="hardwareAmountDue">₱0.00</strong></div>
+        <div class="stat-card"><small>Inserted</small><strong id="hardwareAmountInserted">₱0.00</strong></div>
+        <div class="stat-card"><small>Remaining</small><strong id="hardwareAmountRemaining">₱0.00</strong></div>
+      </div>
+      <div id="hardwarePaymentState" style="margin-top:14px;padding:14px;border-radius:12px;background:#f4f7f4;color:#3f5144;font-size:13px;line-height:1.5;">
+        Waiting for the controller…
+      </div>
+      <div id="hardwareSimulatorControls" style="display:none;margin-top:14px;padding:14px;border:1px dashed #d5a755;border-radius:12px;background:#fff9eb;">
+        <strong style="font-size:12px;color:#765318;">SIMULATOR — synthetic cash only</strong>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;">
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(100,'coin')">₱1</button>
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(500,'coin')">₱5</button>
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(1000,'coin')">₱10</button>
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(2000,'bill')">₱20</button>
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(5000,'bill')">₱50</button>
+          <button class="btn btn--sm" onclick="POS.shop.simulateCash(10000,'bill')">₱100</button>
+        </div>
+      </div>
+      <p class="text-xs text-muted" style="margin:14px 2px 0;">Accepted: ₱1, ₱5, ₱10, ₱20 coins and ₱20, ₱50, ₱100 bills. Inventory is deducted only after the amount due is reached.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="hardwareCancelBtn" onclick="POS.shop.cancelHardwarePayment()">Cancel before inserting cash</button>
     </div>
   </div>
 </div>

@@ -297,7 +297,7 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "ga-init",
     ],
     "BODY_ACHES": [
-        # English   
+        # English
         "body aches",
         "body ache",
         "bodypain",

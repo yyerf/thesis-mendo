@@ -1,0 +1,4 @@
+# Install only after confirming the board's USB identity with udevadm.
+# Keep the device restricted to the dedicated daemon account/group; never use
+# MODE="0666". Replace the placeholder identity if the measured board differs.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", SYMLINK+="mendo-uno", GROUP="dialout", MODE="0660"

@@ -15,7 +15,10 @@ from .db import (
     list_transactions, count_transactions, get_transaction, void_transaction,
     get_stock_logs, list_users, create_user, change_password,
     toggle_user_active,
+    get_db,
 )
+from .order_service import OrderError, OrderService
+from hardware.service import get_hardware_service
 
 from mendo_core.interaction_logger import (
     get_interaction_logs,
@@ -80,6 +83,157 @@ def logout():
 def dashboard(current_user=None):
     stats = get_dashboard_stats()
     return render_template("pos/dashboard.html", stats=stats, user=current_user)
+
+
+# ─────────── Hardware, order recovery, and cashbox ───────────
+
+@admin_bp.route("/hardware")
+@login_required
+def hardware(current_user=None):
+    service = OrderService()
+    return render_template(
+        "pos/hardware.html",
+        user=current_user,
+        hardware=get_hardware_service().status(),
+        profiles=service.list_profiles(),
+        orders=service.list_orders(limit=25),
+        accounting=service.accounting_summary(),
+    )
+
+
+@admin_bp.route("/api/hardware/status")
+@login_required
+def api_hardware_status(current_user=None):
+    return jsonify(get_hardware_service().status())
+
+
+@admin_bp.route("/api/orders")
+@login_required
+def api_orders(current_user=None):
+    state = request.args.get("state", "")
+    limit = min(max(int(request.args.get("limit", 50)), 1), 500)
+    return jsonify(OrderService().list_orders(limit=limit, state=state))
+
+
+@admin_bp.route("/api/orders/<order_ref>")
+@login_required
+def api_order_detail(order_ref, current_user=None):
+    try:
+        return jsonify(OrderService().get_order(order_ref))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 404
+
+
+@admin_bp.route("/api/payment-events")
+@login_required
+def api_payment_events(current_user=None):
+    limit = min(max(int(request.args.get("limit", 200)), 1), 500)
+    rows = get_db().execute(
+        """
+        SELECT ce.*,o.order_ref FROM cash_events ce
+        JOIN orders o ON o.id=ce.order_id ORDER BY ce.id DESC LIMIT ?
+        """, (limit,)
+    ).fetchall()
+    return jsonify([dict(row) for row in rows])
+
+
+@admin_bp.route("/api/accounting/summary")
+@login_required
+def api_accounting_summary(current_user=None):
+    return jsonify(OrderService().accounting_summary())
+
+
+@admin_bp.route("/api/dispense-jobs")
+@login_required
+def api_dispense_jobs(current_user=None):
+    limit = min(max(int(request.args.get("limit", 200)), 1), 500)
+    rows = get_db().execute(
+        """
+        SELECT j.*,o.order_ref,oi.brand FROM dispense_jobs j
+        JOIN orders o ON o.id=j.order_id JOIN order_items oi ON oi.id=j.order_item_id
+        ORDER BY j.id DESC LIMIT ?
+        """, (limit,)
+    ).fetchall()
+    return jsonify([dict(row) for row in rows])
+
+
+@admin_bp.route("/api/motion-profiles")
+@login_required
+def api_motion_profiles(current_user=None):
+    return jsonify(OrderService().list_profiles())
+
+
+@admin_bp.route("/api/motion-profiles/<int:slot>", methods=["POST"])
+@admin_required
+def api_motion_profile_update(slot, current_user=None):
+    try:
+        return jsonify(OrderService().update_profile(slot, request.get_json(force=True), actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/cashbox/open", methods=["POST"])
+@admin_required
+def api_cashbox_open(current_user=None):
+    data = request.get_json(silent=True) or {}
+    return jsonify(OrderService().open_cashbox(staff_id=current_user["id"], notes=str(data.get("notes", ""))))
+
+
+@admin_bp.route("/api/cashbox/<session_ref>/close", methods=["POST"])
+@admin_required
+def api_cashbox_close(session_ref, current_user=None):
+    try:
+        data = request.get_json(force=True)
+        counted = int(data.get("counted_total_centavos", round(float(data.get("counted_total", 0)) * 100)))
+        return jsonify(OrderService().close_cashbox(session_ref, staff_id=current_user["id"], counted_total_centavos=counted, notes=str(data.get("notes", ""))))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/dispense-jobs/<job_id>/confirm-dispensed", methods=["POST"])
+@admin_required
+def api_confirm_dispensed(job_id, current_user=None):
+    try:
+        return jsonify(OrderService().confirm_physical_dispensed(job_id, actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/dispense-jobs/<job_id>/confirm-no-dispense", methods=["POST"])
+@admin_required
+def api_confirm_no_dispense(job_id, current_user=None):
+    try:
+        return jsonify(OrderService().confirm_no_dispense(job_id, actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/dispense-jobs/<job_id>/retry", methods=["POST"])
+@admin_required
+def api_retry_dispense(job_id, current_user=None):
+    try:
+        return jsonify(OrderService().retry_unexecuted_dispense(job_id, actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/dispense-jobs/<job_id>/return-to-stock", methods=["POST"])
+@admin_required
+def api_return_dispensed_to_stock(job_id, current_user=None):
+    try:
+        return jsonify(OrderService().return_dispensed_to_stock(job_id, actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/orders/<order_ref>/refund", methods=["POST"])
+@admin_required
+def api_order_refund(order_ref, current_user=None):
+    try:
+        data = request.get_json(silent=True) or {}
+        return jsonify(OrderService().refund_order(order_ref, actor=str(current_user["id"]), reason=str(data.get("reason", "staff_refund"))))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
 
 
 # ─────────── Inventory ───────────

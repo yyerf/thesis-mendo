@@ -55,7 +55,10 @@ MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
         "Tablet",
         "6",
         ("Neozep / Neozep Z+",),
-        9.50,
+        # Whole pesos only. The smallest currency the kiosk physically accepts
+        # is PHP 1, so a .50 price can never be paid exactly and forces
+        # overpayment on a machine that gives no change.
+        10.00,
     ),
     CatalogItem(
         9,

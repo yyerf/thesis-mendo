@@ -13,6 +13,7 @@ from .routes_admin import admin_bp
 from .routes_shop import shop_bp
 from .routes_consultation import consultation_bp
 from .routes_checkout import checkout_bp
+from hardware.service import HardwareService
 
 __all__ = ["init_pos"]
 
@@ -23,6 +24,10 @@ def init_pos(app: Flask) -> None:
 
     with app.app_context():
         init_db()
+
+    # The Flask process receives a simulator or short-lived Unix-socket client.
+    # Real serial ownership remains in hardware.daemon; no worker opens a tty.
+    app.extensions["mendo_hardware"] = HardwareService.from_environment()
 
     # Migrate legacy JSONL logs to SQLite
     try:

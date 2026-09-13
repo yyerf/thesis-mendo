@@ -31,6 +31,21 @@ The seeded administrator is for first-run development only:
 Change the password immediately in any shared or deployed environment, and set
 `MENDO_SECRET_KEY` to a stable secret.
 
+## Hardware integration status
+
+The current build is intentionally **payment-only**. The tested Allan D2 coin
+path and TB74 D3 bill path are integrated with the Cashier and kiosk checkout
+screens. A successful payment creates one receipt and deducts reserved stock
+exactly once. Medicine motors are compile-time disabled: no paid checkout can
+send a servo/rotor command in this phase.
+
+The real controller runs at 115200 baud through the dedicated hardware daemon.
+Simulator cash remains visibly labelled for software-only tests. This is a
+prototype test gate, not production authorization; wiring, voltage, enclosure,
+cashbox, restart-replay, and long-run acceptance evidence still require
+completion. See the [hardware guide](hardware/README.md) and
+[CHECKPOINT.md](CHECKPOINT.md) before connecting an Arduino.
+
 ## Ten-slot medicine catalog
 
 Production recommendations, POS inventory, checkout, and benchmarks use one
