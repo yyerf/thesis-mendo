@@ -33,7 +33,7 @@ class CatalogItem:
 
 # Slot order follows the physical ten-product list supplied for the machine.
 MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
-    CatalogItem(1, "Advil", "Pain & Inflammation", "Tablet", "12", ("Advil",), 15.00),
+    CatalogItem(1, "Buscopan", "Stomach Cramps", "Tablet", "6", ("Buscopan",), 8.00),
     CatalogItem(2, "Bioflu", "Cold & Flu", "Tablet", "12", ("Bioflu",), 12.00),
     CatalogItem(3, "Biogesic", "Pain & Fever", "Tablet", "12", ("Biogesic",), 5.00),
     CatalogItem(4, "Cetirizine", "Allergy", "Tablet", "6", ("Cetirizine",), 5.00),
