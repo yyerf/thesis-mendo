@@ -778,3 +778,20 @@ controller or used to authorize the installed TB unit.
   the D2 coin signal (NO/NC switch, 1 kΩ + 4.7 kΩ pull-up or PC817, ~100 nF);
   recapture ₱1/₱5/₱10/₱20 with `CASH_TRAIN`; consider a dedicated printer
   supply.
+
+### Coin recapture with CASH_TRAIN — 2026-09-28
+
+Operator dropped ₱1, ₱5, ₱10, ₱20 with no payment active (nothing credited).
+Seven trains were logged (no timestamps; the first rows may include earlier
+line noise). Pulses/settled LOWs/suspect, LOW ms, period ms:
+`5/5/0 5–193 14–148` · `1/1/0 282` · `1/1/0 9` · `16/18/1 3–261 8–306` ·
+`1/1/0 158` · `4/4/0 99–101 168–172` · `34/35/1 3–215 52–286` (5.8 s).
+Reading: the coin slot's own pulses are regular (100 ms LOW, 170 ms period —
+wider than August's 70 ms), but adjacent pulses merge into 158–282 ms LOWs
+(the line does not return HIGH cleanly) and 3–9 ms noise LOWs add false
+pulses; ₱10+₱20 merged into one 34-pulse suspect train. The controller also
+sent 3 garbled replies during the drops (`protocol_errors=3`). Conclusion:
+the D2 conditioning (10 kΩ series, internal pull-up only) is the fault, not
+the counting. Fix the input (PC817, or 1 kΩ + 4.7 kΩ pull-up + 100 nF), then
+recapture one coin at a time before tightening the coin filters to the
+measured timing. Daemon client timeout raised 1.5 → 3 s (commit 6cf146d).
