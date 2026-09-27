@@ -701,3 +701,25 @@ controller or used to authorize the installed TB unit.
   trials still require physical fault testing. `PAY_STOP` now inhibits new
   money while draining a pulse train that had already begun. Keep the trial
   supervised and do not attach medicine motors.
+
+## Firmware recovery after SSD loss — 2026-09-28
+
+- Status: **backup complete; read-only; nothing written to the board**.
+- Context: the source of the working Uno build (coin + TB bill + thermal
+  printer, externally 12 V-powered printer) was lost with the old SSD. No
+  branch on `origin` contains printer code (Arduino or Python).
+- Action: full flash + EEPROM dumped with avrdude, flash verified against the
+  chip, stored in `hardware/firmware/backup/` (hashes in its README).
+- Live probe (read-only commands only): `mendo-controller-v1`, protocol 1,
+  printer `ready=1`. The image = repo `mendo_controller.ino` + a `PRINT_*`
+  command set.
+- Observation: at idle (nothing inserted, acceptors inhibited, coin power off)
+  the raw edge counters climbed ~355/s on D2 (coin) and ~3,066/s on D3 (bill);
+  the firmware filters rejected all of it (`clean=0`, `suspect=0`). Raw edges
+  are never credited, but the source (floating input vs. 12 V printer supply
+  noise) should be identified before long unattended runs.
+- Firmware quirk: the boot-time `HELLO` reply truncates `fault_code=FAIL_SAFE`
+  to `FAIL_` (payload buffer); the next `HEARTBEAT` reports `healthy=1`.
+- Next: rebuild the printer source and the Python host printer client from the
+  recovered protocol; re-flash only after the rebuilt sketch reproduces this
+  behavior.
