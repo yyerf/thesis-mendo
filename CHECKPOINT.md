@@ -811,3 +811,17 @@ noise fragments replaced the missing count. The idle-LOW state is also the
 noisy one (idle-HIGH earlier measured 0 edges/s). Next: set the Allan NO/NC
 switch so D2 rests HIGH, clear with `python -m hardware.cash_log --clear`,
 re-drop ₱1/₱5/₱10/₱20, expect 1/5/10/20 with no suspect flags.
+
+### A/B on the original firmware — 2026-09-28 02:26
+
+Question: did the lost firmware count coins correctly ("it was working
+before")? Static check: the backup image contains the identical coin/bill
+filter tables (glitch 3/20, min LOW 4/25, max LOW 400/400, min period 12/80,
+gap 400/500, max pulses 200/120; pins 2/3). Live check: flashed the backup,
+opened a controller-only bench session (`python -m hardware.cash_bench`),
+operator dropped ₱1, ₱5, ₱10, ₱20. Events: 2, 4, 2 (suspect) around the ₱1,
+then **4, 9, 19** for ₱5/₱10/₱20. The original firmware is one short on every
+coin exactly like the rebuild, and turned the ₱1 drop into ₱8 of noise
+credit. Conclusion: the fault is physical, not the rebuild. D2 is wired to
+the coin acceptor's **COUNTER** terminal (COIN is unconnected; NO/NC = NO);
+D2 rests LOW and noisy. Rebuilt firmware reflashed afterwards.
