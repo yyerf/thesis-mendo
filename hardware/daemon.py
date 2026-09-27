@@ -218,7 +218,9 @@ class HardwareDaemon:
 class UnixHardwareClient:
     """Short-lived socket client; Flask never owns a serial file descriptor."""
 
-    def __init__(self, socket_path: str = "/run/mendo/hardware.sock", timeout: float = 1.5):
+    # Must outlast the daemon's own serial deadline (2 s), or a single garbled
+    # controller reply surfaces as a client timeout (seen 2026-09-28).
+    def __init__(self, socket_path: str = "/run/mendo/hardware.sock", timeout: float = 3.0):
         self.socket_path = socket_path
         self.timeout = timeout
 
