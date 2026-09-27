@@ -84,7 +84,10 @@ class HardwareDaemon:
                 trains = getattr(self.backend, "cash_train", None)
                 if not trains:
                     raise ProtocolError("CASH_TRAIN_UNSUPPORTED")
-                return response(frame.request_id, "CASH_TRAIN", **trains(int(fields.get("index", "0"))))
+                return response(
+                    frame.request_id, "CASH_TRAIN",
+                    **trains(int(fields.get("index", "0")), clear=fields.get("clear") == "1"),
+                )
             if frame.command == "CASH_EVIDENCE":
                 evidence = getattr(self.backend, "cash_evidence", None)
                 if not evidence:
@@ -274,8 +277,11 @@ class UnixHardwareClient:
     def cash_evidence(self, slot: int) -> Dict[str, Any]:
         return dict(self.request("CASH_EVIDENCE", slot=int(slot)))
 
-    def cash_train(self, index: int) -> Dict[str, Any]:
-        return dict(self.request("CASH_TRAIN", index=int(index)))
+    def cash_train(self, index: int, *, clear: bool = False) -> Dict[str, Any]:
+        fields: Dict[str, object] = {"index": int(index)}
+        if clear:
+            fields["clear"] = 1
+        return dict(self.request("CASH_TRAIN", **fields))
 
     def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
         # Outlive the daemon's own serial deadline so its answer is not lost.

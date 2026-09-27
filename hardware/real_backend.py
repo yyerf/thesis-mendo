@@ -211,9 +211,14 @@ class SerialHardwareBackend:
     def cash_evidence(self, slot: int) -> Dict[str, Any]:
         return dict(self._request("CASH_EVIDENCE", slot=int(slot)))
 
-    def cash_train(self, index: int) -> Dict[str, Any]:
-        """One finished pulse train (index 0 = oldest of the last 8)."""
-        return dict(self._request("CASH_TRAIN", index=int(index)))
+    def cash_train(self, index: int, *, clear: bool = False) -> Dict[str, Any]:
+        """One finished pulse train (index 0 = oldest of the last 8).
+
+        ``clear`` empties the log first (bench runs start from nothing)."""
+        fields: Dict[str, object] = {"index": int(index)}
+        if clear:
+            fields["clear"] = 1
+        return dict(self._request("CASH_TRAIN", **fields))
 
     def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
         """Forward one PRINT_* command; chunk writes wait on the printer."""

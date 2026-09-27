@@ -432,6 +432,7 @@ struct TrainRecord {
   uint8_t lows;
   uint8_t suspect;
   uint16_t minLow, maxLow, minPer, maxPer, durationMs;
+  uint32_t startedMs;     // millis() at the train's first edge
 };
 TrainRecord trainLog[TRAIN_LOG_SIZE];
 uint8_t trainLogHead = 0;
@@ -448,6 +449,7 @@ void recordTrain(uint8_t s, uint16_t pulses, uint8_t bad, uint32_t startedMs, ui
   r.minPer = trainMinPer[s]; r.maxPer = trainMaxPer[s];
   uint32_t duration = now - startedMs;
   r.durationMs = duration > 0xFFFF ? 0xFFFF : (uint16_t)duration;
+  r.startedMs = startedMs;
   trainLogHead = (uint8_t)((trainLogHead + 1) % TRAIN_LOG_SIZE);
   if (trainLogCount < TRAIN_LOG_SIZE) trainLogCount++;
 }
@@ -461,12 +463,15 @@ void sendTrainLog(const char *requestId, uint8_t index) {
     return;
   }
   TrainRecord &r = trainLog[(trainLogHead + TRAIN_LOG_SIZE - trainLogCount + index) % TRAIN_LOG_SIZE];
-  char payload[160];
+  // started_ms and now_ms are controller millis(); the host turns their
+  // difference into wall-clock time.
+  char payload[208];
   snprintf_P(payload, sizeof(payload),
-             PSTR("count=%u;present=1;source=%s;pulses=%u;lows=%u;suspect=%u;low_min=%u;low_max=%u;period_min=%u;period_max=%u;duration_ms=%u"),
+             PSTR("count=%u;present=1;source=%s;pulses=%u;lows=%u;suspect=%u;low_min=%u;low_max=%u;period_min=%u;period_max=%u;duration_ms=%u;started_ms=%lu;now_ms=%lu"),
              trainLogCount, r.source == SRC_BILL ? "bill" : "coin", r.pulses, r.lows, r.suspect,
              r.minLow == 0xFFFF ? 0 : r.minLow, r.maxLow,
-             r.minPer == 0xFFFF ? 0 : r.minPer, r.maxPer, r.durationMs);
+             r.minPer == 0xFFFF ? 0 : r.minPer, r.maxPer, r.durationMs,
+             (unsigned long)r.startedMs, (unsigned long)millis());
   sendFrame("RSP", requestId, "CASH_TRAIN", payload);
 }
 
@@ -992,6 +997,7 @@ void handleCommand(char *line) {
     }
     sendCashEvidence(requestId, (uint8_t)atoi(slotText + 5));
   } else if (!strcmp(command, "CASH_TRAIN")) {
+    if (strstr(payload, "clear=1")) trainLogCount = 0;   // start a clean bench run
     char *indexText = strstr(payload, "index=");
     sendTrainLog(requestId, indexText ? (uint8_t)atoi(indexText + 6) : 0);
   } else if (!strcmp(command, "CASH_POLL")) {

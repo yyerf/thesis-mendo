@@ -93,9 +93,11 @@ Stop the daemon first (it owns the port), then:
 ```
 
 - `CASH_DIAG` — raw edge counters, current levels, open trains.
-- `CASH_TRAIN index=N` — the last 8 finished coin/bill pulse trains (0 =
-  oldest): validated pulses, settled LOWs, min/max LOW width and period, and
-  the suspect flag. Recorded even when no payment is active, so a coin or bill
+- `CASH_TRAIN index=N [clear=1]` — the last 8 finished coin/bill pulse trains
+  (0 = oldest): validated pulses, settled LOWs, min/max LOW width and period,
+  the suspect flag, and `started_ms`/`now_ms` controller times. With the daemon
+  running, `python -m hardware.cash_log --clear` empties it and
+  `python -m hardware.cash_log` prints it with wall-clock times. Recorded even when no payment is active, so a coin or bill
   can be characterised without crediting it. Also reachable through the
   daemon (`UnixHardwareClient.cash_train`).
 - `PRINTER_LINE_SCAN ms=N` — samples D10 for N ms and counts level changes.
