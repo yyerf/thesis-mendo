@@ -159,7 +159,14 @@
     var finalTitle = finalReview ? "Keep this reference for staff" : finalCancelled ? "Payment was canceled" : "Payment successful — stock updated";
     var finalMessage = finalReview ? "Do not insert money again. Please ask a staff member to review this payment." : finalCancelled ? "No money was collected and no stock was deducted." : "The sale and inventory deduction are recorded. No medicine motor was activated during this payment-only test.";
     var finalSummary = finalCancelled ? '<div class="success-items"><div class="success-total-row success-total-row--single"><span>Amount collected</span><span>₱0.00</span></div></div>' : '<div class="success-items">' + receiptItems + '<div class="success-total-row"><span>Total</span><span>' + (order.amount_due_display || "₱0.00") + '</span></div><div class="success-total-row"><span>Overpayment</span><span>' + (order.overpayment_display || "₱0.00") + '</span></div></div>';
-    parts.body.innerHTML = stepDots() + '<div class="success-section"><div class="success-icon ' + (finalCancelled ? "cancelled" : "") + '"><i class="fa-solid fa-' + finalIcon + '"></i></div><div class="success-title">' + finalTitle + '</div><div class="success-ref">Order: ' + esc(order.order_ref || "") + (order.transaction_ref ? " · Receipt: " + esc(order.transaction_ref) : "") + '</div>' + finalSummary + '<p style="font-size:13px;color:#68796c">' + finalMessage + '</p></div>';
+    var paper = order.receipt_print || null;
+    var paperNote = "";
+    if (!finalReview && !finalCancelled && paper) {
+      paperNote = paper.state === "printed" ? (paper.printer_mode === "simulator" ? "Simulator: no paper receipt was printed." : "Please take your printed receipt.")
+        : paper.state === "pending" || paper.state === "printing" ? "Printing your receipt…"
+        : "The receipt printer needs attention. Show this screen to staff for your receipt.";
+    }
+    parts.body.innerHTML = stepDots() + '<div class="success-section"><div class="success-icon ' + (finalCancelled ? "cancelled" : "") + '"><i class="fa-solid fa-' + finalIcon + '"></i></div><div class="success-title">' + finalTitle + '</div><div class="success-ref">Order: ' + esc(order.order_ref || "") + (order.transaction_ref ? " · Receipt: " + esc(order.transaction_ref) : "") + '</div>' + finalSummary + (paperNote ? '<p style="font-size:14px;font-weight:600;color:#2b503a"><i class="fa-solid fa-receipt"></i> ' + esc(paperNote) + '</p>' : "") + '<p style="font-size:13px;color:#68796c">' + finalMessage + '</p></div>';
     parts.footer.innerHTML = '<button class="btn btn--primary btn--lg" style="width:100%" onclick="closeCheckoutAndReset()">Done</button>';
   }
   async function createOrder(method) {

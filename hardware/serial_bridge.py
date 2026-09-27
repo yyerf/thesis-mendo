@@ -74,6 +74,12 @@ class VendoBridge:
             return {"ok": True}
         return method(boot_id, sequence_no, source)
 
+    def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
+        method = getattr(self.backend, "printer_command", None)
+        if not method:
+            raise HardwareFault("PRINTER_UNSUPPORTED")
+        return method(name, **fields)
+
     def insert_cash(self, source: str, centavos: int) -> Dict[str, Any]:
         method = getattr(self.backend, "insert_cash", None)
         if not method:

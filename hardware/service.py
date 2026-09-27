@@ -60,6 +60,9 @@ class HardwareService:
             raise RuntimeError("Cash injection is disabled outside simulator mode")
         return self.bridge.insert_cash(source, centavos)
 
+    def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
+        return self.bridge.printer_command(name, **fields)
+
     def poll_event(self) -> Dict[str, Any] | None:
         return self.bridge.poll_event()
 

@@ -21,6 +21,7 @@ from hardware.service import get_hardware_service
 from mendo_core.money import to_centavos
 
 from .db import get_db, get_inventory_by_brand, get_inventory_item
+from .receipt_service import print_receipts_safely, receipt_service
 from .order_service import (
     BILL_DENOMINATIONS_CENTAVOS,
     COIN_DENOMINATIONS_CENTAVOS,
@@ -77,6 +78,9 @@ def _order_response(order: Dict[str, Any], *, status_code: int = 200):
     status = _hardware_status()
     payload = dict(order)
     payload["hardware"] = status
+    payload["receipt_print"] = (
+        receipt_service().summary_for_order(int(order["id"])) if order.get("id") else None
+    )
     payload["simulator_notice"] = (
         "Simulator mode: cash and dispensing events are synthetic and must not be presented as hardware acceptance evidence."
         if status.get("simulator") else None
@@ -235,8 +239,12 @@ def _dispatch_simulator(order_ref: str) -> Dict[str, Any]:
 
 def _finish_paid_order(order_ref: str) -> Dict[str, Any]:
     # Payment-hardware test phase: commit the sale and inventory exactly once,
-    # but deliberately do not enqueue or dispatch medicine-motor jobs.
-    return _service().finalize_payment_only_sale(order_ref)
+    # but deliberately do not enqueue or dispatch medicine-motor jobs. The
+    # receipt prints only after that commit; a printer fault cannot undo it.
+    order = _service().finalize_payment_only_sale(order_ref)
+    if order.get("fulfillment_state") == "completed":
+        print_receipts_safely(order_ref)
+    return order
 
 
 def _ingest_hardware_events() -> None:
@@ -416,6 +424,9 @@ def api_get_order(order_ref: str):
             and not order.get("stock_committed_at")
         ):
             order = _finish_paid_order(order_ref)
+        elif order["fulfillment_state"] == "completed":
+            # Retries a queued or failed copy (throttled in the service).
+            print_receipts_safely(order_ref)
         return _order_response(order)
     except Exception as exc:
         return _error(exc)
@@ -487,6 +498,10 @@ def api_simulate_cash(order_ref: str):
                 amount = to_centavos(data.get("amount", 0))
             event = hardware.inject_cash(source, int(amount))
         result = _service().record_cash_event(order_ref, session_ref=event["session_ref"], event_id=event["event_id"], source=event["source"], raw_pulses=event["raw_pulses"], mapped_centavos=event["mapped_centavos"], boot_id=event["boot_id"], sequence_no=event["sequence_no"], pulse_started_at=event.get("pulse_started_at"))
+        # Mirror _ingest_hardware_events: acceptors are inhibited before the
+        # sale finishes, which is also what lets the receipt printer run.
+        if result.get("stop_acceptors"):
+            hardware.stop_cash(event["session_ref"])
         if result.get("payment_complete"):
             order = _finish_paid_order(order_ref)
         else:

@@ -5,9 +5,16 @@
  * board selection changes only compile-time capacity. The host protocol is a
  * bounded ASCII frame with CRC16-CCITT. No Arduino String or JSON is used.
  *
- * Payment-only build: the measured D2/D3 pulse paths can credit a POS cash
- * session. Medicine motors remain compile-time disabled and this firmware
- * will reject every DISPENSE_ONE command.
+ * Payment + receipt build: the measured D2/D3 pulse paths can credit a POS
+ * cash session and the KMP26 thermal printer on D9/D10 prints receipts.
+ * Medicine motors remain disabled: this build does not link the PCA9685/I2C
+ * code at all (it is in git history for the motion phase), holds PCA OE HIGH,
+ * and rejects every DISPENSE_ONE command.
+ *
+ * Rebuilt 2026-09-28 from the recovered protocol of the working printer image
+ * (hardware/firmware/backup/uno_working_2026-09-28.hex), whose source was lost.
+ * Protocol-compatible with that image except that print fingerprints compare all
+ * 64 bits (the lost build compared only the first 32).
  */
 
 #include <Arduino.h>
@@ -15,7 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <Wire.h>
 
 #if defined(ARDUINO_AVR_UNO)
 static const uint8_t EEPROM_RING_SLOTS = 8;
@@ -34,9 +40,15 @@ static const uint8_t PIN_BILL_INHIBIT = 4;
 static const uint8_t PIN_COIN_POWER = 5;
 static const uint8_t PIN_CHUTE_RESERVED = 6;
 static const uint8_t PIN_PCA_OE = 7;        // active low
-static const uint8_t PIN_INTERLOCK = 8;
-static const uint8_t PCA9685_ADDR = 0x40;
-static const uint16_t FRAME_LIMIT = 240;
+static const uint8_t PIN_INTERLOCK = 8;      // empty on the 2026-09 kiosk; pull-up keeps it HIGH
+// KMP26 58 mm printer, 9600 8N1 TTL. D9 drives the printer's RX. The
+// printer's TX returns on D10; it idles LOW while the printer is powered and
+// connected, so a HIGH (pull-up) level means absent or busy. Both leads go
+// through a series resistor. The printer's DTR is not connected.
+static const uint8_t PIN_PRINTER_TX = 9;
+static const uint8_t PIN_PRINTER_LINE = 10;
+static const uint16_t FRAME_LIMIT = 240;        // receive buffer
+static const uint16_t FRAME_TX_LIMIT = 250;     // host reads 256 incl. CRC and CRLF
 static const uint32_t HEARTBEAT_TIMEOUT_MS = 3000UL;
 
 // ---------------------------------------------------------------------------
@@ -83,10 +95,7 @@ static const uint16_t COIN_GAP_MS        = 400;
 static const uint16_t COIN_MAX_PULSES    = 200;  // PHP 200 ceiling per train
 static const uint16_t EEPROM_EVENT_BASE = 16;
 static const uint16_t EEPROM_JOB_BASE = EEPROM_EVENT_BASE + EEPROM_RING_SLOTS * 8;
-static const uint8_t EEPROM_JOB_RECORD_SIZE = 44;
-static const uint8_t EEPROM_JOB_MARKER = 0xA6;
-static const uint8_t JOB_STARTED = 1;
-static const uint8_t JOB_DONE = 2;
+static const uint8_t EEPROM_JOB_RECORD_SIZE = 44;  // area reserved for the motion build
 // Cash and motion have separate gates. D2/D3 pulse acceptance is now enabled
 // from the completed bench trials; actuator calibration is still absent, so
 // no command can energize a medicine motor.
@@ -119,33 +128,9 @@ bool controllerHealthy = false;
 uint32_t lastHeartbeatMs = 0;
 uint32_t bootSequence = 0;
 uint16_t eventSequence = 0;
-uint8_t jobRingIndex = 0;
 char activeSession[40] = "";
 char rxFrame[FRAME_LIMIT + 1];
 uint16_t rxLength = 0;
-
-struct SlotProfile {
-  uint16_t positionA;
-  uint16_t positionB;
-  uint16_t travelMs;
-  uint16_t dwellMs;
-  uint16_t settleMs;
-  uint16_t cooldownMs;
-  const char *version;
-};
-
-SlotProfile profiles[10] = {
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"},
-  {1500,1900,500,250,300,500,"v1-unmeasured"}
-};
 
 uint16_t crc16Ccitt(const uint8_t *data, uint16_t length) {
   uint16_t crc = 0xFFFF;
@@ -210,7 +195,7 @@ void sendFrame(const char *kind, const char *requestId, const char *command,
   // This keeps peak SRAM bounded during the exact moment cash is reported.
   uint16_t bodyLength = 11 + strlen(kind) + strlen(requestId) +
                         strlen(command) + strlen(payload);
-  if ((uint16_t)(bodyLength + 6) > FRAME_LIMIT) return;
+  if ((uint16_t)(bodyLength + 5) > FRAME_TX_LIMIT) return;
   uint16_t crc = 0xFFFF;
   crc = crc16Append(crc, "MENDO/1|");
   crc = crc16Append(crc, kind);
@@ -246,15 +231,26 @@ bool validateFrameCrc(char *line) {
   return actual == (uint16_t)expected;
 }
 
+static const char STATUS_FMT[] PROGMEM =
+  "healthy=%u;firmware_identity=mendo-controller-v1;protocol_version=1;acceptors_inhibited=%u;coin_power_enabled=%u;pca_outputs_enabled=0;physical_evidence_required=%u;configuration_valid=%u;fault_code=%s";
+
 void sendStatus(const char *requestId) {
-  char payload[200];
-  snprintf(payload, sizeof(payload),
-           "mode=real;healthy=%u;connected=1;simulator=0;firmware_identity=mendo-controller-v1;protocol_version=1;acceptors_inhibited=%u;physical_evidence_required=%u;configuration_valid=%u;fault_code=%s",
-           controllerHealthy ? 1 : 0, acceptorsEnabled ? 0 : 1,
-           CASH_INPUTS_CONFIRMED ? 0 : 1,
-           CASH_INPUTS_CONFIRMED ? 1 : 0,
-           controllerHealthy ? "" : "FAIL_SAFE");
+  // 203 characters with FAIL_SAFE. The lost build used a 200-byte buffer and
+  // cut the fault code to "FAIL_".
+  char payload[212];
+  snprintf_P(payload, sizeof(payload), STATUS_FMT,
+             controllerHealthy ? 1 : 0, acceptorsEnabled ? 0 : 1,
+             acceptorsEnabled ? 1 : 0,
+             CASH_INPUTS_CONFIRMED ? 0 : 1,
+             CASH_INPUTS_CONFIRMED ? 1 : 0,
+             controllerHealthy ? "" : "FAIL_SAFE");
   sendFrame("RSP", requestId, "STATUS", payload);
+}
+
+void sendFault(const char *requestId, const char *command, PGM_P faultCode) {
+  char payload[48];
+  snprintf_P(payload, sizeof(payload), PSTR("ok=0;fault_code=%S"), faultCode);
+  sendFrame("RSP", requestId, command, payload);
 }
 
 void recordEventEvidence(uint8_t source, uint16_t pulses, uint8_t bad) {
@@ -367,61 +363,6 @@ void sendPendingCashEvent(const char *requestId) {
   sendFrame("RSP", requestId, "CASH_POLL", "has_event=0");
 }
 
-bool findJobRecord(const char *jobId, uint8_t &state, uint8_t &slot) {
-  char stored[40];
-  for (uint8_t index = 0; index < JOB_RING_SLOTS; index++) {
-    int address = EEPROM_JOB_BASE + (int)index * EEPROM_JOB_RECORD_SIZE;
-    if (EEPROM.read(address) != EEPROM_JOB_MARKER) continue;
-    for (uint8_t i = 0; i < sizeof(stored) - 1; i++) {
-      stored[i] = (char)EEPROM.read(address + 4 + i);
-    }
-    stored[sizeof(stored) - 1] = '\0';
-    if (!strcmp(stored, jobId)) {
-      state = EEPROM.read(address + 1);
-      slot = EEPROM.read(address + 2);
-      return true;
-    }
-  }
-  return false;
-}
-
-void recordJob(const char *jobId, uint8_t state, uint8_t slot) {
-  int address = -1;
-  bool reused = false;
-  uint8_t existingState = 0;
-  uint8_t existingSlot = 0;
-  if (findJobRecord(jobId, existingState, existingSlot)) {
-    char stored[40];
-    for (uint8_t index = 0; index < JOB_RING_SLOTS; index++) {
-      int candidate = EEPROM_JOB_BASE + (int)index * EEPROM_JOB_RECORD_SIZE;
-      if (EEPROM.read(candidate) != EEPROM_JOB_MARKER) continue;
-      for (uint8_t i = 0; i < sizeof(stored) - 1; i++) stored[i] = (char)EEPROM.read(candidate + 4 + i);
-      stored[sizeof(stored) - 1] = '\0';
-      if (!strcmp(stored, jobId)) { address = candidate; reused = true; break; }
-    }
-  }
-  if (address < 0) address = EEPROM_JOB_BASE + (int)jobRingIndex * EEPROM_JOB_RECORD_SIZE;
-  // Clear the marker first so a reset during the write cannot create a
-  // falsely completed job record.
-  EEPROM.update(address, 0x00);
-  EEPROM.update(address + 1, state);
-  EEPROM.update(address + 2, slot);
-  EEPROM.update(address + 3, 0x00);
-  for (uint8_t i = 0; i < 39; i++) {
-    char value = jobId[i];
-    EEPROM.update(address + 4 + i, value);
-    if (value == '\0') {
-      for (uint8_t rest = i + 1; rest < 40; rest++) EEPROM.update(address + 4 + rest, 0x00);
-      break;
-    }
-  }
-  EEPROM.update(address, EEPROM_JOB_MARKER);
-  if (!reused) {
-    jobRingIndex = (uint8_t)((jobRingIndex + 1) % JOB_RING_SLOTS);
-    EEPROM.update(2, jobRingIndex);
-  }
-}
-
 // `pulses` is the VALIDATED count -- the host maps that to money. `bad` marks
 // a train that contained physically impossible timing; the host must route
 // those to manual review rather than credit them.
@@ -467,12 +408,66 @@ void emitCashEvent(uint8_t source, uint16_t pulses, uint32_t startedMs,
 void coinEdge() { rawEdges[SRC_COIN]++; }
 void billEdge() { rawEdges[SRC_BILL]++; }
 
+// Per-train evidence (bench diagnostics only; never used for credit).
+uint8_t trainLows[2];
+uint16_t trainMinLow[2], trainMaxLow[2], trainMinPer[2], trainMaxPer[2];
+
 void resetTrain(uint8_t s) {
   trainActive[s] = 0;
   cleanPulses[s] = 0;
   prevLowStartMs[s] = 0;
   lowOpen[s] = 0;
   suspect[s] = 0;
+  trainLows[s] = 0;
+  trainMinLow[s] = trainMinPer[s] = 0xFFFF;
+  trainMaxLow[s] = trainMaxPer[s] = 0;
+}
+
+// Ring of the last TRAIN_LOG_SIZE finished trains that had at least one
+// settled LOW, recorded whether or not a payment was active.
+static const uint8_t TRAIN_LOG_SIZE = 8;
+struct TrainRecord {
+  uint8_t source;
+  uint8_t pulses;
+  uint8_t lows;
+  uint8_t suspect;
+  uint16_t minLow, maxLow, minPer, maxPer, durationMs;
+};
+TrainRecord trainLog[TRAIN_LOG_SIZE];
+uint8_t trainLogHead = 0;
+uint8_t trainLogCount = 0;
+
+void recordTrain(uint8_t s, uint16_t pulses, uint8_t bad, uint32_t startedMs, uint32_t now) {
+  if (!trainLows[s]) return;          // pure noise: nothing settled
+  TrainRecord &r = trainLog[trainLogHead];
+  r.source = s;
+  r.pulses = pulses > 255 ? 255 : (uint8_t)pulses;
+  r.lows = trainLows[s];
+  r.suspect = bad;
+  r.minLow = trainMinLow[s]; r.maxLow = trainMaxLow[s];
+  r.minPer = trainMinPer[s]; r.maxPer = trainMaxPer[s];
+  uint32_t duration = now - startedMs;
+  r.durationMs = duration > 0xFFFF ? 0xFFFF : (uint16_t)duration;
+  trainLogHead = (uint8_t)((trainLogHead + 1) % TRAIN_LOG_SIZE);
+  if (trainLogCount < TRAIN_LOG_SIZE) trainLogCount++;
+}
+
+void sendTrainLog(const char *requestId, uint8_t index) {
+  // One finished train per frame, index 0 = oldest retained.
+  if (index >= trainLogCount) {
+    char empty[24];
+    snprintf_P(empty, sizeof(empty), PSTR("count=%u;present=0"), trainLogCount);
+    sendFrame("RSP", requestId, "CASH_TRAIN", empty);
+    return;
+  }
+  TrainRecord &r = trainLog[(trainLogHead + TRAIN_LOG_SIZE - trainLogCount + index) % TRAIN_LOG_SIZE];
+  char payload[160];
+  snprintf_P(payload, sizeof(payload),
+             PSTR("count=%u;present=1;source=%s;pulses=%u;lows=%u;suspect=%u;low_min=%u;low_max=%u;period_min=%u;period_max=%u;duration_ms=%u"),
+             trainLogCount, r.source == SRC_BILL ? "bill" : "coin", r.pulses, r.lows, r.suspect,
+             r.minLow == 0xFFFF ? 0 : r.minLow, r.maxLow,
+             r.minPer == 0xFFFF ? 0 : r.minPer, r.maxPer, r.durationMs);
+  sendFrame("RSP", requestId, "CASH_TRAIN", payload);
 }
 
 // Called on a debounced (glitch-filtered) level transition.
@@ -486,6 +481,14 @@ void onStableEdge(uint8_t s, uint8_t level, uint32_t at) {
   lowOpen[s] = 0;
 
   uint32_t width = at - lowStartMs[s];
+  if (trainLows[s] < 255) trainLows[s]++;
+  if (width < trainMinLow[s]) trainMinLow[s] = (uint16_t)min(width, (uint32_t)0xFFFE);
+  if (width > trainMaxLow[s]) trainMaxLow[s] = (uint16_t)min(width, (uint32_t)0xFFFE);
+  if (prevLowStartMs[s]) {
+    uint32_t seen = lowStartMs[s] - prevLowStartMs[s];
+    if (seen < trainMinPer[s]) trainMinPer[s] = (uint16_t)min(seen, (uint32_t)0xFFFE);
+    if (seen > trainMaxPer[s]) trainMaxPer[s] = (uint16_t)min(seen, (uint32_t)0xFFFE);
+  }
   if (width < srcMinLowMs[s] || width > srcMaxLowMs[s]) {
     // A LOW outside the credit-pulse window is noise, not a pulse. Flag the
     // train: a genuine acceptor never emits one.
@@ -520,11 +523,15 @@ void pollCashSource(uint8_t s, uint32_t now) {
       resetTrain(s);
       trainActive[s] = 1;
       trainStartMs[s] = now;
+      lastActivityMs[s] = now;
       noInterrupts();
       rawAtTrainStart[s] = rawEdges[s];
       interrupts();
     }
-    lastActivityMs[s] = now;
+    // Raw glitches no longer extend the train. Both lines carried thousands
+    // of sub-millisecond spikes per second on the 2026-09-28 bench, which
+    // could hold a train open indefinitely so its cash event never fired.
+    // Only settled transitions below count as activity.
   } else if (stableLevel[s] != raw &&
              (uint32_t)(now - lastRawChangeMs[s]) >= srcGlitchMs[s]) {
     stableLevel[s] = raw;
@@ -536,6 +543,7 @@ void pollCashSource(uint8_t s, uint32_t now) {
     uint16_t pulses = cleanPulses[s];
     uint8_t bad = suspect[s];
     uint32_t startedMs = trainStartMs[s];
+    recordTrain(s, pulses, bad, startedMs, lastActivityMs[s]);
     resetTrain(s);
     // A train with zero validated pulses is noise (a rejected note, or motor
     // interference). It must never reach the host as a cash event. On the
@@ -555,74 +563,361 @@ void finalizePulseTrains() {
   pollCashSource(SRC_BILL, now);
 }
 
-void pcaWrite(uint8_t reg, uint8_t value) {
-  Wire.beginTransmission(PCA9685_ADDR);
-  Wire.write(reg);
-  Wire.write(value);
-  Wire.endTransmission();
+// ---------------------------------------------------------------------------
+// Receipt printer.
+//
+// The host renders ESC/POS and streams it here in hex chunks; the firmware
+// only moves bytes and keeps one durable job record so a lost reply or a
+// reset can never print a receipt twice. Job states: 0 idle, 1 receiving,
+// 2 printed, 3 interrupted (reset or stalled printer mid-job: part of the
+// receipt may be on paper, so only staff may clear it).
+// ---------------------------------------------------------------------------
+static const uint32_t PRINTER_BAUD = 9600UL;
+static const uint16_t PRINTER_BIT_US = (uint16_t)(1000000UL / PRINTER_BAUD);
+static const uint16_t PRINT_MAX_LENGTH = 4096;
+static const uint8_t PRINT_CHUNK_MAX = 96;
+static const uint16_t PRINTER_WAIT_MS = 3000;   // busy this long within one chunk = stalled
+static const uint8_t PRINT_IDLE = 0;
+static const uint8_t PRINT_RECEIVING = 1;
+static const uint8_t PRINT_DONE = 2;
+static const uint8_t PRINT_INTERRUPTED = 3;
+// 16-byte record after the (unused) motion-job ring:
+// marker, state, fingerprint[8], length(2), received(2), checksum, layout.
+static const uint16_t EEPROM_PRINT_BASE =
+  EEPROM_JOB_BASE + JOB_RING_SLOTS * EEPROM_JOB_RECORD_SIZE + 16;
+static const uint8_t EEPROM_PRINT_MARKER = 0xB7;
+static const uint8_t EEPROM_PRINT_LAYOUT = 0x01;
+
+volatile uint8_t *printerTxPort;
+uint8_t printerTxMask;
+uint8_t printFingerprint[8];
+uint8_t printState = PRINT_IDLE;
+uint16_t printLength = 0;
+uint16_t printReceived = 0;
+// How often and how long the printer held its busy line during this job
+// (RAM only). Evidence for flow-control tuning, not part of the job record.
+uint16_t printBusyWaits = 0;
+uint16_t printBusyMs = 0;
+uint16_t printBusyMaxMs = 0;
+
+static const char PRINT_STATUS_FMT[] PROGMEM =
+  "known=%u;ready=%u;dtr_level=%u;state=%u;received=%u;length=%u;busy_waits=%u;busy_ms=%u;busy_max_ms=%u;acceptors_inhibited=%u;coin_power_enabled=%u;job=%s;job_state=%u";
+
+uint8_t printRecordChecksum() {
+  uint8_t sum = printState ^ (uint8_t)printLength ^ (uint8_t)(printLength >> 8) ^
+                (uint8_t)printReceived ^ (uint8_t)(printReceived >> 8);
+  for (uint8_t i = 0; i < 8; i++) sum ^= printFingerprint[i];
+  return (uint8_t)(sum ^ 0x5A);
 }
 
-void pcaSetPulse(uint8_t channel, uint16_t microseconds) {
-  // 50 Hz: 20,000 us frame, 4096 PCA counts.
-  uint16_t ticks = (uint32_t)microseconds * 4096UL / 20000UL;
-  uint8_t base = (uint8_t)(0x06 + 4 * channel);
-  Wire.beginTransmission(PCA9685_ADDR);
-  Wire.write(base);
-  Wire.write(0);
-  Wire.write(0);
-  Wire.write((uint8_t)(ticks & 0xFF));
-  Wire.write((uint8_t)(ticks >> 8));
-  Wire.endTransmission();
+void savePrintRecord() {
+  int a = EEPROM_PRINT_BASE;
+  EEPROM.update(a, EEPROM_PRINT_MARKER);
+  EEPROM.update(a + 1, printState);
+  for (uint8_t i = 0; i < 8; i++) EEPROM.update(a + 2 + i, printFingerprint[i]);
+  EEPROM.update(a + 10, (uint8_t)printLength);
+  EEPROM.update(a + 11, (uint8_t)(printLength >> 8));
+  EEPROM.update(a + 12, (uint8_t)printReceived);
+  EEPROM.update(a + 13, (uint8_t)(printReceived >> 8));
+  EEPROM.update(a + 14, printRecordChecksum());
+  EEPROM.update(a + 15, EEPROM_PRINT_LAYOUT);
 }
 
-void pcaDisable(uint8_t channel) {
-  uint8_t base = (uint8_t)(0x06 + 4 * channel);
-  Wire.beginTransmission(PCA9685_ADDR);
-  Wire.write(base);
-  Wire.write(0);
-  Wire.write(0);
-  Wire.write(0);
-  Wire.write(0x10); // full-off bit; no idle PWM on inactive channels
-  Wire.endTransmission();
+void clearPrintRecord() {
+  printState = PRINT_IDLE;
+  printLength = printReceived = 0;
+  memset(printFingerprint, 0, sizeof(printFingerprint));
+  savePrintRecord();
 }
 
-bool dispenseOne(uint8_t slot, const char *jobId, const char *requestId) {
-  if (!MEDICINE_MOTORS_ENABLED || !controllerHealthy || slot < 1 || slot > 10 || digitalRead(PIN_INTERLOCK) == LOW) return false;
-  uint8_t knownState = 0;
-  uint8_t knownSlot = 0;
-  if (findJobRecord(jobId, knownState, knownSlot)) {
-    if (knownState == JOB_DONE) {
-      char done[96];
-      snprintf(done, sizeof(done), "job_id=%s;slot=%u;result=done_unverified;duplicate=1", jobId, knownSlot);
-      sendFrame("EVT", requestId, "DISPENSE_DONE_UNVERIFIED", done);
+void loadPrintRecord() {
+  int a = EEPROM_PRINT_BASE;
+  // Bytes left by an earlier firmware are far likelier than a torn write, so
+  // only a record with the marker, this layout version, and a valid checksum
+  // is trusted.
+  if (EEPROM.read(a) != EEPROM_PRINT_MARKER || EEPROM.read(a + 15) != EEPROM_PRINT_LAYOUT) {
+    clearPrintRecord();
+    return;
+  }
+  printState = EEPROM.read(a + 1);
+  for (uint8_t i = 0; i < 8; i++) printFingerprint[i] = EEPROM.read(a + 2 + i);
+  printLength = (uint16_t)EEPROM.read(a + 10) | ((uint16_t)EEPROM.read(a + 11) << 8);
+  printReceived = (uint16_t)EEPROM.read(a + 12) | ((uint16_t)EEPROM.read(a + 13) << 8);
+  if (EEPROM.read(a + 14) != printRecordChecksum() || printState > PRINT_INTERRUPTED) {
+    clearPrintRecord();
+    return;
+  }
+  // A job that was still receiving cannot know how much reached the paper.
+  // Never resume it automatically.
+  if (printState == PRINT_RECEIVING) {
+    printState = PRINT_INTERRUPTED;
+    savePrintRecord();
+  }
+}
+
+bool printerLineIdle() { return digitalRead(PIN_PRINTER_LINE) == LOW; }
+
+bool printerReady() {
+  return controllerHealthy && !acceptorsEnabled && !drainAfterStop[0] &&
+         !drainAfterStop[1] && printerLineIdle();
+}
+
+// Bit-banged 8N1, transmit only (no SoftwareSerial, so no pin-change ISRs
+// compete with the D2/D3 cash interrupts). Interrupts are held off for one
+// byte (~1 ms); the host is waiting for this reply, so no USB bytes arrive.
+void printerWriteByte(uint8_t value) {
+  uint8_t oldSreg = SREG;
+  cli();
+  *printerTxPort &= (uint8_t)~printerTxMask;             // start bit
+  delayMicroseconds(PRINTER_BIT_US);
+  for (uint8_t bit = 0; bit < 8; bit++) {
+    if (value & 0x01) *printerTxPort |= printerTxMask;
+    else *printerTxPort &= (uint8_t)~printerTxMask;
+    value >>= 1;
+    delayMicroseconds(PRINTER_BIT_US);
+  }
+  *printerTxPort |= printerTxMask;                         // stop bit
+  delayMicroseconds(PRINTER_BIT_US);
+  SREG = oldSreg;
+}
+
+// Copies `key`'s value (key must start the payload or follow ';').
+bool payloadField(const char *payload, const char *key, char *out, uint8_t size) {
+  uint8_t keyLength = (uint8_t)strlen(key);
+  const char *p = payload;
+  while (p && *p) {
+    if (!strncmp(p, key, keyLength) && p[keyLength] == '=') {
+      p += keyLength + 1;
+      uint8_t i = 0;
+      while (*p && *p != ';') {
+        if (i >= size - 1) return false;
+        out[i++] = *p++;
+      }
+      out[i] = '\0';
       return true;
     }
-    // A reset during a started movement leaves the physical result unknown;
-    // never repeat it automatically.
-    return false;
+    p = strchr(p, ';');
+    if (p) p++;
   }
-  SlotProfile &profile = profiles[slot - 1];
-  if (profile.positionA < 500 || profile.positionA > 2500 ||
-      profile.positionB < 500 || profile.positionB > 2500) return false;
-  digitalWrite(PIN_PCA_OE, LOW);
-  recordJob(jobId, JOB_STARTED, slot);
-  char started[96];
-  snprintf(started, sizeof(started), "job_id=%s;slot=%u;profile=%s", jobId, slot, profile.version);
-  sendFrame("EVT", requestId, "DISPENSE_STARTED", started);
-  pcaSetPulse(slot - 1, profile.positionA);
-  delay(profile.travelMs);
-  pcaSetPulse(slot - 1, profile.positionB);
-  delay(profile.dwellMs);
-  pcaSetPulse(slot - 1, profile.positionA);
-  delay(profile.settleMs);
-  pcaDisable(slot - 1);
-  digitalWrite(PIN_PCA_OE, HIGH);
-  delay(profile.cooldownMs);
-  recordJob(jobId, JOB_DONE, slot);
-  char done[96];
-  snprintf(done, sizeof(done), "job_id=%s;slot=%u;profile=%s;result=done_unverified", jobId, slot, profile.version);
-  sendFrame("EVT", requestId, "DISPENSE_DONE_UNVERIFIED", done);
+  return false;
+}
+
+int8_t hexNibble(char c) {
+  if (c >= '0' && c <= '9') return (int8_t)(c - '0');
+  if (c >= 'a' && c <= 'f') return (int8_t)(c - 'a' + 10);
+  if (c >= 'A' && c <= 'F') return (int8_t)(c - 'A' + 10);
+  return -1;
+}
+
+bool parseFingerprint(const char *payload, uint8_t *out) {
+  char text[20];
+  if (!payloadField(payload, "fingerprint", text, sizeof(text)) || strlen(text) != 16) return false;
+  uint8_t any = 0;
+  for (uint8_t i = 0; i < 8; i++) {
+    int8_t high = hexNibble(text[2 * i]);
+    int8_t low = hexNibble(text[2 * i + 1]);
+    if (high < 0 || low < 0) return false;
+    out[i] = (uint8_t)((high << 4) | low);
+    any |= out[i];
+  }
+  return any != 0;
+}
+
+bool parseUnsigned(const char *payload, const char *key, uint16_t &value) {
+  char text[8];
+  if (!payloadField(payload, key, text, sizeof(text)) || !text[0]) return false;
+  char *end = NULL;
+  unsigned long parsed = strtoul(text, &end, 10);
+  if (!end || *end || parsed > 65535UL) return false;
+  value = (uint16_t)parsed;
   return true;
+}
+
+bool isCurrentJob(const uint8_t *fingerprint) {
+  return printState != PRINT_IDLE && !memcmp(fingerprint, printFingerprint, 8);
+}
+
+void sendPrintStatus(const char *requestId, bool known) {
+  // `job` always names the controller's current record, so staff can clear
+  // an interrupted job even when the host has lost its fingerprint.
+  char job[17];
+  for (uint8_t i = 0; i < 8; i++) {
+    snprintf_P(job + 2 * i, 3, PSTR("%02x"), printFingerprint[i]);
+  }
+  // Longest possible payload is 186 characters; the Uno has ~700 B of stack,
+  // and a 224-byte buffer here overflowed it once the train log was added.
+  char payload[192];
+  snprintf_P(payload, sizeof(payload), PRINT_STATUS_FMT,
+             known ? 1 : 0, printerReady() ? 1 : 0, printerLineIdle() ? 0 : 1,
+             known ? printState : 0, known ? printReceived : 0,
+             known ? printLength : 0, known ? printBusyWaits : 0,
+             known ? printBusyMs : 0, known ? printBusyMaxMs : 0,
+             acceptorsEnabled ? 0 : 1, acceptorsEnabled ? 1 : 0,
+             printState == PRINT_IDLE ? "" : job, printState);
+  sendFrame("RSP", requestId, "PRINT_STATUS", payload);
+}
+
+// Bench diagnostic: poll the printer line for `ms` (max 1000) and report
+// level changes, so a busy level (few changes) can be told apart from serial
+// data or noise (many). Bounded and interrupt-free; it never prints.
+void sendPrinterLineScan(const char *requestId, uint16_t ms) {
+  if (ms == 0 || ms > 1000) ms = 200;
+  uint32_t start = millis();
+  uint32_t samples = 0, highSamples = 0, changes = 0;
+  uint8_t last = digitalRead(PIN_PRINTER_LINE);
+  while ((uint32_t)(millis() - start) < ms) {
+    uint8_t level = digitalRead(PIN_PRINTER_LINE);
+    samples++;
+    if (level) highSamples++;
+    if (level != last) { changes++; last = level; }
+  }
+  char payload[96];
+  snprintf_P(payload, sizeof(payload), PSTR("ms=%u;samples=%lu;high_samples=%lu;changes=%lu;level_now=%u"),
+             ms, samples, highSamples, changes, last);
+  sendFrame("RSP", requestId, "PRINTER_LINE_SCAN", payload);
+}
+
+void handlePrinterCommand(const char *requestId, const char *command, const char *payload) {
+  uint8_t fingerprint[8];
+  bool hasFingerprint = parseFingerprint(payload, fingerprint);
+
+  if (!strcmp(command, "PRINTER_LINE_SCAN")) {
+    uint16_t ms = 200;
+    parseUnsigned(payload, "ms", ms);
+    sendPrinterLineScan(requestId, ms);
+    return;
+  }
+
+  if (!strcmp(command, "PRINTER_STATUS")) {
+    sendPrintStatus(requestId, hasFingerprint && isCurrentJob(fingerprint));
+    return;
+  }
+
+  if (!strcmp(command, "PRINT_CLEAR")) {
+    // Staff decision after looking at the paper. Only the named job.
+    if (!hasFingerprint || !isCurrentJob(fingerprint)) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINT_CLEAR_REJECTED"));
+      return;
+    }
+    clearPrintRecord();
+    sendPrintStatus(requestId, false);
+    return;
+  }
+
+  if (!strcmp(command, "PRINT_BEGIN")) {
+    uint16_t length = 0;
+    if (!hasFingerprint || !parseUnsigned(payload, "length", length) ||
+        length == 0 || length > PRINT_MAX_LENGTH) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINTER_NOT_READY"));
+      return;
+    }
+    if (isCurrentJob(fingerprint)) {        // idempotent: report, never restart
+      sendPrintStatus(requestId, true);
+      return;
+    }
+    if (printState == PRINT_RECEIVING || printState == PRINT_INTERRUPTED) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRIOR_PRINT_AMBIGUOUS"));
+      return;
+    }
+    if (!printerReady()) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINTER_NOT_READY"));
+      return;
+    }
+    memcpy(printFingerprint, fingerprint, 8);
+    printLength = length;
+    printReceived = 0;
+    printBusyWaits = printBusyMs = printBusyMaxMs = 0;
+    printState = PRINT_RECEIVING;
+    savePrintRecord();
+    sendPrintStatus(requestId, true);
+    return;
+  }
+
+  if (!strcmp(command, "PRINT_CHUNK")) {
+    if (!hasFingerprint || !isCurrentJob(fingerprint) || printState != PRINT_RECEIVING) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINT_JOB_NOT_ACTIVE"));
+      return;
+    }
+    uint16_t offset = 0;
+    if (!parseUnsigned(payload, "offset", offset) || offset != printReceived) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINT_OFFSET_MISMATCH"));
+      return;
+    }
+    // Validate the whole chunk before a single byte reaches the paper.
+    const char *hex = NULL;
+    for (const char *p = payload; p && *p; ) {
+      if (!strncmp(p, "hex=", 4)) { hex = p + 4; break; }
+      p = strchr(p, ';');
+      if (p) p++;
+    }
+    uint8_t hexLength = 0;
+    if (hex) {
+      while (hex[hexLength] && hex[hexLength] != ';') {
+        if (hexNibble(hex[hexLength]) < 0 || hexLength >= PRINT_CHUNK_MAX * 2) { hex = NULL; break; }
+        hexLength++;
+      }
+    }
+    if (!hex || hexLength == 0 || (hexLength & 1)) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("BAD_PRINT_CHUNK"));
+      return;
+    }
+    uint8_t count = hexLength / 2;
+    if ((uint32_t)printReceived + count > printLength) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINT_LENGTH_MISMATCH"));
+      return;
+    }
+    if (acceptorsEnabled) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINTER_NOT_READY"));
+      return;
+    }
+    // The busy budget covers the whole chunk so one reply always arrives
+    // well inside the host's request timeout.
+    uint32_t chunkBusyMs = 0;
+    for (uint8_t i = 0; i < count; i++) {
+      if (!printerLineIdle()) {
+        uint32_t waitStart = millis();
+        printBusyWaits++;
+        while (!printerLineIdle()) {
+          if (chunkBusyMs + (uint32_t)(millis() - waitStart) >= PRINTER_WAIT_MS) {
+            printBusyMs += (uint16_t)(millis() - waitStart);
+            printState = PRINT_INTERRUPTED;
+            savePrintRecord();
+            sendFault(requestId, "PRINT_STATUS", PSTR("PRINTER_INTERRUPTED"));
+            return;
+          }
+        }
+        uint32_t waited = millis() - waitStart;
+        chunkBusyMs += waited;
+        printBusyMs += (uint16_t)waited;
+        if (waited > printBusyMaxMs) printBusyMaxMs = (uint16_t)waited;
+      }
+      printerWriteByte((uint8_t)((hexNibble(hex[2 * i]) << 4) | hexNibble(hex[2 * i + 1])));
+      printReceived++;
+    }
+    savePrintRecord();
+    sendPrintStatus(requestId, true);
+    return;
+  }
+
+  if (!strcmp(command, "PRINT_END")) {
+    uint16_t length = 0;
+    if (hasFingerprint && isCurrentJob(fingerprint) && printState == PRINT_DONE) {
+      sendPrintStatus(requestId, true);         // idempotent after a lost reply
+      return;
+    }
+    if (!hasFingerprint || !isCurrentJob(fingerprint) || printState != PRINT_RECEIVING ||
+        !parseUnsigned(payload, "length", length) || length != printLength ||
+        printReceived != printLength) {
+      sendFault(requestId, "PRINT_STATUS", PSTR("PRINT_LENGTH_MISMATCH"));
+      return;
+    }
+    printState = PRINT_DONE;
+    savePrintRecord();
+    sendPrintStatus(requestId, true);
+    return;
+  }
+
+  sendFault(requestId, "PRINT_STATUS", PSTR("UNSUPPORTED_PRINT_COMMAND"));
 }
 
 void handleCommand(char *line) {
@@ -681,35 +976,12 @@ void handleCommand(char *line) {
     if (!drainAfterStop[0] && !drainAfterStop[1]) activeSession[0] = '\0';
     sendFrame("RSP", requestId, "ACK", "ok=1;command=PAY_STOP");
   } else if (!strcmp(command, "DISPENSE_ONE")) {
-    char *job = strstr(payload, "job_id=");
-    char *slotText = strstr(payload, "slot=");
-    if (!job || !slotText) { sendFrame("RSP", requestId, "ACK", "ok=0;fault_code=BAD_DISPENSE"); return; }
-    job += 7;
-    slotText += 5;
-    char jobId[42];
-    uint8_t i = 0;
-    while (*job && *job != ';' && i < sizeof(jobId)-1) jobId[i++] = *job++;
-    jobId[i] = '\0';
-    uint8_t slot = (uint8_t)atoi(slotText);
-    bool ok = dispenseOne(slot, jobId, requestId);
-    sendFrame("RSP", requestId, "ACK", ok ? "ok=1;command=DISPENSE_ONE" : "ok=0;fault_code=DISPENSE_FAILED");
+    sendFrame("RSP", requestId, "ACK", "ok=0;fault_code=MEDICINE_MOTORS_DISABLED");
   } else if (!strcmp(command, "JOB_STATUS")) {
-    char *job = strstr(payload, "job_id=");
-    if (!job) { sendFrame("RSP", requestId, "JOB_STATUS", "known=0"); return; }
-    job += 7;
-    char jobId[40];
-    uint8_t i = 0;
-    while (*job && *job != ';' && i < sizeof(jobId)-1) jobId[i++] = *job++;
-    jobId[i] = '\0';
-    uint8_t state = 0;
-    uint8_t slot = 0;
-    if (findJobRecord(jobId, state, slot)) {
-      char result[96];
-      snprintf(result, sizeof(result), "known=1;job_id=%s;state=%u;slot=%u", jobId, state, slot);
-      sendFrame("RSP", requestId, "JOB_STATUS", result);
-    } else {
-      sendFrame("RSP", requestId, "JOB_STATUS", "known=0");
-    }
+    // No motion job can exist in this build.
+    sendFrame("RSP", requestId, "JOB_STATUS", "known=0");
+  } else if (!strncmp(command, "PRINT", 5)) {
+    handlePrinterCommand(requestId, command, payload);
   } else if (!strcmp(command, "CASH_DIAG")) {
     sendCashDiagnostics(requestId);
   } else if (!strcmp(command, "CASH_EVIDENCE")) {
@@ -719,6 +991,9 @@ void handleCommand(char *line) {
       return;
     }
     sendCashEvidence(requestId, (uint8_t)atoi(slotText + 5));
+  } else if (!strcmp(command, "CASH_TRAIN")) {
+    char *indexText = strstr(payload, "index=");
+    sendTrainLog(requestId, indexText ? (uint8_t)atoi(indexText + 6) : 0);
   } else if (!strcmp(command, "CASH_POLL")) {
     sendPendingCashEvent(requestId);
   } else if (!strcmp(command, "CASH_ACK")) {
@@ -777,11 +1052,15 @@ void setup() {
   pinMode(PIN_PCA_OE, OUTPUT);
   pinMode(PIN_CHUTE_RESERVED, INPUT_PULLUP);
   pinMode(PIN_INTERLOCK, INPUT_PULLUP);
+  pinMode(PIN_PRINTER_TX, OUTPUT);
+  pinMode(PIN_PRINTER_LINE, INPUT_PULLUP);
   // Keep every motor output disabled throughout the payment-only test.
   digitalWrite(PIN_PCA_OE, HIGH);
   digitalWrite(PIN_BILL_INHIBIT, LOW);
   digitalWrite(PIN_COIN_POWER, LOW);
-  Wire.begin();
+  digitalWrite(PIN_PRINTER_TX, HIGH);       // UART idle (mark)
+  printerTxPort = portOutputRegister(digitalPinToPort(PIN_PRINTER_TX));
+  printerTxMask = digitalPinToBitMask(PIN_PRINTER_TX);
   Serial.begin(115200);
   for (uint8_t s = 0; s < 2; s++) {
     rawLevel[s] = digitalRead(srcPin[s]);
@@ -799,8 +1078,7 @@ void setup() {
   bootSequence++;
   EEPROM.update(0, (uint8_t)(bootSequence & 0xFF));
   EEPROM.update(1, (uint8_t)(bootSequence >> 8));
-  jobRingIndex = EEPROM.read(2);
-  if (jobRingIndex >= JOB_RING_SLOTS) jobRingIndex = 0;
+  loadPrintRecord();
   failSafe();
   lastHeartbeatMs = millis();
 }

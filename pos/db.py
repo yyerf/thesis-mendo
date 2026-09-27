@@ -363,6 +363,34 @@ CREATE TABLE IF NOT EXISTS order_audit_events (
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
+-- One row per paper copy. ``fingerprint`` is the controller's idempotency
+-- key: a retry with the same fingerprint resumes or reports the job, never
+-- prints it twice. ``ambiguous`` means the printer stopped mid-receipt and
+-- only staff looking at the paper can resolve it.
+CREATE TABLE IF NOT EXISTS receipt_prints (
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    print_ref             TEXT UNIQUE NOT NULL,
+    order_id              INTEGER NOT NULL,
+    copy_no               INTEGER NOT NULL DEFAULT 1,
+    fingerprint           TEXT UNIQUE NOT NULL,
+    state                 TEXT NOT NULL DEFAULT 'pending'
+        CHECK(state IN ('pending','printing','printed','failed','ambiguous','cancelled')),
+    printer_mode          TEXT,
+    attempts              INTEGER NOT NULL DEFAULT 0,
+    last_error            TEXT,
+    bytes_total           INTEGER,
+    bytes_sent            INTEGER NOT NULL DEFAULT 0,
+    requested_by          TEXT NOT NULL DEFAULT 'system',
+    resolved_by           TEXT,
+    created_at            TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+    claimed_at            TEXT,
+    printed_at            TEXT,
+    updated_at            TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+    UNIQUE(order_id, copy_no),
+    FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_receipt_prints_state ON receipt_prints(state, id);
 CREATE INDEX IF NOT EXISTS idx_orders_payment_state ON orders(payment_state);
 CREATE INDEX IF NOT EXISTS idx_orders_fulfillment_state ON orders(fulfillment_state);
 CREATE INDEX IF NOT EXISTS idx_cash_events_order ON cash_events(order_id, id);

@@ -13,6 +13,7 @@ from .db import (
     list_inventory, get_inventory_item,
 )
 from .order_service import ConsentRequired, InvalidTransition, OrderService, OrderError
+from .receipt_service import print_receipts_safely
 from hardware.interface import HardwareFault
 from hardware.service import get_hardware_service
 
@@ -220,6 +221,7 @@ def api_checkout(current_user=None):
             order = service.finalize_payment_only_sale(
                 order["order_ref"], actor=f"cashier:{current_user['id']}"
             )
+            print_receipts_safely(order["order_ref"])
         elif order["payment_state"] in {"unpaid", "awaiting_cash"}:
             started = service.start_cash(order["order_ref"], no_change_consent=True)
             try:

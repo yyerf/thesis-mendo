@@ -14,6 +14,7 @@ from typing import Any, Dict, Optional
 
 from .interface import HardwareFault
 from .protocol import Frame, ProtocolError, command, decode_frame, response
+from .real_backend import PRINTER_COMMANDS, PRINTER_REQUEST_TIMEOUT
 from .simulator import SimulatedHardware
 
 
@@ -31,10 +32,10 @@ class HardwareDaemon:
         try:
             fields = frame.fields
             if frame.command in {"HELLO", "STATUS"}:
-                return response(frame.request_id, "STATUS", **self._compact_status())
+                return self._status_response(frame.request_id, "STATUS")
             if frame.command == "HEARTBEAT":
                 self.backend.heartbeat()
-                return response(frame.request_id, "HEARTBEAT", **self._compact_status())
+                return self._status_response(frame.request_id, "HEARTBEAT")
             if frame.command == "PAY_START":
                 self.backend.start_payment(fields.get("session", ""), int(fields.get("due", "0")))
                 return response(frame.request_id, "ACK", ok=1, command=frame.command)
@@ -79,6 +80,11 @@ class HardwareDaemon:
                 if not diagnostic:
                     raise ProtocolError("CASH_DIAG_UNSUPPORTED")
                 return response(frame.request_id, "CASH_DIAG", **diagnostic())
+            if frame.command == "CASH_TRAIN":
+                trains = getattr(self.backend, "cash_train", None)
+                if not trains:
+                    raise ProtocolError("CASH_TRAIN_UNSUPPORTED")
+                return response(frame.request_id, "CASH_TRAIN", **trains(int(fields.get("index", "0"))))
             if frame.command == "CASH_EVIDENCE":
                 evidence = getattr(self.backend, "cash_evidence", None)
                 if not evidence:
@@ -88,18 +94,57 @@ class HardwareDaemon:
                     "CASH_EVIDENCE",
                     **evidence(int(fields.get("slot", "0"))),
                 )
+            if frame.command in PRINTER_COMMANDS:
+                printer = getattr(self.backend, "printer_command", None)
+                if not printer:
+                    raise ProtocolError("PRINTER_UNSUPPORTED")
+                return response(
+                    frame.request_id, "PRINT_STATUS", **printer(frame.command, **fields)
+                )
             if frame.command == "SIM_INSERT":
                 result = self.backend.insert_cash(fields["source"], int(fields["centavos"]))
                 return response(frame.request_id, "CASH_EVENT", **result)
             raise ProtocolError(f"Unsupported command {frame.command}")
         except (KeyError, ValueError, HardwareFault, ProtocolError) as exc:
-            return response(frame.request_id, "ACK", ok=0, command=frame.command, fault_code=str(exc))
+            return response(frame.request_id, "ACK", ok=0, command=frame.command, fault_code=str(exc)[:64])
+        except Exception as exc:
+            # e.g. a pyserial write timeout: answer with a fault instead of
+            # dropping the client connection without a reply.
+            return response(
+                frame.request_id, "ACK", ok=0, command=frame.command,
+                fault_code=f"{type(exc).__name__}:{exc}"[:64],
+            )
+
+    def _status_response(self, request_id: str, name: str) -> bytes:
+        """Status always fits one frame. A fault already blocks payment, so
+        optional fields go first, then the fault text is shortened; a fault is
+        never allowed to turn into an unreadable reply."""
+        compact = self._compact_status()
+        while True:
+            try:
+                return response(request_id, name, **compact)
+            except ProtocolError:
+                if "fault_code" not in compact:
+                    raise
+                for optional in ("protocol_errors", "last_heartbeat"):
+                    if optional in compact:
+                        compact.pop(optional)
+                        break
+                else:
+                    fault = str(compact["fault_code"])
+                    if len(fault) <= 5:
+                        raise
+                    compact["fault_code"] = fault[: max(5, len(fault) - 8)]
 
     def _compact_status(self) -> Dict[str, Any]:
-        """Keep every response within the Uno-sized 256-byte frame budget."""
+        """Keep every response within the Uno-sized 256-byte frame budget.
+
+        ``mode`` is omitted: the client-side bridge sets it, and the 22 bytes
+        it cost left no room to report a fault code.
+        """
         status = self.backend.status()
         keys = (
-            "mode", "connected", "healthy", "simulator", "firmware_identity",
+            "connected", "healthy", "simulator", "firmware_identity",
             "protocol_version", "last_heartbeat", "acceptors_inhibited",
             "physical_evidence_required", "configuration_valid",
         )
@@ -116,6 +161,8 @@ class HardwareDaemon:
             compact[key] = value
         if status.get("fault_code"):
             compact["fault_code"] = status["fault_code"]
+        if status.get("protocol_errors"):
+            compact["protocol_errors"] = status["protocol_errors"]
         return compact
 
     def start(self) -> "HardwareDaemon":
@@ -175,10 +222,10 @@ class UnixHardwareClient:
         self.socket_path = socket_path
         self.timeout = timeout
 
-    def request(self, name: str, **fields: object) -> Dict[str, str]:
+    def request(self, name: str, *, timeout: float | None = None, **fields: object) -> Dict[str, str]:
         request_id = f"R{uuid.uuid4().hex[:10]}"
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
-            sock.settimeout(self.timeout)
+            sock.settimeout(timeout or self.timeout)
             sock.connect(self.socket_path)
             sock.sendall(command(request_id, name, **fields))
             raw = b""
@@ -224,3 +271,10 @@ class UnixHardwareClient:
 
     def cash_evidence(self, slot: int) -> Dict[str, Any]:
         return dict(self.request("CASH_EVIDENCE", slot=int(slot)))
+
+    def cash_train(self, index: int) -> Dict[str, Any]:
+        return dict(self.request("CASH_TRAIN", index=int(index)))
+
+    def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
+        # Outlive the daemon's own serial deadline so its answer is not lost.
+        return dict(self.request(name, timeout=PRINTER_REQUEST_TIMEOUT + 1.0, **fields))

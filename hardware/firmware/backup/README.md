@@ -8,7 +8,13 @@ the only copy until the sketch is reconstructed.
 | File | Contents | SHA-256 |
 |------|----------|---------|
 | `uno_working_2026-09-28.hex` | full 32 KiB flash (app + Optiboot), Intel HEX | `369ab96e9547ddcfdc8726c7c83ed7c19adae28ac8a99a221a03889a6ec98447` |
-| `uno_working_2026-09-28.eeprom.hex` | full 1 KiB EEPROM (cash evidence/replay state) | `53ee9dd199628c6df95ce5f64ef3ae91a3695376ad35ef359b93604529f27e11` |
+| `uno_working_2026-09-28.eeprom.hex` | **not EEPROM** — see note below | `53ee9dd199628c6df95ce5f64ef3ae91a3695376ad35ef359b93604529f27e11` |
+
+**Correction (same day):** the "EEPROM" file holds the first 1 KiB of *flash*
+(its bytes are the interrupt vector table and format strings). The Uno's
+Optiboot bootloader does not implement EEPROM reads and silently returned flash.
+The real EEPROM contents were never captured; reading them needs an ISP
+programmer. The flash backup is unaffected and was verified.
 
 Board: Uno R3 `2341:0043`, ATmega328P `0x1e950f`, USB serial
 `751363233373514071E2`. Dump verified byte-for-byte against the chip
@@ -35,5 +41,5 @@ avrdude -p m328p -c arduino -P /dev/ttyACM0 -b 115200 \
   -U flash:w:uno_working_2026-09-28.hex:i
 ```
 
-Restoring EEPROM is optional and only through an ISP programmer (Optiboot
-cannot write EEPROM); a fresh EEPROM just loses replay history.
+EEPROM cannot be read or written through Optiboot. Firmware that reuses it
+(boot counter, cash-evidence ring, print record) must validate what it finds.

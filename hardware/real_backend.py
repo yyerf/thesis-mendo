@@ -19,6 +19,15 @@ from .pulses import PulseMapping
 from .protocol import ProtocolError, command, decode_frame
 
 
+PRINTER_COMMANDS = frozenset({
+    "PRINT_BEGIN", "PRINT_CHUNK", "PRINT_END", "PRINT_CLEAR", "PRINTER_STATUS",
+    "PRINTER_LINE_SCAN",
+})
+# A 64-byte chunk takes ~70 ms at 9600 baud, but the controller may wait for
+# a busy printer before each byte.
+PRINTER_REQUEST_TIMEOUT = 6.0
+
+
 class SerialHardwareBackend:
     """Bounded request/response bridge for the Arduino controller."""
 
@@ -56,6 +65,8 @@ class SerialHardwareBackend:
             "physical_evidence_required": True,
             "configuration_valid": False,
             "fault_code": "NOT_STARTED",
+            # Replies that failed CRC or framing since the daemon started.
+            "protocol_errors": 0,
         }
         self._stop = threading.Event()
         self._heartbeat_thread: Optional[threading.Thread] = None
@@ -69,7 +80,8 @@ class SerialHardwareBackend:
                 self.port,
                 self.baudrate,
                 timeout=self.timeout,
-                write_timeout=self.timeout,
+                # 0.25 s once timed out a 214-byte print frame (2026-09-28).
+                write_timeout=max(1.0, self.timeout),
             )
             # Opening an Uno CDC serial port toggles DTR and resets the board.
             # Bytes written while the Optiboot bootloader is still active are
@@ -199,6 +211,16 @@ class SerialHardwareBackend:
     def cash_evidence(self, slot: int) -> Dict[str, Any]:
         return dict(self._request("CASH_EVIDENCE", slot=int(slot)))
 
+    def cash_train(self, index: int) -> Dict[str, Any]:
+        """One finished pulse train (index 0 = oldest of the last 8)."""
+        return dict(self._request("CASH_TRAIN", index=int(index)))
+
+    def printer_command(self, name: str, **fields: object) -> Dict[str, Any]:
+        """Forward one PRINT_* command; chunk writes wait on the printer."""
+        if name not in PRINTER_COMMANDS:
+            raise HardwareFault("UNSUPPORTED_PRINTER_COMMAND")
+        return dict(self._request(name, _timeout=PRINTER_REQUEST_TIMEOUT, **fields))
+
     def _capture_cash_event(self, fields: Dict[str, str]) -> None:
         """Normalize the AVR evidence frame into the POS cash contract.
 
@@ -253,14 +275,14 @@ class SerialHardwareBackend:
             except Exception as exc:
                 self._set_fault(str(exc))
 
-    def _request(self, name: str, **fields: object) -> Dict[str, str]:
+    def _request(self, name: str, *, _timeout: float | None = None, **fields: object) -> Dict[str, str]:
         with self._lock:
             if self._serial is None:
                 raise HardwareFault("SERIAL_NOT_OPEN")
             request_id = f"R{uuid.uuid4().hex[:10]}"
             self._serial.write(command(request_id, name, **fields))
             self._serial.flush()
-            deadline = time.monotonic() + max(1.0, self.timeout * 8)
+            deadline = time.monotonic() + (_timeout or max(1.0, self.timeout * 8))
             while time.monotonic() < deadline:
                 raw = self._serial.readline(256)
                 if not raw:
@@ -268,6 +290,7 @@ class SerialHardwareBackend:
                 try:
                     frame = decode_frame(raw)
                 except ProtocolError:
+                    self._status["protocol_errors"] = int(self._status.get("protocol_errors", 0)) + 1
                     self._set_fault("PROTOCOL_ERROR")
                     continue
                 if frame.kind == "EVT":

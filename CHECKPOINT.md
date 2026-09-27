@@ -723,3 +723,58 @@ controller or used to authorize the installed TB unit.
 - Next: rebuild the printer source and the Python host printer client from the
   recovered protocol; re-flash only after the rebuilt sketch reproduces this
   behavior.
+
+## Receipt printing restored; firmware rebuilt — 2026-09-28
+
+- Status: **host + firmware printing implemented and live-verified; bill path
+  verified; coin path and acceptor inhibit fail physical checks (below)**.
+- Correction to the backup entry above: the "EEPROM" dump is really the first
+  1 KiB of flash (Optiboot cannot read EEPROM). Only the flash backup is valid.
+- Wiring confirmed by the operator and the recovered image: printer RX ← D9,
+  printer "TX" wire → D10 (behaves as a busy line), DTR unconnected, D8 empty;
+  printer 12 V shared with the TB74 supply.
+- Recovered printer protocol (black-box + disassembly): `PRINT_BEGIN/CHUNK/END/
+  CLEAR`, `PRINTER_STATUS`, fingerprint = 16 hex (lost build: first 32 bits
+  only, zero rejected), single EEPROM job record, states 0/1/2/3, printing
+  gated on a fresh heartbeat and inhibited acceptors.
+- Host: `hardware/printer.py` (idempotent chunked job with controller resync),
+  `hardware/receipt.py` (32-column ESC/POS, ASCII-folded, spaced rules,
+  `ESC 7` peak-heat limit, tear feed), daemon/bridge forwarding, simulator
+  emulation, `receipt_prints` table + `pos/receipt_service.py` (queued in the
+  sale transaction; retry/reprint/resolve; admin card), kiosk/cashier status.
+- Firmware: rebuilt `mendo_controller.ino` (printer module, bit-banged D9 TX,
+  bounded busy wait, busy counters, `job` field, `PRINTER_LINE_SCAN`,
+  `CASH_TRAIN` log, settled-edge train timing, motion code not linked).
+- Evidence, 2026-09-28 bench (photos in the operator's Downloads):
+  - Full 750-byte receipts lost half their text on both the old and rebuilt
+    firmware. Losses began after every solid `----` rule; the printer then
+    held D10 HIGH ~400 ms (399/395 ms measured). Spaced dashes: 0 ms busy.
+    Same solid rule after `ESC 7 3 80 2`: 0 ms busy, nothing lost. The
+    shipped receipt (spaced rules + ESC 7) printed 752/752 bytes, 0 ms busy.
+  - No cutter: five cut commands ignored.
+  - ₱50 bill: exactly 5 × 50 ms LOW, 150 ms period — matches August.
+  - Coin: ₱5 counted 3 or 4 (suspect); later coins produced irregular,
+    fragmented trains; D2 idle alternated LOW-noisy/HIGH. See
+    `hardware/README.md` → Open hardware issues.
+  - TB74 accepted a note and the coin slot a coin with no payment active
+    (inhibit not wired; coin power not switched by D5). ₱86 inserted during
+    diagnostics was never credited, as designed.
+  - Both inputs carry bursts of ~3,500 sub-ms spikes/s at idle; they could
+    hold a train open so its cash event never fired — fixed in firmware by
+    counting only settled transitions as activity.
+- Daemon bugs found live and fixed: the 243-byte status reply overflowed the
+  256-byte frame whenever a fault was present (POS showed "unhealthy or
+  disconnected"); serial write timeout raised 0.25 → 1 s; unexpected serial
+  exceptions now return a fault instead of dropping the client.
+- Reliability runs: 500/500 and 300/300 clean controller exchanges; one lost
+  reply seen during paper-feed testing (recovered by the resync path).
+- Tests: `pytest testing/test_receipt_printing.py testing/test_hardware_payment.py`
+  58 passed. Full suite 263 passed, 25 failed; the same 25 fail on the
+  untouched commit (catalog/detection/semantic tests), unrelated to hardware.
+- Live POS test ran against a copy of the database (`var/livetest/`,
+  gitignored); `data/mendo_pos.db` was not modified.
+- Next physical actions: wire the TB74 inhibit and prove its polarity; put the
+  coin acceptor behind D5 or accept that coins inserted early are lost; fix
+  the D2 coin signal (NO/NC switch, 1 kΩ + 4.7 kΩ pull-up or PC817, ~100 nF);
+  recapture ₱1/₱5/₱10/₱20 with `CASH_TRAIN`; consider a dedicated printer
+  supply.

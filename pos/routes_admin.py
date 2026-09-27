@@ -18,6 +18,7 @@ from .db import (
     get_db,
 )
 from .order_service import OrderError, OrderService
+from .receipt_service import receipt_service
 from hardware.service import get_hardware_service
 
 from mendo_core.interaction_logger import (
@@ -119,7 +120,9 @@ def api_orders(current_user=None):
 @login_required
 def api_order_detail(order_ref, current_user=None):
     try:
-        return jsonify(OrderService().get_order(order_ref))
+        order = OrderService().get_order(order_ref)
+        order["receipt_prints"] = receipt_service().list_for_order(int(order["id"]))
+        return jsonify(order)
     except (ValueError, OrderError) as exc:
         return jsonify({"error": str(exc)}), 404
 
@@ -222,6 +225,53 @@ def api_retry_dispense(job_id, current_user=None):
 def api_return_dispensed_to_stock(job_id, current_user=None):
     try:
         return jsonify(OrderService().return_dispensed_to_stock(job_id, actor=str(current_user["id"])))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/printer/status")
+@login_required
+def api_printer_status(current_user=None):
+    receipts = receipt_service()
+    return jsonify({"printer": receipts.printer_status(), "attention": receipts.list_attention()})
+
+
+@admin_bp.route("/api/printer/test", methods=["POST"])
+@login_required
+def api_printer_test(current_user=None):
+    try:
+        return jsonify(receipt_service().test_print(actor=f"staff:{current_user['id']}"))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/receipts/<print_ref>/retry", methods=["POST"])
+@login_required
+def api_receipt_retry(print_ref, current_user=None):
+    try:
+        return jsonify(receipt_service().retry(print_ref))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/receipts/<print_ref>/resolve", methods=["POST"])
+@login_required
+def api_receipt_resolve(print_ref, current_user=None):
+    """Staff looked at a half-printed receipt and decide what it was."""
+    try:
+        action = str((request.get_json(silent=True) or {}).get("action", ""))
+        return jsonify(receipt_service().resolve_ambiguous(
+            print_ref, action=action, actor=f"staff:{current_user['id']}"
+        ))
+    except (ValueError, OrderError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@admin_bp.route("/api/orders/<order_ref>/receipt/reprint", methods=["POST"])
+@login_required
+def api_receipt_reprint(order_ref, current_user=None):
+    try:
+        return jsonify(receipt_service().reprint(order_ref, actor=f"staff:{current_user['id']}"))
     except (ValueError, OrderError) as exc:
         return jsonify({"error": str(exc)}), 400
 
