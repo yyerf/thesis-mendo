@@ -795,3 +795,19 @@ the D2 conditioning (10 kΩ series, internal pull-up only) is the fault, not
 the counting. Fix the input (PC817, or 1 kΩ + 4.7 kΩ pull-up + 100 nF), then
 recapture one coin at a time before tightening the coin filters to the
 measured timing. Daemon client timeout raised 1.5 → 3 s (commit 6cf146d).
+
+### Timestamped coin run — 2026-09-28 02:18
+
+Log cleared, then ₱1, ₱5, ₱10, ₱20 dropped ≥5 s apart (not credited).
+`02:18:28 7p 4–159/32–225` · `02:18:32 9p suspect 3–301/79–310` ·
+`02:18:43 5p 67–101/136–174` · `02:18:57 9p 100–112/170` ·
+`02:19:07 20p 13–101/17–201`. D2 rests LOW with ~12,000 raw edges/s.
+Finding: the coin signal is **inverted versus August** (then idle HIGH,
+70 ms LOW pulses, ~100 ms HIGH; now idle LOW, 100–112 ms LOW segments at the
+same 170 ms period — the old HIGH gaps). The firmware therefore counts the
+gaps between pulses: ₱10 → 9 with perfect timing, ₱1 → nothing (the two
+₱1-time trains are noise bursts), ₱5/₱20 reached their totals only because
+noise fragments replaced the missing count. The idle-LOW state is also the
+noisy one (idle-HIGH earlier measured 0 edges/s). Next: set the Allan NO/NC
+switch so D2 rests HIGH, clear with `python -m hardware.cash_log --clear`,
+re-drop ₱1/₱5/₱10/₱20, expect 1/5/10/20 with no suspect flags.
