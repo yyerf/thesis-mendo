@@ -6,6 +6,10 @@ hardware behavior is safe.
 
 ## Resume here
 
+> **Superseded (2026-09-28):** the current resume point is
+> [Resume here — 2026-09-29](#resume-here--2026-09-29) at the end of this file.
+> The block below is the 2026-08-03 state, kept for the record.
+
 - Current phase: **R0 audit record complete; R1 firmware remediation awaiting
   user approval**
 - Current status: **software Phases 1–2 remediation required; real hardware
@@ -825,3 +829,53 @@ coin exactly like the rebuild, and turned the ₱1 drop into ₱8 of noise
 credit. Conclusion: the fault is physical, not the rebuild. D2 is wired to
 the coin acceptor's **COUNTER** terminal (COIN is unconnected; NO/NC = NO);
 D2 rests LOW and noisy. Rebuilt firmware reflashed afterwards.
+
+## Resume here — 2026-09-29
+
+State at end of 2026-09-28 session:
+
+- **Uno runs the rebuilt firmware** (`hardware/firmware/mendo_controller/`,
+  commit 8a35226 source). Original image: `hardware/firmware/backup/`
+  (`avrdude -p m328p -c arduino -P /dev/ttyACM0 -b 115200 -U flash:w:hardware/firmware/backup/uno_working_2026-09-28.hex:i`).
+- **Receipt printing works end to end** (full receipt 752/752 bytes, 0 ms
+  busy). Not yet exercised: a complete real sale that triggers the automatic
+  receipt (blocked by the coin issue; the bill path is ready).
+- **Bill (TB74, D3) is healthy**: ₱50 = 5 × 50 ms LOW / 150 ms period.
+- **Coin (D2) is miscounted by one per coin** because D2 is on the coin
+  acceptor's COUNTER terminal (COIN unconnected). Decide option A (move to
+  COIN after a meter check) or B (firmware counts HIGH pulses + tighter coin
+  filters) — see `hardware/README.md` → Open hardware issues §3.
+- **Still unwired:** TB74 inhibit (yellow/green); coin acceptor not switched
+  by D5. Cash inserted outside a payment is taken and never credited.
+- Test database copy for live trials: `var/livetest/mendo_pos.db`
+  (gitignored; `data/mendo_pos.db` untouched). Biogesic stock there = 5.
+- Nothing pushed to `origin` yet (branch `experiment-march-1`).
+
+Restart the stack (two terminals, from the repo root):
+
+```bash
+# 1. hardware daemon (owns /dev/ttyACM0)
+MENDO_HARDWARE_MODE=real MENDO_HARDWARE_SOCKET=/tmp/mendo-hardware.sock \
+MENDO_SERIAL_DEVICE=/dev/ttyACM0 .venv/bin/python -m hardware.daemon_main
+
+# 2. POS on the test DB copy (http://127.0.0.1:5055, admin / mendo2026)
+MENDO_HARDWARE_MODE=real MENDO_HARDWARE_SOCKET=/tmp/mendo-hardware.sock \
+.venv/bin/python -c "import pos.db as d; d.DB_PATH='var/livetest/mendo_pos.db'; from web.app import app; app.run(host='127.0.0.1', port=5055, threaded=True)"
+```
+
+Bench tools (daemon running): `python -m hardware.cash_log --clear` then drop
+coins ≥5 s apart and `python -m hardware.cash_log` (per-coin pulses with
+times, nothing credited); `python -m hardware.cash_bench --minutes 5`
+(controller-only payment session that reports cash events exactly as a sale
+would, nothing credited). Direct probes need the daemon stopped:
+`python -m hardware.probe HEARTBEAT PRINTER_STATUS CASH_DIAG`.
+
+Next steps, in order:
+1. Coin: option A (meter check, move to COIN) or B; then
+   `cash_log --clear`, drop ₱1/₱5/₱10/₱20, expect 1/5/10/20 with no suspect.
+2. One real sale on `/shop` with coins and one with a ₱50 bill; confirm the
+   receipt prints automatically and stock/transaction are correct.
+3. Wire the TB74 inhibit and prove its polarity; decide on D5 for the coin
+   acceptor.
+4. Consider a dedicated 12 V supply for the printer.
+5. Push the branch.

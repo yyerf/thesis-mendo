@@ -109,15 +109,26 @@ Stop the daemon first (it owns the port), then:
    Money inserted outside an active payment is taken but never credited.
 2. **Coin slot not switched by D5.** A coin was accepted with D5 (coin power)
    off, so the coin acceptor is powered directly. Same consequence as (1).
-3. **Coin signal on D2 is unreliable.** Wiring: coin COUNTER → ~10 kΩ → D2 with
-   only the Uno's ~35 kΩ internal pull-up. Observed: idle level alternating
-   between LOW (with ~2,000 noise edges/s) and HIGH; ₱5 counted as 3 or 4
-   pulses (flagged suspect); a ₱10+₱20 sequence produced ~7 pulse-shaped LOWs
-   with 0.4–1.3 s irregular gaps and fragments instead of the August train
-   (70 ms LOW / ~170 ms period, 1 pulse per peso). Check the Allan NO/NC
-   switch, then use 1 kΩ series + 4.7 kΩ pull-up to 5 V (never a pull-up with
-   the 10 kΩ still in series) or, better, a PC817 optocoupler; add ~100 nF to
-   GND at D2.
+3. **Coin signal on D2 is wrong: D2 is wired to the coin acceptor's COUNTER
+   terminal; COIN is unconnected** (NO/NC switch = NO). Wiring: COUNTER →
+   ~10 kΩ → D2, Uno internal pull-up only. D2 rests LOW with up to ~12,000
+   noise edges/s. The COUNTER waveform is inverted relative to the August
+   calibration (now 100–112 ms LOW segments at a 170 ms period = the old HIGH
+   gaps), so the firmware counts the gaps between pulses: **every coin is one
+   short** (₱5→4, ₱10→9, ₱20→19) and ₱1 yields only noise. The **original
+   pre-SSD-loss firmware does exactly the same** on today's wiring (A/B run,
+   ₱1 noise even credited ₱8), and its filter constants are byte-identical to
+   the rebuild — so this is physical, not firmware. Pending decision:
+   - **A (recommended):** check COIN→GND with a meter (≈0 V = safe; ≈12 V =
+     do not connect directly), move the D2 wire to **COIN**, keep NO, re-run
+     the drop test (expect 1/5/10/20). No firmware change needed.
+   - **B (fallback):** stay on COUNTER; firmware counts HIGH pulses and the
+     coin filters are tightened to the measured timing (pulse ~60–70 ms,
+     period ~170 ms: reject < ~40 ms pulses and < ~120 ms periods). Works
+     around, but does not remove, the noisy resting state.
+   For extra margin either way: 1 kΩ series + 4.7 kΩ pull-up to 5 V (never
+   with the 10 kΩ still in series) or a PC817, ~100 nF to GND, short common
+   GND.
 4. **Both input lines carry bursts of thousands of sub-ms spikes per second**
    (bill ≈3,500/s) with nothing running. The firmware now ignores them for
    train timing (previously they could hold a train open so no cash event
