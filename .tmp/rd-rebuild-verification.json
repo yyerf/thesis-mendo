@@ -1,0 +1,13 @@
+{
+  "source_sha256": "78268f963cf5c9ea3a37e00403694a57fde8872f3a48c0864c4737ad6aa3d741",
+  "output": "C:\\Users\\john\\Desktop\\thesis\\mendo-v3\\thesis-mendo\\thesis-13-results-discussion-iteration-1-highlighted.docx",
+  "changed_package_parts": [
+    "word/document.xml"
+  ],
+  "unchanged_before_results": 447,
+  "unchanged_after_results": 91,
+  "new_tables": 4,
+  "new_text_words": 992,
+  "all_original_baseline_tables_preserved": true,
+  "visual_qa": "All 87 final pages inspected; final pagination changes on pages 73-78 re-inspected; other page images identical to inspected version"
+}

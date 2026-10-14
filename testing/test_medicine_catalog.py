@@ -14,6 +14,7 @@ from mendo_core.medicine_catalog import (
     CATALOG_BRANDS,
     MEDICINE_CATALOG,
     MEDICINE_CATALOG_VERSION,
+    PENDING_PROBIOTIC,
     inventory_catalog_records,
 )
 from mendo_core.prediction_pipeline import predict_symptoms
@@ -27,16 +28,15 @@ from pos.db import _sync_inventory_catalog
 
 
 EXPECTED_CATALOG = (
-    "Advil",
+    "Kremil-S",
     "Bioflu",
     "Biogesic",
     "Cetirizine",
     "Solmux",
-    "Tuseran",
+    "Sinecod",
     "Symdex",
-    "Neozep",
+    "Buscopan",
     "Loperamide",
-    "Erceflora",
 )
 
 
@@ -48,35 +48,33 @@ class RuntimeCatalogTests(unittest.TestCase):
     def test_exact_ten_slot_catalog_and_formulations(self):
         self.assertEqual(CATALOG_BRANDS, EXPECTED_CATALOG)
         self.assertEqual(tuple(row.brand for row in self.rows), EXPECTED_CATALOG)
-        self.assertEqual([item.slot for item in MEDICINE_CATALOG], list(range(1, 11)))
+        self.assertEqual([item.slot for item in MEDICINE_CATALOG], list(range(1, 10)))
         self.assertEqual(
             {row.brand: row.dosage_form for row in self.rows},
             {
-                "Advil": "Tablet",
+                "Kremil-S": "Chewable Tablet",
                 "Bioflu": "Tablet",
                 "Biogesic": "Tablet",
                 "Cetirizine": "Tablet",
                 "Solmux": "Capsule",
-                "Tuseran": "Tablet",
+                "Sinecod": "Tablet",
                 "Symdex": "Tablet",
-                "Neozep": "Tablet",
+                "Buscopan": "Tablet",
                 "Loperamide": "Tablet",
-                "Erceflora": "Oral Suspension",
             },
         )
         self.assertEqual(
             {row.brand: row.min_age for row in self.rows},
             {
-                "Advil": "12",
+                "Kremil-S": "12",
                 "Bioflu": "12",
                 "Biogesic": "12",
                 "Cetirizine": "6",
                 "Solmux": "12",
-                "Tuseran": "12",
+                "Sinecod": "13",
                 "Symdex": "6",
-                "Neozep": "6",
+                "Buscopan": "6",
                 "Loperamide": "6",
-                "Erceflora": "All ages",
             },
         )
 
@@ -109,7 +107,7 @@ class RuntimeCatalogTests(unittest.TestCase):
         fever = recommend_from_dataset(["FEVER"], self.rows, user_input="fever")
         self.assertEqual(
             [row["brand"] for row in fever["recommendations"]],
-            ["Biogesic", "Advil"],
+            ["Biogesic"],
         )
         self.assertNotIn("Bioflu", [row["brand"] for row in fever["recommendations"]])
 
@@ -117,7 +115,7 @@ class RuntimeCatalogTests(unittest.TestCase):
         productive = recommend_from_dataset(
             ["COUGH_PRODUCTIVE"], self.rows, user_input="cough with phlegm"
         )
-        self.assertEqual([row["brand"] for row in dry["recommendations"]], ["Tuseran"])
+        self.assertEqual([row["brand"] for row in dry["recommendations"]], ["Sinecod"])
         self.assertEqual(
             [row["brand"] for row in productive["recommendations"]], ["Solmux"]
         )
@@ -139,7 +137,7 @@ class RuntimeCatalogTests(unittest.TestCase):
             context_override="DIARRHEA_FOOD_POISONING",
         )
         self.assertEqual(
-            [row["brand"] for row in infectious["recommendations"]], ["Erceflora"]
+            [row["brand"] for row in infectious["recommendations"]], []
         )
         warning = " ".join(infectious["safety_warnings"]).lower()
         self.assertIn("only an adjunct", warning)
@@ -167,18 +165,23 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
                         rows = db.execute(
                             """
                             SELECT hardware_slot,brand,is_active
-                            FROM inventory ORDER BY hardware_slot
+                            FROM inventory WHERE hardware_slot IS NOT NULL ORDER BY hardware_slot
                             """
                         ).fetchall()
-                        self.assertEqual(len(rows), 10)
+                        self.assertEqual(len(rows), 9)
                         self.assertEqual(
                             [row["brand"] for row in rows], list(EXPECTED_CATALOG)
                         )
                         self.assertEqual(
                             [row["hardware_slot"] for row in rows],
-                            list(range(1, 11)),
+                            list(range(1, 10)),
                         )
                         self.assertTrue(all(row["is_active"] for row in rows))
+                        pending = db.execute(
+                            "SELECT is_active,hardware_slot,stock_quantity,unit_price FROM inventory WHERE brand=?",
+                            (PENDING_PROBIOTIC["brand"],),
+                        ).fetchone()
+                        self.assertEqual(tuple(pending), (0, None, 0, 0))
                         self.assertEqual(
                             db.execute("PRAGMA integrity_check").fetchone()[0],
                             "ok",
@@ -215,7 +218,9 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
                 (2,'Neozep / Neozep Z+','Tablet',9.5,49,1),
                 (3,'Neozep','Syrup',10,50,1),
                 (7,'Tuseran Forte','Tablet',10,46,1),
-                (8,'Decolgen','Tablet',7,50,1);
+                (8,'Decolgen','Tablet',7,50,1),
+                (9,'Advil','Tablet',8,30,1),
+                (10,'Erceflora','Oral Suspension',28,20,1);
             INSERT INTO transaction_items VALUES (2);
             INSERT INTO stock_logs VALUES (2);
             """
@@ -234,10 +239,10 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
             """
         ).fetchall()
         self.assertEqual([row["brand"] for row in active], list(EXPECTED_CATALOG))
-        self.assertEqual([row["hardware_slot"] for row in active], list(range(1, 11)))
+        self.assertEqual([row["hardware_slot"] for row in active], list(range(1, 10)))
         self.assertEqual(
             conn.execute("SELECT brand FROM inventory WHERE id=2").fetchone()["brand"],
-            "Neozep",
+            "Neozep / Neozep Z+",
         )
         self.assertEqual(
             conn.execute("SELECT inventory_id FROM transaction_items").fetchone()[0],
@@ -251,6 +256,16 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
             "SELECT is_active,hardware_slot FROM inventory WHERE id=8"
         ).fetchone()
         self.assertEqual((retired["is_active"], retired["hardware_slot"]), (0, None))
+        for inventory_id in (2, 3, 7, 9, 10):
+            retired = conn.execute(
+                "SELECT is_active,hardware_slot FROM inventory WHERE id=?", (inventory_id,)
+            ).fetchone()
+            self.assertEqual(tuple(retired), (0, None))
+        for brand in ("Kremil-S", "Sinecod", "Buscopan"):
+            stock = conn.execute("SELECT stock_quantity FROM inventory WHERE brand=?", (brand,)).fetchone()[0]
+            self.assertEqual(stock, 0, "Replacement must not inherit a different drug's stock")
+        _sync_inventory_catalog(conn, inventory_catalog_records(source["Sheet1"]))
+        self.assertEqual(conn.execute("SELECT COUNT(*) FROM inventory WHERE hardware_slot IS NOT NULL").fetchone()[0], 9)
         conn.close()
 
     def test_transactions_reject_items_outside_the_hardware_catalog(self):

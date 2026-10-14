@@ -9,12 +9,12 @@ Annotation format (CSV):
   mendo-3f9a...,"masakit ulo ko","HEADACHE"
 
   - id: the export's anonymized id (sha256 of input) — verified
-  - expected: comma-separated symptom labels from the 14-label set,
+  - expected: comma-separated symptom labels from the 13-label set,
     or "NONE" for no symptom; empty cell -> row is skipped (not annotated)
 
 Accepted labels: HEADACHE, FEVER, COUGH_GENERAL, COUGH_DRY, COUGH_PRODUCTIVE,
 SORE_THROAT, STOMACH_ACHE, BODY_ACHES, DIARRHEA, NASAL_CONGESTION,
-RUNNY_NOSE, RASHES, ALLERGIC_RHINITIS, TOOTHACHE.
+RUNNY_NOSE, RASHES, ALLERGIC_RHINITIS.
 
 Usage:
   python testing/validation/import_annotations.py --in annotated.csv \
@@ -37,7 +37,6 @@ LABELS = {
     "HEADACHE", "FEVER", "COUGH_GENERAL", "COUGH_DRY", "COUGH_PRODUCTIVE",
     "SORE_THROAT", "STOMACH_ACHE", "BODY_ACHES", "DIARRHEA",
     "NASAL_CONGESTION", "RUNNY_NOSE", "RASHES", "ALLERGIC_RHINITIS",
-    "TOOTHACHE",
 }
 
 

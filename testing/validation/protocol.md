@@ -40,7 +40,7 @@ python testing/validation/export_validation_set.py --max 100 --seed 7 ^
 
 1. Read each `input` sentence as if a customer typed it at the kiosk.
 2. Write the symptom labels that match **your clinical reading**, using only
-   the 14-label vocabulary below. Use `NONE` when no symptom is present
+   the 13-label vocabulary below. Use `NONE` when no supported symptom is present
    (chit-chat, questions, "wala po akong sakit").
 3. Label **symptom classes**, not every word: "masakit ulo at nilalagnat"
    -> `HEADACHE,FEVER`; "ubo na may plema" -> `COUGH_PRODUCTIVE` (not
@@ -50,8 +50,10 @@ python testing/validation/export_validation_set.py --max 100 --seed 7 ^
    the throat -> `SORE_THROAT` (clear-secretion distinction rationale is in
    the thesis; the 520 sheet's throat->Cough annotation clash is a known
    dataset quirk, not a clinical rule).
-5. Toothache -> `TOOTHACHE` (dictionary-only label; the semantic stage has
-   no TOOTHACHE head).
+5. Dental symptoms are outside the revised Iteration-1 recommendation scope.
+   A dental-only input -> `NONE`; mixed inputs retain independently present
+   supported symptoms. Record the dental concern and referral in the review
+   notes. Preserve historical toothache annotations with their original version.
 6. `NASAL_CONGESTION` (blocked/stuffy/barado) vs `RUNNY_NOSE` (sipon
    flowing) are distinct; both together is allowed.
 7. Negated symptoms are not symptoms: "walang ubo" -> `NONE`, not
@@ -60,9 +62,9 @@ python testing/validation/export_validation_set.py --max 100 --seed 7 ^
    weakness, fainting, pregnancy + headache) are still labeled for their
    *symptoms*; their refer decision is the pipeline's job, not the label's.
 
-**Vocabulary (14):** HEADACHE, FEVER, COUGH_GENERAL, COUGH_DRY,
+**Vocabulary (13):** HEADACHE, FEVER, COUGH_GENERAL, COUGH_DRY,
 COUGH_PRODUCTIVE, SORE_THROAT, STOMACH_ACHE, BODY_ACHES, DIARRHEA,
-NASAL_CONGESTION, RUNNY_NOSE, RASHES, ALLERGIC_RHINITIS, TOOTHACHE — plus
+NASAL_CONGESTION, RUNNY_NOSE, RASHES, ALLERGIC_RHINITIS — plus
 `NONE`.
 
 ## 4. Annotation file format
@@ -87,8 +89,8 @@ python testing/validation/import_annotations.py --in annotated.csv
 - Validates every `id` against `sha256(input)` (tamper/typo guard),
   checks the label vocabulary, dedupes against existing rows, and appends
   to `testing/benchmark/pharmacist_validated.jsonl`.
-- The classifier training script picks that file up as a fourth source on
-  the next retrain (see `train_semantic_classifier.load_training_rows`).
+- These records support evaluation and expert-guided refinement. The deployed
+  pretrained embedding model is not automatically retrained on them.
 
 ## 6. Reporting (never inflate)
 

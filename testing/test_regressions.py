@@ -75,9 +75,9 @@ class RegressionTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
         recommendation = data["recommendation"]
-        self.assertEqual(recommendation.get("action"), "recommend")
+        self.assertEqual(recommendation.get("action"), "no_match")
         brands = [row["brand"] for row in recommendation.get("recommendations", [])]
-        self.assertIn("Erceflora", brands)
+        self.assertEqual(brands, [])
         self.assertNotIn("Loperamide", brands)
 
     def test_difficulty_breathing_red_flag(self):
@@ -345,7 +345,7 @@ class RegressionTests(unittest.TestCase):
                 self.assertIn("NASAL_CONGESTION", symptoms, text)
                 self.assertNotIn("RUNNY_NOSE", symptoms, text)
 
-    def test_blocked_nose_recommends_decongestant_not_runny_clarify(self):
+    def test_blocked_nose_without_eligible_stocked_product_returns_no_match(self):
         """Pure congestion (no dripping cue) must go straight to a decongestant
         recommendation, never the runny-nose SIPON_CONTEXT clarification."""
         for text in [
@@ -363,17 +363,17 @@ class RegressionTests(unittest.TestCase):
                 )
                 symptoms = report.get("final", {}).get("symptoms", [])
                 rec = recommend_from_dataset(symptoms, self.rows, user_input=text)
-                self.assertEqual(rec.get("action"), "recommend", text)
+                self.assertEqual(rec.get("action"), "no_match", text)
                 self.assertNotEqual(rec.get("clarify_type"), "SIPON_CONTEXT", text)
                 brands = [row["brand"] for row in rec.get("recommendations", [])]
-                self.assertIn("Neozep", brands, text)
+                self.assertEqual(brands, [], text)
 
     def test_plain_headache_does_not_pull_cold_meds(self):
         rec = recommend_from_dataset(["HEADACHE"], self.rows, user_input="sakit akong ulo")
         self.assertEqual(rec.get("action"), "recommend")
         brands = [row["brand"] for row in rec.get("recommendations", [])]
         self.assertIn("Biogesic", brands)
-        self.assertIn("Advil", brands)
+        self.assertNotIn("Kremil-S", brands)
         self.assertFalse(any(brand in {"Bioflu", "Neozep", "Symdex"} for brand in brands))
 
     def test_hypertension_filters_decongestant_cold_combos(self):
@@ -392,9 +392,9 @@ class RegressionTests(unittest.TestCase):
 
         self.assertNotIn("Bioflu", brands)
         self.assertFalse(any("Neozep" in b for b in brands))
-        self.assertIn("neozep", joined_blocked)
+        self.assertIn("symdex", joined_blocked)
         self.assertTrue(
-            any(name in joined_blocked for name in ("tuseran", "symdex", "neozep"))
+            any(name in joined_blocked for name in ("bioflu", "symdex"))
         )
 
         # Ensure no decongestant ingredient survives recommendation list.
@@ -549,7 +549,7 @@ class RegressionTests(unittest.TestCase):
         )
         self.assertEqual(rec.get("action"), "recommend")
         brands = [r["brand"] for r in rec.get("recommendations", [])]
-        self.assertEqual(brands, ["Loperamide", "Erceflora"])
+        self.assertEqual(brands, ["Loperamide"])
 
     def test_diarrhea_food_poisoning_uses_adjunct_and_hydration_warning(self):
         """Food poisoning excludes loperamide and does not overstate probiotics."""
@@ -558,9 +558,9 @@ class RegressionTests(unittest.TestCase):
             user_input="diarrhea food poisoning spoiled",
             context_override="DIARRHEA_FOOD_POISONING",
         )
-        self.assertEqual(rec.get("action"), "recommend")
+        self.assertEqual(rec.get("action"), "no_match")
         brands = [r["brand"] for r in rec.get("recommendations", [])]
-        self.assertEqual(brands, ["Erceflora"])
+        self.assertEqual(brands, [])
         warnings = " ".join(rec.get("safety_warnings", [])).lower()
         self.assertIn("only an adjunct", warnings)
         self.assertIn("oral rehydration", warnings)
@@ -624,7 +624,7 @@ class RegressionTests(unittest.TestCase):
 
     def test_hypertension_contraindication_blocks_cold_combo(self):
         rec = recommend_from_dataset(
-            ["RUNNY_NOSE"],
+            ["RUNNY_NOSE", "FEVER"],
             self.rows,
             user_input="may sipon pero may high blood",
             detected_conditions=["HYPERTENSION"],
@@ -633,7 +633,7 @@ class RegressionTests(unittest.TestCase):
         recommended_brands = [r["brand"] for r in rec.get("recommendations", [])]
         blocked_brands = [r["brand"] for r in rec.get("blocked_recommendations", [])]
         self.assertNotIn("Neozep", recommended_brands)
-        self.assertIn("Neozep", blocked_brands)
+        self.assertIn("Bioflu", blocked_brands)
 
 
 # ===================================================================
@@ -937,8 +937,8 @@ class FuzzyRescueTests(unittest.TestCase):
             ("headeche", ["HEADACHE"]),
             ("headach", ["HEADACHE"]),
             ("grabeng hedache nako", ["HEADACHE"]),
-            ("totache", ["TOOTHACHE"]),
-            ("toothach", ["TOOTHACHE"]),
+            ("totache", []),
+            ("toothach", []),
             ("stomachake", ["STOMACH_ACHE"]),
             ("stomak pain", ["STOMACH_ACHE"]),
             ("my tummi hurts", ["STOMACH_ACHE"]),

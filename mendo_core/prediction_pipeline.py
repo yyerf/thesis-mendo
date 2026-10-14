@@ -16,7 +16,7 @@ from .medicine_catalog import MEDICINE_CATALOG_VERSION
 from .step2 import SYMPTOM_ANCHORS
 from .step3_hybrid import extract_symptoms_hybrid_report
 
-ENGINE_ID = "mendo-expert-minilm-v3.2"
+ENGINE_ID = "mendo-expert-minilm-v3.3"
 TRACE_SCHEMA_VERSION = 2
 SEMANTIC_MODEL_ID = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 SEMANTIC_THRESHOLD = 0.65

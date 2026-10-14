@@ -644,7 +644,18 @@ def recommend_from_dataset(
             "safety_warnings": [],
         }
 
+    # A legacy client may still submit the retired dental label.
+    symptoms = [symptom for symptom in symptoms if symptom != "TOOTHACHE"]
     if not symptoms:
+        from .step1 import has_dental_context
+
+        if has_dental_context(user_input or ""):
+            return {
+                "action": "no_match",
+                "message": "Dental symptoms are outside this kiosk's scope. Please consult a dentist or pharmacist.",
+                "recommendations": [],
+                "safety_warnings": [],
+            }
         return {
             "action": "no_match",
             "message": (
@@ -960,7 +971,7 @@ def recommend_from_dataset(
             ) or ("expectorant" in row.drug_category):
                 add_candidate(row, "productive_cough_match", 3)
 
-        # Dry cough -> the stocked Tuseran slot.
+        # Dry cough -> the stocked Sinecod tablet.
         if "COUGH_DRY" in matching_symptoms:
             if (
                 "dry cough" in row.primary_symptom
@@ -1081,17 +1092,11 @@ def recommend_from_dataset(
             )
             if _is_stomach_drug:
                 if _stomach_acidic:
-                    # Reference-mode rule; the ten-slot catalog has no antacid.
                     if "antacid" in row.drug_category:
                         add_candidate(row, "acidic_stomach_match", 5)
-                    else:
-                        add_candidate(row, "stomach_ache_match", 1)
                 elif _stomach_cramping:
-                    # Reference-mode rule; the catalog has no antispasmodic.
                     if "antispasmodic" in row.drug_category:
                         add_candidate(row, "cramping_stomach_match", 5)
-                    else:
-                        add_candidate(row, "stomach_ache_match", 1)
                 else:
                     add_candidate(row, "stomach_ache_match", 2)
 
@@ -1181,7 +1186,8 @@ def recommend_from_dataset(
         safety_warnings.append(
             "⚠ Possible food poisoning or infection suspected. Anti-diarrheal medicine "
             "(loperamide) is NOT recommended because it may be inappropriate for some "
-            "infectious diarrhea. Erceflora is only an adjunct and does not replace oral rehydration. "
+            "infectious diarrhea. A probiotic, if approved by your pharmacist, is only an adjunct "
+            "and does not replace oral rehydration. "
             "Use an appropriate oral rehydration solution and drink safe fluids. "
             "Consult a doctor if symptoms persist beyond 2 days, or if you develop "
             "high fever or blood in stool."

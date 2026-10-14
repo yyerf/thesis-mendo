@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .step1 import extract_symptoms as extract_symptoms_dictionary
 from .step1 import extract_conditions as extract_conditions_dictionary
+from .step1 import has_dental_context
 
 
 # ---------------------------------------------------------------------------
@@ -1754,7 +1755,7 @@ def extract_symptoms_hybrid(
     # e.g. "naga dugo akong ulo" never surfaces HEADACHE.
     detected = _apply_blood_context_filter(user_input, detected)
 
-    if detected or not enable_semantic_fallback:
+    if detected or not enable_semantic_fallback or has_dental_context(user_input):
         return detected
 
     # Lazy import so step3 can still run without sentence-transformers installed
@@ -1835,6 +1836,17 @@ def extract_symptoms_hybrid_report(
             "details": dict_details,
         }
     )
+
+    if has_dental_context(user_input):
+        report["out_of_scope"] = ["dental"]
+        if not dict_symptoms:
+            report["stages"].append({
+                "stage": "semantic", "used": False,
+                "skip_reason": "dental_context_outside_otc_scope",
+            })
+            report["final"]["conditions"] = dict_conditions
+            report["final"]["source"] = "none"
+            return report
 
     # Always try semantic model — even when dictionary has results — so the
     # transformer can correct dictionary false positives (e.g. "ngipon" → RUNNY_NOSE).

@@ -671,66 +671,21 @@ SYMPTOM_DICTIONARY: Dict[str, List[str]] = {
         "sige cr",
         "loose bowel",
     ],
-    "TOOTHACHE": [
-        # English
-        "toothache",
-        "tooth ache",
-        "tooth pain",
-        "tooth hurts",
-        "my tooth hurts",
-        "teeth hurt",
-        "molar pain",
-        "aching tooth",
-        "painful tooth",
-        # Tagalog / Taglish
-        "sakit ngipin",
-        "sakit ng ngipin",
-        "sakit sa ngipin",
-        "masakit ngipin",
-        "masakit ang ngipin",
-        "masakit ang ngipin ko",
-        "sumasakit ang ngipin",
-        "sumasakit ang ngipin ko",
-        "ngilo",
-        "nangingilo",
-        "nangingilo ang ngipin",
-        "masakit bagang",
-        "sakit bagang",
-        "sakit ng bagang",
-        "masakit ang bagang",
-        # Taglish — "yung tooth" phrasing (suite coverage)
-        "masakit yung tooth",
-        "masakit ang tooth",
-        "masakit yung tooth ko",
-        "masakit ang tooth ko",
-        "masakit ang aking tooth",
-        "sakit yung tooth",
-        "sakit ang tooth",
-        "sakit yung tooth ko",
-        "sakit ang tooth ko",
-        "sumasakit yung tooth",
-        "sumasakit yung tooth ko",
-        "masakit yung ngipin",
-        "masakit yung ngipin ko",
-        "sakit yung ngipin",
-        "sakit yung ngipin ko",
-        "masakit ang molar",
-        "masakit yung molar",
-        "masakit yung molar ko",
-        # Bisaya
-        "sakit akong ngipon",
-        "gasakit akong ngipon",
-        "ga sakit akong ngipon",
-        "sakit akong bag-ang",
-        "sakit akong bagang",
-        "gasakit akong bag-ang",
-        "gasakit akong bagang",
-        "nisakit akong ngipon",
-        "murag gasakit akong ngipon",
-        "sakit sa ngipon",
-        "manghubag ang ngipon",
-    ],
+
 }
+
+def has_dental_context(text: str) -> bool:
+    """Recognize excluded dental context without adding an OTC symptom label.
+
+    This guards semantic fallback from turning dental pain into body aches or
+    a cold. It is an exclusion cue, not a diagnosis of toothache.
+    """
+    return bool(re.search(
+        r"\b(toothache|tootache|totache|tothache|toothach|tooth|teeth|molar|molars|"
+        r"ngipin|ngipon|bagang|bag\s+ang|dental|ngilo|nangingilo)\b",
+        re.sub(r"[^a-zñ\s]", " ", text.casefold()),
+    ))
+
 
 # Condition entities that should be carried into recommendation safety checks.
 CONDITION_LABELS: Dict[str, List[str]] = {
@@ -885,13 +840,13 @@ _BODY_PART_SYMPTOMS = {
     "muscles": {"BODY_ACHES"},
     "kalamnan": {"BODY_ACHES"},
     "kaunoran": {"BODY_ACHES"},
-    "ngipin": {"TOOTHACHE"},
-    "ngipon": {"TOOTHACHE"},
-    "tooth": {"TOOTHACHE"},
-    "teeth": {"TOOTHACHE"},
-    "bagang": {"TOOTHACHE"},
-    "bag-ang": {"TOOTHACHE"},
-    "molar": {"TOOTHACHE"},
+    "ngipin": set(),
+    "ngipon": set(),
+    "tooth": set(),
+    "teeth": set(),
+    "bagang": set(),
+    "bag-ang": set(),
+    "molar": set(),
     "temperatura": {"FEVER"},
     "temperature": {"FEVER"},
     "balat": {"RASHES"},
@@ -1704,7 +1659,6 @@ def _levenshtein_within(a: str, b: str, max_dist: int) -> bool:
 # errors, which is why it runs as the last detection stage.
 _FUZZY_ANCHORS = [
     ("headache", "HEADACHE", 2),
-    ("toothache", "TOOTHACHE", 2),
     ("stomachache", "STOMACH_ACHE", 2),
     ("stomach", "STOMACH_ACHE", 2),
     ("tummy", "STOMACH_ACHE", 1),
@@ -2295,38 +2249,6 @@ def extract_symptoms(user_input: str) -> List[str]:
                             break
                     if not negated_body_pain:
                         detected.append("BODY_ACHES")
-    # Proximity-based TOOTHACHE rescue: pain word near tooth words with filler
-    # Handles "pain in one of my teeth", "my tooth starts hurting whenever I
-    # chew", "sumasakit ang isang ngipin ko kapag kumakain ako", "Grabe ang
-    # kasakit sa usa sa akong mga ngipon".
-    if "TOOTHACHE" not in detected and "TOOTHACHE" not in negated_labels:
-        tooth_words = re.search(r"\b(ngipin|ngipon|tooth|teeth|molar|molars|bagang|bag-ang)\b", normalized_text)
-        tooth_pain = re.search(
-            r"\b(masakit|masaket|sakit|sumasakit|gasakit|kasakit|pananakit|nananakit|pain|painful|ache|aches|aching|hurts|hurting|ngilo|nangingilo)\b",
-            normalized_text,
-        )
-        if tooth_words and tooth_pain:
-            tokens = normalized_text.split()
-            tw_pos = [i for i, t in enumerate(tokens) if re.match(r"^(ngipin|ngipon|tooth|teeth|molar|molars|bagang|bag-ang)$", t)]
-            tp_pos = [i for i, t in enumerate(tokens) if re.match(r"^(masakit|masaket|sakit|sumasakit|gasakit|kasakit|pananakit|nananakit|pain|painful|ache|aches|aching|hurts|hurting|ngilo|nangingilo)$", t)]
-            if tw_pos and tp_pos:
-                min_dist = min(abs(a - b) for a in tw_pos for b in tp_pos)
-                if min_dist <= 6:
-                    # "hindi sumasakit ang ngipin ko" / "my teeth don't hurt" — negated
-                    negated_tooth = False
-                    for part in re.split(r"\b(pero|but|kaso|however|though)\b", normalized_text):
-                        if not re.search(r"\b(ngipin|ngipon|tooth|teeth|molar|bagang|bag-ang)\b", part):
-                            continue
-                        if re.search(
-                            rf"{_NEG_WORDS_RX}(?:\s+\w+){{0,{_NEG_WINDOW}}}\s+"
-                            r"\b(masakit|masaket|sakit|sumasakit|pain|painful|ache|aches|aching|hurt|hurting|ngilo|nangingilo)\b",
-                            part,
-                        ):
-                            negated_tooth = True
-                            break
-                    if not negated_tooth:
-                        detected.append("TOOTHACHE")
-
     # Allergen-trigger inference: if RASHES is detected and a known allergen
     # trigger is mentioned, also infer ALLERGIC_RHINITIS.  In the MENDO label
     # system, ALLERGIC_RHINITIS is the closest label for general allergy.  This
@@ -2685,6 +2607,15 @@ def extract_symptoms(user_input: str) -> List[str]:
             d for d in detected
             if d not in {"RUNNY_NOSE", "NASAL_CONGESTION", "ALLERGIC_RHINITIS"}
         ]
+
+    # Dental words such as "ngipon" must not be fuzzy-corrected into "sipon".
+    # Preserve an independently stated cold symptom in a mixed complaint.
+    if has_dental_context(user_input):
+        for label in ("RUNNY_NOSE", "NASAL_CONGESTION", "COUGH_GENERAL", "COUGH_DRY",
+                      "COUGH_PRODUCTIVE", "BODY_ACHES", "SORE_THROAT"):
+            if not any(_phrase_in_text(_normalize(user_input), _normalize(phrase))
+                       for phrase in SYMPTOM_DICTIONARY[label]):
+                detected = [symptom for symptom in detected if symptom != label]
 
     # Distinct list (preserve dictionary order). Since Python 3.7+, dict preserves insertion order.
     return list(dict.fromkeys(detected))

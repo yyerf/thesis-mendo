@@ -50,27 +50,40 @@ completion. See the [hardware guide](hardware/README.md) and
 
 Production recommendations, POS inventory, checkout, and benchmarks use one
 versioned hardware catalog:
-`mendo-hardware-catalog-v1-2026-07`. The formulation-level JSON remains the
-reference source, but runtime loading selects exactly these ten physical items:
+`mendo-hardware-catalog-v2-2026-10-13`. The formulation-level JSON remains the
+reference source. Nine approved items occupy the first nine hardware slots;
+slot 10 is reserved for an unverified probiotic:
 
 | Slot | Medicine | Runtime category | Form | Minimum age |
 |---:|---|---|---|---:|
-| 1 | Advil | Pain & Inflammation | Tablet | 12 |
+| 1 | Kremil-S | Antacid | Chewable Tablet | 12 |
 | 2 | Bioflu | Cold & Flu | Tablet | 12 |
 | 3 | Biogesic | Pain & Fever | Tablet | 12 |
 | 4 | Cetirizine | Allergy | Tablet | 6 |
 | 5 | Solmux | Cough with Phlegm / Productive Cough | Capsule | 12 |
-| 6 | Tuseran | Dry Cough | Tablet | 12 |
+| 6 | Sinecod | Cough Suppressant | Tablet | 13 |
 | 7 | Symdex | Cold & Cough | Tablet | 6 |
-| 8 | Neozep | Cold | Tablet | 6 |
+| 8 | Buscopan | Antispasmodic | Tablet | 6 |
 | 9 | Loperamide | Anti-diarrhea | Tablet | 6 |
-| 10 | Erceflora | Probiotic (Adjunct for Diarrhea) | Oral Suspension | All ages |
+| 10 | Lactobacillus acidophilus placeholder | Pending product verification | Unverified | Unverified |
 
-Startup migrations rename older aliases without changing inventory IDs, assign
-hardware slots, and mark products outside the catalog inactive. Historical
-transactions and stock movements are never deleted. Erceflora is treated only
-as an adjunct; food-poisoning guidance still requires oral rehydration and
-excludes loperamide.
+Startup migrations normalize same-product aliases, assign hardware slots,
+and mark retired products inactive. Newly introduced products start in separate
+inventory rows with zero stock; existing records for the same product retain
+their own stock. A different medicine's stock and history are never renamed
+into a new drug. Historical transactions and stock movements remain.
+The probiotic placeholder is inactive with no purchasable hardware slot.
+Food-poisoning guidance requires oral rehydration and excludes loperamide;
+there is currently no approved stocked probiotic recommendation.
+
+The pharmacist scope revision removes toothache from the supported symptom
+labels. Dental cues remain as exclusion guards and yield a dentist/pharmacist
+message when no supported symptom is present. The dictionary now contains
+13 labels and 541 phrases. Stomach acidity routes to Kremil-S and cramping
+routes to Buscopan. See the [Iteration 1 review](docs/research/iteration-1-results-discussion-review.md)
+for evidence requirements, limitations, and thesis corrections. Restart the
+application to reload the catalog and apply inventory synchronization; confirm
+the actual stocked formulations, selling prices, and physical slot labels.
 
 ## Consultation and audit flow
 

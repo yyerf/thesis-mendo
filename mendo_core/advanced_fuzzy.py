@@ -163,7 +163,6 @@ def keyboard_weighted_distance(a: str, b: str, max_dist: float = 2.0) -> float:
 _ADVANCED_ANCHORS: List[Tuple[str, str, float, List[str]]] = [
     # English anchors (original)
     ("headache", "HEADACHE", 2.0, ["hedache", "headake", "hedake"]),
-    ("toothache", "TOOTHACHE", 2.0, ["totache", "tothache"]),
     ("stomach", "STOMACH_ACHE", 2.0, ["stomak", "stomack", "stomake"]),
     ("stomachache", "STOMACH_ACHE", 2.5, ["stomakache", "stomackache"]),
     ("fever", "FEVER", 1.5, ["feaver", "faver"]),

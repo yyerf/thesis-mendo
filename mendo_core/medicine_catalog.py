@@ -1,8 +1,8 @@
-"""Canonical ten-slot medicine catalog used by production and evaluation.
+"""Canonical medicine catalog for the ten-slot machine.
 
 The source JSON keeps formulation-level reference records. Production selects
-exactly one physical formulation per hardware slot and exposes the short brand
-names printed on the machine. Historical inventory rows are migrated by
+one approved physical formulation per occupied hardware slot and exposes the
+short brand names printed on the machine. Historical inventory rows are migrated by
 ``pos.db`` without deleting transaction or stock-movement history.
 """
 
@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 
-MEDICINE_CATALOG_VERSION = "mendo-hardware-catalog-v1-2026-07"
+MEDICINE_CATALOG_VERSION = "mendo-hardware-catalog-v2-2026-10-13"
 
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ class CatalogItem:
 
 # Slot order follows the physical ten-product list supplied for the machine.
 MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
-    CatalogItem(1, "Buscopan", "Stomach Cramps", "Tablet", "6", ("Buscopan",), 8.00),
+    CatalogItem(1, "Kremil-S", "Antacid", "Chewable Tablet", "12", ("Kremil-S",), 8.00),
     CatalogItem(2, "Bioflu", "Cold & Flu", "Tablet", "12", ("Bioflu",), 12.00),
     CatalogItem(3, "Biogesic", "Pain & Fever", "Tablet", "12", ("Biogesic",), 5.00),
     CatalogItem(4, "Cetirizine", "Allergy", "Tablet", "6", ("Cetirizine",), 5.00),
@@ -46,15 +46,16 @@ MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
         ("Solmux",),
         12.00,
     ),
-    CatalogItem(6, "Tuseran", "Dry Cough", "Tablet", "12", ("Tuseran Forte",), 10.00),
+    # The stocked 50 mg tablet is for adolescents OVER 12; syrup ages do not apply.
+    CatalogItem(6, "Sinecod", "Cough Suppressant", "Tablet", "13", ("Sinecod Forte",), 10.00),
     CatalogItem(7, "Symdex", "Cold & Cough", "Tablet", "6", ("Symdex-D",), 10.00),
     CatalogItem(
         8,
-        "Neozep",
-        "Cold",
+        "Buscopan",
+        "Antispasmodic",
         "Tablet",
         "6",
-        ("Neozep / Neozep Z+",),
+        ("Buscopan",),
         # Whole pesos only. The smallest currency the kiosk physically accepts
         # is PHP 1, so a .50 price can never be paid exactly and forces
         # overpayment on a machine that gives no change.
@@ -69,21 +70,28 @@ MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
         ("Loperamide (Diatabs)",),
         6.00,
     ),
-    CatalogItem(
-        10,
-        "Erceflora",
-        "Probiotic (Adjunct for Diarrhea)",
-        "Oral Suspension",
-        "All ages",
-        ("Erceflora",),
-        28.00,
-    ),
+    # Slot 10 reserved: the proposed Lactobacillus acidophilus product needs
+    # exact formulation and regulatory verification before OTC activation.
 )
 
 CATALOG_BY_BRAND: Dict[str, CatalogItem] = {
     item.brand: item for item in MEDICINE_CATALOG
 }
 CATALOG_BRANDS: Tuple[str, ...] = tuple(item.brand for item in MEDICINE_CATALOG)
+
+# This is an inactive inventory placeholder, never a recommendation source.
+# No strength, CFU, form, age, therapeutic claim, or selling price is assumed.
+PENDING_PROBIOTIC = {
+    "slot": None,
+    "reserved_slot": 10,
+    "brand": "Lactobacillus acidophilus (pending verification)",
+    "aliases": ("Lactobacillus acidophilus (pending verification)",),
+    "generic_name": "Lactobacillus acidophilus — exact product unverified",
+    "category": "Probiotic — pending product and regulatory verification",
+    "dosage_form": "Unverified",
+    "default_price": 0.0,
+    "is_active": False,
+}
 
 
 def _normalized(value: Any) -> str:
@@ -105,7 +113,7 @@ def is_catalog_brand(name: str) -> bool:
 def select_runtime_entries(
     entries: Sequence[Mapping[str, Any]],
 ) -> List[Dict[str, Any]]:
-    """Return exactly one normalized source record for each physical slot."""
+    """Return one normalized source record for each approved physical slot."""
     selected: List[Dict[str, Any]] = []
     for item in MEDICINE_CATALOG:
         allowed_names = {_normalized(name) for name in item.inventory_names}
@@ -138,9 +146,9 @@ def select_runtime_entries(
 def inventory_catalog_records(
     entries: Sequence[Mapping[str, Any]],
 ) -> List[Dict[str, Any]]:
-    """Build database-ready records from the same ten runtime entries."""
+    """Build approved inventory records plus the disabled probiotic placeholder."""
     selected = select_runtime_entries(entries)
-    return [
+    records = [
         {
             "slot": item.slot,
             "brand": item.brand,
@@ -152,3 +160,4 @@ def inventory_catalog_records(
         }
         for item, row in zip(MEDICINE_CATALOG, selected)
     ]
+    return records + [dict(PENDING_PROBIOTIC)]

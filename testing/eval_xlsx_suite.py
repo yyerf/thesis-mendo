@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from mendo_core.prediction_pipeline import predict_symptoms  # noqa: E402
+from mendo_core.medicine_catalog import MEDICINE_CATALOG_VERSION
 
 SUITE = ROOT / "testing" / "benchmark" / "test_xlsx_cases.jsonl"
 OUT = ROOT / "testing" / "benchmark" / "results" / "xlsx_suite_results.json"
@@ -68,6 +69,10 @@ def load_cases() -> list[dict]:
 
 
 def expected_canonical(exp: str) -> set:
+    # Preserve the historical workbook annotation; apply the revised scope
+    # explicitly when evaluating the current engine.
+    if exp == "Toothache":
+        return set()
     if exp in EMPTY_EXPECTED or not exp:
         return set()
     return {EXPECTED_MAP.get(exp, exp.upper())}
@@ -97,6 +102,8 @@ def main() -> None:
                 "lang": lang_of(rec["tc_id"]),
                 "input": rec["input"],
                 "expected": sorted(exp),
+                "original_expected": rec["expected"],
+                "scope_override": "dental_out_of_scope" if rec["expected"] == "Toothache" else None,
                 "detected": sorted(got),
                 "ok": ok,
                 "latency_s": round(latency, 3),
@@ -132,6 +139,8 @@ def main() -> None:
                 "total": total,
                 "ok": ok_count,
                 "engine_id": engine_id,
+                "medicine_catalog_version": MEDICINE_CATALOG_VERSION,
+                "scope_policy": "13 supported labels; historical Toothache cases retained as out-of-scope checks",
                 "elapsed_s": round(elapsed, 1),
                 "results": results,
             },
@@ -140,7 +149,7 @@ def main() -> None:
         ),
         encoding="utf-8",
     )
-    print(f"\nsaved -> {OUT.relative_to(ROOT)}")
+    print(f"\nsaved -> {OUT.resolve().relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

@@ -594,9 +594,9 @@ def _sync_inventory_catalog(
                         (brand, generic_name, category, dosage_form, unit_price,
                          unit_price_centavos, stock_quantity, reserved_quantity,
                          hardware_slot, is_active)
-                    VALUES (?,?,?,?,?,?,0,0,?,1)
+                    VALUES (?,?,?,?,?,?,0,0,?,?)
                     """,
-                    (record["brand"], record["generic_name"], record["category"], record["dosage_form"], record["default_price"], int(round(float(record["default_price"]) * 100)), record["slot"]),
+                    (record["brand"], record["generic_name"], record["category"], record["dosage_form"], record["default_price"], int(round(float(record["default_price"]) * 100)), record["slot"], int(record.get("is_active", True))),
                 )
             else:
                 db.execute(
@@ -604,10 +604,16 @@ def _sync_inventory_catalog(
                     INSERT INTO inventory
                         (brand, generic_name, category, dosage_form, unit_price,
                          stock_quantity, hardware_slot, is_active)
-                    VALUES (?,?,?,?,?,0,?,1)
+                    VALUES (?,?,?,?,?,0,?,?)
                     """,
-                    (record["brand"], record["generic_name"], record["category"], record["dosage_form"], record["default_price"], record["slot"]),
+                    (record["brand"], record["generic_name"], record["category"], record["dosage_form"], record["default_price"], record["slot"], int(record.get("is_active", True))),
                 )
+
+        if not record.get("is_active", True):
+            db.execute(
+                "UPDATE inventory SET is_active=0, hardware_slot=NULL WHERE brand=?",
+                (record["brand"],),
+            )
 
     # Existing installations have REAL prices. Backfill once without
     # converting through a binary float in the order layer.

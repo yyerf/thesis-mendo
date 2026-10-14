@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-13",
+  "timezone": "Asia/Manila",
+  "base_commit": "4c04943b53ed5a34ec02adffb860a24da4e2cb98",
+  "working_tree_revision": true,
+  "engine_id": "mendo-expert-minilm-v3.3",
+  "catalog_version": "mendo-hardware-catalog-v2-2026-10-13",
+  "dictionary_labels": 13,
+  "dictionary_phrase_entries": 541,
+  "semantic_anchor_entries": 277,
+  "active_catalog_entries": 9,
+  "pending_reserved_slot": 10,
+  "package_versions": {
+    "Flask": "3.0.0",
+    "sentence-transformers": "2.7.0",
+    "torch": "2.1.1",
+    "transformers": "4.36.2"
+  },
+  "sha256": {
+    "data/Mendo-Datasets.json": "f9281ec3d968ad962f483a036ad7c98bd691988ed767454ab3181fc07f52a7c1",
+    "testing/benchmark/testing.csv": "0df56542cbd2086e7dc4dfa1d6fbe89d8863e5800c191804d1b44140d87849b7",
+    "testing/benchmark/test_xlsx_cases.jsonl": "b216a45cf7444181bbab37bb83731d4e5d62809941cdf73d79a298a040b59fb3",
+    "mendo_core/step1.py": "ed4f84c220b08e18a9d5200113275c300c3af7c02792774f0830cc4203ac5864",
+    "mendo_core/step3_hybrid.py": "e15b437959c2c7d814a8d51672496627eb82f53a83c03636b55e28f093ae4f99",
+    "mendo_core/medicine_catalog.py": "029293cff55e2f36a4af93194ccc5e171724c10c68c99d037d6b749d8aca579e",
+    "mendo_core/step4_recommend.py": "94b889a3a72cdff6d2d0cde499d563d3c041d2493f5755811b86ca543dc4291d"
+  },
+  "tests": {
+    "baseline": {
+      "tests": 200,
+      "failure_reports": 25,
+      "errors": 2,
+      "failed_identities": [
+        "test_affix_stripping (test_advanced_fuzzy.PhoneticNormalizationTests.test_affix_stripping)",
+        "test_affixation_handling (test_advanced_fuzzy.NGramSimilarityTests.test_affixation_handling)",
+        "test_aliases_migrate_without_deleting_history (test_medicine_catalog.InventoryCatalogMigrationTests.test_aliases_migrate_without_deleting_history)",
+        "test_catalog_specific_routing_and_safety (test_medicine_catalog.RuntimeCatalogTests.test_catalog_specific_routing_and_safety)",
+        "test_consonant_normalization (test_advanced_fuzzy.PhoneticNormalizationTests.test_consonant_normalization)",
+        "test_daemon_keeps_burst_events_until_each_is_acked (test_hardware_payment.HardwareBoundaryTests.test_daemon_keeps_burst_events_until_each_is_acked)",
+        "test_dict_hit_skipped_stage_records_not_used (test_sailor_semantic.TraceSummaryHonestyTests.test_dict_hit_skipped_stage_records_not_used)",
+        "test_dictionary_hit_skips_llm (test_sailor_semantic.PrecisionFirstGatingTests.test_dictionary_hit_skips_llm)",
+        "test_embedding_backend_is_precision_first (test_sailor_semantic.PrecisionFirstGatingTests.test_embedding_backend_is_precision_first)",
+        "test_exact_ten_slot_catalog_and_formulations (test_medicine_catalog.RuntimeCatalogTests.test_exact_ten_slot_catalog_and_formulations)",
+        "test_first_run_creates_only_the_ten_hardware_slots (test_medicine_catalog.InventoryCatalogMigrationTests.test_first_run_creates_only_the_ten_hardware_slots)",
+        "test_get_match_details (test_advanced_fuzzy.MatchDetailsTests.test_get_match_details)",
+        "test_known_false_positives_and_nasal_separation (test_audit_workflow.PredictionTraceTests.test_known_false_positives_and_nasal_separation) (text='ang ubod ng init ngayon')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='may sorethroat ako')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='my tummi hurts')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='noze barado')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='sore troat')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='trout hurts')",
+        "test_non_adjacent_substitution_cost (test_advanced_fuzzy.KeyboardWeightedDistanceTests.test_non_adjacent_substitution_cost)",
+        "test_nose_bleeding_does_not_become_congestion (test_regressions.RegressionTests.test_nose_bleeding_does_not_become_congestion)",
+        "test_plain_headache_does_not_pull_cold_meds (test_regressions.RegressionTests.test_plain_headache_does_not_pull_cold_meds)",
+        "test_precision_maintained (test_advanced_fuzzy.IntegrationTests.test_precision_maintained)",
+        "test_single_character_difference (test_advanced_fuzzy.NGramSimilarityTests.test_single_character_difference)",
+        "test_tagalog_typos_with_advanced_fuzzy (test_advanced_fuzzy.IntegrationTests.test_tagalog_typos_with_advanced_fuzzy)",
+        "test_trace_identifies_model_scores_and_decisions (test_audit_workflow.PredictionTraceTests.test_trace_identifies_model_scores_and_decisions)",
+        "test_unix_daemon_round_trip (test_hardware_payment.HardwareBoundaryTests.test_unix_daemon_round_trip)",
+        "test_vowel_normalization (test_advanced_fuzzy.PhoneticNormalizationTests.test_vowel_normalization)"
+      ]
+    },
+    "revised": {
+      "tests": 207,
+      "failure_reports": 20,
+      "errors": 2,
+      "failed_identities": [
+        "test_affix_stripping (test_advanced_fuzzy.PhoneticNormalizationTests.test_affix_stripping)",
+        "test_affixation_handling (test_advanced_fuzzy.NGramSimilarityTests.test_affixation_handling)",
+        "test_consonant_normalization (test_advanced_fuzzy.PhoneticNormalizationTests.test_consonant_normalization)",
+        "test_daemon_keeps_burst_events_until_each_is_acked (test_hardware_payment.HardwareBoundaryTests.test_daemon_keeps_burst_events_until_each_is_acked)",
+        "test_dict_hit_skipped_stage_records_not_used (test_sailor_semantic.TraceSummaryHonestyTests.test_dict_hit_skipped_stage_records_not_used)",
+        "test_dictionary_hit_skips_llm (test_sailor_semantic.PrecisionFirstGatingTests.test_dictionary_hit_skips_llm)",
+        "test_embedding_backend_is_precision_first (test_sailor_semantic.PrecisionFirstGatingTests.test_embedding_backend_is_precision_first)",
+        "test_get_match_details (test_advanced_fuzzy.MatchDetailsTests.test_get_match_details)",
+        "test_known_false_positives_and_nasal_separation (test_audit_workflow.PredictionTraceTests.test_known_false_positives_and_nasal_separation) (text='ang ubod ng init ngayon')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='may sorethroat ako')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='my tummi hurts')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='noze barado')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='sore troat')",
+        "test_misspelled_english_words_detected (test_regressions.FuzzyRescueTests.test_misspelled_english_words_detected) (text='trout hurts')",
+        "test_non_adjacent_substitution_cost (test_advanced_fuzzy.KeyboardWeightedDistanceTests.test_non_adjacent_substitution_cost)",
+        "test_nose_bleeding_does_not_become_congestion (test_regressions.RegressionTests.test_nose_bleeding_does_not_become_congestion)",
+        "test_precision_maintained (test_advanced_fuzzy.IntegrationTests.test_precision_maintained)",
+        "test_single_character_difference (test_advanced_fuzzy.NGramSimilarityTests.test_single_character_difference)",
+        "test_tagalog_typos_with_advanced_fuzzy (test_advanced_fuzzy.IntegrationTests.test_tagalog_typos_with_advanced_fuzzy)",
+        "test_trace_identifies_model_scores_and_decisions (test_audit_workflow.PredictionTraceTests.test_trace_identifies_model_scores_and_decisions)",
+        "test_unix_daemon_round_trip (test_hardware_payment.HardwareBoundaryTests.test_unix_daemon_round_trip)",
+        "test_vowel_normalization (test_advanced_fuzzy.PhoneticNormalizationTests.test_vowel_normalization)"
+      ]
+    },
+    "new_failed_identities": [],
+    "focused": {
+      "tests": 14,
+      "passed": true
+    }
+  },
+  "limits": [
+    "Synthetic technical benchmarks are not independent clinical validation.",
+    "Workbook dental cases preserve original annotations and explicit scope overrides.",
+    "All remaining full-suite failure identities also occur in committed HEAD.",
+    "Unix-domain socket test errors occurred on Windows.",
+    "No physical dispensing or production database migration was performed."
+  ]
+}
