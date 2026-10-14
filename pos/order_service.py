@@ -1565,6 +1565,10 @@ class OrderService:
                 "INSERT INTO transaction_items (transaction_id,inventory_id,brand,quantity,unit_price,subtotal) VALUES (?,?,?,?,?,?)",
                 (transaction_id, row["inventory_id"], row["brand"], row["quantity_ordered"], int(row["unit_price_centavos"]) / 100, subtotal),
             )
+        # Queued inside the sale's transaction so every completed sale owns
+        # exactly one first-copy print job, even if the host dies right after.
+        from .receipt_service import queue_receipt_locked
+        queue_receipt_locked(db, int(order["id"]), ref, copy_no=1)
         return int(transaction_id)
 
     def _audit(self, db, order_id: int, event_type: str, from_state: Optional[str], to_state: Optional[str], actor: str, detail: Dict[str, Any]) -> None:

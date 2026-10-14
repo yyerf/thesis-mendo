@@ -6,6 +6,10 @@ hardware behavior is safe.
 
 ## Resume here
 
+> **Superseded (2026-09-28):** the current resume point is
+> [Resume here — 2026-09-29](#resume-here--2026-09-29) at the end of this file.
+> The block below is the 2026-08-03 state, kept for the record.
+
 - Current phase: **R0 audit record complete; R1 firmware remediation awaiting
   user approval**
 - Current status: **software Phases 1–2 remediation required; real hardware
@@ -701,3 +705,177 @@ controller or used to authorize the installed TB unit.
   trials still require physical fault testing. `PAY_STOP` now inhibits new
   money while draining a pulse train that had already begun. Keep the trial
   supervised and do not attach medicine motors.
+
+## Firmware recovery after SSD loss — 2026-09-28
+
+- Status: **backup complete; read-only; nothing written to the board**.
+- Context: the source of the working Uno build (coin + TB bill + thermal
+  printer, externally 12 V-powered printer) was lost with the old SSD. No
+  branch on `origin` contains printer code (Arduino or Python).
+- Action: full flash + EEPROM dumped with avrdude, flash verified against the
+  chip, stored in `hardware/firmware/backup/` (hashes in its README).
+- Live probe (read-only commands only): `mendo-controller-v1`, protocol 1,
+  printer `ready=1`. The image = repo `mendo_controller.ino` + a `PRINT_*`
+  command set.
+- Observation: at idle (nothing inserted, acceptors inhibited, coin power off)
+  the raw edge counters climbed ~355/s on D2 (coin) and ~3,066/s on D3 (bill);
+  the firmware filters rejected all of it (`clean=0`, `suspect=0`). Raw edges
+  are never credited, but the source (floating input vs. 12 V printer supply
+  noise) should be identified before long unattended runs.
+- Firmware quirk: the boot-time `HELLO` reply truncates `fault_code=FAIL_SAFE`
+  to `FAIL_` (payload buffer); the next `HEARTBEAT` reports `healthy=1`.
+- Next: rebuild the printer source and the Python host printer client from the
+  recovered protocol; re-flash only after the rebuilt sketch reproduces this
+  behavior.
+
+## Receipt printing restored; firmware rebuilt — 2026-09-28
+
+- Status: **host + firmware printing implemented and live-verified; bill path
+  verified; coin path and acceptor inhibit fail physical checks (below)**.
+- Correction to the backup entry above: the "EEPROM" dump is really the first
+  1 KiB of flash (Optiboot cannot read EEPROM). Only the flash backup is valid.
+- Wiring confirmed by the operator and the recovered image: printer RX ← D9,
+  printer "TX" wire → D10 (behaves as a busy line), DTR unconnected, D8 empty;
+  printer 12 V shared with the TB74 supply.
+- Recovered printer protocol (black-box + disassembly): `PRINT_BEGIN/CHUNK/END/
+  CLEAR`, `PRINTER_STATUS`, fingerprint = 16 hex (lost build: first 32 bits
+  only, zero rejected), single EEPROM job record, states 0/1/2/3, printing
+  gated on a fresh heartbeat and inhibited acceptors.
+- Host: `hardware/printer.py` (idempotent chunked job with controller resync),
+  `hardware/receipt.py` (32-column ESC/POS, ASCII-folded, spaced rules,
+  `ESC 7` peak-heat limit, tear feed), daemon/bridge forwarding, simulator
+  emulation, `receipt_prints` table + `pos/receipt_service.py` (queued in the
+  sale transaction; retry/reprint/resolve; admin card), kiosk/cashier status.
+- Firmware: rebuilt `mendo_controller.ino` (printer module, bit-banged D9 TX,
+  bounded busy wait, busy counters, `job` field, `PRINTER_LINE_SCAN`,
+  `CASH_TRAIN` log, settled-edge train timing, motion code not linked).
+- Evidence, 2026-09-28 bench (photos in the operator's Downloads):
+  - Full 750-byte receipts lost half their text on both the old and rebuilt
+    firmware. Losses began after every solid `----` rule; the printer then
+    held D10 HIGH ~400 ms (399/395 ms measured). Spaced dashes: 0 ms busy.
+    Same solid rule after `ESC 7 3 80 2`: 0 ms busy, nothing lost. The
+    shipped receipt (spaced rules + ESC 7) printed 752/752 bytes, 0 ms busy.
+  - No cutter: five cut commands ignored.
+  - ₱50 bill: exactly 5 × 50 ms LOW, 150 ms period — matches August.
+  - Coin: ₱5 counted 3 or 4 (suspect); later coins produced irregular,
+    fragmented trains; D2 idle alternated LOW-noisy/HIGH. See
+    `hardware/README.md` → Open hardware issues.
+  - TB74 accepted a note and the coin slot a coin with no payment active
+    (inhibit not wired; coin power not switched by D5). ₱86 inserted during
+    diagnostics was never credited, as designed.
+  - Both inputs carry bursts of ~3,500 sub-ms spikes/s at idle; they could
+    hold a train open so its cash event never fired — fixed in firmware by
+    counting only settled transitions as activity.
+- Daemon bugs found live and fixed: the 243-byte status reply overflowed the
+  256-byte frame whenever a fault was present (POS showed "unhealthy or
+  disconnected"); serial write timeout raised 0.25 → 1 s; unexpected serial
+  exceptions now return a fault instead of dropping the client.
+- Reliability runs: 500/500 and 300/300 clean controller exchanges; one lost
+  reply seen during paper-feed testing (recovered by the resync path).
+- Tests: `pytest testing/test_receipt_printing.py testing/test_hardware_payment.py`
+  58 passed. Full suite 263 passed, 25 failed; the same 25 fail on the
+  untouched commit (catalog/detection/semantic tests), unrelated to hardware.
+- Live POS test ran against a copy of the database (`var/livetest/`,
+  gitignored); `data/mendo_pos.db` was not modified.
+- Next physical actions: wire the TB74 inhibit and prove its polarity; put the
+  coin acceptor behind D5 or accept that coins inserted early are lost; fix
+  the D2 coin signal (NO/NC switch, 1 kΩ + 4.7 kΩ pull-up or PC817, ~100 nF);
+  recapture ₱1/₱5/₱10/₱20 with `CASH_TRAIN`; consider a dedicated printer
+  supply.
+
+### Coin recapture with CASH_TRAIN — 2026-09-28
+
+Operator dropped ₱1, ₱5, ₱10, ₱20 with no payment active (nothing credited).
+Seven trains were logged (no timestamps; the first rows may include earlier
+line noise). Pulses/settled LOWs/suspect, LOW ms, period ms:
+`5/5/0 5–193 14–148` · `1/1/0 282` · `1/1/0 9` · `16/18/1 3–261 8–306` ·
+`1/1/0 158` · `4/4/0 99–101 168–172` · `34/35/1 3–215 52–286` (5.8 s).
+Reading: the coin slot's own pulses are regular (100 ms LOW, 170 ms period —
+wider than August's 70 ms), but adjacent pulses merge into 158–282 ms LOWs
+(the line does not return HIGH cleanly) and 3–9 ms noise LOWs add false
+pulses; ₱10+₱20 merged into one 34-pulse suspect train. The controller also
+sent 3 garbled replies during the drops (`protocol_errors=3`). Conclusion:
+the D2 conditioning (10 kΩ series, internal pull-up only) is the fault, not
+the counting. Fix the input (PC817, or 1 kΩ + 4.7 kΩ pull-up + 100 nF), then
+recapture one coin at a time before tightening the coin filters to the
+measured timing. Daemon client timeout raised 1.5 → 3 s (commit 6cf146d).
+
+### Timestamped coin run — 2026-09-28 02:18
+
+Log cleared, then ₱1, ₱5, ₱10, ₱20 dropped ≥5 s apart (not credited).
+`02:18:28 7p 4–159/32–225` · `02:18:32 9p suspect 3–301/79–310` ·
+`02:18:43 5p 67–101/136–174` · `02:18:57 9p 100–112/170` ·
+`02:19:07 20p 13–101/17–201`. D2 rests LOW with ~12,000 raw edges/s.
+Finding: the coin signal is **inverted versus August** (then idle HIGH,
+70 ms LOW pulses, ~100 ms HIGH; now idle LOW, 100–112 ms LOW segments at the
+same 170 ms period — the old HIGH gaps). The firmware therefore counts the
+gaps between pulses: ₱10 → 9 with perfect timing, ₱1 → nothing (the two
+₱1-time trains are noise bursts), ₱5/₱20 reached their totals only because
+noise fragments replaced the missing count. The idle-LOW state is also the
+noisy one (idle-HIGH earlier measured 0 edges/s). Next: set the Allan NO/NC
+switch so D2 rests HIGH, clear with `python -m hardware.cash_log --clear`,
+re-drop ₱1/₱5/₱10/₱20, expect 1/5/10/20 with no suspect flags.
+
+### A/B on the original firmware — 2026-09-28 02:26
+
+Question: did the lost firmware count coins correctly ("it was working
+before")? Static check: the backup image contains the identical coin/bill
+filter tables (glitch 3/20, min LOW 4/25, max LOW 400/400, min period 12/80,
+gap 400/500, max pulses 200/120; pins 2/3). Live check: flashed the backup,
+opened a controller-only bench session (`python -m hardware.cash_bench`),
+operator dropped ₱1, ₱5, ₱10, ₱20. Events: 2, 4, 2 (suspect) around the ₱1,
+then **4, 9, 19** for ₱5/₱10/₱20. The original firmware is one short on every
+coin exactly like the rebuild, and turned the ₱1 drop into ₱8 of noise
+credit. Conclusion: the fault is physical, not the rebuild. D2 is wired to
+the coin acceptor's **COUNTER** terminal (COIN is unconnected; NO/NC = NO);
+D2 rests LOW and noisy. Rebuilt firmware reflashed afterwards.
+
+## Resume here — 2026-09-29
+
+State at end of 2026-09-28 session:
+
+- **Uno runs the rebuilt firmware** (`hardware/firmware/mendo_controller/`,
+  commit 8a35226 source). Original image: `hardware/firmware/backup/`
+  (`avrdude -p m328p -c arduino -P /dev/ttyACM0 -b 115200 -U flash:w:hardware/firmware/backup/uno_working_2026-09-28.hex:i`).
+- **Receipt printing works end to end** (full receipt 752/752 bytes, 0 ms
+  busy). Not yet exercised: a complete real sale that triggers the automatic
+  receipt (blocked by the coin issue; the bill path is ready).
+- **Bill (TB74, D3) is healthy**: ₱50 = 5 × 50 ms LOW / 150 ms period.
+- **Coin (D2) is miscounted by one per coin** because D2 is on the coin
+  acceptor's COUNTER terminal (COIN unconnected). Decide option A (move to
+  COIN after a meter check) or B (firmware counts HIGH pulses + tighter coin
+  filters) — see `hardware/README.md` → Open hardware issues §3.
+- **Still unwired:** TB74 inhibit (yellow/green); coin acceptor not switched
+  by D5. Cash inserted outside a payment is taken and never credited.
+- Test database copy for live trials: `var/livetest/mendo_pos.db`
+  (gitignored; `data/mendo_pos.db` untouched). Biogesic stock there = 5.
+- Nothing pushed to `origin` yet (branch `experiment-march-1`).
+
+Restart the stack (two terminals, from the repo root):
+
+```bash
+# 1. hardware daemon (owns /dev/ttyACM0)
+MENDO_HARDWARE_MODE=real MENDO_HARDWARE_SOCKET=/tmp/mendo-hardware.sock \
+MENDO_SERIAL_DEVICE=/dev/ttyACM0 .venv/bin/python -m hardware.daemon_main
+
+# 2. POS on the test DB copy (http://127.0.0.1:5055, admin / mendo2026)
+MENDO_HARDWARE_MODE=real MENDO_HARDWARE_SOCKET=/tmp/mendo-hardware.sock \
+.venv/bin/python -c "import pos.db as d; d.DB_PATH='var/livetest/mendo_pos.db'; from web.app import app; app.run(host='127.0.0.1', port=5055, threaded=True)"
+```
+
+Bench tools (daemon running): `python -m hardware.cash_log --clear` then drop
+coins ≥5 s apart and `python -m hardware.cash_log` (per-coin pulses with
+times, nothing credited); `python -m hardware.cash_bench --minutes 5`
+(controller-only payment session that reports cash events exactly as a sale
+would, nothing credited). Direct probes need the daemon stopped:
+`python -m hardware.probe HEARTBEAT PRINTER_STATUS CASH_DIAG`.
+
+Next steps, in order:
+1. Coin: option A (meter check, move to COIN) or B; then
+   `cash_log --clear`, drop ₱1/₱5/₱10/₱20, expect 1/5/10/20 with no suspect.
+2. One real sale on `/shop` with coins and one with a ₱50 bill; confirm the
+   receipt prints automatically and stock/transaction are correct.
+3. Wire the TB74 inhibit and prove its polarity; decide on D5 for the coin
+   acceptor.
+4. Consider a dedicated 12 V supply for the printer.
+5. Push the branch.

@@ -328,6 +328,8 @@ const POS = (() => {
           state.innerHTML = `<strong style="color:#9a3e2f">Staff review required</strong><br>${order.failure_reason || 'The pulse evidence could not be credited safely.'}`;
         } else if (order.fulfillment_state === 'completed') {
           state.innerHTML = `<strong style="color:#23643d">Payment successful — stock updated</strong><br>${label} · ${eventCount} cash event${eventCount === 1 ? '' : 's'} recorded · no motor command sent`;
+          const paper = order.receipt_print;
+          if (paper) state.innerHTML += `<br>Paper receipt: <strong>${paper.state}</strong>${paper.last_error ? ' (' + paper.last_error + ')' : ''}`;
         } else {
           state.innerHTML = `<strong>Waiting for coins or bills…</strong><br>${label} · ${eventCount} cash event${eventCount === 1 ? '' : 's'} recorded`;
         }

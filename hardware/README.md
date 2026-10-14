@@ -1,6 +1,8 @@
 # MendoVendo hardware guide
 
-Status: **payment-only POS integration enabled for the measured D2/D3 pulse paths; medicine motors disabled**
+Status: **payment-only POS integration with receipt printing; medicine motors disabled.**
+2026-09-28: bill path (D3) verified; **coin path (D2) signal is faulty and the
+TB74 inhibit is not wired** — see [Open hardware issues](#open-hardware-issues-2026-09-28).
 
 The controller now carries the same D2 coin and D3 TB74 timing filters used by
 the successful bench sketch. The host maps validated pulses, binds them to one
@@ -17,9 +19,11 @@ and are not the integrated controller.
 
 ## Run a payment-only test
 
-1. Open `hardware/firmware/mendo_controller/mendo_controller.ino` in Arduino
-   IDE, select Arduino Uno, and upload it. Close Serial Monitor afterward; the
-   daemon needs exclusive access at **115200 baud**.
+1. Upload `hardware/firmware/mendo_controller/` (Arduino IDE, or
+   `arduino-cli upload --fqbn arduino:avr:uno -p /dev/ttyACM0 hardware/firmware/mendo_controller`
+   after `arduino-cli compile`). Close Serial Monitor afterward; the daemon
+   needs exclusive access at **115200 baud**. The last known-good image from
+   before the rebuild is in `firmware/backup/`.
 2. Start the hardware daemon (replace `/dev/ttyACM0` if the Uno has another
    stable path):
 
@@ -41,6 +45,97 @@ and are not the integrated controller.
 4. Open `/shop`, add medicine, select **Start Cash Payment**, and insert cash.
    The live dialog shows due, inserted, and remaining values. On success, verify
    `/admin/inventory`, the receipt, and stock logs. No motor job should exist.
+
+## Receipt printer (KMP26, 58 mm)
+
+Wiring: printer RX ← Uno **D9**, printer "TX" wire → Uno **D10**, printer GND →
+Arduino GND, printer 12 V from the TB74's 12 V supply (WEL-R7U02 harness).
+Both signal leads go through a series resistor (1–10 kΩ, unverified). The
+printer's DTR pin is not connected.
+
+- **D10 behaves as a busy output, not serial data.** Measured: LOW and fully
+  steady at idle (0 changes in 45,263 samples); HIGH for ~400 ms only when the
+  head draws peak current. Firmware waits while it is HIGH (max 3 s per chunk,
+  then the job is marked interrupted).
+- **No cutter.** GS V 0/1/66, ESC i and ESC m were all ignored. Receipts end
+  with a 6-line feed so the text clears the tear bar; tear by hand.
+- **Brown-out on solid rules (root cause of missing receipt text).** A
+  full-width solid `----` rule made the printer go busy ~400 ms and lose the
+  text already in its buffer (photos 2026-09-28). Receipts therefore use spaced
+  dashes and start with `ESC 7 3 80 2` (at most 32 dots heated at once), which
+  printed the same rule fully dark with 0 ms busy and nothing lost. A dedicated
+  or heavier 12 V supply for the printer is still recommended.
+
+Protocol (host → Uno, one ESC/POS job at a time, see `hardware/printer.py`):
+`PRINT_BEGIN fingerprint,length` · `PRINT_CHUNK fingerprint,offset,hex` (≤ 96
+bytes; host sends 64) · `PRINT_END fingerprint,length` · `PRINT_CLEAR
+fingerprint` (staff) · `PRINTER_STATUS [fingerprint]`. Job states: 0 idle,
+1 receiving, 2 printed, 3 interrupted. The single job record lives in EEPROM,
+so a retry after a lost reply resumes at the controller's byte count and never
+prints twice; a job interrupted mid-paper blocks all printing until staff
+resolve it on **Admin → Hardware** (`PRINTER_STATUS` always reports the
+blocking `job` fingerprint, so it can be cleared even if the host lost it).
+
+POS side: every completed sale queues copy 1 in `receipt_prints` inside the
+sale's transaction; printing runs after commit and can never undo a sale
+(`pos/receipt_service.py`). Admin → Hardware shows printer state, a test-slip
+button, retry, reprint, and the "paper is complete / reprint" decision for an
+interrupted receipt.
+
+## Bench diagnostics
+
+Stop the daemon first (it owns the port), then:
+
+```bash
+.venv/bin/python -m hardware.probe HEARTBEAT PRINTER_STATUS CASH_DIAG
+.venv/bin/python -m hardware.probe CASH_TRAIN:index=0 CASH_TRAIN:index=1
+.venv/bin/python -m hardware.probe PRINTER_LINE_SCAN:ms=500
+```
+
+- `CASH_DIAG` — raw edge counters, current levels, open trains.
+- `CASH_TRAIN index=N [clear=1]` — the last 8 finished coin/bill pulse trains
+  (0 = oldest): validated pulses, settled LOWs, min/max LOW width and period,
+  the suspect flag, and `started_ms`/`now_ms` controller times. With the daemon
+  running, `python -m hardware.cash_log --clear` empties it and
+  `python -m hardware.cash_log` prints it with wall-clock times. Recorded even when no payment is active, so a coin or bill
+  can be characterised without crediting it. Also reachable through the
+  daemon (`UnixHardwareClient.cash_train`).
+- `PRINTER_LINE_SCAN ms=N` — samples D10 for N ms and counts level changes.
+
+## Open hardware issues (2026-09-28)
+
+1. **Bill inhibit not wired.** Yellow `INHIBIT+`/green `INHIBIT-` are not
+   connected, so the TB74 accepted a ₱50 note while the Uno was inhibiting it.
+   Money inserted outside an active payment is taken but never credited.
+2. **Coin slot not switched by D5.** A coin was accepted with D5 (coin power)
+   off, so the coin acceptor is powered directly. Same consequence as (1).
+3. **Coin signal on D2 is wrong: D2 is wired to the coin acceptor's COUNTER
+   terminal; COIN is unconnected** (NO/NC switch = NO). Wiring: COUNTER →
+   ~10 kΩ → D2, Uno internal pull-up only. D2 rests LOW with up to ~12,000
+   noise edges/s. The COUNTER waveform is inverted relative to the August
+   calibration (now 100–112 ms LOW segments at a 170 ms period = the old HIGH
+   gaps), so the firmware counts the gaps between pulses: **every coin is one
+   short** (₱5→4, ₱10→9, ₱20→19) and ₱1 yields only noise. The **original
+   pre-SSD-loss firmware does exactly the same** on today's wiring (A/B run,
+   ₱1 noise even credited ₱8), and its filter constants are byte-identical to
+   the rebuild — so this is physical, not firmware. Pending decision:
+   - **A (recommended):** check COIN→GND with a meter (≈0 V = safe; ≈12 V =
+     do not connect directly), move the D2 wire to **COIN**, keep NO, re-run
+     the drop test (expect 1/5/10/20). No firmware change needed.
+   - **B (fallback):** stay on COUNTER; firmware counts HIGH pulses and the
+     coin filters are tightened to the measured timing (pulse ~60–70 ms,
+     period ~170 ms: reject < ~40 ms pulses and < ~120 ms periods). Works
+     around, but does not remove, the noisy resting state.
+   For extra margin either way: 1 kΩ series + 4.7 kΩ pull-up to 5 V (never
+   with the 10 kΩ still in series) or a PC817, ~100 nF to GND, short common
+   GND.
+4. **Both input lines carry bursts of thousands of sub-ms spikes per second**
+   (bill ≈3,500/s) with nothing running. The firmware now ignores them for
+   train timing (previously they could hold a train open so no cash event
+   fired), but the source — likely shared 12 V/ground — should be fixed.
+
+The bill path itself is healthy: a ₱50 note measured exactly 5 × 50 ms LOW at a
+150 ms period.
 
 ## Reference files
 
@@ -65,8 +160,10 @@ must be cleared first.
 | D5 | fail-off coin-acceptor power relay/load switch |
 | D6 | reserved for future shared chute sensor |
 | D7 | PCA9685 active-low OE safety control |
-| D8 | reserved enclosure/interlock input |
-| A4/A5 | PCA9685 SDA/SCL |
+| D8 | enclosure interlock input (pull-up; LOW = fail-safe). Empty on the 2026-09 kiosk |
+| D9 | thermal printer RX — bit-banged 9600 8N1, idle HIGH |
+| D10 | thermal printer busy line (the wire labelled "TX"; LOW = ready, HIGH ≈ busy) |
+| A4/A5 | PCA9685 SDA/SCL (not linked in the payment+printer build) |
 | PCA channels 0–9 | hardware slots 1–10 |
 
 Uno and Mega builds must share one source tree. Board selection is a
