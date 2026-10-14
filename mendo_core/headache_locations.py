@@ -854,6 +854,9 @@ def build_red_flag_response(key: str) -> Dict:
     return {
         "flag": "headache_red_flag",
         "message": ht.safety_note_en,
+        "message_en": ht.safety_note_en,
+        "message_tl": ht.safety_note_tl,
+        "message_ceb": ht.safety_note_ceb,
         "matched": key,
     }
 

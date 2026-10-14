@@ -61,6 +61,8 @@ data/*.sqlite
 *.db-shm
 *.db-journal
 logs/*.jsonl
+logs/archive/
+logs/*-preview.jpg
 
 # Reproducible benchmark: retain only the canonical manifest
 testing/benchmark/results/*

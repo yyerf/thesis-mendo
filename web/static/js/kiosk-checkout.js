@@ -33,7 +33,7 @@
       var note = document.createElement("div");
       note.className = "checkout-notice";
       note.style.cssText = "margin-top:12px;padding:10px 12px;border-radius:10px;background:#fff1ed;color:#9a3e2f;font-size:13px";
-      note.textContent = message;
+      note.textContent = window.MendoI18n.phrase(message, window.getKioskLanguage());
       body.appendChild(note);
     }
   }
@@ -55,7 +55,10 @@
     if (badge) badge.textContent = count;
     if (proceed) proceed.style.display = count ? "inline-flex" : "none";
     if (countEl) countEl.textContent = count;
+    var catalogCount = el('catalogCartCount');
+    if (catalogCount) catalogCount.textContent = count;
   }
+  window.refreshKioskCart = refresh;
   function stepDots() {
     return '<div class="checkout-steps"><div class="checkout-step-dot ' + (step >= 1 ? (step > 1 ? "done" : "active") : "") + '"></div><div class="checkout-step-line"></div><div class="checkout-step-dot ' + (step >= 2 ? (step > 2 ? "done" : "active") : "") + '"></div><div class="checkout-step-line"></div><div class="checkout-step-dot ' + (step >= 3 ? (step > 3 ? "done" : "active") : "") + '"></div><div class="checkout-step-line"></div><div class="checkout-step-dot ' + (step >= 4 ? "done active" : "") + '"></div></div>';
   }
@@ -63,6 +66,14 @@
     return { body: el("checkoutBody"), footer: el("checkoutFooter"), title: el("checkoutTitle") };
   }
   function render() {
+    renderContent();
+    var parts = modalParts();
+    [parts.title, parts.body, parts.footer].forEach(function (part) {
+      window.MendoI18n.localize(part, window.getKioskLanguage());
+    });
+  }
+  window.refreshKioskLanguage = render;
+  function renderContent() {
     var parts = modalParts();
     if (!parts.body || !parts.footer || !parts.title) return;
     var order = window._mendoOrder || {};

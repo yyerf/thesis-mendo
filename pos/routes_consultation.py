@@ -49,6 +49,8 @@ from mendo_core.prediction_pipeline import (
     record_decision,
 )
 from pos.auth import reviewer_required
+from mendo_core.diarrhea_intake import accept_answer, intake_result, annotate_advice, SCREEN_VERSION
+from mendo_core.unstocked_symptoms import reported_complaints, complaint_red_flags
 
 log = logging.getLogger("mendo.consultation")
 
@@ -61,13 +63,15 @@ def _flow_trace(step: str, **fields) -> None:
     duration safeguard -> recommendation (including the recommended
     medicines). Emits BOTH via print() and via the `mendo.consultation`
     logger so it is visible whichever console/redirect is in play. Raw
-    health text is truncated to 60 chars and can be suppressed by setting
-    MENDO_FLOW_TRACE=0.
+    health text is truncated to 60 chars; traces require research consent and
+    can additionally be suppressed by setting MENDO_FLOW_TRACE=0.
     """
     try:
         import os
         raw = os.environ.get("MENDO_FLOW_TRACE", "1").strip().lower()
         if raw in {"0", "false", "no", "off"}:
+            return
+        if not session.get("research_consent", False):
             return
         parts = [f"{k}={v}" for k, v in fields.items() if v is not None]
         line = f"[FLOW] {step}: " + " | ".join(parts)
@@ -83,7 +87,76 @@ consultation_bp = Blueprint(
     url_prefix="/consult",
 )
 
-CONSENT_COPY_VERSION = "research-consent-v1-2026-07"
+
+def _consult_recommend(symptoms, rows, **kwargs):
+    """Every consultation route shares the server-held diarrhea safety answers."""
+    from mendo_core.step4_recommend import recommend_medicine
+    if "DIARRHEA" in symptoms and not kwargs.get("red_flags"):
+        answers = session.get("diarrhea_answers", {})
+        if "FEVER" in symptoms:
+            answers = {**answers, "fever": "yes"}
+        gate = intake_result(list(symptoms), answers, session.get("consult_age"))
+        if gate is not None:
+            return gate
+        # No known food link is not a diagnosis of non-infectious diarrhea.
+        # The old override is used internally only after the complete screen.
+        if not kwargs.get("context_override") or str(kwargs["context_override"]).startswith(("DIARRHEA", "DS_")):
+            kwargs["context_override"] = "DIARRHEA_NON_INFECTIOUS"
+        result = recommend_medicine(symptoms, rows, **kwargs)
+        result["diarrhea_screen"] = {"version": SCREEN_VERSION, "answers": answers}
+        result.setdefault("safety_warnings", []).extend([
+            "Screening does not establish the cause of diarrhea. Prioritize oral rehydration; ask a pharmacist for ORS, which is not stocked here.",
+            "Plain loperamide treats loose stools, not bloating or cramping. Do not add other medicines just for those answers; ask a pharmacist if they persist.",
+            "Nutrabliss Daily Defense supports digestive health; it is not a proven treatment for this diarrhea episode or a replacement for ORS.",
+        ])
+        return annotate_advice(result)
+    return recommend_medicine(symptoms, rows, **kwargs)
+
+
+@consultation_bp.route("/api/catalog")
+def api_catalog():
+    """Public kiosk product information; purchase eligibility stays server-side."""
+    from pos.db import list_inventory
+    from mendo_core.medicine_catalog import NUTRABLISS_PRODUCT
+    by_brand = {row.brand: row for row in _get_med_rows()}
+    image_names = {"Kremil-S": "kremil-s", "Bioflu": "bioflu", "Biogesic": "biogesic", "Cetirizine": "cetirizine", "Solmux": "solmux", "Sinecod": "sinecod", "Symdex": "symdex", "Buscopan": "buscopan", "Loperamide": "loperamide", NUTRABLISS_PRODUCT["brand"]: "nutrabliss"}
+    products = []
+    for inv in list_inventory(active_only=True):
+        row = by_brand.get(inv["brand"])
+        if row is None and inv["brand"] != NUTRABLISS_PRODUCT["brand"]:
+            continue
+        supplement = row is None
+        products.append({
+            "id": inv["id"], "brand": inv["brand"], "generic_name": inv["generic_name"],
+            "category": inv["category"], "dosage_form": inv["dosage_form"],
+            "price_centavos": inv["unit_price_centavos"], "stock_quantity": inv["stock_quantity"],
+            "available_quantity": inv["available_quantity"], "hardware_slot": inv["hardware_slot"],
+            "purchasable": bool(inv["hardware_slot"] is not None and inv["available_quantity"] > 0 and inv["unit_price_centavos"] > 0),
+            "minimum_age": int(row.min_age) if row else NUTRABLISS_PRODUCT["minimum_age"],
+            "description": row.notes if row else "Multi-species probiotic and prebiotic food supplement for digestive-health support. This is not a diarrhea medicine.",
+            "indications": list(row.approved_indications) if row else ["Digestive-health support"],
+            "warnings": list(row.warnings) if row else ["Follow the local product label for dose, age suitability and storage. This is a food supplement."],
+            "contraindications": list(row.contraindications) if row else [],
+            "instructions": "Follow the exact package directions. Ask a pharmacist about dose, interactions and suitability; do not combine products with the same ingredients.",
+            "is_supplement": supplement,
+            "image": "/static/images/medicines/" + image_names[inv["brand"]] + (
+                ".webp" if inv["brand"] in {"Bioflu", "Biogesic", "Loperamide"}
+                else ".png" if inv["brand"] in {"Kremil-S", "Sinecod", "Buscopan"}
+                else ".jpg"
+            ),
+        })
+    return jsonify({"products": products})
+
+
+@consultation_bp.route("/api/catalog-age", methods=["POST"])
+def api_catalog_age():
+    value = (request.get_json(silent=True) or {}).get("age")
+    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 120:
+        return jsonify({"error": "Please enter a valid age from 1 to 120."}), 400
+    session["catalog_age"] = value
+    return jsonify({"saved": True})
+
+CONSENT_COPY_VERSION = "research-consent-v2-2026-10-14"
 
 
 def _consent_log_kwargs(data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -308,6 +381,11 @@ def api_research_consent():
         return jsonify({"error": "consent must be true or false"}), 400
     session["research_consent"] = data["consent"]
     session["consent_version"] = CONSENT_COPY_VERSION
+    session.pop("catalog_age", None)
+    session.pop("consult_age", None)
+    session.pop("diarrhea_answers", None)
+    session.pop("sid", None)
+    session.pop("kiosk_cart", None)
     return jsonify(
         {
             "saved": True,
@@ -392,6 +470,9 @@ def classify_no_match(user_text: str) -> str:
     if has(_NO_MATCH_OUT_OF_SCOPE_WORDS):
         return "out_of_scope"
 
+    if reported_complaints(user_text):
+        return "out_of_scope"
+
     if has(_NO_MATCH_NONSENSE_WORDS):
         return "nonsense"
 
@@ -429,7 +510,8 @@ def api_pre_detect():
             if "NASAL_CONGESTION" not in report["final"]["symptoms"]:
                 report["final"]["symptoms"].append("NASAL_CONGESTION")
         symptoms = report.get("final", {}).get("symptoms", [])
-        red_flags = report.get("red_flags", [])
+        red_flags = report.get("red_flags", []) + complaint_red_flags(user_text)
+        unstocked = reported_complaints(user_text)
 
         severity_hints = _extract_severity_hints(user_text, symptoms)
 
@@ -445,6 +527,7 @@ def api_pre_detect():
 
         return jsonify({
             "symptoms": symptoms,
+            "unstocked_complaints": unstocked,
             "severity_hints": severity_hints,
             "red_flags": red_flags,
             "headache_intake": headache_intake,
@@ -497,6 +580,8 @@ def api_analyze():
         session["sid"] = uuid.uuid4().hex[:8]
         session["consult_language"] = language
         session["consult_input_mode"] = input_mode
+        session["diarrhea_answers"] = {}
+        session["consult_age"] = user_age
 
         # ── Resolve effective severity ──
         # If per-symptom severity_map is provided, use the max value for the
@@ -588,7 +673,7 @@ def api_analyze():
         symptoms = report.get("final", {}).get("symptoms", [])
         detected_conditions = report.get("final", {}).get("conditions", [])
         source = report.get("final", {}).get("source", "unknown")
-        red_flags = report.get("red_flags", [])
+        red_flags = report.get("red_flags", []) + complaint_red_flags(user_text)
 
         # ── Headache location red flags: only real red_flag danger blocks OTC ──
         headache_cautions = []
@@ -600,6 +685,9 @@ def api_analyze():
                     red_flags.append({
                         "flag": "headache_location",
                         "message": loc_data_red.safety_note_en,
+                        "message_en": loc_data_red.safety_note_en,
+                        "message_tl": loc_data_red.safety_note_tl,
+                        "message_ceb": loc_data_red.safety_note_ceb,
                     })
                 elif loc_data_red.red_flags_en:
                     headache_cautions = loc_data_red.red_flags_en
@@ -643,7 +731,7 @@ def api_analyze():
                 headache_prefer = loc_data.prefer_categories
                 headache_avoid = loc_data.avoid_categories
 
-        recommendation = recommend_medicine(
+        recommendation = _consult_recommend(
             symptoms,
             med_rows,
             red_flags=red_flags,
@@ -652,6 +740,12 @@ def api_analyze():
             headache_prefer_categories=headache_prefer,
             headache_avoid_categories=headache_avoid,
         )
+        if reported_complaints(user_text) and recommendation.get("action") != "triage":
+            recommendation = {
+                "action": "no_match", "recommendations": [],
+                "message": "Your description includes a complaint for which this machine does not carry a suitable product. Ask a pharmacist about suitable care and medicine availability.",
+                "safety_warnings": [],
+            }
 
         # Log recommendation details
         rec_action = recommendation.get("action", "unknown")
@@ -755,6 +849,7 @@ def api_analyze():
             "engine": report.get("engine"),
             "trace_version": TRACE_SCHEMA_VERSION,
             "no_match_reason": classify_no_match(user_text) if not symptoms else None,
+            "unstocked_complaints": reported_complaints(user_text),
         }
         if user_age is not None:
             resp["age"] = user_age
@@ -996,7 +1091,7 @@ def api_duration_check():
 
         # All durations checked and safe — proceed with recommendation
         med_rows = _get_med_rows()
-        recommendation = recommend_medicine(
+        recommendation = _consult_recommend(
             original_symptoms,
             med_rows,
             user_input=clarification_data.get("pseudo_input"),
@@ -1134,6 +1229,17 @@ def api_context_clarify():
 
         symptoms = list(original)
 
+        if clarify_type == "DIARRHEA_SCREEN":
+            if "DIARRHEA" not in symptoms:
+                return jsonify({"error": "Diarrhea screening requires a diarrhea consultation"}), 400
+            try:
+                session["diarrhea_answers"] = accept_answer(
+                    symptoms, session.get("diarrhea_answers", {}), clarification,
+                    session.get("consult_age", user_age),
+                )
+            except ValueError as exc:
+                return jsonify({"error": str(exc)}), 400
+
         # UI display labels can be more specific than core model labels.
         # We keep core labels for rule-based recommendation compatibility,
         # and send a parallel display list for frontend rendering.
@@ -1179,7 +1285,7 @@ def api_context_clarify():
 
         from mendo_core.step4_recommend import recommend_medicine
         med_rows = _get_med_rows()
-        recommendation = recommend_medicine(
+        recommendation = _consult_recommend(
             symptoms,
             med_rows,
             user_input=pseudo_input,
@@ -1306,7 +1412,7 @@ def api_clarify():
 
         from mendo_core.step4_recommend import recommend_medicine
         med_rows = _get_med_rows()
-        recommendation = recommend_medicine(
+        recommendation = _consult_recommend(
             symptoms,
             med_rows,
             detected_conditions=original_conditions,

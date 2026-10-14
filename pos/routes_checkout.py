@@ -100,10 +100,21 @@ def _cart_order_items(cart: list) -> list:
     return [{"inventory_id": int(item["inventory_id"]), "quantity": int(item["quantity"])} for item in cart]
 
 
+def _validate_kiosk_age(items: list) -> None:
+    from mendo_core.medicine_catalog import catalog_item_for_name
+    age = session.get("catalog_age", session.get("consult_age"))
+    for entry in items:
+        item = get_inventory_item(entry.get("inventory_id"))
+        product = catalog_item_for_name(item["brand"]) if item else None
+        if product and (age is None or int(age) < int(product.minimum_age)):
+            raise OrderError("Please check the patient's age and ask a pharmacist about suitable medicines.")
+
+
 def _create_order_from_cart(*, payment_method: str = "cash", idempotency_key: Optional[str] = None, source: str = "kiosk") -> Dict[str, Any]:
     cart = _get_kiosk_cart()
     if not cart:
         raise OrderError("Cart is empty")
+    _validate_kiosk_age(cart)
     body = request.get_json(silent=True) or {}
     key = idempotency_key or request.headers.get("Idempotency-Key") or body.get("idempotency_key")
     if not key and payment_method == "xendit_cashless":
@@ -356,6 +367,11 @@ def api_kiosk_cart_add():
     item = get_inventory_by_brand(brand)
     if not item or not item["is_active"] or item.get("hardware_slot") is None:
         return jsonify({"error": "Product is not available"}), 404
+    from mendo_core.medicine_catalog import catalog_item_for_name
+    product = catalog_item_for_name(item["brand"])
+    age = session.get("catalog_age", session.get("consult_age"))
+    if product and (age is None or int(age) < int(product.minimum_age)):
+        return jsonify({"error": "Please check the patient's age and ask a pharmacist about suitable medicines."}), 400
     if int(item["stock_quantity"]) - int(item.get("reserved_quantity", 0)) <= 0:
         return jsonify({"error": "Out of stock"}), 400
     cart = _get_kiosk_cart()
@@ -374,6 +390,8 @@ def api_kiosk_cart_add():
             return jsonify({"success": True, "message": f"{item['brand']} updated in cart"})
     if qty > MAX_QTY_PER_ITEM:
         return jsonify({"error": f"Maximum {MAX_QTY_PER_ITEM} units per medicine"}), 400
+    if qty > int(item["stock_quantity"]) - int(item.get("reserved_quantity", 0)):
+        return jsonify({"error": "Not enough available stock"}), 400
     cart.append({"inventory_id": item["id"], "quantity": qty})
     _set_kiosk_cart(cart)
     return jsonify({"success": True, "message": f"{item['brand']} added to cart"})
@@ -401,6 +419,7 @@ def api_create_order():
     try:
         data = request.get_json(silent=True) or {}
         items = data.get("items") or _cart_order_items(_get_kiosk_cart())
+        _validate_kiosk_age(items)
         key = request.headers.get("Idempotency-Key") or data.get("idempotency_key")
         order = _service().create_order(items, idempotency_key=key or "", source=str(data.get("source", "kiosk")), payment_method=str(data.get("payment_method", "cash")))
         session["kiosk_order_ref"] = order["order_ref"]

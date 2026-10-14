@@ -50,9 +50,9 @@ completion. See the [hardware guide](hardware/README.md) and
 
 Production recommendations, POS inventory, checkout, and benchmarks use one
 versioned hardware catalog:
-`mendo-hardware-catalog-v2-2026-10-13`. The formulation-level JSON remains the
-reference source. Nine approved items occupy the first nine hardware slots;
-slot 10 is reserved for an unverified probiotic:
+`mendo-hardware-catalog-v4-2026-10-15`. The formulation-level JSON remains the
+medicine reference source. Nine medicines occupy the first nine slots;
+Nutrabliss is sold separately as a digestive-health supplement in slot 10:
 
 | Slot | Medicine | Runtime category | Form | Minimum age |
 |---:|---|---|---|---:|
@@ -64,15 +64,17 @@ slot 10 is reserved for an unverified probiotic:
 | 6 | Sinecod | Cough Suppressant | Tablet | 13 |
 | 7 | Symdex | Cold & Cough | Tablet | 6 |
 | 8 | Buscopan | Antispasmodic | Tablet | 6 |
-| 9 | Loperamide | Anti-diarrhea | Tablet | 6 |
-| 10 | Lactobacillus acidophilus placeholder | Pending product verification | Unverified | Unverified |
+| 9 | Loperamide (Diatabs) | Anti-diarrhea | Capsule | 12 |
+| 10 | Nutrabliss Daily Defense Probiotic | Digestive-health food supplement | Capsule | 12 |
 
 Startup migrations normalize same-product aliases, assign hardware slots,
 and mark retired products inactive. Newly introduced products start in separate
 inventory rows with zero stock; existing records for the same product retain
 their own stock. A different medicine's stock and history are never renamed
 into a new drug. Historical transactions and stock movements remain.
-The probiotic placeholder is inactive with no purchasable hardware slot.
+Nutrabliss is purchasable through the retail catalog and uses the same cart,
+reservation, stock deduction and receipt flow. It is separate from the nine
+medicines used for symptom-based recommendations.
 Food-poisoning guidance requires oral rehydration and excludes loperamide;
 there is currently no approved stocked probiotic recommendation.
 
@@ -99,9 +101,19 @@ the actual stocked formulations, selling prices, and physical slot labels.
    validation metrics. Nothing automatically retrains production.
 
 Declining consent does not block consultation. Raw health text is not persisted;
-only an anonymous aggregate operational counter is incremented. The 507
-pre-consent interactions retained during merge recovery are marked
-legacy/unconsented and excluded from research exports and field metrics.
+only an anonymous aggregate operational counter is incremented. Legacy
+unconsented interactions are excluded from research exports and field metrics.
+
+For a fresh hands-on event audit, follow the [convention logging guide](docs/convention-logging.md).
+The preparation command archives the database, runtime logs, and local source
+before clearing consultation audit records; inventory and commerce history remain.
+
+The welcome screen offers direct medicine browsing or symptom consultation.
+The kiosk catalog includes local reference photos, product details, stock,
+prices and an age-checked cart. Diarrhea consultations use a ten-question
+screen before the existing duration safeguard. Unsupported complaints get
+named pharmacy guidance; urgent symptoms retain medical referral. See the
+[October convention changes](docs/convention-kiosk-changes.md) for scope and sources.
 
 ## Evaluation terminology
 

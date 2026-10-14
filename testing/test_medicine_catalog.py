@@ -6,6 +6,7 @@ import json
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from flask import Flask
@@ -14,7 +15,7 @@ from mendo_core.medicine_catalog import (
     CATALOG_BRANDS,
     MEDICINE_CATALOG,
     MEDICINE_CATALOG_VERSION,
-    PENDING_PROBIOTIC,
+    NUTRABLISS_PRODUCT,
     inventory_catalog_records,
 )
 from mendo_core.prediction_pipeline import predict_symptoms
@@ -60,7 +61,7 @@ class RuntimeCatalogTests(unittest.TestCase):
                 "Sinecod": "Tablet",
                 "Symdex": "Tablet",
                 "Buscopan": "Tablet",
-                "Loperamide": "Tablet",
+                "Loperamide": "Capsule",
             },
         )
         self.assertEqual(
@@ -74,7 +75,7 @@ class RuntimeCatalogTests(unittest.TestCase):
                 "Sinecod": "13",
                 "Symdex": "6",
                 "Buscopan": "6",
-                "Loperamide": "6",
+                "Loperamide": "12",
             },
         )
 
@@ -144,7 +145,8 @@ class RuntimeCatalogTests(unittest.TestCase):
         self.assertIn("oral rehydration", warning)
 
     def test_prediction_trace_versions_the_catalog(self):
-        report = predict_symptoms("masakit ulo ko")
+        with patch("mendo_core.step3_hybrid._get_semantic_extractor", side_effect=RuntimeError("semantic not needed for catalog trace test")):
+            report = predict_symptoms("masakit ulo ko")
         self.assertEqual(
             report["engine"]["medicine_catalog_version"],
             MEDICINE_CATALOG_VERSION,
@@ -152,6 +154,16 @@ class RuntimeCatalogTests(unittest.TestCase):
 
 
 class InventoryCatalogMigrationTests(unittest.TestCase):
+    def test_generic_probiotic_is_visible_in_inventory_without_legacy_products(self):
+        from pos.routes_admin import _inventory_listings
+        items = [
+            {"brand": "Biogesic", "hardware_slot": 3},
+            {"brand": NUTRABLISS_PRODUCT["brand"], "hardware_slot": None},
+            {"brand": "Legacy Product", "hardware_slot": None},
+        ]
+        with patch("pos.routes_admin.list_inventory", return_value=items):
+            self.assertEqual(_inventory_listings(), items[:2])
+
     def test_first_run_creates_only_the_ten_hardware_slots(self):
         original_path = pos_db.DB_PATH
         with tempfile.TemporaryDirectory() as tmp:
@@ -168,20 +180,20 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
                             FROM inventory WHERE hardware_slot IS NOT NULL ORDER BY hardware_slot
                             """
                         ).fetchall()
-                        self.assertEqual(len(rows), 9)
+                        self.assertEqual(len(rows), 10)
                         self.assertEqual(
-                            [row["brand"] for row in rows], list(EXPECTED_CATALOG)
+                            [row["brand"] for row in rows], [*EXPECTED_CATALOG, NUTRABLISS_PRODUCT["brand"]]
                         )
                         self.assertEqual(
                             [row["hardware_slot"] for row in rows],
-                            list(range(1, 10)),
+                            list(range(1, 11)),
                         )
                         self.assertTrue(all(row["is_active"] for row in rows))
                         pending = db.execute(
                             "SELECT is_active,hardware_slot,stock_quantity,unit_price FROM inventory WHERE brand=?",
-                            (PENDING_PROBIOTIC["brand"],),
+                            (NUTRABLISS_PRODUCT["brand"],),
                         ).fetchone()
-                        self.assertEqual(tuple(pending), (0, None, 0, 0))
+                        self.assertEqual(tuple(pending), (1, 10, 0, 35.0))
                         self.assertEqual(
                             db.execute("PRAGMA integrity_check").fetchone()[0],
                             "ok",
@@ -220,7 +232,8 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
                 (7,'Tuseran Forte','Tablet',10,46,1),
                 (8,'Decolgen','Tablet',7,50,1),
                 (9,'Advil','Tablet',8,30,1),
-                (10,'Erceflora','Oral Suspension',28,20,1);
+                (10,'Erceflora','Oral Suspension',28,20,1),
+                (11,'Lactobacillus acidophilus (pending verification)','Unverified',0,0,0);
             INSERT INTO transaction_items VALUES (2);
             INSERT INTO stock_logs VALUES (2);
             """
@@ -238,8 +251,8 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
             ORDER BY hardware_slot
             """
         ).fetchall()
-        self.assertEqual([row["brand"] for row in active], list(EXPECTED_CATALOG))
-        self.assertEqual([row["hardware_slot"] for row in active], list(range(1, 10)))
+        self.assertEqual([row["brand"] for row in active], [*EXPECTED_CATALOG, NUTRABLISS_PRODUCT["brand"]])
+        self.assertEqual([row["hardware_slot"] for row in active], list(range(1, 11)))
         self.assertEqual(
             conn.execute("SELECT brand FROM inventory WHERE id=2").fetchone()["brand"],
             "Neozep / Neozep Z+",
@@ -264,8 +277,15 @@ class InventoryCatalogMigrationTests(unittest.TestCase):
         for brand in ("Kremil-S", "Sinecod", "Buscopan"):
             stock = conn.execute("SELECT stock_quantity FROM inventory WHERE brand=?", (brand,)).fetchone()[0]
             self.assertEqual(stock, 0, "Replacement must not inherit a different drug's stock")
+        probiotic = conn.execute(
+            "SELECT id,brand,is_active,hardware_slot FROM inventory WHERE id=11"
+        ).fetchone()
+        self.assertEqual(tuple(probiotic), (11, "Lactobacillus acidophilus (pending verification)", 0, None))
+        named = conn.execute("SELECT id,hardware_slot,is_active,stock_quantity FROM inventory WHERE brand=?", (NUTRABLISS_PRODUCT["brand"],)).fetchone()
+        self.assertNotEqual(named["id"], 11, "A generic placeholder must not be renamed into a different verified product")
+        self.assertEqual((named["hardware_slot"], named["is_active"], named["stock_quantity"]), (10, 1, 0))
         _sync_inventory_catalog(conn, inventory_catalog_records(source["Sheet1"]))
-        self.assertEqual(conn.execute("SELECT COUNT(*) FROM inventory WHERE hardware_slot IS NOT NULL").fetchone()[0], 9)
+        self.assertEqual(conn.execute("SELECT COUNT(*) FROM inventory WHERE hardware_slot IS NOT NULL").fetchone()[0], 10)
         conn.close()
 
     def test_transactions_reject_items_outside_the_hardware_catalog(self):

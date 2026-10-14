@@ -37,7 +37,7 @@
       <tbody>
         {% for item in items %}
         <tr data-id="{{ item.id }}" data-brand="{{ item.brand }}" data-search="{{ item.brand|lower }} {{ (item.generic_name or '')|lower }} {{ (item.category or '')|lower }}">
-          <td><span class="badge badge--neutral">#{{ item.hardware_slot }}</span></td>
+          <td><span class="badge badge--neutral">{{ '#' ~ item.hardware_slot if item.hardware_slot is not none else '—' }}</span></td>
           <td class="font-bold">{{ item.brand }}</td>
           <td class="text-secondary text-sm truncate" style="max-width: 160px;">{{ item.generic_name or '—' }}</td>
           <td><span class="badge badge--neutral">{{ item.category or '—' }}</span></td>

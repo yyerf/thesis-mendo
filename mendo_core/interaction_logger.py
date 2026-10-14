@@ -23,7 +23,7 @@ from .prediction_pipeline import ENGINE_ID, TRACE_SCHEMA_VERSION
 
 log = logging.getLogger("mendo.logger")
 _DB_PATH = str(Path(__file__).resolve().parents[1] / "data" / "mendo_pos.db")
-CONSENT_VERSION = "research-consent-v1-2026-07"
+CONSENT_VERSION = "research-consent-v2-2026-10-14"
 _disabled = False
 
 _JSON_COLUMNS = {
@@ -379,6 +379,8 @@ def log_interaction(
         },
         "recommendation_detail": {
             "action": action,
+            "diarrhea_screen": recommendation.get("diarrhea_screen"),
+            "safety_warnings": recommendation.get("safety_warnings", []),
             "clarification_question": recommendation.get("question"),
             "clarification_options": [
                 {"label": option.get("label"), "value": option.get("value")}

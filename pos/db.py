@@ -642,6 +642,10 @@ def _sync_inventory_catalog(
                 "UPDATE inventory SET is_active=0, hardware_slot=NULL WHERE brand=?",
                 (record["brand"],),
             )
+        elif record["slot"] is None and chosen and chosen["brand"] != record["brand"]:
+            # Make the generic listing visible when migrating its old inactive
+            # placeholder. A missing hardware slot still prevents dispensing.
+            db.execute("UPDATE inventory SET is_active=1 WHERE brand=?", (record["brand"],))
 
     # Existing installations have REAL prices. Backfill once without
     # converting through a binary float in the order layer.

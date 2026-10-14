@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 
-MEDICINE_CATALOG_VERSION = "mendo-hardware-catalog-v2-2026-10-13"
+MEDICINE_CATALOG_VERSION = "mendo-hardware-catalog-v4-2026-10-15"
 
 
 @dataclass(frozen=True)
@@ -65,13 +65,12 @@ MEDICINE_CATALOG: Tuple[CatalogItem, ...] = (
         9,
         "Loperamide",
         "Anti-diarrhea",
-        "Tablet",
-        "6",
+        "Capsule",
+        "12",
         ("Loperamide (Diatabs)",),
         6.00,
     ),
-    # Slot 10 reserved: the proposed Lactobacillus acidophilus product needs
-    # exact formulation and regulatory verification before OTC activation.
+    # Slot 10 is a separate retail supplement, excluded from medicinal recommendations.
 )
 
 CATALOG_BY_BRAND: Dict[str, CatalogItem] = {
@@ -79,19 +78,23 @@ CATALOG_BY_BRAND: Dict[str, CatalogItem] = {
 }
 CATALOG_BRANDS: Tuple[str, ...] = tuple(item.brand for item in MEDICINE_CATALOG)
 
-# This is an inactive inventory placeholder, never a recommendation source.
-# No strength, CFU, form, age, therapeutic claim, or selling price is assumed.
-PENDING_PROBIOTIC = {
-    "slot": None,
-    "reserved_slot": 10,
-    "brand": "Lactobacillus acidophilus (pending verification)",
-    "aliases": ("Lactobacillus acidophilus (pending verification)",),
-    "generic_name": "Lactobacillus acidophilus — exact product unverified",
-    "category": "Probiotic — pending product and regulatory verification",
-    "dosage_form": "Unverified",
-    "default_price": 0.0,
-    "is_active": False,
+NUTRABLISS_PRODUCT = {
+    "slot": 10,
+    "brand": "Nutrabliss Daily Defense Probiotic",
+    "aliases": ("Nutrabliss Daily Defense Probiotic",),
+    "generic_name": "L. rhamnosus + L. paracasei + L. reuteri + L. acidophilus + L. gasseri + L. johnsonii; prebiotics",
+    "category": "Digestive-health food supplement",
+    "dosage_form": "Capsule",
+    "default_price": 35.0,
+    "minimum_age": 12,
+    "age_source": "https://www.watsons.com.hk/en/daily-defense-probiotic-prebiotics/p/BP_812267",
+    "is_active": True,
 }
+
+NUTRABLISS_CATALOG_ITEM = CatalogItem(
+    10, NUTRABLISS_PRODUCT["brand"], NUTRABLISS_PRODUCT["category"], "Capsule", "12",
+    (NUTRABLISS_PRODUCT["brand"],), 35.0,
+)
 
 
 def _normalized(value: Any) -> str:
@@ -100,7 +103,7 @@ def _normalized(value: Any) -> str:
 
 def catalog_item_for_name(name: str) -> Optional[CatalogItem]:
     normalized = _normalized(name)
-    for item in MEDICINE_CATALOG:
+    for item in (*MEDICINE_CATALOG, NUTRABLISS_CATALOG_ITEM):
         if normalized in {_normalized(candidate) for candidate in item.inventory_names}:
             return item
     return None
@@ -139,6 +142,12 @@ def select_runtime_entries(
         row["Minimum Age"] = item.minimum_age
         row["Hardware Slot"] = item.slot
         row["Catalog Version"] = MEDICINE_CATALOG_VERSION
+        if item.brand == "Loperamide":
+            row["Warnings"] = [
+                "For ages 12 and above; do not use for bloody stool, fever, a swollen abdomen or diarrhea after antibiotics without professional advice.",
+                "Replace lost fluids with oral rehydration solution. Stop and seek medical advice if not improving within 48 hours.",
+                "Do not exceed the package dose. Excess doses can cause serious heart problems.",
+            ]
         selected.append(row)
     return selected
 
@@ -146,7 +155,7 @@ def select_runtime_entries(
 def inventory_catalog_records(
     entries: Sequence[Mapping[str, Any]],
 ) -> List[Dict[str, Any]]:
-    """Build approved inventory records plus the disabled probiotic placeholder."""
+    """Build hardware inventory records plus the generic probiotic listing."""
     selected = select_runtime_entries(entries)
     records = [
         {
@@ -160,4 +169,4 @@ def inventory_catalog_records(
         }
         for item, row in zip(MEDICINE_CATALOG, selected)
     ]
-    return records + [dict(PENDING_PROBIOTIC)]
+    return records + [dict(NUTRABLISS_PRODUCT)]

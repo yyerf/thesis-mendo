@@ -20,6 +20,7 @@ from .db import (
 from .order_service import OrderError, OrderService
 from .receipt_service import receipt_service
 from hardware.service import get_hardware_service
+from mendo_core.medicine_catalog import NUTRABLISS_PRODUCT
 
 from mendo_core.interaction_logger import (
     get_interaction_logs,
@@ -288,17 +289,26 @@ def api_order_refund(order_ref, current_user=None):
 
 # ─────────── Inventory ───────────
 
+def _inventory_listings():
+    """Show hardware medicines and the generic probiotic inventory entry."""
+    return [
+        item for item in list_inventory()
+        if item.get("hardware_slot") is not None
+        or item["brand"] == NUTRABLISS_PRODUCT["brand"]
+    ]
+
+
 @admin_bp.route("/inventory")
 @login_required
 def inventory(current_user=None):
-    items = list_inventory(catalog_only=True)
+    items = _inventory_listings()
     return render_template("pos/inventory.html", items=items, user=current_user)
 
 
 @admin_bp.route("/api/inventory", methods=["GET"])
 @login_required
 def api_inventory(current_user=None):
-    items = list_inventory(catalog_only=True)
+    items = _inventory_listings()
     return jsonify(items)
 
 

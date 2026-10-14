@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mendo — AI Medicine Consultation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/kiosk-catalog.css') }}?v=20261014">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -58,24 +59,25 @@
 
     .hidden { display: none !important; }
 
-    .consent-box {
-      max-width: 680px;
-      border-top: 5px solid var(--blue-600);
+    .modal-box.consent-box {
+      max-width: 640px; max-height: calc(100dvh - 32px);
+      display: flex; flex-direction: column; text-align: left;
     }
-    .consent-kicker {
-      color: var(--blue-700); font-size: 12px; font-weight: 800;
-      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px;
+    .consent-scroll {
+      overflow-y: auto; min-height: 0; max-height: 48dvh;
+      padding: 0 8px 0 0; margin: 14px 0; color: var(--zinc-600);
+      overscroll-behavior: contain;
     }
-    .consent-facts {
-      display: grid; gap: 10px; margin: 18px 0; padding: 16px;
-      background: var(--blue-50); border: 1px solid var(--blue-200);
-      border-radius: var(--radius);
+    .consent-scroll h4 { font-size: 13px; color: var(--zinc-800); margin: 14px 0 6px; }
+    .consent-scroll p { font-size: 12px; line-height: 1.6; }
+    .consent-check {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; font-size: 14px; line-height: 1.5; cursor: pointer;
     }
-    .consent-fact { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
-    .consent-fact i { color: var(--blue-600); margin-top: 3px; }
-    .consent-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .consent-note { font-size: 12px; color: var(--zinc-500); margin: 12px 0 18px; }
-    @media (max-width: 560px) { .consent-actions { grid-template-columns: 1fr; } }
+    .consent-check input { width: 22px; height: 22px; flex-shrink: 0; accent-color: var(--zinc-800); }
+    .consent-proceed { width: 100%; background: var(--blue-500); color: white; margin-top: 12px; }
+    .consent-proceed:hover { background: var(--blue-600); }
+    .consent-note { font-size: 13px; color: var(--zinc-500); margin: 8px 0; }
 
     /* ═══════════════════════════════
        SCREEN 0 — Home / Intro
@@ -830,7 +832,7 @@
       margin: 0;
       padding: 48px 28px;
       border-radius: 0;
-      background: linear-gradient(165deg, #fff7ed 0%, #fef2f2 55%, #fdf2f8 100%);
+      background: var(--white);
       color: var(--zinc-800);
       display: flex;
       flex-direction: column;
@@ -2071,6 +2073,27 @@
       .cash-amount-due strong { font-size: 25px; }
       .cash-live-status { margin-left: 0; }
     }
+    .no-symptoms, .nomatch-card, .triage-banner, .referral-banner, .duration-referral-banner {
+      background: var(--white); border: 1px solid var(--zinc-200);
+      border-radius: var(--radius); box-shadow: none; padding: 28px 24px;
+      margin: 0 auto; max-width: 640px;
+    }
+    .triage-banner { border-top: 3px solid #b91c1c; }
+    .no-symptoms h3, .nomatch-card h3, .triage-banner h3,
+    .referral-banner h3, .duration-referral-banner h3 { font-size: 22px; color: var(--zinc-800); font-weight: 700; }
+    .no-symptoms p, .nomatch-card p, .triage-banner p,
+    .referral-banner p, .duration-referral-banner .duration-detail { font-size: 15px; line-height: 1.65; color: var(--zinc-600); }
+    .nomatch-card .icon-circle, .referral-banner .icon-circle,
+    .duration-referral-banner .icon { background: var(--zinc-100); color: var(--zinc-600); }
+    .triage-banner .flag-list li { background: var(--zinc-50); color: var(--zinc-700); border-radius: var(--radius); font-weight: 400; }
+    .referral-cta { background: transparent; padding: 0; color: var(--zinc-800); }
+    .panel-footer { flex-wrap: wrap; gap: 10px; }
+    .panel-footer > div { flex-wrap: wrap; justify-content: flex-end; }
+    @media (max-width: 560px) {
+      .analysis-result.warning-fullscreen { height: auto; min-height: 0; padding: 16px 0; }
+      .modal-box.consent-box { padding: 20px; }
+      .no-symptoms, .nomatch-card, .triage-banner, .referral-banner, .duration-referral-banner { padding: 24px 18px; }
+    }
   </style>
 </head>
 <body>
@@ -2088,11 +2111,12 @@
   </div>
   <div class="home-top-right">
     <div class="home-lang-switch" onclick="event.stopPropagation()">
+      <button class="home-lang-btn" data-home-lang="auto" onclick="pickLanguage('auto', event)">Auto</button>
       <button class="home-lang-btn" data-home-lang="en" onclick="pickLanguage('en', event)">EN</button>
       <button class="home-lang-btn" data-home-lang="ceb" onclick="pickLanguage('ceb', event)">BSYA/CBU</button>
       <button class="home-lang-btn" data-home-lang="tl" onclick="pickLanguage('tl', event)">TGL</button>
     </div>
-    <button class="help-btn-home" onclick="openModal('helpModal', event)" title="About this system">?</button>
+    <button class="help-btn-home" onclick="openModal('helpModal', event)" data-i18n-title="about" title="About this system">?</button>
   </div>
 
   <div class="home-bg" onclick="startKiosk()">
@@ -2113,27 +2137,37 @@
   </div>
 </div>
 
+<!-- Separate first page, shown after the welcome dialog and before age entry. -->
+<section id="kioskChoicePage" class="kiosk-choice-page hidden" aria-label="Choose a service">
+  <header class="choice-page-header">
+    <button class="btn" onclick="resetAll()" data-i18n="back">Back</button>
+  </header>
+    <div class="kiosk-entry">
+      <div class="entry-choices">
+        <button class="entry-choice" onclick="chooseKioskFlow('catalog')">
+          <span class="entry-choice-icon"><i class="fa-solid fa-capsules"></i></span>
+          <strong data-i18n="browseMedicines">Browse medicines</strong>
+          <span data-i18n="browseMedicinesHelp">View medicines, prices and stock. Add your selection to the cart.</span>
+        </button>
+        <button class="entry-choice" onclick="chooseKioskFlow('consult')">
+          <span class="entry-choice-icon"><i class="fa-solid fa-comment-medical"></i></span>
+          <strong data-i18n="describeSymptoms">Describe symptoms</strong>
+          <span data-i18n="describeSymptomsHelp">Answer a few questions to see suitable options and safety guidance.</span>
+        </button>
+      </div>
+    </div>
+</section>
+
 <!-- ═══ MODALS ═══ -->
 
 <!-- About Mendo Modal -->
 <div class="modal-overlay hidden" id="helpModal" onclick="closeModal('helpModal', event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="close-btn" onclick="document.getElementById('helpModal').classList.add('hidden')">&times;</button>
-    <h3>About Mendo</h3>
-    <p>
-      <strong>Mendo</strong> is an AI-powered over-the-counter (OTC) medicine vending system.
-      It uses natural language processing to understand your symptoms and recommend
-      safe, age-appropriate medicines.
-    </p>
-    <p>
-      Describe your symptoms in <strong>English</strong>, <strong>Tagalog</strong>,
-      <strong>Bisaya</strong>, or a mix (Taglish) and the system will match them
-      to appropriate OTC medication available in the vending machine.
-    </p>
-    <p style="color: var(--zinc-400); font-size: 13px;">
-      This system is not a substitute for professional medical advice. Always consult
-      a healthcare provider for serious or persistent symptoms.
-    </p>
+    <h3 data-i18n="about"></h3>
+    <p data-i18n="aboutBody"></p>
+    <p data-i18n="aboutLanguages"></p>
+    <p data-i18n="aboutNote"></p>
   </div>
 </div>
 
@@ -2141,16 +2175,8 @@
 <div class="modal-overlay hidden" id="whyAgeModal" onclick="closeModal('whyAgeModal', event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="close-btn" onclick="document.getElementById('whyAgeModal').classList.add('hidden')">&times;</button>
-    <h3>Why do we ask your age?</h3>
-    <p>
-      Some over-the-counter medicines have <strong>minimum age requirements</strong>.
-      For example, certain pain relievers are not recommended for children under 12.
-    </p>
-    <p>
-      By entering your age, we automatically filter out any medicines that are
-      not safe for your age group. This ensures every recommendation is
-      appropriate for you.
-    </p>
+    <h3 data-i18n="whyAge"></h3>
+    <p data-i18n="ageHelp"></p>
   </div>
 </div>
 
@@ -2158,12 +2184,10 @@
 <div class="modal-overlay hidden" id="langModal" onclick="closeModal('langModal', event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="close-btn" onclick="document.getElementById('langModal').classList.add('hidden')">&times;</button>
-    <h3>Supported Languages</h3>
-    <p>
-      Our AI understands multiple Philippine languages. You can describe
-      your symptoms in any of the following:
-    </p>
+    <h3 data-i18n="languages"></h3>
+    <p data-i18n="languageHelp"></p>
     <div class="lang-pick-row" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0;">
+      <button class="home-lang-btn" data-modal-lang="auto" onclick="pickLanguage('auto', event); document.getElementById('langModal').classList.add('hidden')">Auto</button>
       <button class="home-lang-btn" data-modal-lang="en" onclick="pickLanguage('en', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">English</button>
       <button class="home-lang-btn" data-modal-lang="tl" onclick="pickLanguage('tl', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">Tagalog</button>
       <button class="home-lang-btn" data-modal-lang="ceb" onclick="pickLanguage('ceb', event); document.getElementById('langModal').classList.add('hidden')" style="font-size:13px;">Bisaya / Cebuano</button>
@@ -2174,68 +2198,46 @@
       <strong>Bisaya</strong> — "Sakit akong ulo, naay ubo"<br>
       <strong>Taglish</strong> — Mix of any of the above
     </p>
-    <p>
-      Voice input also supports these languages. Just tap the microphone
-      and speak naturally.
-    </p>
+    <p data-i18n="voiceHelp"></p>
   </div>
 </div>
 
-<!-- Legal Notice Modal (shown before entering kiosk flow) -->
-<div class="modal-overlay hidden" id="legalNoticeModal" onclick="closeModal('legalNoticeModal', event)">
-  <div class="modal-box legal-notice-box" onclick="event.stopPropagation()">
-    <h3>Legal Notice & Warning</h3>
-    <p>
-      In compliance with the <strong>Price Act (RA 7581, as amended)</strong>,
-      hoarding and illegal stockpiling of medicines are prohibited.
-    </p>
-    <ul class="legal-note-list">
-      <li>Please purchase medicines responsibly and only as needed.</li>
-      <li>Do not hoard medicines for resale, panic-buying, or artificial shortage creation.</li>
-      <li>Suspicious or abusive purchasing behavior may be flagged for review.</li>
-    </ul>
-    <p style="font-size:12px;color:var(--zinc-400);margin-bottom:0;">
-      By continuing, you acknowledge this advisory and agree to comply with applicable Philippine laws.
-    </p>
-    <div class="legal-actions">
-      <button class="btn btn--primary" onclick="confirmLegalNotice(event)">I Understand, Continue</button>
-    </div>
-  </div>
-</div>
-
-<!-- Research participation is optional; declining never blocks consultation. -->
+<!-- Research logging stays optional; the single checkbox records the choice. -->
 <div class="modal-overlay hidden" id="researchConsentModal">
-  <div class="modal-box consent-box" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
-    <div class="consent-kicker">Thesis field validation · Boluntaryong paglahok</div>
-    <h3 id="consentTitle">May we save this consultation for research review?</h3>
-    <p id="consentIntro">
-      Mendo can still help you if you decline. If you agree, your symptom text,
-      system trace, and outcome will be stored so authorized domain experts can
-      independently review the system. Reviews never retrain production automatically.
-    </p>
-    <div class="consent-facts">
-      <div class="consent-fact"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span id="consentAgree"><strong>Agree:</strong> save this consultation for consented, de-identified research export after expert adjudication.</span></div>
-      <div class="consent-fact"><i class="fa-solid fa-user-slash" aria-hidden="true"></i><span id="consentDecline"><strong>Decline:</strong> do not persist raw symptom text; retain only an anonymous operational count.</span></div>
-      <div class="consent-fact"><i class="fa-solid fa-language" aria-hidden="true"></i><span id="consentChoice"><strong>Your choice:</strong> consultation remains available either way.</span></div>
+  <div class="modal-box consent-box" role="dialog" aria-modal="true" aria-labelledby="consentTitle" aria-describedby="consentIntro">
+    <h3 id="consentTitle">Before you begin</h3>
+    <p id="consentIntro">Please read these terms before proceeding.</p>
+    <div class="consent-scroll" tabindex="0" role="region" aria-labelledby="consentTermsTitle">
+      <h4 id="consentTermsTitle">Using Mendo</h4>
+      <p id="consentTerms"></p>
+      <h4 id="consentPrivacyTitle">Privacy · RA 10173</h4>
+      <p id="consentPrivacy"></p>
+      <h4 id="consentResearchTitle">Optional research logs</h4>
+      <p id="consentResearch"></p>
+      <p id="consentChoice"></p>
+      <h4 id="consentLawTitle">Responsible purchases · RA 7581</h4>
+      <p id="consentLaw"></p>
     </div>
-    <p class="consent-note" id="consentNote">Select one choice before continuing. This is research consent, not consent to medical treatment.</p>
-    <div class="consent-actions">
-      <button class="btn btn--primary" id="consentYes" onclick="saveResearchConsent(true, event)">I agree to research use</button>
-      <button class="btn btn--outline" id="consentNo" onclick="saveResearchConsent(false, event)">Decline and continue</button>
-    </div>
+    <label class="consent-check">
+      <input type="checkbox" id="researchConsentCheck">
+      <span id="consentCheckLabel">I agree to save this consultation for research review (optional).</span>
+    </label>
+    <p class="consent-note" id="consentNote"></p>
+    <p class="consent-note hidden" id="consentError" role="alert"></p>
+    <button class="btn btn--primary consent-proceed" id="consentProceed" onclick="saveResearchConsent(document.getElementById('researchConsentCheck').checked, event)">Proceed</button>
   </div>
 </div>
 
 <div class="idle-overlay hidden" id="idleModal" onclick="resumeFromIdle(event)">
   <div class="idle-box" onclick="event.stopPropagation()">
     <div class="idle-icon">👋</div>
-    <h3>Are you still there?</h3>
-    <p>Your session will return to the welcome screen due to inactivity.</p>
+    <h3 data-i18n="idleTitle">Are you still there?</h3>
+    <p data-i18n="idleBody">Your session will end soon due to inactivity.</p>
     <div class="idle-countdown">
-      <strong id="idleCountdown">10</strong> seconds left
+      <strong id="idleCountdown">10</strong> <span data-i18n="secondsLeft">seconds left</span>
     </div>
     <div class="idle-actions">
-      <button class="btn btn--primary" onclick="resumeFromIdle(event)" style="width:100%;">Continue Session</button>
+      <button class="btn btn--primary" onclick="resumeFromIdle(event)" style="width:100%;" data-i18n="continueSession">Continue Session</button>
     </div>
   </div>
 </div>
@@ -2251,15 +2253,15 @@
       <img src="{{ url_for('static', filename='images/mendo.png') }}" alt="Mendo">
     </div>
     <div class="kiosk-steps" id="stepsBar">
-      <div class="kiosk-step active" data-step="1"><span class="num">1</span><span>Age</span></div>
+      <div class="kiosk-step active" data-step="1"><span class="num">1</span><span data-i18n="age">Age</span></div>
       <div class="kiosk-step-divider"></div>
-      <div class="kiosk-step" data-step="2"><span class="num">2</span><span>Symptoms</span></div>
+      <div class="kiosk-step" data-step="2"><span class="num">2</span><span data-i18n="symptoms">Symptoms</span></div>
       <div class="kiosk-step-divider"></div>
-      <div class="kiosk-step" data-step="3"><span class="num">3</span><span>Pain</span></div>
+      <div class="kiosk-step" data-step="3"><span class="num">3</span><span data-i18n="pain">Pain</span></div>
       <div class="kiosk-step-divider"></div>
-      <div class="kiosk-step" data-step="4"><span class="num">4</span><span>Results</span></div>
+      <div class="kiosk-step" data-step="4"><span class="num">4</span><span data-i18n="results">Results</span></div>
     </div>
-    <button class="help-btn-bar" onclick="openModal('helpModal', event)" title="About Mendo">?</button>
+    <button class="help-btn-bar" onclick="openModal('helpModal', event)" data-i18n-title="about" title="About Mendo">?</button>
   </div>
 
   <div class="kiosk-body">
@@ -2283,14 +2285,14 @@
           </div>
 
           <button class="why-ask-link" onclick="openModal('whyAgeModal', event)">
-            <span class="q-icon">?</span> Why do we ask?
+            <span class="q-icon">?</span> <span data-i18n="whyAge">Why do we ask?</span>
           </button>
         </div>
       </div>
       <div class="panel-footer">
-        <button class="btn" onclick="backToHome()">Cancel</button>
+        <button class="btn" onclick="backToHome()"><span data-i18n="cancel">Cancel</span></button>
         <button class="btn btn--primary btn--lg" id="toStep2Btn" disabled onclick="goToStep(2)">
-          Continue
+          <span data-i18n="analyzeBtn">Continue</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
@@ -2306,7 +2308,7 @@
           <div class="symptom-input-wrap">
             <textarea class="symptom-textarea" id="symptomInput"
               placeholder="Example: Masakit ulo ko tapos inuubo na walang plema..."></textarea>
-            <button class="mic-btn" id="voiceBtn" title="Tap to speak">
+            <button class="mic-btn" id="voiceBtn" data-i18n-title="speak" title="Tap to speak">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
                 <path d="M19 10v2a7 7 0 01-14 0v-2"/>
@@ -2317,14 +2319,14 @@
           </div>
 
           <div class="lang-row">
-            <button class="lang-info-btn" onclick="openModal('langModal', event)" title="Supported languages">?</button>
+            <button class="lang-info-btn" onclick="openModal('langModal', event)" data-i18n-title="languages" title="Supported languages">?</button>
           </div>
         </div>
       </div>
       <div class="panel-footer">
-        <button class="btn" onclick="goToStep(1)">Back</button>
+        <button class="btn" onclick="goToStep(1)"><span data-i18n="back">Back</span></button>
         <button class="btn btn--primary btn--lg" id="toStep3Btn" disabled onclick="triggerPreDetect()">
-          Continue
+          <span data-i18n="analyzeBtn">Continue</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
@@ -2335,7 +2337,7 @@
       <div class="panel-content">
         <!-- Pre-detect loading shimmer -->
         <div id="preDetectLoading" class="analysis-loading hidden">
-          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Detecting symptoms...</p>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;" data-i18n="detecting">Detecting symptoms...</p>
         </div>
 
         <!-- Headache Location Visualizer (shown if HEADACHE detected) -->
@@ -2348,9 +2350,9 @@
         <div id="noSymptomsStep3" class="hidden" style="width:100%;"></div>
       </div>
       <div class="panel-footer">
-        <button class="btn" onclick="goToStep(2)">Back</button>
+        <button class="btn" onclick="goToStep(2)"><span data-i18n="back">Back</span></button>
         <button class="btn btn--primary btn--lg hidden" id="confirmHeadLocFooter" onclick="confirmHeadacheType()">
-          Confirm
+          <span data-i18n="confirm">Confirm</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
         <button class="btn btn--primary btn--lg hidden" id="analyzeBtn" onclick="runAnalysis()">
@@ -2365,15 +2367,15 @@
       <div class="kiosk-body" style="overflow-y:auto;">
         <!-- Loading shimmer -->
         <div class="analysis-loading" id="analysisLoading">
-          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;">Analyzing your symptoms...</p>
-          <p class="shimmer" style="font-size:13px;margin-top:8px;">Running hybrid NLP pipeline</p>
+          <p class="shimmer shimmer-primary" style="font-size:18px;font-weight:700;" data-i18n="analyzing">Analyzing your symptoms...</p>
+          <p class="shimmer" style="font-size:13px;margin-top:8px;" data-i18n="pleaseWait">Please wait.</p>
         </div>
 
         <!-- Results -->
         <div class="analysis-result hidden" id="analysisResult"></div>
       </div>
       <div class="panel-footer">
-        <button class="btn hidden" id="backFromResults" onclick="goBackFromResults()">Back</button>
+        <button class="btn hidden" id="backFromResults" onclick="goBackFromResults()"><span data-i18n="back">Back</span></button>
         <div style="display:flex;gap:10px;margin-left:auto;">
           <button class="btn btn--primary btn--lg hidden" id="viewRecsBtn" onclick="showRecommendations()">
             View Recommendations
@@ -2391,7 +2393,7 @@
 <!-- ═══ Checkout FAB ═══ -->
 <button class="checkout-fab" id="checkoutFab" onclick="openCheckoutModal()">
   <i class="fa-solid fa-bag-shopping"></i>
-  Checkout
+  <span data-i18n="checkoutShort">Checkout</span>
   <span class="badge" id="fabBadge">0</span>
 </button>
 
@@ -2412,7 +2414,24 @@
 </div>
 
 <div id="toastContainer" class="toast-container"></div>
+<section id="catalogScreen" class="catalog-screen hidden" aria-labelledby="catalogTitle">
+  <header class="catalog-header">
+    <button class="btn" onclick="resetAll()" data-i18n="back">Back</button>
+    <div><h1 id="catalogTitle" data-i18n="browseMedicines">Browse medicines</h1></div>
+    <button class="btn btn--primary catalog-cart-button" onclick="openCheckoutModal()"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span data-i18n="viewCart">View cart</span><span id="catalogCartCount">0</span></button>
+  </header>
+  <div class="catalog-tools"><input id="catalogSearch" type="search" placeholder="Search" aria-label="Search medicines" autocomplete="off" oninput="renderMedicineCatalog()"><p data-i18n="catalogNotice">Product information is not a diagnosis. Check the package and ask a pharmacist if unsure.</p></div>
+  <p id="catalogNotice" class="catalog-status" role="status" aria-live="polite"></p>
+  <div id="catalogGrid" class="catalog-grid" aria-live="polite"></div>
+</section>
+<div class="modal-overlay hidden" id="medicineDetailModal" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal-box medicine-detail" role="dialog" aria-modal="true" aria-labelledby="medicineDetailTitle">
+    <button class="close-btn" onclick="document.getElementById('medicineDetailModal').classList.add('hidden')" aria-label="Close">&times;</button>
+    <div id="medicineDetailBody"></div>
+  </div>
+</div>
 
+<script src="{{ url_for('static', filename='js/kiosk-translations.js') }}?v=20261014"></script>
 <script>
 (() => {
   // ── State ──
@@ -2489,11 +2508,11 @@
       professionalHelpTitle: 'Seek professional help',
       professionalHelpSub: 'Your pain level is high, so please prioritize a pharmacist or doctor before self-medicating.',
       professionalHelpNote: 'You can still continue to view the medicine list if needed.',
-      emergencyTitle: 'Emergency signs detected',
-      emergencySub: 'Self-medication is not recommended. Please seek medical attention right away.',
-      emergencyNote: 'This is not a diagnosis. The system detected terms that may require urgent care.',
+      emergencyTitle: 'Get medical help now',
+      emergencySub: 'Go to the nearest emergency department. Do not take medicine from this kiosk for these symptoms.',
+      emergencyNote: 'This is a safety warning, not a diagnosis.',
       durationTitle: 'See a doctor or pharmacist',
-      durationBlocked: 'OTC recommendations are blocked for safety.',
+      durationBlocked: 'Please get medical advice before taking medicine.',
       durationNote: 'This reminder is for safety only and is not a diagnosis.',
       noScopeTitle: 'Input outside current scope',
       noScopeSub: 'Please try a short symptom description so the vending machine can assist you.',
@@ -2507,8 +2526,8 @@
       recommendationTap: 'Touch again to review medicine options',
       durationCheckTitle: 'Duration Safety Check',
       durationQuestion: 'How long have you had this symptom?',
-      assessAgain: 'Assess Again',
-      exit: 'Exit',
+      assessAgain: 'Start again',
+      exit: 'Finish',
       viewRecommendations: 'View Recommendations',
       nextSymptomBtn: 'Next',
       analyzeBtn: 'Continue',
@@ -2617,11 +2636,11 @@
       professionalHelpTitle: 'Pagpangayo og propesyonal nga tabang',
       professionalHelpSub: 'Taas ang imong pain level busa unaha ang pharmacist o doktor sa dili pa mag-self-medicate.',
       professionalHelpNote: 'Pwede gihapon nimo tan-awon ang listahan sa tambal kung kinahanglan.',
-      emergencyTitle: 'Naay nadetect nga delikadong timailhan',
-      emergencySub: 'Dili girekomenda ang self-medication. Palihug adto dayon sa doktor o ospital.',
-      emergencyNote: 'Dili kini diagnosis. Nakadetect ang system og mga pulong nga basin nanginahanglan og dali nga pag-atiman.',
+      emergencyTitle: 'Pangayo dayon og medikal nga tabang',
+      emergencySub: 'Adto dayon sa emergency department sa labing duol nga ospital. Ayaw pagkuha og tambal sa kiosk para niini nga mga sintomas.',
+      emergencyNote: 'Pasidaan kini para sa kaluwasan, dili diagnosis.',
       durationTitle: 'Pakigkita sa doktor o pharmacist',
-      durationBlocked: 'Gi-block ang OTC recommendation para sa imong kaluwasan.',
+      durationBlocked: 'Pangayo una og tambag sa doktor sa dili pa motumar og tambal.',
       durationNote: 'Pahimangno lang kini para sa kaluwasan ug dili diagnosis.',
       noScopeTitle: 'Wala pa sa sakop ang input',
       noScopeSub: 'Sulayi og mubo nga hulagway sa sintomas aron makatabang ang vending machine.',
@@ -2635,8 +2654,8 @@
       recommendationTap: 'Hikapa pag-usab aron makita ang mga tambal',
       durationCheckTitle: 'Pagsusi sa Kadugayon',
       durationQuestion: 'Unsa na kadugay nimo ni nga sintomas?',
-      assessAgain: 'Usba ang Assessment',
-      exit: 'Gawas',
+      assessAgain: 'Usab sa pagsugod',
+      exit: 'Human na',
       viewRecommendations: 'Tan-awa ang Rekomendasyon',
       continueToRecs: 'I-press ang Continue aron makita ang girekomendang tambal.',
       coldWeatherTitle: 'Posibleng Hinungdan ang Nakit-an',
@@ -2710,6 +2729,16 @@
       tl: { label: 'Hindi dahil sa panis na pagkain', desc: 'Walang palatandaan ng food poisoning.' },
       ceb: { label: 'Dili gikan sa daot nga pagkaon', desc: 'Walay timailhan sa food poisoning.' },
     },
+    RASHES_BREATHING_YES: {
+      en: { label: 'Yes, breathing is difficult', desc: 'I have rashes and trouble breathing.' },
+      tl: { label: 'Oo, hirap huminga', desc: 'May pantal at hirap huminga.' },
+      ceb: { label: 'Oo, lisod pagginhawa', desc: 'Adunay pantal ug lisod pagginhawa.' },
+    },
+    RASHES_BREATHING_NO: {
+      en: { label: 'No breathing difficulty', desc: 'I can breathe normally.' },
+      tl: { label: 'Walang hirap sa paghinga', desc: 'Normal ang paghinga ko.' },
+      ceb: { label: 'Dili lisod pagginhawa', desc: 'Normal ang akong pagginhawa.' },
+    },
     STOMACH_ACIDIC: {
       en: { label: 'Burning or acidic', desc: 'Feels like acid or stomach irritation.' },
       tl: { label: 'Mahapdi o acidic', desc: 'Parang may asim o iritasyon sa tiyan.' },
@@ -2734,7 +2763,7 @@
 
   function t(key) {
     const copy = UI_COPY[selectedLanguage] || UI_COPY.en;
-    return copy[key] || UI_COPY.en[key] || key;
+    return copy[key] || UI_COPY.en[key] || window.MendoI18n.text(key, selectedLanguage);
   }
 
   function getSymptomLabel(symptom) {
@@ -2758,36 +2787,30 @@
   }
 
   function detectLanguageFromText(text) {
-    const input = String(text || '').toLowerCase();
-    if (!input.trim()) return selectedLanguage || 'en';
-
-    const bisayaHints = [
-      'akong', 'naay', 'unsa', 'gibati', 'puson', 'hilanat', 'sip-on',
-      'kabag', 'hapdos', 'aslom', 'sakit akong', 'tiyan nako', 'wala koy',
-      'labad', 'garas', 'tilaok', 'kalibang', 'tutunlan', 'dughan',
-      'lawas', 'imong', 'dili', 'sakit sa', 'nako',
-    ];
-    // 'ug' checked separately with word boundary to avoid matching inside 'cough'
-    const ugRegex = /\bug\b/;
-    const cebUgBonus = ugRegex.test(input) ? 1 : 0;
-    const tagalogHints = [
-      'masakit', 'nararamdaman', 'nilalagnat', 'ubo ko', 'may', 'wala akong',
-      'tiyan ko', 'sipon', 'lalamunan', 'nahihilo', 'mahapdi', 'kabag', 'puson ko',
-      'lagnat', 'sumasakit', 'pagtatae', 'tumutulo', 'katawan', 'bahing',
-      'hindi', 'sakit ng', 'ang ulo', 'ang tiyan', 'balat', 'pantal',
-      'barado', 'plema',
-    ];
-    // Shared Filipino words — boost both scores so either Filipino language wins over English
-    const sharedFilipino = ['ubo', 'sakit', 'ilong', 'tiyan', 'ulo', 'barado', 'pantal'];
-
-    const score = (terms) => terms.reduce((total, term) => total + (input.includes(term) ? 1 : 0), 0);
-    const sharedScore = score(sharedFilipino);
-    const cebScore = score(bisayaHints) + sharedScore + cebUgBonus;
-    const tlScore = score(tagalogHints) + sharedScore;
-
-    if (cebScore > tlScore && cebScore > 0) return 'ceb';
-    if (tlScore > cebScore && tlScore > 0) return 'tl';
+    const words = String(text || '').toLowerCase().replace(/[^a-zà-ÿ0-9-]+/g, ' ').trim();
+    if (!words) return selectedLanguage || 'en';
+    const contains = term => (' ' + words + ' ').includes(' ' + term + ' ');
+    const scores = {
+      ceb: ['akong', 'akoang', 'akoa', 'nako', 'naay', 'naa', 'koy', 'unya', 'ug',
+        'unsa', 'gibati', 'hilanat', 'sip-on', 'hapdos', 'aslom', 'labad', 'kalibang',
+        'kalibanga', 'gikapoy', 'naglabad', 'nagkalibang', 'nag-ubo', 'sakit akong', 'tutunlan', 'dughan', 'lawas', 'imong', 'dili', 'sakit sa'],
+      tl: ['masakit', 'nararamdaman', 'nilalagnat', 'may', 'meron', 'wala akong',
+        'lalamunan', 'nahihilo', 'mahapdi', 'lagnat', 'sumasakit', 'pagtatae',
+        'tumutulo', 'katawan', 'hindi', 'sakit ng', 'ang ulo', 'ang tiyan'],
+      en: ['i have', 'my', 'headache', 'fever', 'cough', 'stomach', 'pain',
+        'runny nose', 'diarrhea', 'sore throat', 'rash', 'feeling'],
+    };
+    // Shared words such as "ubo" or "sakit" cannot identify a language alone.
+    const ranked = Object.entries(scores).map(([lang, terms]) => [lang, terms.filter(contains).length])
+      .sort((a, b) => b[1] - a[1]);
+    if (ranked[0][1] > 0 && ranked[0][1] > ranked[1][1]) return ranked[0][0];
     return selectedLanguage || 'en';
+  }
+
+  function syncInputLanguage(text) {
+    if (languagePickedExplicitly) return;
+    const detected = detectLanguageFromText(text);
+    if (detected !== selectedLanguage) setLanguage(detected);
   }
 
   function getClarifyQuestionText(clarifyType, backendQuestion) {
@@ -2822,6 +2845,11 @@
         tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
         ceb: 'Pilia ang pinakaduol sa sakit sa imong tiyan.',
       },
+      RASHES_BREATHING: {
+        en: 'Do you also have difficulty breathing?',
+        tl: 'Nahihirapan ka rin bang huminga?',
+        ceb: 'Lisod usab ang imong pagginhawa?',
+      },
       STOMACH_CONTEXT: {
         en: 'Select what matches your stomach pain.',
         tl: 'Piliin ang pinakaakma sa sakit ng tiyan mo.',
@@ -2832,7 +2860,7 @@
     if (prompts[clarifyType]?.[selectedLanguage]) {
       return prompts[clarifyType][selectedLanguage];
     }
-    return backendQuestion || 'Select the best match.';
+    return t('bestMatch');
   }
 
   function updateStaticCopy() {
@@ -2846,15 +2874,26 @@
     }
     symptomInput.placeholder = t('symptomPlaceholder');
     document.querySelectorAll('[data-home-lang]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.homeLang === selectedLanguage);
+      btn.classList.toggle('active', btn.dataset.homeLang === (languagePickedExplicitly ? selectedLanguage : 'auto'));
     });
     document.querySelectorAll('[data-modal-lang]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.modalLang === selectedLanguage);
+      btn.classList.toggle('active', btn.dataset.modalLang === (languagePickedExplicitly ? selectedLanguage : 'auto'));
     });
     document.getElementById('assessAgainBtn').textContent = t('assessAgain');
     document.getElementById('exitBtn').textContent = t('exit');
     document.getElementById('viewRecsBtn').childNodes[0].textContent = `${t('viewRecommendations')} `;
+    document.documentElement.lang = selectedLanguage;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      el.title = t(el.dataset.i18nTitle);
+    });
     updatePain();
+    document.querySelectorAll('.catalog-language').forEach(select => {
+      select.value = languagePickedExplicitly ? selectedLanguage : 'auto';
+    });
+    if (window.refreshMedicineCatalogLanguage) window.refreshMedicineCatalogLanguage();
   }
 
   function clearIdleTimers() {
@@ -2872,7 +2911,7 @@
   }
 
   function showIdlePrompt() {
-    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    if ((currentStep === 0 || kioskMain.classList.contains('hidden')) && document.getElementById('catalogScreen').classList.contains('hidden') && document.getElementById('kioskChoicePage').classList.contains('hidden')) return;
     idleSecondsRemaining = 10;
     idleCountdown.textContent = String(idleSecondsRemaining);
     idleModal.classList.remove('hidden');
@@ -2889,13 +2928,13 @@
   }
 
   function startIdleTracking() {
-    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    if ((currentStep === 0 || kioskMain.classList.contains('hidden')) && document.getElementById('catalogScreen').classList.contains('hidden') && document.getElementById('kioskChoicePage').classList.contains('hidden')) return;
     clearIdleTimers();
     idleWarningTimer = setTimeout(showIdlePrompt, 30000);
   }
 
   function registerActivity() {
-    if (currentStep === 0 || kioskMain.classList.contains('hidden')) return;
+    if ((currentStep === 0 || kioskMain.classList.contains('hidden')) && document.getElementById('catalogScreen').classList.contains('hidden') && document.getElementById('kioskChoicePage').classList.contains('hidden')) return;
     if (!idleModal.classList.contains('hidden')) {
       idleModal.classList.add('hidden');
     }
@@ -3042,14 +3081,15 @@
   //  HEADACHE TYPE SELECTOR — Image Card Grid
   // ═══════════════════════════════════════
 
-  async function renderHeadacheLocationSelector() {
+  async function renderHeadacheLocationSelector(preserveSelection = false) {
     const container = document.getElementById('headacheLocationSelector');
     document.getElementById('perSymptomSeverity').innerHTML = '';
     document.getElementById('noSymptomsStep3').classList.add('hidden');
     document.getElementById('analyzeBtn').classList.add('hidden');
 
-    let locs = [];
-    try {
+    const previousSelection = preserveSelection ? selectedHeadacheLocation : null;
+    let locs = preserveSelection ? headacheLocations : [];
+    if (!preserveSelection) try {
       const res = await fetch('/consult/api/headache-locations');
       locs = (await res.json()).locations || [];
     } catch { locs = []; }
@@ -3077,9 +3117,9 @@
           <div class="section-title" style="font-size:22px;margin-bottom:10px;text-align:left;">${ll({en:'What type of headache do you have?', tl:'Anong uri ng sakit ng ulo ang nararamdaman mo?', ceb:'Unsa nga klase sa sakit sa ulo ang imong gibati?'})}</div>
           <div class="headache-grid" id="headacheGrid">${cardsHtml}</div>
         </div>
-        <div class="headache-detail-sidebar" id="headacheDetailSidebar"></div>
       </div>`;
     container.classList.remove('hidden');
+    if (previousSelection) selectHeadacheType(previousSelection);
   }
 
   window.selectHeadacheType = function(key) {
@@ -3089,23 +3129,6 @@
     });
     document.getElementById('confirmHeadLocFooter').disabled = false;
 
-    const lang = selectedLanguage || 'en';
-    const ll = (o) => o[lang] || o.en || o;
-    const loc = headacheLocations.find(l => l.key === key);
-    if (!loc) return;
-
-    const label = ll({en:loc.label_en, tl:loc.label_tl, ceb:loc.label_ceb});
-    const desc = ll({en:loc.desc_en, tl:loc.desc_tl, ceb:loc.desc_ceb});
-    const causes = ll({en:loc.common_causes_en, tl:loc.common_causes_tl, ceb:loc.common_causes_ceb});
-    const causesList = Array.isArray(causes) ? causes.join(', ') : (causes || '');
-
-    const sidebar = document.getElementById('headacheDetailSidebar');
-    sidebar.classList.add('visible');
-    sidebar.innerHTML = `
-      <h4>${label}</h4>
-      <div class="desc">${desc}</div>
-      ${causesList ? `<div class="causes"><strong>Common causes:</strong> ${causesList}</div>` : ''}
-    `;
   };
 
   window.confirmHeadacheType = function() {
@@ -3139,11 +3162,24 @@
 
   window.setLanguage = function(lang, event) {
     if (event) event.stopPropagation();
+    if (!['en', 'tl', 'ceb'].includes(lang)) return;
     selectedLanguage = lang;
     if (recognition) {
       recognition.lang = getSpeechRecognitionLocale(lang);
     }
     updateStaticCopy();
+    renderResearchConsentCopy();
+    if (currentStep === 3) {
+      const headacheSelector = document.getElementById('headacheLocationSelector');
+      if (!headacheSelector.classList.contains('hidden')) {
+        renderHeadacheLocationSelector(true);
+      } else if (!document.getElementById('noSymptomsStep3').classList.contains('hidden')) {
+        showNoMatchStep3(currentNoMatchReason);
+      } else if (severityQueue.length) {
+        askNextSeverity(Number(document.getElementById('painSliderDyn').value));
+      }
+    }
+    if (window.refreshKioskLanguage && document.getElementById('checkoutOverlay').classList.contains('active')) window.refreshKioskLanguage();
     if (analysisData && currentStep === 4) {
       if (showingRecs) {
         renderRecommendations(analysisData);
@@ -3156,16 +3192,26 @@
     }
   };
 
+  window.getKioskLanguage = () => selectedLanguage;
+  window.kioskText = t;
+
   // Explicit user choice (home buttons / modal): stays sticky for the whole
   // session, unlike the passive auto-detect from typed text.
   window.pickLanguage = function(lang, event) {
     if (event) event.stopPropagation();
+    if (lang === 'auto') {
+      languagePickedExplicitly = false;
+      const detected = detectLanguageFromText(symptomInput.value);
+      setLanguage(detected, event);
+      return;
+    }
+    if (!['en', 'tl', 'ceb'].includes(lang)) return;
     languagePickedExplicitly = true;
     setLanguage(lang, event);
   };
 
   window.handleLanguageSelectChange = function(lang) {
-    setLanguage(lang);
+    pickLanguage(lang);
   };
 
   window.resumeFromIdle = function(event) {
@@ -3202,87 +3248,112 @@
   // ══════════════════════════════
   function enterKioskFlow() {
     screenHome.classList.add('hidden');
+    if (!window.kioskEntryMode) {
+      document.getElementById('kioskChoicePage').classList.remove('hidden');
+      startIdleTracking();
+      return;
+    }
+    document.getElementById('kioskChoicePage').classList.add('hidden');
+    document.getElementById('stepsBar').classList.toggle('hidden', window.kioskEntryMode === 'catalog');
     kioskMain.classList.remove('hidden');
     document.body.style.overflow = '';
     goToStep(1);
     startIdleTracking();
   }
 
-  window.startKiosk = function() {
-    openModal('legalNoticeModal');
+  const CONSENT_COPY = {
+    en: {
+      Title: 'Before you begin', Intro: 'Read these terms, then press Proceed.',
+      TermsTitle: 'Using Mendo',
+      Terms: 'Mendo suggests medicines based on your symptoms. It does not diagnose illness or replace a doctor or pharmacist. Follow the product label and seek medical help for severe or lasting symptoms.',
+      PrivacyTitle: 'Privacy · RA 10173',
+      Privacy: 'The Data Privacy Act of 2012 protects your personal information. Avoid entering your name, address, phone number, or other identifying details in your symptom description.',
+      ResearchTitle: 'Optional research logs',
+      Research: 'If you check the box below, your symptom text, age, pain ratings, system steps, and results will be saved for authorized experts to review. Research exports remove identifying details and require expert review. Reviews do not automatically change the system.',
+      Choice: 'If you leave the box unchecked, your raw symptom text will not be saved in research logs. Only an anonymous operational count is retained. You can use Mendo either way.',
+      LawTitle: 'Responsible purchases · RA 7581',
+      Law: 'The Price Act covers medicine prices and unlawful hoarding. Buy only what you need. Do not stockpile medicines for resale or to create shortages.',
+      CheckLabel: 'I agree to save this consultation for research review (optional).',
+      Note: 'By pressing Proceed, you acknowledge these terms. Research participation is your choice.',
+      Proceed: 'Proceed', Error: 'Your choice could not be saved. Please try again.',
+    },
+    tl: {
+      Title: 'Bago magsimula', Intro: 'Basahin ang mga tuntunin, pagkatapos pindutin ang Magpatuloy.',
+      TermsTitle: 'Paggamit ng Mendo',
+      Terms: 'Nagmumungkahi ang Mendo ng gamot batay sa iyong sintomas. Hindi ito nagbibigay ng diagnosis o pumapalit sa doktor o pharmacist. Sundin ang label ng gamot. Magpatingin kung malubha o tumatagal ang sintomas.',
+      PrivacyTitle: 'Pagkapribado · RA 10173',
+      Privacy: 'Pinoprotektahan ng Data Privacy Act of 2012 ang iyong personal na impormasyon. Huwag ilagay ang pangalan, tirahan, numero ng telepono, o ibang detalye na makakakilala sa iyo sa paglalarawan ng sintomas.',
+      ResearchTitle: 'Opsyonal na tala para sa pananaliksik',
+      Research: 'Kapag nilagyan mo ng tsek ang kahon, ise-save ang teksto ng sintomas, edad, antas ng sakit, mga hakbang ng sistema, at resulta para suriin ng awtorisadong mga eksperto. Inaalis ang mga detalye na makakakilala sa iyo sa research export at kailangan muna itong suriin ng eksperto. Hindi awtomatikong binabago ng pagsusuri ang sistema.',
+      Choice: 'Kung walang tsek ang kahon, hindi ise-save ang teksto ng iyong sintomas sa research logs. Bilang lamang na hindi makakakilala sa iyo ang itatago. Maaari mong gamitin ang Mendo sa alinmang pagpili.',
+      LawTitle: 'Responsableng pagbili · RA 7581',
+      Law: 'Sakop ng Price Act ang presyo ng gamot at ilegal na pag-iimbak. Bilhin lamang ang kailangan. Huwag mag-imbak para sa muling pagbebenta o para lumikha ng kakulangan.',
+      CheckLabel: 'Pumapayag akong i-save ang konsultasyong ito para sa pananaliksik (opsyonal).',
+      Note: 'Sa pagpindot ng Magpatuloy, kinikilala mo ang mga tuntuning ito. Ikaw ang pipili kung sasali sa pananaliksik.',
+      Proceed: 'Magpatuloy', Error: 'Hindi na-save ang iyong pinili. Subukan muli.',
+    },
+    ceb: {
+      Title: 'Sa dili pa magsugod', Intro: 'Basaha ang mga lagda, dayon pindota ang Padayon.',
+      TermsTitle: 'Paggamit sa Mendo',
+      Terms: 'Ang Mendo mosugyot og tambal base sa imong sintomas. Dili kini mohatag og diagnosis o mopuli sa doktor o pharmacist. Sunda ang label sa tambal. Pakigkita sa doktor kung grabe o dugay mawala ang sintomas.',
+      PrivacyTitle: 'Pagkapribado · RA 10173',
+      Privacy: 'Ang Data Privacy Act of 2012 nanalipod sa imong personal nga impormasyon. Ayaw ibutang ang imong ngalan, adres, numero sa telepono, o ubang detalye nga makaila kanimo sa paghulagway sa sintomas.',
+      ResearchTitle: 'Opsyonal nga mga tala para sa panukiduki',
+      Research: 'Kung imong tsekan ang kahon, tipigan ang teksto sa sintomas, edad, lebel sa kasakit, mga lakang sa sistema, ug resulta aron susihon sa awtorisadong mga eksperto. Tangtangon ang mga detalye nga makaila kanimo sa research export ug kinahanglan una kini susihon sa eksperto. Ang pagsusi dili awtomatikong mousab sa sistema.',
+      Choice: 'Kung dili nimo tsekan ang kahon, dili tipigan ang teksto sa imong sintomas sa research logs. Ihap ra nga dili makaila kanimo ang tipigan. Makagamit ka sa Mendo bisan unsa imong pilion.',
+      LawTitle: 'Responsableng pagpalit · RA 7581',
+      Law: 'Ang Price Act naglangkob sa presyo sa tambal ug ilegal nga pagtipig. Palita lang ang imong gikinahanglan. Ayaw pagtigom og tambal para ibaligya pag-usab o aron magkulang ang suplay.',
+      CheckLabel: 'Mouyon ko nga tipigan kini nga konsultasyon para sa panukiduki (opsyonal).',
+      Note: 'Sa pagpindot sa Padayon, imong giila kini nga mga lagda. Ikaw ang mopili kung moapil sa panukiduki.',
+      Proceed: 'Padayon', Error: 'Wala matipigi ang imong gipili. Palihug sulayi pag-usab.',
+    },
   };
 
-  window.confirmLegalNotice = function(event) {
-    if (event) event.stopPropagation();
-    document.getElementById('legalNoticeModal').classList.add('hidden');
+  window.chooseKioskFlow = function(mode) {
+    if (!['catalog', 'consult'].includes(mode)) return;
+    window.kioskEntryMode = mode;
+    enterKioskFlow();
+  };
+
+  window.startKiosk = function() {
+    window.kioskEntryMode = null;
+    document.getElementById('researchConsentCheck').checked = false;
+    document.getElementById('consentError').classList.add('hidden');
     renderResearchConsentCopy();
-    document.getElementById('researchConsentModal').classList.remove('hidden');
+    openModal('researchConsentModal');
+    document.querySelector('.consent-scroll').scrollTop = 0;
+    document.querySelector('.consent-scroll').focus();
   };
 
   function renderResearchConsentCopy() {
-    const copy = {
-      en: {
-        title: 'May we save this consultation for research review?',
-        intro: 'Mendo can still help you if you decline. If you agree, your symptom text, system trace, and outcome will be stored so authorized domain experts can independently review the system. Reviews never retrain production automatically.',
-        agree: 'Agree: save this consultation for consented, de-identified research export after expert adjudication.',
-        decline: 'Decline: do not persist raw symptom text; retain only an anonymous operational count.',
-        choice: 'Your choice: consultation remains available either way.',
-        note: 'Select one choice before continuing. This is research consent, not consent to medical treatment.',
-        yes: 'I agree to research use', no: 'Decline and continue',
-      },
-      tl: {
-        title: 'Maaari ba naming i-save ang konsultasyong ito para sa pagsusuri?',
-        intro: 'Makakatulong pa rin ang Mendo kahit tumanggi ka. Kapag pumayag ka, ise-save ang teksto ng sintomas, trace ng sistema, at resulta upang masuri nang hiwalay ng awtorisadong domain experts. Walang review na awtomatikong magre-retrain sa production system.',
-        agree: 'Pumayag: isama ang de-identified na konsultasyon sa research export matapos ang expert adjudication.',
-        decline: 'Tumanggi: huwag i-save ang raw na teksto ng sintomas; anonymous na bilang lamang ang itatago.',
-        choice: 'Anuman ang piliin mo, maaari mong ipagpatuloy ang konsultasyon.',
-        note: 'Pumili bago magpatuloy. Pahintulot ito para sa research, hindi pahintulot para sa medical treatment.',
-        yes: 'Pumapayag ako sa research', no: 'Tumanggi at magpatuloy',
-      },
-      ceb: {
-        title: 'Mahimo ba namong i-save kini nga konsultasyon para sa research review?',
-        intro: 'Makatabang gihapon ang Mendo bisan dili ka mouyon. Kung mouyon ka, i-save ang symptom text, system trace, ug resulta aron independente nga ma-review sa awtorisadong domain experts. Walay review nga awtomatikong mag-retrain sa production system.',
-        agree: 'Mouyon: iapil ang de-identified nga konsultasyon sa research export human sa expert adjudication.',
-        decline: 'Dili mouyon: dili i-save ang raw symptom text; anonymous nga ihap ra ang tipigan.',
-        choice: 'Bisan unsa imong pilion, makapadayon gihapon ka sa konsultasyon.',
-        note: 'Pagpili usa sa dili pa mopadayon. Research consent kini, dili consent sa medical treatment.',
-        yes: 'Mouyon ko sa research', no: 'Dili mouyon ug mopadayon',
-      },
-    }[selectedLanguage] || {};
-    document.getElementById('consentTitle').textContent = copy.title;
-    document.getElementById('consentIntro').textContent = copy.intro;
-    document.getElementById('consentAgree').textContent = copy.agree;
-    document.getElementById('consentDecline').textContent = copy.decline;
-    document.getElementById('consentChoice').textContent = copy.choice;
-    document.getElementById('consentNote').textContent = copy.note;
-    document.getElementById('consentYes').textContent = copy.yes;
-    document.getElementById('consentNo').textContent = copy.no;
+    const copy = CONSENT_COPY[selectedLanguage] || CONSENT_COPY.en;
+    Object.entries(copy).forEach(([key, value]) => {
+      document.getElementById('consent' + key).textContent = value;
+    });
   }
 
   window.saveResearchConsent = async function(consent, event) {
     if (event) event.stopPropagation();
-    const buttons = document.querySelectorAll('#researchConsentModal button');
-    buttons.forEach(btn => btn.disabled = true);
+    const button = document.getElementById('consentProceed');
+    const checkbox = document.getElementById('researchConsentCheck');
+    if (button.disabled) return;
+    button.disabled = true;
+    checkbox.disabled = true;
+    document.getElementById('consentError').classList.add('hidden');
     try {
       const response = await fetch('/consult/api/research-consent', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({consent}),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Could not save your choice');
+      if (!response.ok) throw new Error('Could not save choice');
       document.getElementById('researchConsentModal').classList.add('hidden');
       enterKioskFlow();
-      showToast(
-        consent
-          ? 'Research consent saved. This consultation may be reviewed.'
-          : 'Consultation will continue without saving your raw symptom text.',
-        'info'
-      );
     } catch (error) {
-      showToast(error.message, 'error');
+      document.getElementById('consentError').classList.remove('hidden');
     } finally {
-      buttons.forEach(btn => btn.disabled = false);
+      button.disabled = false;
+      checkbox.disabled = false;
     }
   };
 
@@ -3294,6 +3365,15 @@
   //  STEP NAVIGATION
   // ══════════════════════════════
   window.goToStep = function(n) {
+    if (n === 2 && window.kioskEntryMode === 'catalog') {
+      if (toStep2Btn.disabled) return;
+      toStep2Btn.disabled = true;
+      window.startCatalogForAge(patientAge).then(() => {
+        kioskMain.classList.add('hidden');
+        startIdleTracking();
+      }).catch(() => showToast(t('tryAgain'), 'error')).finally(() => { toStep2Btn.disabled = false; });
+      return;
+    }
     currentStep = n;
     showingRecs = false;
 
@@ -3391,14 +3471,7 @@
   symptomInput.addEventListener('input', () => {
     consultInputMode = 'text';
     toStep3Btn.disabled = !symptomInput.value.trim();
-    // Passive auto-detect only helps when the user never chose a language;
-    // an explicit pick (home button / modal) stays sticky.
-    if (!languagePickedExplicitly) {
-      const detected = detectLanguageFromText(symptomInput.value);
-      if (detected && detected !== selectedLanguage) {
-        setLanguage(detected);
-      }
-    }
+    syncInputLanguage(symptomInput.value);
   });
 
   symptomInput.addEventListener('keydown', (e) => {
@@ -3446,6 +3519,7 @@
   window.triggerPreDetect = async function() {
     const text = symptomInput.value.trim();
     if (!text) return;
+    syncInputLanguage(text);
     durationBySymptom = {};
 
     // Navigate to step 3, show loading
@@ -3468,6 +3542,7 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Detection failed');
+      currentUnstockedComplaints = data.unstocked_complaints || [];
 
       completeLoadingProgress('preDetect');
       document.getElementById('preDetectLoading').classList.add('hidden');
@@ -3494,6 +3569,10 @@
         return;
       }
 
+      if (currentUnstockedComplaints.length) {
+        runAnalysis();
+        return;
+      }
       if (preDetectedSymptoms.length === 0) {
         showNoMatchStep3(data.no_match_reason || 'vague');
         return;
@@ -3523,7 +3602,7 @@
 
     } catch (err) {
       completeLoadingProgress('preDetect');
-      showToast(err.message, 'error');
+      showToast(t('tryAgain'), 'error');
       goToStep(2);
     }
   };
@@ -3531,7 +3610,7 @@
   // ══════════════════════════════
   //  STEP 3: PER-SYMPTOM SEVERITY
   // ══════════════════════════════
-  function askNextSeverity() {
+  function askNextSeverity(currentValue) {
     const actionBtn = document.getElementById('analyzeBtn');
 
     function setStep3Action(label, handler) {
@@ -3551,7 +3630,7 @@
     }
 
     const symptom = severityQueue[0];
-    const hint = severityHints[symptom] || 5;
+    const hint = currentValue ?? severityHints[symptom] ?? 5;
     const nextLabel = severityQueue.length > 1
       ? (t('nextSymptomBtn') || 'Next')
       : (t('analyzeBtn') || 'Continue');
@@ -3736,7 +3815,7 @@
       renderAnalysis(data);
     } catch (err) {
       completeLoadingProgress('analysis');
-      showToast(err.message, 'error');
+      showToast(t('tryAgain'), 'error');
       goToStep(3);
     }
   };
@@ -3751,9 +3830,9 @@
       circle: 'icon-circle--green',
       title: { en: 'No symptoms to treat yet', tl: 'Wala pang sintomas na gagamutin', ceb: 'Wala pay sintomas nga tambalan' },
       body: {
-        en: 'You mentioned that you do NOT have these symptoms. If you still feel unwell, try describing what you actually feel — or ask our pharmacist for advice.',
+        en: 'No symptoms were found. If you feel unwell, describe what you feel or ask a pharmacist.',
         tl: 'Sinabi mo na WALA kang ganyang sintomas. Kung masama pa rin ang pakiramdam mo, subukang ilarawan ang talagang nararamdaman mo — o magtanong sa aming pharmacist.',
-        ceb: 'Gikomento nimo nga WALA ka ni nga sintomas. Kung dili gihapon maayo ang imong pamati, sulayi gihulagway kung unsa gyud ang imong gibati — o pangutana sa among pharmacist.',
+        ceb: 'Walay sintomas nga nakita. Kung dili maayo imong pamati, isulti ang imong gibati o pangutana sa pharmacist.',
       },
     },
     out_of_scope: {
@@ -3761,9 +3840,9 @@
       circle: 'icon-circle--amber',
       title: { en: 'Outside what we can treat', tl: 'Wala sa kayang gamutin ng kiosk', ceb: 'Gawas sa among matambalan' },
       body: {
-        en: 'What you described is not something this kiosk can treat with over-the-counter medicine. A doctor or pharmacist can help you best.',
+        en: 'This kiosk has no suitable medicine for what you described. Please ask a doctor or pharmacist.',
         tl: 'Ang iyong inilarawan ay hindi kayang gamutin ng kiosk na ito sa pamamagitan ng over-the-counter na gamot. Ang doktor o pharmacist ang pinakamakatutulong sa iyo.',
-        ceb: 'Ang imong gihulagway dili matambalan sa kiosk gamit ang over-the-counter nga tambal. Ang doktor o pharmacist ang makahatag kanimo og labing maayong tabang.',
+        ceb: 'Walay angay nga tambal sa kiosk para sa imong gihulagway. Palihug pangutana sa doktor o pharmacist.',
       },
     },
     nonsense: {
@@ -3782,28 +3861,35 @@
       circle: 'icon-circle--blue',
       title: { en: 'We could not recognize a symptom', tl: 'Hindi namin nakilala ang sintomas', ceb: 'Wala mi makaila og sintomas' },
       body: {
-        en: 'Your description is a bit too vague for us to recognize a symptom. Try using common words, like one of these:',
+        en: 'Please describe what you feel. You can use an example below:',
         tl: 'Medyo malabo ang iyong paglalarawan para makilala namin ang sintomas. Subukang gumamit ng karaniwang salita, gaya ng isa sa mga ito:',
-        ceb: 'Gamay ra kaayo ang detalye sa imong gihulagway aron makaila kami og sintomas. Sulayi ang kasagarang mga pulong, sama sa usa sa mosunod:',
+        ceb: 'Palihug isulti ang imong gibati. Pwede nimo gamiton ang pananglitan sa ubos:',
       },
       examples: true,
     },
   };
-  const NO_MATCH_EXAMPLES = [
-    'Masakit ulo ko',
-    'May lagnat ako',
-    'May ubo ako',
-    'Sakit akong tiyan',
-    'Sipon',
-    'Pantal sa katawan',
-  ];
+  const NO_MATCH_EXAMPLES = {
+    en: ['I have a headache', 'I have a fever', 'I have a cough'],
+    tl: ['Masakit ulo ko', 'May lagnat ako', 'May ubo ako'],
+    ceb: ['Sakit akong ulo', 'Naa koy hilanat', 'Naa koy ubo'],
+  };
 
   function renderNoMatchCard(reason, options = {}) {
+    const complaints = options.complaints || currentUnstockedComplaints || [];
+    if (complaints.length) {
+      const names = complaints.map(row => row.label_i18n?.[selectedLanguage] || row.label_i18n?.en || '').filter(Boolean).join(', ');
+      const bodies = {
+        en: `Your description mentions: ${names}. This machine does not carry a suitable product for this complaint. Please ask a pharmacist about suitable care and medicine availability. Tooth or gum problems may also need a dentist.`,
+        tl: `Nabanggit sa iyong paglalarawan: ${names}. Walang angkop na produkto sa makinang ito para dito. Magtanong sa pharmacist tungkol sa angkop na pangangalaga at available na gamot. Maaaring kailangan ng dentista para sa ngipin o gilagid.`,
+        ceb: `Gihisgotan sa imong paghulagway: ${names}. Walay angay nga produkto sa makina alang niini. Pangutana sa pharmacist bahin sa angay nga pag-atiman ug available nga tambal. Mahimong kinahanglan og dentista para sa ngipon o lagos.`,
+      };
+      return `<div class="nomatch-card"><div class="icon-circle amber"><i class="fa-solid fa-prescription-bottle-medical"></i></div><h3>${t('productNotCarried')}</h3><p>${escHtml(bodies[selectedLanguage] || bodies.en)}</p><p>${t('unstockedSafety')}</p></div>`;
+    }
     const copy = NO_MATCH_COPY[reason] || NO_MATCH_COPY.vague;
     const lang = selectedLanguage || 'en';
     const pick = (o) => o[lang] || o.en || o;
     const examplesHtml = copy.examples
-      ? `<div class="nomatch-examples">${NO_MATCH_EXAMPLES
+      ? `<div class="nomatch-examples">${(NO_MATCH_EXAMPLES[lang] || NO_MATCH_EXAMPLES.en)
           .map(e => `<button class="nomatch-example" onclick="useExamplePhrase('${e.replace(/'/g, "\\'")}')">${e}</button>`)
           .join('')}</div>`
       : '';
@@ -3813,18 +3899,22 @@
         <h3>${pick(copy.title)}</h3>
         <p>${pick(copy.body)}</p>
         ${examplesHtml}
-        <p class="nomatch-note">${t('emergencyNote')}</p>
+
       </div>`;
   }
 
   window.useExamplePhrase = function(phrase) {
+    assessAgain();
     symptomInput.value = phrase;
     consultInputMode = 'text';
     toStep3Btn.disabled = false;
     triggerPreDetect();
   };
 
+  let currentNoMatchReason = 'vague';
+  let currentUnstockedComplaints = [];
   function showNoMatchStep3(reason) {
+    currentNoMatchReason = reason;
     const box = document.getElementById('noSymptomsStep3');
     box.innerHTML = renderNoMatchCard(reason);
     box.classList.remove('hidden');
@@ -3837,6 +3927,11 @@
     container.classList.remove('hidden');
     container.classList.remove('warning-fullscreen');
     setTapReadyState(false);
+    // Each response owns its controls; clarification buttons must not leak
+    // into the duration or result screen.
+    document.getElementById('viewRecsBtn').classList.add('hidden');
+    document.getElementById('assessAgainBtn').classList.add('hidden');
+    document.getElementById('exitBtn').classList.add('hidden');
 
     const symptoms = data.symptoms || [];
     const rec = data.recommendation || {};
@@ -3850,14 +3945,13 @@
       container.classList.add('center-stage');
       container.classList.add('warning-fullscreen');
       const flags = rec.triage_flags || [];
-      const flagItems = flags.map(f => `<li>${f.message}</li>`).join('');
+      const flagItems = flags.map(f => `<li>${escHtml(window.MendoI18n.flag(f, selectedLanguage))}</li>`).join('');
       container.innerHTML = `
         <div class="triage-banner">
           <div class="icon"><i class="fa-solid fa-stethoscope"></i></div>
           <h3>${t('emergencyTitle')}</h3>
           <p>${t('emergencySub')}</p>
           <ul class="flag-list">${flagItems}</ul>
-          <div class="referral-cta">${t('professionalHelpTitle')}</div>
           <p class="triage-note">${t('emergencyNote')}</p>
         </div>`;
       document.getElementById('assessAgainBtn').classList.remove('hidden');
@@ -3866,8 +3960,8 @@
     }
 
     // No symptoms
-    if (!symptoms.length) {
-      container.innerHTML = renderNoMatchCard(data.no_match_reason || 'vague');
+    if (!symptoms.length || (rec.action === 'no_match' && data.unstocked_complaints?.length)) {
+      container.innerHTML = renderNoMatchCard(data.no_match_reason || 'vague', {complaints: data.unstocked_complaints});
       document.getElementById('assessAgainBtn').classList.remove('hidden');
       document.getElementById('exitBtn').classList.remove('hidden');
       return;
@@ -3875,14 +3969,14 @@
 
     if (rec.action === 'ask_clarify') {
       const clarifyType = rec.clarify_type || 'COUGH';
-      const questionText = getClarifyQuestionText(clarifyType, rec.question);
+      const questionText = rec.question_i18n?.[selectedLanguage] || getClarifyQuestionText(clarifyType, rec.question);
       let buttonsHtml = '';
 
       if (rec.options && rec.options.length) {
         buttonsHtml = rec.options.map(opt => `
           <button class="clarify-btn" onclick="handleContextClarify('${opt.value}', '${clarifyType}')">
             <div class="icon"><i class="${getOptionIconClass(opt.value, clarifyType)}"></i></div>
-            <div class="label">${getContextOptionLabel(opt.value, opt.label)}</div>
+            <div class="label">${escHtml(opt.label_i18n?.[selectedLanguage] || getContextOptionLabel(opt.value, opt.label))}</div>
             <div class="desc">${getContextOptionDesc(opt.value, opt.label) || ''}</div>
           </button>`).join('');
       } else {
@@ -3901,12 +3995,21 @@
 
       container.innerHTML = `
         <div class="clarify-page">
-          <div class="clarify-page-question">${questionText}</div>
+          ${rec.question_number ? `<p class="intake-progress">${rec.question_number} / ${rec.question_total}</p>` : ''}
+          <div class="clarify-page-question">${escHtml(questionText)}</div>
           <div class="clarify-buttons clarify-buttons--compact">
             ${buttonsHtml}
           </div>
         </div>`;
       document.getElementById('backFromResults').classList.remove('hidden');
+      return;
+    }
+
+    if (rec.action === 'no_match') {
+      // Symptoms can be recognized even when the catalog has no safe option
+      // (for example, food-borne diarrhea). Show the explanation, not a dead end.
+      showingRecs = false;
+      renderRecommendations(data);
       document.getElementById('assessAgainBtn').classList.remove('hidden');
       document.getElementById('exitBtn').classList.remove('hidden');
       return;
@@ -3965,7 +4068,7 @@
       analysisData.recommendation = data.recommendation;
       renderAnalysis(analysisData);
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(t('tryAgain'), 'error');
     }
   };
 
@@ -3984,6 +4087,7 @@
           clarify_type: clarifyType,
           clarification: value,
           age: patientAge,
+          language: selectedLanguage,
         }),
       });
       const data = await res.json();
@@ -3993,9 +4097,12 @@
       analysisData.symptoms_display = data.symptoms_display || data.symptoms;
       analysisData.detected_conditions = data.detected_conditions || analysisData.detected_conditions || [];
       analysisData.recommendation = data.recommendation;
+      // Keep the answer when duration screening re-runs recommendations.
+      analysisData.recommendation._context_override = clarifyType === 'DIARRHEA_SCREEN' ? 'DIARRHEA_NON_INFECTIOUS' : value;
+      analysisData._clarificationData = { clarification: value };
       renderAnalysis(analysisData);
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(t('tryAgain'), 'error');
     }
   };
 
@@ -4016,7 +4123,7 @@
     durationQueue = symptoms.filter(s => DURATION_SYMPTOMS.includes(s));
     durationCompleted = [];
     durationContextOverride = null;
-    durationClarificationData = {};
+    durationClarificationData = analysisData._clarificationData || {};
     durationBySymptom = {};
 
     // Capture context override from the recommendation flow if any
@@ -4055,6 +4162,7 @@
 
   function renderDurationQuestion(symptom) {
     const container = document.getElementById('analysisResult');
+    ['viewRecsBtn', 'assessAgainBtn', 'exitBtn'].forEach(id => document.getElementById(id).classList.add('hidden'));
     container.classList.remove('warning-fullscreen');
     const total = (analysisData.symptoms || []).filter(s => DURATION_SYMPTOMS.includes(s)).length;
     const answered = durationCompleted.length;
@@ -4232,7 +4340,7 @@
       if (!res.ok) throw new Error(data.error || 'Duration check failed');
 
       if (data.warning) {
-        showToast(data.warning, 'warning');
+        showToast(t('prolongedRunnyNose'), 'warning');
       }
 
       if (!data.safe) {
@@ -4262,7 +4370,7 @@
         askNextDuration();
       }
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(t('tryAgain'), 'error');
     }
   };
 
@@ -4345,8 +4453,6 @@
     if (showingRecs) {
       showingRecs = false;
       renderAnalysis(analysisData);
-      document.getElementById('assessAgainBtn').classList.add('hidden');
-      document.getElementById('exitBtn').classList.add('hidden');
     } else {
       goToStep(3);
     }
@@ -4478,20 +4584,20 @@
             <div class="rec-brand">${escHtml(rec.brand)}</div>
             <div class="rec-generic">${escHtml(rec.active_ingredients || '')}</div>
             <div class="rec-meta">
-              ${rec.drug_category ? `<span class="rec-tag">${escHtml(rec.drug_category)}</span>` : ''}
-              ${rec.dosage_form ? `<span class="rec-tag">${escHtml(rec.dosage_form)}</span>` : ''}
-              ${rec.hardware_slot ? `<span class="rec-tag">Slot #${escHtml(rec.hardware_slot)}</span>` : ''}
-              ${rec.min_age ? `<span class="rec-tag">Age ${escHtml(rec.min_age)}+</span>` : ''}
+              ${rec.drug_category ? `<span class="rec-tag">${escHtml(window.MendoI18n.product(rec.drug_category, selectedLanguage))}</span>` : ''}
+              ${rec.dosage_form ? `<span class="rec-tag">${escHtml(window.MendoI18n.product(rec.dosage_form, selectedLanguage))}</span>` : ''}
+              ${rec.hardware_slot ? `<span class="rec-tag">${t('slot')} #${escHtml(rec.hardware_slot)}</span>` : ''}
+              ${rec.min_age ? `<span class="rec-tag">${t('age')} ${escHtml(rec.min_age)}+</span>` : ''}
             </div>
           </div>
           <div class="rec-stock">
             ${rec.pos_price != null ? `<div class="price">${fmt(rec.pos_price)}</div>` : ''}
             ${rec.in_stock === true
-              ? `<div class="avail in">\u2713 In Stock (${rec.stock_quantity})</div>`
+              ? `<div class="avail in">\u2713 ${t('inStock')} (${rec.stock_quantity})</div>`
               : rec.in_stock === false
-                ? `<div class="avail out">\u2717 Out of Stock</div>`
+                ? `<div class="avail out">\u2717 ${t('outOfStock')}</div>`
                 : ''}
-            ${canBuy ? `<button class="btn btn--primary btn--sm" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> Buy</button>` : ''}
+            ${canBuy ? `<button class="btn btn--primary btn--sm" data-brand="${escHtml(rec.brand)}" onclick="addToKioskCart(this.dataset.brand, event)"><i class="fa-solid fa-cart-plus"></i> ${t('buy')}</button>` : ''}
           </div>
         </div>`;
     }
@@ -4529,7 +4635,11 @@
       return `<div class="rec-columns">${columns}</div>`;
     }
 
-    let html = ``;
+    const safetyWarnings = data.recommendation?.safety_warnings || [];
+    let html = safetyWarnings.length ? `
+      <div class="rec-disclaimer" role="status">
+        ${safetyWarnings.map((warning, index) => `<p>${escHtml(data.recommendation?.safety_warnings_i18n?.[index]?.[selectedLanguage] || window.MendoI18n?.notice(warning, selectedLanguage) || warning)}</p>`).join('')}
+      </div>` : '';
 
     if (referral && referral.level === 'high' && !forceViewList) {
       container.classList.add('center-stage');
@@ -4554,7 +4664,7 @@
 
     if (!recs.length) {
       // Check if the backend sent a message (e.g., cold-weather advisory)
-      const recMsg = data.recommendation?.message || '';
+      const recMsg = data.recommendation?.message_i18n?.[selectedLanguage] || data.recommendation?.message || '';
       const recMsgLower = recMsg.toLowerCase();
       const hasColdWeatherSignal =
         recMsgLower.includes('malamig na panahon') ||
@@ -4584,7 +4694,7 @@
             <div class="no-symptoms">
               <div class="icon">&#128138;</div>
               <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">${t('professionalHelpTitle')}</h3>
-              <p>${recMsg}</p>
+              <p>${escHtml(window.MendoI18n?.notice(recMsg, selectedLanguage) || recMsg)}</p>
             </div>`;
         }
       } else {
@@ -4628,8 +4738,8 @@
     if (exclusions.length) {
       html += `
         <div class="rec-note" style="margin:10px 0;padding:10px 12px;background:var(--zinc-100);border-radius:10px;font-size:12.5px;color:var(--zinc-600);">
-          <strong style="color:var(--zinc-700);">Not shown:</strong>
-          ${exclusions.map(e => `${escHtml(e.brand)} (${escHtml(e.reason === 'patient_age_below_minimum' ? `minimum age ${e.minimum_age}` : e.reason)})`).join(' &nbsp;·&nbsp; ')}
+          <strong style="color:var(--zinc-700);">${t('notShown')}:</strong>
+          ${exclusions.map(e => `${escHtml(e.brand)} (${escHtml(e.reason === 'patient_age_below_minimum' ? `${t('minimumAge')} ${e.minimum_age}` : t('safetyExcluded'))})`).join(' &nbsp;·&nbsp; ')}
         </div>`;
     }
 
@@ -4641,7 +4751,7 @@
       </div>
       <div class="results-actions results-actions--center" style="margin-top:14px;">
         <button class="btn btn--primary btn--lg" onclick="openCheckoutModal()" id="proceedCheckoutBtn" style="display:none;">
-          <i class="fa-solid fa-bag-shopping"></i>&nbsp; Proceed to Checkout
+          <i class="fa-solid fa-bag-shopping"></i>&nbsp; ${t('checkout')}
           <span id="checkoutBtnCount" style="margin-left:6px;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:999px;font-size:12px;">0</span>
         </button>
       </div>`;
@@ -4682,6 +4792,15 @@
   // ══════════════════════════════
   window.resetAll = function() {
     hideIdlePrompt();
+    document.getElementById('kioskChoicePage').classList.add('hidden');
+    window.kioskEntryMode = null;
+    document.getElementById('catalogScreen').classList.add('hidden');
+    document.getElementById('medicineDetailModal').classList.add('hidden');
+    document.getElementById('researchConsentModal').classList.add('hidden');
+    currentUnstockedComplaints = [];
+    languagePickedExplicitly = false;
+    selectedLanguage = 'en';
+    if (window.resetMedicineCatalog) window.resetMedicineCatalog();
     consultInputMode = 'text';
     symptomInput.value = '';
     ageInput.value = '';
@@ -4720,6 +4839,7 @@
     screenHome.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentStep = 0;
+    updateStaticCopy();
   };
 
   ['pointerdown', 'keydown', 'input', 'touchstart'].forEach(evt => {
@@ -4748,12 +4868,7 @@
       symptomInput.value = transcript;
       consultInputMode = 'voice';
       toStep3Btn.disabled = !transcript.trim();
-      if (!languagePickedExplicitly) {
-        const detected = detectLanguageFromText(transcript);
-        if (detected && detected !== selectedLanguage) {
-          setLanguage(detected);
-        }
-      }
+      syncInputLanguage(transcript);
     };
 
     recognition.onend = () => {
@@ -4765,7 +4880,7 @@
       isRecording = false;
       voiceBtn.classList.remove('recording');
       if (e.error !== 'no-speech') {
-        showToast('Voice error: ' + e.error, 'error');
+        showToast(t('voiceError'), 'error');
       }
     };
 
@@ -4815,13 +4930,13 @@
       });
       const data = await res.json();
       if (!res.ok) {
-        showToast(data.error || 'Failed to add', 'error');
+        showToast(window.MendoI18n.phrase(data.error || t('tryAgain'), selectedLanguage), 'error');
         return;
       }
-      showToast(data.message, 'success');
+      showToast(`${escHtml(brand)} ${t('cartAdded')}`, 'success');
       await refreshKioskCart();
     } catch (err) {
-      showToast('Failed to add to cart', 'error');
+      showToast(t('tryAgain'), 'error');
     }
   };
 
@@ -5000,7 +5115,7 @@
           <div class="processing-sub" id="paymentProcessingSub">Complete your payment in the Xendit window.<br>This page will update automatically.</div>
         </div>`;
       footer.innerHTML = `
-        <button class="btn" onclick="cancelPayment()">Cancel</button>
+        <button class="btn" onclick="cancelPayment()"><span data-i18n="cancel">Cancel</span></button>
         <button class="btn btn--primary" onclick="verifyCurrentPayment(true)">I Already Paid</button>`;
 
     } else if (checkoutStep === 5) {
@@ -5238,6 +5353,7 @@
 
 })();
 </script>
-<script src="{{ url_for('static', filename='js/kiosk-checkout.js') }}?v=20260805-payment4"></script>
+<script src="{{ url_for('static', filename='js/kiosk-checkout.js') }}?v=20261014-i18n"></script>
+<script src="{{ url_for('static', filename='js/kiosk-catalog.js') }}?v=20261014"></script>
 </body>
 </html>
